@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import Logo from 'public/next.svg';
 import IconFont from '@_components/IconFont';
-import { Collapse, CollapseProps, TabsProps, Dropdown } from 'antd';
+import { Collapse, CollapseProps } from 'antd';
 import OverViewDetail from './OverViewDetail';
 import OverViewProperty from './OverViewProperty';
 import { ItemSymbolDetailOverview } from '../type';
@@ -30,22 +29,23 @@ export default function OverView(props: OverViewProps) {
       ),
       children: <OverViewDetail overview={overview} onHolderClick={onHolderClick} />,
     },
-    {
-      key: '2',
-      showArrow: false,
-      label: (
-        <div className="nft-detail-label">
-          <div className="nft-detail-label-left">
-            <IconFont type="box" />
-            <span>Properties &#40;{overview.properties.total}&#41;</span>
-          </div>
-          <div className="nft-detail-label-right">
-            <IconFont type="Down" />
-          </div>
-        </div>
-      ),
-      children: <OverViewProperty overview={overview} />,
-    },
+    // {
+    //   key: '2',
+    //   showArrow: false,
+    //   collapsible: overview.properties ? 'header' : 'disabled',
+    //   label: (
+    //     <div className="nft-detail-label">
+    //       <div className="nft-detail-label-left">
+    //         <IconFont type="box" />
+    //         <span>Properties &#40;{overview.properties?.total}&#41;</span>
+    //       </div>
+    //       <div className="nft-detail-label-right">
+    //         <IconFont type="Down" />
+    //       </div>
+    //     </div>
+    //   ),
+    //   children: <OverViewProperty overview={overview} />,
+    // },
   ];
   if (overview.description) {
     collapseItems.push({
@@ -78,17 +78,24 @@ export default function OverView(props: OverViewProps) {
   return (
     <div className="ntf-overview-wrap">
       <div className="nft-image-wrap">
-        <Image src={overview.item.imageUrl} alt="" className="nft-image" />
+        {overview.item?.imageUrl && <Image src={overview.item?.imageUrl} alt="" className="nft-image" />}
       </div>
       <div className="nft-detail-wrap">
         <div className="nft-title-wrap">
-          <h1 className="nft-title">{overview.item.name}</h1>
+          <h1 className="nft-title">{overview.item?.name}</h1>
           <div className="nft-thumb">
             <div className="nft-thumb-image-wrap">
-              <Image className="object-contain" fill src={overview.nftCollection.imageUrl} alt="" />
+              {overview.nftCollection?.imageUrl && (
+                <Image
+                  className="aspect-square w-full object-cover"
+                  fill
+                  src={overview.nftCollection?.imageUrl}
+                  alt=""
+                />
+              )}
             </div>
             <Link href="/" className="text-link">
-              {overview.nftCollection.name}
+              {overview.nftCollection?.name}
             </Link>
           </div>
         </div>

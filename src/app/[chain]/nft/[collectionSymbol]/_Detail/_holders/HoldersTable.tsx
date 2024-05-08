@@ -1,57 +1,65 @@
 'use client';
 import Table, { ITableSearch } from '@_components/Table';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
-import { CollectionHoldersData, HolderItem } from '../type';
+import { HolderItem } from '../type';
 import getColumns from './column';
-import { fetchHolderData } from '../mock';
-import { useMobileContext } from '@app/pageProvider';
-import useTableData from '@_hooks/useTable';
 import { useParams } from 'next/navigation';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
+import { useMobileAll } from '@_hooks/useResponsive';
 import { NftCollectionPageParams } from 'global';
+import { getPageNumber } from '@_utils/formatter';
+import { fetchNFTHolders } from '@_api/fetchNFTS';
+import { TChainID } from '@_api/type';
+import { pageSizeOption } from '@_utils/contant';
 
 export interface HolderProps {
   topSearchProps?: ITableSearch;
   search?: string;
 }
-const holder: CollectionHoldersData = {
-  total: 0,
-  holders: [],
-};
+
 export default function Holder(props: HolderProps) {
-  const { topSearchProps, search } = props;
-  const { isMobile } = useMobileAll();
+  const { topSearchProps } = props;
+  const isMobile = useMobileAll();
   const { collectionSymbol, chain } = useParams<NftCollectionPageParams>();
-  const disposeData = (data: CollectionHoldersData) => {
-    return {
-      total: data.total,
-      list: [...data.holders],
-    };
-  };
-  const fetchHolderDataWrap = async ({ page, pageSize }) => {
-    return fetchHolderData({
-      chainId: chain, // 主链/侧链
-      skipCount: (page - 1) * pageSize,
-      maxResultCount: pageSize,
-      symbol: collectionSymbol,
-    });
-  };
-  const { loading, total, data, currentPage, pageSize, pageChange, pageSizeChange, searchChange } = useTableData<
-    HolderItem,
-    CollectionHoldersData
-  >({
-    SSRData: disposeData(holder),
-    fetchData: fetchHolderDataWrap,
-    disposeData: disposeData,
-    defaultSearch: search,
-  });
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(50);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(0);
+  const [data, setData] = useState<HolderItem[]>([]);
+  const fetchHolderDataWrap = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await fetchNFTHolders({
+        chainId: chain as TChainID,
+        skipCount: getPageNumber(currentPage, pageSize),
+        maxResultCount: pageSize,
+        collectionSymbol: collectionSymbol,
+        search: '',
+      });
+      setTotal(data.total);
+      setData(data.list);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  }, [chain, collectionSymbol, currentPage, pageSize]);
+
   const columns = useMemo<ColumnsType<HolderItem>>(() => {
-    return getColumns();
-  }, []);
+    return getColumns(currentPage, pageSize, chain);
+  }, [chain, currentPage, pageSize]);
+
+  const pageChange = async (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const pageSizeChange = async (page, size) => {
+    setPageSize(size);
+    setCurrentPage(page);
+  };
+
   useEffect(() => {
-    searchChange(search);
-  }, [search]);
+    fetchHolderDataWrap();
+  }, [fetchHolderDataWrap]);
 
   return (
     <div>
@@ -69,6 +77,7 @@ export default function Holder(props: HolderProps) {
         isMobile={isMobile}
         rowKey="transactionHash"
         total={total}
+        options={pageSizeOption}
         pageSize={pageSize}
         pageNum={currentPage}
         pageChange={pageChange}

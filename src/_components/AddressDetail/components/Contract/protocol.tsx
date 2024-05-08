@@ -21,7 +21,7 @@ export default function Protocol({
   }),
 }) {
   const [full, setFull] = useState(false);
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const fullCode = () => {
     setFull(!full);
   };

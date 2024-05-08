@@ -33,7 +33,7 @@ export interface ITransfersRef {
 }
 
 const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInputChange }: ITransfersProps, ref) => {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(50);
   const [loading, setLoading] = useState<boolean>(false);

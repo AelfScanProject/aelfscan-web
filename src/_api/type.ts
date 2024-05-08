@@ -241,3 +241,12 @@ export interface ICollectionTransfersRequestParams extends RequestInit {
   orderBy?: string;
   sort?: string;
 }
+
+export interface ICollectionItemHoldersRequestParams extends RequestInit {
+  chainId: TChainID;
+  skipCount: number;
+  maxResultCount: number;
+  symbol: string;
+  orderBy?: string;
+  sort?: string;
+}

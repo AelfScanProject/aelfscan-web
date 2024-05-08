@@ -35,7 +35,7 @@ export default function OverView(props: OverViewProps) {
                 </span>
                 ITEMS
               </div>
-              <div className="des">{thousandsNumber(overview.items)}</div>
+              <div className="desc">{thousandsNumber(overview.items)}</div>
             </li>
             <li className="collection-overview-data-item">
               <div className="title">HOLDERS</div>
@@ -60,7 +60,7 @@ export default function OverView(props: OverViewProps) {
                 CONTRACT
               </div>
               <div className="desc item-center flex">
-                <IconFont className="mr-1 text-xs" type="Contract" />
+                <IconFont className="mr-1 text-sm" type="Contract" />
                 <ContractToken
                   address={overview.tokenContractAddress}
                   type={AddressType.address}

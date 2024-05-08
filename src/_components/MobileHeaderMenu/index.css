@@ -1,11 +1,12 @@
 .header-navbar-mobile-more {
   @apply w-8 h-8;
-  .anticon {
+
+  /* .anticon {
     @apply w-8 h-8 leading-8;
     svg {
       @apply w-8 h-8 leading-8;
     }
-  }
+  } */
 }
 .header-drawer-menu-root-wrapper {
   .explorer-drawer-content-wrapper {

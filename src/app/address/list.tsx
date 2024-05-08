@@ -30,7 +30,7 @@ export interface IResponseData {
 }
 
 export default function List({ SSRData }) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const disposeData = (data) => {
     return {
       total: data.total,

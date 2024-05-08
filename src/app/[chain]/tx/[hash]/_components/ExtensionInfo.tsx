@@ -11,7 +11,7 @@ import { ITransactionDetailData } from '@_api/type';
 import { useParams } from 'next/navigation';
 
 export default function ExtensionInfo({ data }: { data: ITransactionDetailData }) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const { chain } = useParams();
   const renderInfo = useMemo(() => {
     return [

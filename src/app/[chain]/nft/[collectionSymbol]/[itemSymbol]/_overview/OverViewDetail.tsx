@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { CollectionSymbol, ItemSymbol } from 'global';
 import { useEnvContext } from 'next-runtime-env';
+import { thousandsNumber } from '@_utils/formatter';
 
 export interface OverViewDetailProps {
   overview: ItemSymbolDetailOverview;
@@ -29,7 +30,7 @@ export default function OverViewDetail(props: OverViewDetailProps) {
           <span>Holders:</span>
         </div>
         <div className="nft-detail-item-right cursor-pointer text-link" onClick={onHolderClick}>
-          {overview.holders}
+          {thousandsNumber(overview.holders)}
         </div>
       </li>
       <li className="nft-detail-item">
@@ -110,9 +111,9 @@ export default function OverViewDetail(props: OverViewDetailProps) {
           <IconFont type="question-circle" />
           <span>Quantity:</span>
         </div>
-        <div className="nft-detail-item-right">{overview.quantity}</div>
+        <div className="nft-detail-item-right">{thousandsNumber(overview.quantity)}</div>
       </li>
-      {isMainNet && (
+      {isMainNet && overview.marketPlaces && (
         <li className="nft-detail-item">
           <div className="nft-detail-item-left">
             <IconFont type="question-circle" />
@@ -120,10 +121,10 @@ export default function OverViewDetail(props: OverViewDetailProps) {
           </div>
           <div className="nft-detail-item-right">
             <span className="flex">
-              <Image src={overview.marketPlaces.marketLogo} alt="" width={20} height={20} />
+              <Image src={overview.marketPlaces?.marketLogo} alt="" width={20} height={20} />
               <Link href={`eforest.finance/detail/buy/${params.collectionSymbol}/${params.itemSymbol}`}>
-                <Tooltip title={`view on ${overview.marketPlaces.marketName}`}>
-                  {overview.marketPlaces.marketName}
+                <Tooltip title={`view on ${overview.marketPlaces?.marketName}`}>
+                  {overview.marketPlaces?.marketName}
                 </Tooltip>
               </Link>
             </span>

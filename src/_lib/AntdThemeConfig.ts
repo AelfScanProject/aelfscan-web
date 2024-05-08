@@ -8,6 +8,7 @@ export const THEME_CONFIG: ThemeConfig = {
     colorPrimaryActive: '#155ABF',
     colorBorder: '#D0D0D0',
     colorPrimaryBorder: '#D0D0D0',
+    colorTextDisabled: '#D6D6D6',
   },
   components: {
     Descriptions: {

@@ -59,7 +59,7 @@ export default function NFTAssets({ SSRData = { total: 0, list: [] } }) {
     300,
     [searchText],
   );
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   return (
     <div className="asset-list">
       <div className="table-container p-4 pb-0">

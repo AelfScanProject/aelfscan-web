@@ -30,7 +30,7 @@ export default function ContractToken({
     </div>
   ) : (
     <div className="address">
-      <IconFont className="mr-1 text-xs" type="Contract" />
+      <IconFont className="mr-1 text-sm" type="Contract" />
       <EPTooltip
         title={
           <div>

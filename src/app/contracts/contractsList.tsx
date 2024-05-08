@@ -31,7 +31,7 @@ export interface IResponseData {
 }
 
 export default function List({ SSRData }) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
 
   const columns = useMemo<ColumnsType<ITableDataType>>(() => {
     return getColumns();

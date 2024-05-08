@@ -38,7 +38,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       render: (text) => {
         return (
           <div className="flex items-center">
-            <Link className="block w-[120px] truncate text-xs leading-5 text-link" href={`tx/${text}`}>
+            <Link className="block w-[120px] truncate text-link" href={`tx/${text}`}>
               {text}
             </Link>
           </div>
@@ -78,7 +78,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       dataIndex: 'timestamp',
       key: 'timestamp',
       render: (text) => {
-        return <div className="text-xs leading-5">{formatDate(text, timeFormat)}</div>;
+        return <div>{formatDate(text, timeFormat)}</div>;
       },
     },
     {

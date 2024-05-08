@@ -13,7 +13,7 @@ import { pageSizeOption } from '@_utils/contant';
 interface HoldersProps extends ITokenSearchProps {}
 
 export default function Holders({ search, onSearchChange, onSearchInputChange }: HoldersProps) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
 
   const { chain, tokenSymbol } = useParams();
 

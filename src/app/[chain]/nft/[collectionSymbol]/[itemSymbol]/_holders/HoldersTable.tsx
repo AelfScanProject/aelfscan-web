@@ -1,39 +1,56 @@
 'use client';
 import Table from '@_components/Table';
-import getColumns from './column';
-import { useMemo } from 'react';
+import getColumns from '../../_Detail/_holders/column';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
-import { HolderItem, ItemSymbolDetailHolders } from '../type';
-import { fetchHolderData } from '../mock';
-import { useMobileContext } from '@app/pageProvider';
-import useTableData from '@_hooks/useTable';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
-export interface HolderProps {
-  holder: ItemSymbolDetailHolders;
-}
-export default function Holder(props: HolderProps) {
-  const { isMobile } = useMobileAll();
-  const { holder } = props;
-  const disposeData = (data: ItemSymbolDetailHolders) => {
-    return {
-      total: data.total,
-      list: [...data.list],
-    };
-  };
-  const { loading, total, data, currentPage, pageSize, pageChange, pageSizeChange } = useTableData<
-    HolderItem,
-    ItemSymbolDetailHolders
-  >({
-    SSRData: disposeData(holder),
-    fetchData: fetchHolderData,
-    disposeData: disposeData,
-  });
-  const columns = useMemo<ColumnsType<HolderItem>>(() => {
-    return getColumns();
-  }, []);
+import { useMobileAll } from '@_hooks/useResponsive';
+import { fetchNFTItemHolders } from '@_api/fetchNFTS';
+import { getPageNumber } from '@_utils/formatter';
+import { TChainID } from '@_api/type';
+import { useParams } from 'next/navigation';
+import { pageSizeOption } from '@_utils/contant';
+import { HolderItem } from '../../_Detail/type';
 
-  const multiTitle = total > 100 && 'More than > 100 transactions found';
-  const multiTitleDesc = total > 100 && `Showing the last 500k records`;
+export default function Holder() {
+  const isMobile = useMobileAll();
+  const { itemSymbol, chain } = useParams();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(25);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(0);
+  const [data, setData] = useState<HolderItem[]>([]);
+  const fetchHolderDataWrap = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await fetchNFTItemHolders({
+        chainId: chain as TChainID,
+        skipCount: getPageNumber(currentPage, pageSize),
+        maxResultCount: pageSize,
+        symbol: itemSymbol as string,
+      });
+      setTotal(data.total);
+      setData(data.list);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  }, [chain, currentPage, itemSymbol, pageSize]);
+  const columns = useMemo<ColumnsType<HolderItem>>(() => {
+    return getColumns(currentPage, pageSize, chain);
+  }, [chain, currentPage, pageSize]);
+
+  const pageChange = async (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const pageSizeChange = async (page, size) => {
+    setPageSize(size);
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    fetchHolderDataWrap();
+  }, [fetchHolderDataWrap]);
 
   return (
     <div>
@@ -41,8 +58,8 @@ export default function Holder(props: HolderProps) {
         headerLeftNode={`A total of ${total} holders found`}
         headerTitle={{
           multi: {
-            title: multiTitle || '',
-            desc: multiTitleDesc || '',
+            title: '',
+            desc: '',
           },
         }}
         loading={loading}
@@ -51,6 +68,7 @@ export default function Holder(props: HolderProps) {
         isMobile={isMobile}
         rowKey="transactionHash"
         total={total}
+        options={pageSizeOption}
         pageSize={pageSize}
         pageNum={currentPage}
         pageChange={pageChange}
