@@ -13,7 +13,7 @@ import { getPageNumber } from '@_utils/formatter';
 
 export default function List({ SSRData, showHeader = true }) {
   console.log(SSRData, 'transactionSSRData');
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
 
   const { chain } = useParams();
   const fetchData = useCallback(

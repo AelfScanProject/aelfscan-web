@@ -16,7 +16,8 @@ export default function DetailContainer({
 }: {
   infoList: { label: string; value: React.ReactNode | string; tip?: React.ReactNode | string }[];
 }) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
+  console.log(isMobile, 'isMobile');
   return (
     <div className="wrap basic px-4">
       {infoList.map((item) => {
@@ -30,9 +31,9 @@ export default function DetailContainer({
                   <IconFont className="text-sm" style={{ marginRight: '4px' }} type="question-circle" />
                 </Tooltip>
               )}
-              <div className="label text-xs leading-5 text-base-200">{item.label} :</div>
+              <div className="label text-sm leading-[22px] text-base-200">{item.label} :</div>
             </div>
-            <div className="value flex-1 break-words text-xs leading-5 text-base-100">{item.value}</div>
+            <div className="value flex-1 text-sm leading-[22px] text-base-100">{item.value}</div>
           </div>
         );
       })}

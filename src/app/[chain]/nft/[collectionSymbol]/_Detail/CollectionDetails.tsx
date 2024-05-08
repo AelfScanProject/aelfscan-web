@@ -1,14 +1,10 @@
 'use client';
-import Image from 'next/image';
-import Link from 'next/link';
-import { ITabsProps } from 'aelf-design';
 import Overview from './_overview/OverView';
 import EPTabs, { EPTabsRef } from '@_components/EPTabs';
 import TransfersTable from './_transfers/Table';
 import HoldersTable from './_holders/HoldersTable';
 import Inventory from './_inventory/Inventory';
-import ItemHoldersTable from './_holders/HoldersTable';
-import { CollectionDetailData, CollectionTransfersData, URL_QUERY_KEY } from './type';
+import { CollectionDetailData, URL_QUERY_KEY } from './type';
 import { useEffect, useRef, useState } from 'react';
 
 export interface NFTDetailsProps {
@@ -32,6 +28,20 @@ const tabMap = {
   [TabKey.empty]: 'Transfers',
   [TabKey.inventory]: 'Inventory',
 };
+
+const unSearchItem = {
+  key: TabKey.balances,
+};
+const tabItems: { key: string }[] = [
+  {
+    key: TabKey.empty,
+  },
+  unSearchItem,
+  {
+    key: TabKey.inventory,
+  },
+];
+
 export default function NFTDetails(props: NFTDetailsProps) {
   const { overview } = props;
   console.log(overview, 'collection detail');
@@ -44,18 +54,6 @@ export default function NFTDetails(props: NFTDetailsProps) {
     setSearchVal(val);
   };
 
-  const unSearchItem = {
-    key: TabKey.balances,
-  };
-  const tabItems: { key: string }[] = [
-    {
-      key: TabKey.empty,
-    },
-    unSearchItem,
-    {
-      key: TabKey.inventory,
-    },
-  ];
   const [tabList, setTabList] = useState(tabItems);
   const handlePressEnter = (val) => {
     if (val.trim()) {

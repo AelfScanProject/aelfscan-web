@@ -11,6 +11,9 @@ import ExtensionInfo from './ExtensionInfo';
 import LogsContainer from '@_components/LogsContainer';
 import EPTabs from '@_components/EPTabs';
 import { ITransactionDetailData } from '@_api/type';
+import EPTooltip from '@_components/EPToolTip';
+import IconFont from '@_components/IconFont';
+
 export default function Detail({ SSRData }: { SSRData: ITransactionDetailData }) {
   console.log(SSRData, 'SSRData');
   const router = useRouter();
@@ -49,7 +52,17 @@ export default function Detail({ SSRData }: { SSRData: ITransactionDetailData })
           Logs<span className="ml-[2px]">({detailData.logEvents.length})</span>
         </div>
       ),
-      children: <LogsContainer Logs={detailData.logEvents} />,
+      children: (
+        <div>
+          <div className="px-4 py-2 text-sm leading-[22px] text-base-100">
+            <EPTooltip title="Transaction Receipt Event Logs" mode={'dark'}>
+              <IconFont className="text-sm" style={{ marginRight: '4px' }} type="question-circle" />
+            </EPTooltip>
+            Transaction Receipt Event Logs
+          </div>
+          <LogsContainer Logs={detailData.logEvents} />
+        </div>
+      ),
     },
   ];
 

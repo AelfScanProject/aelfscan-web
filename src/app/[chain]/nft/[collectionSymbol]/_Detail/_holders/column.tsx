@@ -7,20 +7,17 @@
  */
 import { ColumnsType } from 'antd/es/table';
 import { Address, HolderItem } from '../type';
-import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
-import Copy from '@_components/Copy';
-import Link from 'next/link';
-import IconFont from '@_components/IconFont';
-import { Tooltip } from 'antd';
+import ContractToken from '@_components/ContractToken';
+import { thousandsNumber } from '@_utils/formatter';
 
-export default function getColumns(): ColumnsType<HolderItem> {
+export default function getColumns(currentPage, pageSize, chain): ColumnsType<HolderItem> {
   return [
     {
       title: <span>#</span>,
       width: 144,
       dataIndex: '',
       key: 'rank',
-      render: (text, record, index) => <span>{index}</span>,
+      render: (text, record, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       dataIndex: 'address',
@@ -31,17 +28,11 @@ export default function getColumns(): ColumnsType<HolderItem> {
           <span>Address</span>
         </div>
       ),
-      render: (address: Address) => {
-        const { name } = address;
+      render: (data: Address) => {
+        const { name, addressType, address } = data;
         return (
           <div className="address flex items-center">
-            <IconFont className="mr-1 text-xs" type="Contract" />
-            <Tooltip title={addressFormat(name)} overlayClassName="table-item-tooltip-white">
-              <Link className="text-link" href={`/address/${addressFormat(name)}`}>
-                {addressFormat(hiddenAddress(name, 4, 4))}
-              </Link>
-            </Tooltip>
-            <Copy value={addressFormat(name)} />
+            <ContractToken name={name} type={addressType} address={address} chainId={chain} />
           </div>
         );
       },
@@ -51,14 +42,14 @@ export default function getColumns(): ColumnsType<HolderItem> {
       width: 384,
       dataIndex: 'quantity',
       key: 'quantity',
-      render: (quantity) => <span>{quantity}</span>,
+      render: (quantity) => <span>{thousandsNumber(quantity)}</span>,
     },
     {
       title: <span>Percentage</span>,
       width: 384,
       dataIndex: 'percentage',
       key: 'percentage',
-      render: (percentage) => <span>{percentage}</span>,
+      render: (percentage) => <span>{percentage}%</span>,
     },
   ];
 }

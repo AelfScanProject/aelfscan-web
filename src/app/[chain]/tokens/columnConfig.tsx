@@ -69,11 +69,11 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, chain, 
       render: (text, record) => {
         const { holderPercentChange24H } = record;
         return (
-          <div className="text-xs leading-5">
+          <div>
             <div>{text}</div>
             <div className={clsx(holderPercentChange24H >= 0 ? 'text-[#00A186]' : 'text-[#FF4D4F]')}>
               <EPTooltip title={getHolderPercentChange24h(record)} mode="dark">
-                {holderPercentChange24H}%
+                <span className="text-xs leading-5">{holderPercentChange24H}%</span>
               </EPTooltip>
             </div>
           </div>

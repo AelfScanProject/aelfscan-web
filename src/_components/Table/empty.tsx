@@ -27,7 +27,7 @@ export default function CommonEmpty({ type, desc, className, size = 'large' }: I
     const typesMap = {
       nodata: {
         src: tableEmptyImg,
-        desc: 'noData',
+        desc: 'There are no matching entries',
       },
       search: {
         src: TableEmptySearch,
@@ -45,7 +45,7 @@ export default function CommonEmpty({ type, desc, className, size = 'large' }: I
       curType = typesMap[type];
     }
     return (
-      <div className={clsx('empty-placeholder flex-col flex items-center justify-center', sizeStyle, className)}>
+      <div className={clsx('empty-placeholder flex flex-col items-center justify-center', sizeStyle, className)}>
         {curType.src && <Image alt="empty" src={curType.src} />}
         {curType.desc && <span className="mt-1">{desc || curType.desc}</span>}
       </div>

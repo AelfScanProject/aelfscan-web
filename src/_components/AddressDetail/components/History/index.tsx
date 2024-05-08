@@ -17,7 +17,7 @@ enum EventMapEnum {
 }
 export default function History({ SSRData = [], onTabClick }: { SSRData: IHistory[]; onTabClick: (string) => void }) {
   const [history, setHistory] = useState<IHistory[]>(SSRData);
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const router = useRouter();
   useEffectOnce(() => {
     async function getData() {

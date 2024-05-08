@@ -4,7 +4,7 @@ import { useMobileContext } from '@app/pageProvider';
 import clsx from 'clsx';
 import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
 export default function Contract() {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   return (
     <div className="contract-container">
       <div className={clsx(isMobile && 'flex-col', 'contract-header mx-4 flex border-b border-color-divider pb-4')}>

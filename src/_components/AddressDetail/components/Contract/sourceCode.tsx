@@ -6,12 +6,11 @@ import { handelCopy } from '@_utils/copy';
 import Download from '@_components/Download';
 import copy from 'copy-to-clipboard';
 import { useState } from 'react';
-import { useMobileContext } from '@app/pageProvider';
 import clsx from 'clsx';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
+import { useMobileAll } from '@_hooks/useResponsive';
 
 export default function SourceCode() {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const files = [
     {
       name: 'AllCalculateFeeCoefficients.cs',

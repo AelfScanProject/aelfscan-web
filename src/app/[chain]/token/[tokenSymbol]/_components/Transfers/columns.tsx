@@ -42,7 +42,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chain }): Col
           {record.status === TTransactionStatus.fail && <IconFont className="ml-1" type="question-circle-error" />}
           <EPTooltip title={text} mode="dark">
             <Link
-              className="block w-[120px] truncate text-xs leading-5 text-link"
+              className="block w-[120px] truncate text-link"
               href={`/${chain}/tx/${text}?blockHeight=${record.blockHeight}`}>
               {text}
             </Link>
@@ -78,7 +78,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chain }): Col
       dataIndex: 'blockTime',
       key: 'blockTime',
       render: (text) => {
-        return <div className="text-xs leading-5">{formatDate(text, timeFormat)}</div>;
+        return <div>{formatDate(text, timeFormat)}</div>;
       },
     },
     {

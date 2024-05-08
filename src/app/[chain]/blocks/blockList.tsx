@@ -35,7 +35,7 @@ export interface IBlocksData {
 
 export default function BlockList({ SSRData }) {
   console.log(SSRData, ' SSRData');
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
   const [loading, setLoading] = useState<boolean>(false);

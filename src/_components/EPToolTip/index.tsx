@@ -25,7 +25,7 @@ export default function EPTooltip({
   mode = 'dark',
   ...params
 }: IToolTip) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   return (
     <Tooltip
       overlayClassName={clsx(mode === 'light' ? 'tooltip-light' : 'tooltip-dark', className)}

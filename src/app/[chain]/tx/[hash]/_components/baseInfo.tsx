@@ -21,7 +21,7 @@ import { StatusEnum } from '@_types/status';
 import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
 
 export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const { chain } = useParams();
   const renderInfo = useMemo(() => {
     return [
@@ -29,7 +29,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         label: 'Transactions Hash',
         tip: 'A TxHash or transaction hash is a unique 64 character identifier that is generated whenever a transaction is executed.',
         value: (
-          <div>
+          <div className="break-all">
             {data.transactionId}
             <Copy value={data.transactionId} />
           </div>
@@ -84,9 +84,9 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         value: (
           <div className="flex flex-row items-center gap-1">
             <ContractToken
-              address={data.from.address}
-              name={data.from.name}
-              type={data.from.addressType}
+              address={data?.from?.address}
+              name={data?.from?.name}
+              type={data?.from?.addressType}
               chainId={chain as string}
             />
             {data.from.isManager && <Tag color="processing">Manager</Tag>}
@@ -101,9 +101,9 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
             {/* <ContractToken address="AELF.Contract.Token" /> */}
             {data.to.address ? (
               <ContractToken
-                address={data.to.address}
-                name={data.to.name}
-                type={data.to.addressType}
+                address={data?.to?.address}
+                name={data?.to?.name}
+                type={data?.to?.addressType}
                 chainId={chain as string}
               />
             ) : (
@@ -142,15 +142,27 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
             {data.tokenTransferreds.length > 0
               ? data.tokenTransferreds.map((tokenTransfer, idx) => {
                   return (
-                    <div key={idx} className={clsx(isMobile && 'flex-col !items-start', 'mb-4 flex items-center')}>
+                    <div
+                      key={idx}
+                      className={clsx(isMobile && 'flex-col !items-start gap-2', 'mb-4 flex items-center')}>
                       <div className="flex items-center">
                         <IconFont type="arrow" />
                         <span className="mx-1 text-base-200">From</span>
-                        <HashAddress size="small" address={tokenTransfer?.from?.address} preLen={8} endLen={8} />
+                        <ContractToken
+                          address={tokenTransfer?.from?.address}
+                          name={tokenTransfer?.from?.name}
+                          type={tokenTransfer?.from?.addressType}
+                          chainId={chain as string}
+                        />
                       </div>
                       <div className="flex items-center">
                         <span className="mx-1 text-base-200">To</span>
-                        <HashAddress size="small" address={tokenTransfer?.to?.address} preLen={8} endLen={8} />
+                        <ContractToken
+                          address={tokenTransfer?.to?.address}
+                          name={tokenTransfer?.to?.name}
+                          type={tokenTransfer?.to?.addressType}
+                          chainId={chain as string}
+                        />
                       </div>
                       <div className="flex items-center">
                         <span className="mx-1 text-base-200">For</span>
@@ -183,7 +195,10 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                   return (
                     <div
                       key={idx}
-                      className={clsx(isMobile && 'flex-col !items-start', 'nft-transferred mb-4 flex items-center')}>
+                      className={clsx(
+                        isMobile && 'flex-col !items-start gap-2',
+                        'nft-transferred mb-4 flex items-center',
+                      )}>
                       {/* <Image
                     className={clsx(isMobile && 'mb-2', 'rounded-lg bg-slate-200')}
                     src={nftsTransfer.imageUrl}
@@ -200,8 +215,19 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                         </div>
                         <div className="flex items-center">
                           <span className="mr-1 inline-block">From</span>
-                          <HashAddress size="small" address={nftsTransfer.from.address} preLen={8} endLen={8} />
+                          <ContractToken
+                            address={nftsTransfer?.from?.address}
+                            name={nftsTransfer?.from?.name}
+                            type={nftsTransfer?.from?.addressType}
+                            chainId={chain as string}
+                          />
                           <span className="mx-1 inline-block text-base-200">To</span>
+                          <ContractToken
+                            address={nftsTransfer?.to?.address}
+                            name={nftsTransfer?.to?.name}
+                            type={nftsTransfer?.to?.addressType}
+                            chainId={chain as string}
+                          />
                           <HashAddress size="small" address={nftsTransfer.to.address} preLen={8} endLen={8} />
                         </div>
                       </div>
@@ -236,6 +262,6 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         ),
       },
     ];
-  }, [data, isMobile]);
+  }, [data, isMobile, chain]);
   return <DetailContainer infoList={renderInfo} />;
 }

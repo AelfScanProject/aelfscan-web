@@ -17,7 +17,7 @@
   }
 
   &-explorer-change {
-    @apply cursor-pointer w-10 h-10 flex items-center justify-center rounded border border-[#BFBFBF] ml-2;
+    @apply hidden lg:flex cursor-pointer w-10 h-10 items-center justify-center rounded border border-[#BFBFBF] ml-2;
     .explorer-change-icon {
       @apply w-10 h-10 flex items-center justify-center rounded border ml-2;
     }

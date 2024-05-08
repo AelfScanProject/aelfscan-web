@@ -1,18 +1,16 @@
 import React, { ReactNode } from 'react';
-import { Card, SpinProps, Spin } from 'antd';
-// import './index.css';
-import { SortOrder } from 'antd/es/table/interface';
-import CommonEmpty from '@_components/Table/empty';
-import IconFont from '@_components/IconFont';
-import { Pagination, ITableProps } from 'aelf-design';
+import { Card, Spin } from 'antd';
+import './index.css';
+import { Pagination } from 'aelf-design';
 import EPSearch from '@_components/EPSearch';
 import clsx from 'clsx';
-import { ISearchProps } from 'aelf-design';
 import { isReactNode } from '@_utils/typeUtils';
 import { InventoryItem } from '../type';
 import { ITableSearch } from '@_components/Table';
-
-const { Meta } = Card;
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import EPTooltip from '@_components/EPToolTip';
+import { useMobileAll } from '@_hooks/useResponsive';
 
 export interface IHeaderTitleProps {
   single?: {
@@ -45,43 +43,53 @@ export interface Props {
 }
 
 export type EmptyType = 'nodata' | 'search' | 'internet';
-function emptyStatus({ emptyType, emptyText }) {
-  let type: EmptyType;
-  if (!emptyType) {
-    type = 'nodata';
-  } else if (emptyType === 'nodata' || emptyType === 'search' || emptyType === 'internet') {
-    type = emptyType;
-  } else if (typeof emptyType === 'function') {
-    return emptyType();
-  } else {
-    return emptyType;
-  }
-  return <CommonEmpty type={type} desc={emptyText} />;
-}
+
 interface NftCardListProps {
   list: InventoryItem[];
 }
 function NftCardList(props: NftCardListProps) {
+  const { chain, collectionSymbol } = useParams();
   const { list } = props;
   return (
-    <div className="collection-detail-inventory row-cols-mobile-1 row-cols-2   row-cols-md-4 row-cols-lg-4 row-cols-xl-6">
+    <div className="collection-detail-inventory">
       {list.map((itemObj, index) => {
         return (
           <div key={index} className="collection-detail-inventory-item">
-            <Card
-              hoverable
-              cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}>
-              <div>
-                <span>Symbol:</span>
-                <span>{itemObj.item.symbol}</span>
-              </div>
-              <div>
-                <span>Last Sale:</span>
-                <span>
-                  {itemObj.lastSalePriceInUsd}/{itemObj.lastSaleAmount}
-                </span>
-              </div>
-            </Card>
+            <Link href={`/${chain}/nft/${collectionSymbol}/${itemObj?.item?.symbol}`}>
+              <Card
+                hoverable
+                cover={
+                  <img
+                    alt="example"
+                    className="rounded object-cover"
+                    src={itemObj?.item?.imageUrl || 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png'}
+                  />
+                }>
+                <div>
+                  <span className="text-xs leading-5 text-base-200">Symbol:</span>
+                  <span className="ml-1 text-xs leading-5 text-base-100">{itemObj.item.symbol}</span>
+                </div>
+                <div className="item-center flex text-xs leading-5">
+                  <div className="w-[58px] text-base-200">Last Sale:</div>
+                  {itemObj.lastSaleAmount === -1 ? (
+                    <span className="text-base-100">N/A</span>
+                  ) : (
+                    <EPTooltip
+                      mode="dark"
+                      title={`Click to see transaction with last sale price of $${itemObj.lastSalePriceInUsd} (${itemObj.lastSaleAmount} ${itemObj.lastSaleAmountSymbol})`}>
+                      <Link
+                        className="inline-block truncate"
+                        href={`/${chain}/tx/${itemObj.lastTransactionId}?blockHeight=${itemObj.blockHeight}`}>
+                        <span className="mx-1">${itemObj.lastSalePriceInUsd}</span>
+                        <span>
+                          ({itemObj.lastSaleAmount} {itemObj.lastSaleAmountSymbol})
+                        </span>
+                      </Link>
+                    </EPTooltip>
+                  )}
+                </div>
+              </Card>
+            </Link>
           </div>
         );
       })}
@@ -100,7 +108,6 @@ function HeaderTitle(props: IHeaderTitleProps): ReactNode {
   } else {
     return (
       <div className="single align-center flex">
-        <IconFont className="text-xs" type="Rank" />
         <div className="total-tex ml-1 text-sm font-normal leading-22  text-base-100 ">{props.single?.title}</div>
       </div>
     );
@@ -110,7 +117,6 @@ function HeaderTitle(props: IHeaderTitleProps): ReactNode {
 export default function CardList({
   loading = false,
   pageNum,
-  isMobile,
   pageSize,
   defaultCurrent,
   total,
@@ -126,6 +132,7 @@ export default function CardList({
   dataSource,
   ...params
 }: Props) {
+  const isMobile = useMobileAll();
   return (
     <Spin spinning={loading}>
       <div className="ep-table rounded-lg bg-white shadow-table">

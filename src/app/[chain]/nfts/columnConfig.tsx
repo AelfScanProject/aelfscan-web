@@ -19,7 +19,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, sort, c
     },
     {
       title: 'Collection',
-      width: 448,
+      width: 548,
       dataIndex: 'nftCollection',
       key: 'nftCollection',
       render: (collection: IToken) => (
@@ -41,7 +41,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, sort, c
           </EPTooltip>
         </>
       ),
-      width: 448,
+      width: 348,
       dataIndex: 'items',
       key: 'items',
       render: (text) => thousandsNumber(text),

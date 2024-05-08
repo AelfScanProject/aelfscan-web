@@ -1,70 +1,70 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CardList from './CardList';
-import useTableData from '@_hooks/useTable';
-import { useMobileContext } from '@app/pageProvider';
-import { CollectionInventoryData, InventoryItem } from '../type';
-import { fetchInventoryList } from '../mock';
+import { InventoryItem } from '../type';
 import { useParams } from 'next/navigation';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
 import { ITableSearch } from '@_components/Table';
 import { NftCollectionPageParams } from 'global';
+import { fetchNFTInventory } from '@_api/fetchNFTS';
+import { TChainID } from '@_api/type';
 export interface InventoryProps {
   search?: string;
   topSearchProps?: ITableSearch;
 }
-const inventoryList: CollectionInventoryData = {
-  total: 0,
-  inventory: [],
-};
 
 export default function Inventory(props: InventoryProps) {
-  const { isMobile } = useMobileAll();
   const { collectionSymbol, chain } = useParams<NftCollectionPageParams>();
   const { topSearchProps, search } = props;
 
-  const disposeData = (data: CollectionInventoryData) => {
-    return {
-      total: data.total,
-      list: [...data.inventory],
-    };
-  };
-  const fetchInventoryListWrap = async ({ page, pageSize }) => {
-    console.log('fetchInventoryListWrap');
-    return fetchInventoryList({
-      chainId: chain, // 主链/侧链
-      skipCount: (page - 1) * pageSize,
-      maxResultCount: pageSize,
-      search: search ?? '',
-      collection: collectionSymbol,
-    });
-  };
-  const { loading, total, data, currentPage, pageSize, pageChange, pageSizeChange, searchChange } = useTableData<
-    InventoryItem,
-    CollectionInventoryData
-  >({
-    SSRData: disposeData(inventoryList),
-    fetchData: fetchInventoryListWrap,
-    disposeData: disposeData,
-    defaultSearch: search,
-  });
-  useEffect(() => {
-    searchChange(search);
-  }, [search]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(50);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(0);
+  const [data, setData] = useState<InventoryItem[]>([]);
 
+  const fetchInventoryListWrap = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetchNFTInventory({
+        chainId: chain as TChainID,
+        skipCount: (currentPage - 1) * pageSize,
+        maxResultCount: pageSize,
+        search: search ?? '',
+        collectionSymbol: collectionSymbol,
+      });
+      setTotal(res.total);
+      setData(res.list);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  }, [chain, currentPage, pageSize, search, collectionSymbol]);
+
+  const pageChange = async (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const pageSizeChange = async (page, size) => {
+    setPageSize(size);
+    setCurrentPage(page);
+  };
+  useEffect(() => {
+    fetchInventoryListWrap();
+  }, [fetchInventoryListWrap]);
+
+  console.log(111);
   return (
     <div>
       <CardList
         total={total}
         headerTitle={{
           single: {
-            title: `A total of ${2000} records found`,
+            title: `A total of ${total} records found`,
           },
         }}
         showTopSearch={true}
         topSearchProps={topSearchProps}
         loading={loading}
         dataSource={data}
-        isMobile={isMobile}
         pageSize={pageSize}
         pageNum={currentPage}
         pageChange={pageChange}

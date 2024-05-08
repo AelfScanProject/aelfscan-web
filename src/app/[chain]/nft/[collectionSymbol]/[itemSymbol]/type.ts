@@ -7,6 +7,9 @@
 //   amount: string;
 //   from: string;
 //   to: string;
+
+import { IToken } from '@_types/common';
+
 // }
 interface Collection {
   name: string;
@@ -59,8 +62,8 @@ export interface ItemSymbolDetailHolders {
   list: HolderItem[];
 }
 export interface ItemSymbolDetailOverview {
-  nftCollection: Collection;
-  item: Collection;
+  nftCollection: IToken;
+  item: IToken;
   holders: number;
   owner: string[];
   issuer: string[];
@@ -69,12 +72,10 @@ export interface ItemSymbolDetailOverview {
   marketPlaces: MarketPlace;
   isSeed: boolean;
   symbolToCreate: string;
-  expires: string;
+  expireTime: string;
   properties: {
     total: number;
     list: PropertyItem[];
   };
   description: string;
-  // activity: ;
-  // holders: ;
 }
