@@ -30,7 +30,7 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
                 <IconFont className="text-xs" type="question-circle" />
               </EPTooltip>
             )}
-            <Text size="mini" style={{ color: '#858585' }}>
+            <Text size="small" style={{ color: '#858585' }}>
               {label}
             </Text>
           </Flex>
@@ -51,8 +51,8 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
   return (
     <Flex className="overview-card" vertical>
       <Flex className="mb-5">
-        <Text size="small" fontWeight={FontWeightEnum.Bold}>
-          Overview
+        <Text size="normal" fontWeight={FontWeightEnum.Medium}>
+          <span className="text-base-100">Overview</span>
         </Text>
       </Flex>
       <Flex vertical={isMobile} gap={isMobile ? 8 : 0}>

@@ -63,7 +63,7 @@ export default function BaseInfo({ data, tabChange }) {
         tip: 'The date and time at which the block is produced.',
         value: (
           <div className="value-timestamp">
-            <IconFont className="mr-1 !text-xs !leading-5" type="Time" />
+            <IconFont className="mr-1 !text-sm !leading-[22px]" type="Time" />
             <span>
               {formatDate(data.timestamp, 'age')}({dayjs.unix(data.timestamp).format('MMM-DD-YYYY hh:mm:ss Z')})
             </span>
@@ -74,7 +74,7 @@ export default function BaseInfo({ data, tabChange }) {
         label: 'Transactions ',
         tip: 'The number of transactions in the block.',
         value: (
-          <div className="text-xs leading-5">
+          <div>
             <span
               className=" cursor-pointer text-link"
               onClick={() => {
@@ -89,7 +89,7 @@ export default function BaseInfo({ data, tabChange }) {
       {
         label: 'Chain ID ',
         tip: 'The chain on which the block is produced.',
-        value: <div className="text-xs leading-5">{data.chainId}</div>,
+        value: <div>{data.chainId}</div>,
       },
       {
         label: 'divider1',
@@ -99,7 +99,7 @@ export default function BaseInfo({ data, tabChange }) {
         label: 'Producer ',
         tip: 'The producer of the block.',
         value: (
-          <div className="text-xs leading-5">
+          <div>
             <span className="text-link">
               {data.producer.name ? data.producer.name : addressFormat(data.producer.address, chain as string)}
             </span>
@@ -112,7 +112,7 @@ export default function BaseInfo({ data, tabChange }) {
         label: 'Block Reward ',
         tip: 'The block reward given by aelf network, unaffected by the specific transaction.',
         value: (
-          <div className="flex items-center text-xs leading-5">
+          <div className="flex items-center ">
             <span className="mr-1">{addSymbol(divDecimals(data.reward.elfReward))}</span>
             {data.reward.usdReward && <DollarCurrency price={data.reward.usdReward} />}
           </div>
@@ -131,7 +131,7 @@ export default function BaseInfo({ data, tabChange }) {
         label: 'Burnt Fees ',
         tip: 'Each transaction will burn 10% of its Size Fee.',
         value: (
-          <div className="flex items-center text-xs leading-5">
+          <div className="flex items-center text-sm leading-[22px]">
             <span className="mr-1">{addSymbol(divDecimals(data.burntFee.elfFee))}</span>
             {data.burntFee.usdFee && <DollarCurrency price={data.burntFee.usdFee} />}
           </div>

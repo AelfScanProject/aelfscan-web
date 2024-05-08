@@ -1,10 +1,10 @@
-import { MenuOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@aelf-design/icons';
 import IconFont from '@_components/IconFont';
 import { MenuItem, NetworkItem } from '@_types';
 import { Drawer, Menu, MenuProps } from 'antd';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import './index.css';
 import { useAppDispatch, useAppSelector } from '@_store';
 import { setDefaultChain } from '@_store/features/chainIdSlice';
@@ -85,7 +85,12 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
 
   return (
     <div className={`header-navbar-mobile-more ${isMainNet ? 'header-navbar-main-mobile-more' : ''}`}>
-      <IconFont type={isMainNet ? 'moremainnet' : 'moretestnet'} onClick={() => toggleMenu()} />
+      {/* <IconFont type={isMainNet ? 'moremainnet' : 'moretestnet'} onClick={() => toggleMenu()} /> */}
+      <div
+        className="item-center border-1 flex size-8 justify-center rounded border border-[#444F70] bg-[#222F55]"
+        onClick={() => toggleMenu()}>
+        <MenuOutlined color="#fff" hoverColor="#fff" activeColor="#fff" style={{ fontSize: '20px' }} />
+      </div>
       {showMobileMenu && (
         <Drawer
           open={showMobileMenu}

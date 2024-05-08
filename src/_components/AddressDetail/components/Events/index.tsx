@@ -72,7 +72,7 @@ export default function Events({ SSRData = { total: 0, list: [] } }) {
     [searchText],
   );
 
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
 
   return (
     <div className="event-container">

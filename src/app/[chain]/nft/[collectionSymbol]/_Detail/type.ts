@@ -69,11 +69,12 @@ export interface HolderItem {
   address: Address;
   quantity: string;
   percentage: string;
+  value: number;
 }
 
 export interface CollectionHoldersData {
   total: number;
-  holders: HolderItem[];
+  list: HolderItem[];
 }
 
 export interface CollectionHoldersApiResponse {
@@ -82,22 +83,18 @@ export interface CollectionHoldersApiResponse {
   data: CollectionHoldersData;
 }
 
-// wqw
-export interface InventorySymbol {
-  symbol: string;
-  name: string;
-  imageUrl: string;
-}
 export interface InventoryItem {
-  item: InventorySymbol;
+  item: IToken;
   lastSalePriceInUsd: number;
   lastSaleAmount: number;
-  timestamp: string;
-  transactionHash: string;
+  lastTransactionId: string;
+  lastSaleAmountSymbol: string;
+  blockHeight: number;
 }
 export interface CollectionInventoryData {
   total: number;
-  inventory: InventoryItem[];
+  isAddress: boolean;
+  list: InventoryItem[];
 }
 
 export interface CollectionInventoryApiResponse {

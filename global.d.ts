@@ -6,7 +6,7 @@ type HashParams = {
 };
 
 type ChainId = {
-  chain: string;
+  chain: TChainID;
 };
 
 type TokenSymbol = {

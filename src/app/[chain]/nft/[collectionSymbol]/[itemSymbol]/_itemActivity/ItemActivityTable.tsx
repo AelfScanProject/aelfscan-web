@@ -12,7 +12,7 @@ export interface ItemActivityTableProps {
   activeData: ItemSymbolDetailActivity;
 }
 export default function ItemActivityTable(props: ItemActivityTableProps) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const { activeData } = props;
   const disposeData = (data: ItemSymbolDetailActivity) => {
     return {

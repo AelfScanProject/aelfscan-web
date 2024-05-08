@@ -1,11 +1,4 @@
-import {
-  HolderItem,
-  IActivityTableData,
-  ItemSymbolDetailActivity,
-  ItemSymbolDetailHolders,
-  ItemSymbolDetailOverview,
-} from './type';
-import Logo from 'public/next.svg';
+import { HolderItem, IActivityTableData, ItemSymbolDetailActivity, ItemSymbolDetailHolders } from './type';
 
 const activeList: IActivityTableData[] = Array.from(new Array(100).keys()).map((item) => {
   return {
@@ -65,59 +58,4 @@ async function fetchHolderData({ page, pageSize }): Promise<ItemSymbolDetailHold
     list: holderList.slice((page - 1) * pageSize, page * pageSize),
   };
 }
-const overview: ItemSymbolDetailOverview = {
-  nftCollection: {
-    name: 'string',
-    imageUrl: Logo,
-    symbol: 'string',
-  },
-  item: {
-    name: 'string',
-    imageUrl: Logo,
-    symbol: 'string',
-  },
-  owner: [
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-  ],
-  holders: 100,
-  issuer: [
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-    'address1address1address1address1',
-  ],
-  tokenSymbol: 'string',
-  quantity: 100,
-  marketPlaces: {
-    marketName: 'name',
-    marketLogo: Logo,
-    marketUrl: '',
-  },
-  isSeed: false,
-  symbolToCreate: 'string',
-  expires: 'string',
-  properties: {
-    total: 100,
-    list: [
-      {
-        title: '123',
-        value: '123',
-      },
-    ],
-  },
-  description:
-    'Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is a collaborative.Into the Metaverse is',
-};
-const fetchOverviewData = async (): Promise<ItemSymbolDetailOverview> => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return overview;
-};
-export { activeList, overview, holderList, fetchActiveData, fetchHolderData, fetchOverviewData };
+export { activeList, holderList, fetchActiveData, fetchHolderData };

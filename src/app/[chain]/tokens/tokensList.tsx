@@ -18,7 +18,7 @@ interface TokensListProps {
 
 export default function TokensList({ SSRData }: TokensListProps) {
   console.log(SSRData, 'tokenSSRData');
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(50);
   const [loading, setLoading] = useState<boolean>(false);

@@ -160,7 +160,7 @@ export default function AddressDetail({
     },
   ];
 
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   return (
     <div className="address-detail">
       <div className="address-header">

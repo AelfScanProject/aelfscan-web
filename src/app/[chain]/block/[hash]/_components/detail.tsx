@@ -25,7 +25,7 @@ import { useParams } from 'next/navigation';
 import { useEffectOnce } from 'react-use';
 
 export default function Detail({ SSRData }) {
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
   const [detailData] = useState<IBlocksDetailData>(SSRData);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -115,7 +115,7 @@ export default function Detail({ SSRData }) {
   return (
     <div className={clsx('token-detail-container')}>
       <HeadTitle content="Blocks">
-        <span className="ml-2 block text-xs leading-5 text-base-200">#{detailData?.blockHeight}</span>
+        <span className="ml-2 block text-sm leading-[22px] text-base-200">#{detailData?.blockHeight}</span>
       </HeadTitle>
 
       <div className="detail-table">

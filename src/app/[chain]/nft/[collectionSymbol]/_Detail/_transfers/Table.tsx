@@ -19,7 +19,7 @@ export interface ItemActivityTableProps {
 export default function ItemActivityTable(props: ItemActivityTableProps) {
   const { collectionSymbol, chain } = useParams<NftCollectionPageParams>();
   const { topSearchProps, search } = props;
-  const { isMobile } = useMobileAll();
+  const isMobile = useMobileAll();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(50);

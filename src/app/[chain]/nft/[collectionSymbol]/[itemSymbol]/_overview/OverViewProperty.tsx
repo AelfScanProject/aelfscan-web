@@ -11,7 +11,7 @@ export default function OverViewDetail(props: OverViewPropertyProps) {
   const { overview } = props;
   return (
     <ul className="nft-detail-ul nft-detail-block-wrap">
-      {overview.properties.list.map((item, index) => {
+      {overview.properties?.list.map((item, index) => {
         return (
           <li className="nft-detail-block" key={index}>
             <h1>{item.title}</h1>

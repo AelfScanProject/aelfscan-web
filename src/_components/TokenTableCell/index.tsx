@@ -18,13 +18,13 @@ export default function TokenCell({ token, children }: ITokenCellProps) {
   return (
     <Flex gap={4} align="center">
       {children}
-      <Text size="small" fontWeight={FontWeightEnum.Bold}>
+      <Text size="normal" fontWeight={FontWeightEnum.Medium}>
         <EPTooltip mode="dark" title={token?.name}>
-          {name}
+          <span className="text-[#000]">{name}</span>
         </EPTooltip>
       </Text>
       {symbol && (
-        <Text className="!text-[#858585]" size="small">
+        <Text className="!text-[#858585]" size="normal" fontWeight={FontWeightEnum.Medium}>
           <EPTooltip mode="dark" title={token?.symbol}>
             {`(${symbol})`}
           </EPTooltip>
