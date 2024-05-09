@@ -1,3 +1,4 @@
+import { IFromInfo, TransactionStatus } from '@_api/type';
 import { IToken } from '@_types/common';
 import { ISearchProps } from 'aelf-design';
 
@@ -25,24 +26,13 @@ export interface CollectionTransferItemProperty {
   imageUrl: string;
 }
 export interface CollectionTransfer {
-  transactionHash: string;
-  status: string;
+  transactionId: string;
+  status: TransactionStatus;
   method: string;
-  timestamp: string;
-  from: {
-    name: string;
-    address: string;
-    addressType: number;
-    isManager: boolean;
-    isProducer: boolean;
-  };
-  to: {
-    name: string;
-    address: string;
-    addressType: number;
-    isManager: boolean;
-    isProducer: boolean;
-  };
+  blockHeight: number;
+  blockTime: string;
+  from: IFromInfo;
+  to: IFromInfo;
   value: number;
   item: CollectionTransferItemProperty;
 }

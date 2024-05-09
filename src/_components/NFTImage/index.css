@@ -1,0 +1,10 @@
+.nft-default-img {
+  @apply relative;
+}
+.nft-default-img .explorer-image-placeholder {
+  background-color: #fff;
+
+  .explorer-skeleton-image .explorer-skeleton-image-svg {
+    @apply !mx-2;
+  }
+}
