@@ -4,16 +4,15 @@ import Overview from './_overview/OverView';
 import EPTabs, { EPTabsRef } from '@_components/EPTabs';
 import ItemActivityTable from './_itemActivity/ItemActivityTable';
 import ItemHoldersTable from './_holders/HoldersTable';
-import { ItemSymbolDetailActivity, ItemSymbolDetailOverview } from './type';
+import { ItemSymbolDetailOverview } from './type';
 import { useRef, useState } from 'react';
 
 export interface NFTDetailsProps {
-  activity: ItemSymbolDetailActivity;
   overview: ItemSymbolDetailOverview;
 }
 const holders = 'Holders';
 export default function NFTDetails(props: NFTDetailsProps) {
-  const { activity, overview } = props;
+  const { overview } = props;
   console.log(overview, 'overview');
   const tabRef = useRef<EPTabsRef>(null);
   const [selectKey, setSelectKey] = useState<string>('');
@@ -21,7 +20,7 @@ export default function NFTDetails(props: NFTDetailsProps) {
     {
       key: '',
       label: 'Item Activity',
-      children: <ItemActivityTable activeData={activity} />,
+      children: <ItemActivityTable />,
     },
     {
       key: holders,

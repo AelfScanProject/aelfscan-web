@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import EPTooltip from '@_components/EPToolTip';
 import { useMobileAll } from '@_hooks/useResponsive';
+import NFTImage from '@_components/NFTImage';
 
 export interface IHeaderTitleProps {
   single?: {
@@ -56,15 +57,7 @@ function NftCardList(props: NftCardListProps) {
         return (
           <div key={index} className="collection-detail-inventory-item">
             <Link href={`/${chain}/nft/${collectionSymbol}/${itemObj?.item?.symbol}`}>
-              <Card
-                hoverable
-                cover={
-                  <img
-                    alt="example"
-                    className="rounded object-cover"
-                    src={itemObj?.item?.imageUrl || 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png'}
-                  />
-                }>
+              <Card hoverable cover={<NFTImage className="rounded object-cover" src={itemObj?.item?.imageUrl} />}>
                 <div>
                   <span className="text-xs leading-5 text-base-200">Symbol:</span>
                   <span className="ml-1 text-xs leading-5 text-base-100">{itemObj.item.symbol}</span>

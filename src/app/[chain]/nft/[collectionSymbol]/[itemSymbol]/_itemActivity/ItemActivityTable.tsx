@@ -1,33 +1,44 @@
 'use client';
 import Table from '@_components/Table';
 import getColumns from './column';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
-import { IActivityTableData, ItemSymbolDetailActivity } from '../type';
-import { fetchActiveData } from '../mock';
-import { useMobileContext } from '@app/pageProvider';
-import useTableData from '@_hooks/useTable';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
-export interface ItemActivityTableProps {
-  activeData: ItemSymbolDetailActivity;
-}
-export default function ItemActivityTable(props: ItemActivityTableProps) {
+import { IActivityTableData } from '../type';
+import { useMobileAll } from '@_hooks/useResponsive';
+import { fetchNFTItemActivity } from '@_api/fetchNFTS';
+import { useParams } from 'next/navigation';
+import { getPageNumber } from '@_utils/formatter';
+import { TChainID } from '@_api/type';
+
+export default function ItemActivityTable() {
   const isMobile = useMobileAll();
-  const { activeData } = props;
-  const disposeData = (data: ItemSymbolDetailActivity) => {
-    return {
-      total: data.total,
-      list: [...data.list],
-    };
-  };
-  const { loading, total, data, currentPage, pageSize, pageChange, pageSizeChange } = useTableData<
-    IActivityTableData,
-    ItemSymbolDetailActivity
-  >({
-    SSRData: disposeData(activeData),
-    fetchData: fetchActiveData,
-    disposeData: disposeData,
-  });
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(25);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(0);
+  const [data, setData] = useState<IActivityTableData[]>([]);
+
+  const { chain, itemSymbol } = useParams<{
+    chain: TChainID;
+    itemSymbol: string;
+  }>();
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await fetchNFTItemActivity({
+        chainId: chain,
+        symbol: itemSymbol,
+        skipCount: getPageNumber(currentPage, pageSize),
+        maxResultCount: pageSize,
+      });
+      setData(data.list);
+      setTotal(data.total);
+    } finally {
+      setLoading(false);
+    }
+  }, [chain, currentPage, itemSymbol, pageSize]);
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const columns = useMemo<ColumnsType<IActivityTableData>>(() => {
     return getColumns({
@@ -35,11 +46,22 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
+      chainId: chain,
     });
-  }, [timeFormat]);
+  }, [chain, timeFormat]);
 
-  const multiTitle = total > 100 && 'More than > 100 transactions found';
-  const multiTitleDesc = total > 100 && `Showing the last 500k records`;
+  const pageChange = async (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const pageSizeChange = async (page, size) => {
+    setPageSize(size);
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <div>
@@ -47,15 +69,15 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
         headerLeftNode={`A total of ${total} records found`}
         headerTitle={{
           multi: {
-            title: multiTitle || '',
-            desc: multiTitleDesc || '',
+            title: '',
+            desc: '',
           },
         }}
         loading={loading}
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
-        rowKey="transactionHash"
+        rowKey="transactionId"
         total={total}
         pageSize={pageSize}
         pageNum={currentPage}
