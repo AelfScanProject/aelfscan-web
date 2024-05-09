@@ -66,7 +66,9 @@ export default function Holder() {
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
-        rowKey="transactionHash"
+        rowKey={(record) => {
+          return record.address.address;
+        }}
         total={total}
         options={pageSizeOption}
         pageSize={pageSize}

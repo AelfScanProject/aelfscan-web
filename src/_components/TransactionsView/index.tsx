@@ -23,13 +23,13 @@ export default function TransactionsView({ record }) {
         <div className="main">
           <div className="status mb-2">
             <div className="label">Status :</div>
-            <div className="value">
-              <Status status={record.status} />
-            </div>
+            <div className="value">{record.status && <Status status={record.status} />}</div>
           </div>
           <div className="fee">
             <div className="label">Transaction Fee :</div>
-            <div className="value text-xs leading-5 text-base-100">{addSymbol(divDecimals(record.transactionFee))}</div>
+            <div className="value text-xs leading-5 text-base-100">
+              {record.transactionFee ? addSymbol(divDecimals(record.transactionFee)) : '--'}
+            </div>
           </div>
         </div>
       </div>

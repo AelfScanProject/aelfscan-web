@@ -31,20 +31,21 @@ export interface Address {
   isProducer: boolean;
 }
 
-interface PropertyItem {
+export interface PropertyItem {
   title: string;
   value: string;
 }
 
 export interface IActivityTableData {
-  transactionHash: string;
+  transactionId: string;
   action: string;
-  timestamp: string;
+  blockTime: number;
   price: number;
-  amount: number;
+  priceSymbol: string;
+  quantity: number;
   from: Address;
   to: Address;
-  marketPlaces: MarketPlace;
+  blockHeight: number;
 }
 
 export interface HolderItem {
@@ -72,10 +73,7 @@ export interface ItemSymbolDetailOverview {
   marketPlaces: MarketPlace;
   isSeed: boolean;
   symbolToCreate: string;
-  expireTime: string;
-  properties: {
-    total: number;
-    list: PropertyItem[];
-  };
+  expireTime: number;
+  properties: PropertyItem[];
   description: string;
 }
