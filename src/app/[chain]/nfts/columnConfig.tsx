@@ -4,9 +4,9 @@ import TokenTableCell from '@_components/TokenTableCell';
 import { IToken, SortEnum } from '@_types/common';
 import { thousandsNumber } from '@_utils/formatter';
 import { ColumnsType } from 'antd/es/table';
-import Image from 'next/image';
 import { INFTsTableItem } from './type';
 import Link from 'next/link';
+import NFTImage from '@_components/NFTImage';
 
 export default function getColumns({ currentPage, pageSize, ChangeOrder, sort, chain }): ColumnsType<INFTsTableItem> {
   return [
@@ -26,7 +26,12 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, sort, c
         <Link href={`/${chain}/nft/${collection.symbol}`}>
           <TokenTableCell token={collection}>
             {collection.imageUrl && (
-              <Image className="rounded-lg" src={collection.imageUrl} width={40} height={40} alt="img"></Image>
+              <NFTImage
+                className="rounded-lg"
+                src={collection.imageUrl}
+                width="40px"
+                height="40px"
+                alt="img"></NFTImage>
             )}
           </TokenTableCell>
         </Link>
