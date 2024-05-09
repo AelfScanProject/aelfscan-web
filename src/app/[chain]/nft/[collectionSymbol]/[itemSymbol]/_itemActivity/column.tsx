@@ -15,36 +15,43 @@ import IconFont from '@_components/IconFont';
 import { Tooltip } from 'aelf-design';
 import ContractToken from '@_components/ContractToken';
 import { AddressType } from '@_types/common';
+import TransactionsView from '@_components/TransactionsView';
+import EPTooltip from '@_components/EPToolTip';
+import Market from '@_components/Market';
 
-export default function getColumns({ timeFormat, handleTimeChange }): ColumnsType<IActivityTableData> {
+export default function getColumns({ timeFormat, handleTimeChange, chainId }): ColumnsType<IActivityTableData> {
   return [
     {
-      title: <IconFont type="question-circle" className="flex size-full justify-center" />,
+      title: (
+        <EPTooltip title="See preview of the transaction details." mode="dark">
+          <IconFont className="ml-[6px] cursor-pointer text-xs" type="question-circle" />
+        </EPTooltip>
+      ),
       width: 40,
       dataIndex: '',
       key: 'view',
-      render: () => (
-        <div className="flex size-6 cursor-pointer items-center justify-center rounded border border-color-divider bg-white focus:bg-color-divider">
-          <IconFont type="view" />
-        </div>
-      ),
+      render: (record) => <TransactionsView record={record} />,
     },
     {
-      dataIndex: 'transactionHash',
+      dataIndex: 'transactionId',
       width: 224,
-      key: 'transactionHash',
+      key: 'transactionId',
       title: (
         <div>
           <span>Txn Hash</span>
-          <IconFont type="question-circle" className="ml-1" />
         </div>
       ),
-      render: (text) => {
+      render: (text, records) => {
         return (
           <div className="flex items-center">
-            <Link className="block w-[120px] truncate text-xs leading-5 text-link" href={`tx/${text}`}>
-              {text}
-            </Link>
+            <EPTooltip title={text} mode="dark">
+              <Link
+                className="block w-[120px] truncate text-link"
+                href={`/${chainId}/tx/${text}?blockHeight=${records.blockHeight}`}>
+                {text}
+              </Link>
+            </EPTooltip>
+            <Copy value={text}></Copy>
           </div>
         );
       },
@@ -59,8 +66,8 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
         </div>
       ),
       width: 224,
-      dataIndex: 'timestamp',
-      key: 'timestamp',
+      dataIndex: 'blockTime',
+      key: 'blockTime',
       render: (text) => {
         return <div className="text-xs leading-5">{formatDate(text, timeFormat)}</div>;
       },
@@ -70,26 +77,36 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       width: 112,
       dataIndex: 'action',
       key: 'action',
-      render: (text, record) => {
+      render: (text) => {
         return (
           <div>
             <span>{text}</span>
-            {record.action === 'Sale' && <IconFont type="view" />}
           </div>
         );
       },
     },
     {
+      title: '',
+      width: 50,
+      dataIndex: 'market',
+      key: 'market',
+      render: (text, record) => {
+        return <div>{record.action === 'Sale' && <Market />}</div>;
+      },
+    },
+    {
       title: 'Price',
-      width: 240,
+      width: 190,
       dataIndex: 'price',
       key: 'price',
       render: (text, record) => {
         return (
-          record.action === 'Sales' && (
+          record.action === 'Sale' && (
             <div>
-              <span>{text}</span>
-              <span>(0.2003ELF)</span>
+              {/* <span>{text}</span> */}
+              <span className="text-xs leading-5 text-base-200">
+                ({text} {record.priceSymbol})
+              </span>
             </div>
           )
         );
@@ -101,17 +118,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       width: 196,
       render: (from) => {
         const { address } = from;
-        return (
-          <div className="address flex items-center">
-            <Tooltip title={addressFormat(address)} overlayClassName="table-item-tooltip-white">
-              <Link className="text-link" href={`/address/${addressFormat(address)}`}>
-                {addressFormat(hiddenAddress(address, 4, 4))}
-              </Link>
-            </Tooltip>
-            <Copy value={addressFormat(address)} />
-            <div className="flex items-center"></div>
-          </div>
-        );
+        return <ContractToken name={address.name} address={address} type={AddressType.address} chainId={chainId} />;
       },
     },
     {
@@ -127,7 +134,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       // width: 196,
       render: (to) => {
         const { address } = to;
-        return <ContractToken address={address} type={AddressType.address} chainId="AELF" />;
+        return <ContractToken name={address.name} address={address} type={AddressType.address} chainId={chainId} />;
       },
     },
   ];

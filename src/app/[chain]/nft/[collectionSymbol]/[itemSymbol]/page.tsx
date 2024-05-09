@@ -9,7 +9,6 @@ import { notFound } from 'next/navigation';
 import './index.css';
 // import request from '@_api';
 import NFTDetails from './NFTDetails';
-import { fetchActiveData } from './mock';
 import { ChainId, CollectionSymbol, ItemSymbol } from 'global';
 import { fetchServerCollectionItemDetail } from '@_api/fetchNFTS';
 export default async function NFTDetailsPage({ params }: { params: ChainId & CollectionSymbol & ItemSymbol }) {
@@ -17,13 +16,12 @@ export default async function NFTDetailsPage({ params }: { params: ChainId & Col
     return notFound();
   }
   const { chain, itemSymbol } = params;
-  const [activity, overview] = await Promise.all([
-    fetchActiveData({ page: 1, pageSize: 10 }),
+  const [overview] = await Promise.all([
     fetchServerCollectionItemDetail({
       chainId: chain,
       symbol: itemSymbol,
     }),
   ]);
 
-  return <NFTDetails activity={activity} overview={overview} />;
+  return <NFTDetails overview={overview} />;
 }

@@ -13,7 +13,10 @@ import {
   CollectionInventoryData,
   CollectionTransfersData,
 } from '@app/[chain]/nft/[collectionSymbol]/_Detail/type';
-import { ItemSymbolDetailOverview } from '@app/[chain]/nft/[collectionSymbol]/[itemSymbol]/type';
+import {
+  ItemSymbolDetailActivity,
+  ItemSymbolDetailOverview,
+} from '@app/[chain]/nft/[collectionSymbol]/[itemSymbol]/type';
 
 const defaultTokenListData = {
   total: 0,
@@ -71,6 +74,16 @@ export async function fetchNFTHolders(params: ICollectionTransfersRequestParams)
 }
 export async function fetchNFTItemHolders(params: ICollectionItemHoldersRequestParams): Promise<CollectionHoldersData> {
   const result = await request.nfts.getNFTItemHolders({
+    params: params,
+  });
+  const data = result?.data || defaultTokenListData;
+  return data;
+}
+
+export async function fetchNFTItemActivity(
+  params: ICollectionItemHoldersRequestParams,
+): Promise<ItemSymbolDetailActivity> {
+  const result = await request.nfts.getNFTItemActivity({
     params: params,
   });
   const data = result?.data || defaultTokenListData;

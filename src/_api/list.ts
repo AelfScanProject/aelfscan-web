@@ -41,6 +41,7 @@ const NFT_API_List = {
   getNFTTransfers: `${BASE_API}/app/token/nft/transfers`,
   getNFTHolders: `${BASE_API}/app/token/nft/holders`,
   getNFTItemHolders: `${BASE_API}/app/token/nft/item-holders`,
+  getNFTItemActivity: `${BASE_API}/app/token/nft/item-activity`,
   getNFTInventory: `${BASE_API}/app/token/nft/inventory`,
 };
 

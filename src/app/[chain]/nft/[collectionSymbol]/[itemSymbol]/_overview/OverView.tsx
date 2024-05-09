@@ -1,17 +1,22 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import IconFont from '@_components/IconFont';
 import { Collapse, CollapseProps } from 'antd';
 import OverViewDetail from './OverViewDetail';
 import OverViewProperty from './OverViewProperty';
 import { ItemSymbolDetailOverview } from '../type';
+import NFTImage from '@_components/NFTImage';
+import { Typography } from 'antd';
+
+const { Paragraph } = Typography;
 
 export interface OverViewProps {
   overview: ItemSymbolDetailOverview;
   onHolderClick: () => void;
 }
+
 export default function OverView(props: OverViewProps) {
   const { overview, onHolderClick } = props;
+  const { description, properties } = overview;
   const collapseItems: CollapseProps['items'] = [
     {
       key: '1',
@@ -29,25 +34,27 @@ export default function OverView(props: OverViewProps) {
       ),
       children: <OverViewDetail overview={overview} onHolderClick={onHolderClick} />,
     },
-    // {
-    //   key: '2',
-    //   showArrow: false,
-    //   collapsible: overview.properties ? 'header' : 'disabled',
-    //   label: (
-    //     <div className="nft-detail-label">
-    //       <div className="nft-detail-label-left">
-    //         <IconFont type="box" />
-    //         <span>Properties &#40;{overview.properties?.total}&#41;</span>
-    //       </div>
-    //       <div className="nft-detail-label-right">
-    //         <IconFont type="Down" />
-    //       </div>
-    //     </div>
-    //   ),
-    //   children: <OverViewProperty overview={overview} />,
-    // },
   ];
-  if (overview.description) {
+  if (properties) {
+    collapseItems.push({
+      key: '2',
+      showArrow: false,
+      collapsible: properties ? 'header' : 'disabled',
+      label: (
+        <div className="nft-detail-label">
+          <div className="nft-detail-label-left">
+            <IconFont type="box" />
+            <span>Properties &#40;{properties?.length}&#41;</span>
+          </div>
+          <div className="nft-detail-label-right">
+            <IconFont type="Down" />
+          </div>
+        </div>
+      ),
+      children: <OverViewProperty properties={properties} />,
+    });
+  }
+  if (description) {
     collapseItems.push({
       key: '3',
       showArrow: false,
@@ -64,13 +71,7 @@ export default function OverView(props: OverViewProps) {
       ),
       children: (
         <div className="nft-detail-ul flex">
-          <input type="checkbox" id="exp" className="nft-detail-txt-checkbox peer" />
-          <div className="nft-detail-txt peer-checked:!line-clamp-none">
-            <label className="nft-detail-txt-more" htmlFor="exp">
-              See More
-            </label>
-            {overview.description}
-          </div>
+          <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>{description}</Paragraph>
         </div>
       ),
     });
@@ -78,21 +79,14 @@ export default function OverView(props: OverViewProps) {
   return (
     <div className="ntf-overview-wrap">
       <div className="nft-image-wrap">
-        {overview.item?.imageUrl && <Image src={overview.item?.imageUrl} alt="" className="nft-image" />}
+        <NFTImage className="nft-image" src={overview.item?.imageUrl} />
       </div>
       <div className="nft-detail-wrap">
         <div className="nft-title-wrap">
           <h1 className="nft-title">{overview.item?.name}</h1>
           <div className="nft-thumb">
             <div className="nft-thumb-image-wrap">
-              {overview.nftCollection?.imageUrl && (
-                <Image
-                  className="aspect-square w-full object-cover"
-                  fill
-                  src={overview.nftCollection?.imageUrl}
-                  alt=""
-                />
-              )}
+              <NFTImage className="aspect-square w-full object-cover" src={overview.nftCollection?.imageUrl} />
             </div>
             <Link href="/" className="text-link">
               {overview.nftCollection?.name}
