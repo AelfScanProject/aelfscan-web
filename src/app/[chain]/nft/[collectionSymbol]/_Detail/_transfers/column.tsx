@@ -1,18 +1,17 @@
-import { Button } from 'aelf-design';
 import { ColumnsType } from 'antd/es/table';
 import { CollectionTransfer, CollectionTransferItemProperty } from '../type';
-import { formatDate } from '@_utils/formatter';
-import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
+import { formatDate, thousandsNumber } from '@_utils/formatter';
 import Copy from '@_components/Copy';
 import Link from 'next/link';
 import IconFont from '@_components/IconFont';
-import { Tooltip } from 'aelf-design';
 import ContractToken from '@_components/ContractToken';
-import { AddressType } from '@_types/common';
 import TransactionsView from '@_components/TransactionsView';
 import EPTooltip from '@_components/EPToolTip';
+import { TransactionStatus } from '@_api/type';
+import Method from '@_components/Method';
+import NFTImage from '@_components/NFTImage';
 
-export default function getColumns({ timeFormat, handleTimeChange }): ColumnsType<CollectionTransfer> {
+export default function getColumns({ timeFormat, handleTimeChange, chainId }): ColumnsType<CollectionTransfer> {
   return [
     {
       title: (
@@ -20,27 +19,32 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
           <IconFont className="ml-[6px] cursor-pointer text-xs" type="question-circle" />
         </EPTooltip>
       ),
-      width: 56,
+      width: 72,
       dataIndex: '',
       key: 'view',
       render: (record) => <TransactionsView record={record} />,
     },
     {
-      dataIndex: 'transactionHash',
+      dataIndex: 'transactionId',
       width: 168,
-      key: 'transactionHash',
+      key: 'transactionId',
       title: (
         <div>
           <span>Txn Hash</span>
-          <IconFont type="question-circle" className="ml-1" />
         </div>
       ),
-      render: (text) => {
+      render: (text, records) => {
         return (
           <div className="flex items-center">
-            <Link className="block w-[120px] truncate text-link" href={`tx/${text}`}>
-              {text}
-            </Link>
+            {records.status === TransactionStatus.Failed && <IconFont className="mr-1" type="question-circle-error" />}
+            <EPTooltip title={text} mode="dark">
+              <Link
+                className="block w-[120px] truncate text-link"
+                href={`/${chainId}/tx/${text}?blockHeight=${records.blockHeight}`}>
+                {text}
+              </Link>
+            </EPTooltip>
+            <Copy value={text}></Copy>
           </div>
         );
       },
@@ -50,20 +54,14 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       width: 128,
       key: 'method',
       title: (
-        <div>
+        <div className="cursor-pointer font-medium">
           <span>Method</span>
-          <IconFont type="question-circle" className="ml-1" />
+          <EPTooltip title="Function executed based on input data. " mode="dark">
+            <IconFont className="ml-1 text-xs" type="question-circle" />
+          </EPTooltip>
         </div>
       ),
-      render: (text) => {
-        return (
-          <div className="flex items-center">
-            <Button className="method-button">
-              <span className="truncate">{text}</span>
-            </Button>
-          </div>
-        );
-      },
+      render: (text) => <Method text={text} tip={text} />,
     },
     {
       title: (
@@ -74,9 +72,9 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
           {timeFormat}
         </div>
       ),
-      width: 160,
-      dataIndex: 'timestamp',
-      key: 'timestamp',
+      width: 144,
+      dataIndex: 'blockTime',
+      key: 'blockTime',
       render: (text) => {
         return <div>{formatDate(text, timeFormat)}</div>;
       },
@@ -85,20 +83,9 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       dataIndex: 'from',
       title: 'From',
       width: 196,
-      render: (from) => {
-        const { address } = from;
-        const formatAddress = addressFormat(address);
-        return (
-          <div className="address flex items-center">
-            <Tooltip title={formatAddress} overlayClassName="table-item-tooltip-white">
-              <Link className="text-link" href={`/address/${formatAddress}`}>
-                {addressFormat(hiddenAddress(address, 4, 4))}
-              </Link>
-            </Tooltip>
-            <Copy value={formatAddress} />
-            <div className="flex items-center"></div>
-          </div>
-        );
+      render: (fromData) => {
+        const { address } = fromData;
+        return <ContractToken address={address} name={fromData.name} chainId={chainId} type={fromData.addressType} />;
       },
     },
     {
@@ -112,9 +99,9 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       dataIndex: 'to',
       title: 'To',
       width: 196,
-      render: (to) => {
-        const { address } = to;
-        return <ContractToken address={address} type={AddressType.address} chainId="AELF" />;
+      render: (toData) => {
+        const { address } = toData;
+        return <ContractToken address={address} name={toData.name} chainId={chainId} type={toData.addressType} />;
       },
     },
     {
@@ -122,7 +109,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       width: 192,
       dataIndex: 'value',
       key: 'value',
-      render: (text) => <span>{text}</span>,
+      render: (text) => <span>{thousandsNumber(text)}</span>,
     },
     {
       title: 'Item',
@@ -132,7 +119,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       render: (item: CollectionTransferItemProperty) => (
         <div className="collection-transfer-item">
           <div className="mr-[4px] size-[40px] rounded-lg">
-            <img src={item.imageUrl} alt="" />
+            <NFTImage width="40px" height="40px" src={item.imageUrl} />
           </div>
           <div>
             <div className="name h-[20px] w-[140px] truncate leading-[20px]">{item.name}</div>

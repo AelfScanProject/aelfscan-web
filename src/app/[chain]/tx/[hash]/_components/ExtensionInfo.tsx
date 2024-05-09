@@ -1,6 +1,6 @@
 import DetailContainer from '@_components/DetailContainer';
 import { useMemo } from 'react';
-import { divDecimals, numberFormatter } from '@_utils/formatter';
+import { divDecimals } from '@_utils/formatter';
 import DollarCurrencyRate from '@_components/DollarCurrencyRate';
 import Link from 'next/link';
 import CodeBlock from '@_components/CodeBlock';
@@ -29,7 +29,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
                         'flex items-center',
                         idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider',
                       )}>
-                      <span>{numberFormatter(transactionFee.amount + '')}</span>
+                      <span>{transactionFee.amount}</span>
                       <span>{transactionFee.symbol}</span>
                       <DollarCurrencyRate nowPrice={transactionFee.nowPrice} tradePrice={transactionFee.tradePrice} />
                     </div>
@@ -42,7 +42,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
       {
         label: 'Resources Fee ',
         tip: 'The amount of resource tokens paid to process the transaction.',
-        value: <span>{data.resourcesFee ? numberFormatter(data.resourcesFee) : '-'}</span>,
+        value: <span>{data.resourcesFee ? data.resourcesFee : '-'}</span>,
       },
       {
         label: 'divider1',
@@ -62,7 +62,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
                         'flex items-center',
                         idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider',
                       )}>
-                      <span>{divDecimals(burntFee.amount)}</span>
+                      <span>{burntFee.amount}</span>
                       <span>{burntFee.symbol}</span>
                       <DollarCurrencyRate nowPrice={burntFee.nowPrice} tradePrice={burntFee.tradePrice} />
                     </div>

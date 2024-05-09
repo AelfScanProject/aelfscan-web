@@ -8,11 +8,9 @@
 import { ColumnsType } from 'antd/es/table';
 import { IActivityTableData } from '../type';
 import { formatDate } from '@_utils/formatter';
-import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
 import Copy from '@_components/Copy';
 import Link from 'next/link';
 import IconFont from '@_components/IconFont';
-import { Tooltip } from 'aelf-design';
 import ContractToken from '@_components/ContractToken';
 import { AddressType } from '@_types/common';
 import TransactionsView from '@_components/TransactionsView';
@@ -103,7 +101,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
         return (
           record.action === 'Sale' && (
             <div>
-              {/* <span>{text}</span> */}
+              <span>${record.priceOfUsd}</span>
               <span className="text-xs leading-5 text-base-200">
                 ({text} {record.priceSymbol})
               </span>
