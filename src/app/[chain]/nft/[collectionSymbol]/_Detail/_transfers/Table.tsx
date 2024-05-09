@@ -3,12 +3,10 @@ import Table, { ITableSearch } from '@_components/Table';
 import getColumns from './column';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
-import { CollectionTransfersData, CollectionTransfer } from '../type';
-import { useMobileContext } from '@app/pageProvider';
-import useTableData from '@_hooks/useTable';
+import { CollectionTransfer } from '../type';
 import { useParams } from 'next/navigation';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
-import { NftCollectionPageParams, CollectionSymbol } from 'global';
+import { useMobileAll } from '@_hooks/useResponsive';
+import { NftCollectionPageParams } from 'global';
 import { getPageNumber } from '@_utils/formatter';
 import { fetchNFTTransfers } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
@@ -53,8 +51,9 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
+      chainId: chain,
     });
-  }, [timeFormat]);
+  }, [chain, timeFormat]);
 
   const pageChange = async (page: number) => {
     setCurrentPage(page);
@@ -83,7 +82,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
-        rowKey="transactionHash"
+        rowKey="transactionId"
         total={total}
         pageSize={pageSize}
         pageNum={currentPage}

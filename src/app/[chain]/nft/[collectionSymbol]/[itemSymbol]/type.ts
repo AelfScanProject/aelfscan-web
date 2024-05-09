@@ -41,6 +41,7 @@ export interface IActivityTableData {
   action: string;
   blockTime: number;
   price: number;
+  priceOfUsd: number;
   priceSymbol: string;
   quantity: number;
   from: Address;

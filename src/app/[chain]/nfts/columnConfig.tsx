@@ -25,14 +25,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, sort, c
       render: (collection: IToken) => (
         <Link href={`/${chain}/nft/${collection.symbol}`}>
           <TokenTableCell token={collection}>
-            {collection.imageUrl && (
-              <NFTImage
-                className="rounded-lg"
-                src={collection.imageUrl}
-                width="40px"
-                height="40px"
-                alt="img"></NFTImage>
-            )}
+            <NFTImage className="rounded-lg" src={collection.imageUrl} width="40px" height="40px" alt="img"></NFTImage>
           </TokenTableCell>
         </Link>
       ),
@@ -40,7 +33,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, sort, c
     {
       title: (
         <>
-          <span className="mr-1">Item</span>
+          <span className="mr-1">Items</span>
           <EPTooltip mode="dark" title="The total number of NFT items in the collection">
             <IconFont className="text-xs" type="question-circle" />
           </EPTooltip>
@@ -56,7 +49,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, sort, c
         <div className="flex cursor-pointer" onClick={ChangeOrder}>
           <IconFont className={`mr-1 text-xs ${sort === SortEnum.asc ? 'scale-y-[-1]' : ''}`} type="Rank" />
           <EPTooltip mode="dark" title="Sorted in descending order Click for ascending order">
-            <div className="text-link">Holder</div>
+            <div className="text-link">Holders</div>
           </EPTooltip>
         </div>
       ),

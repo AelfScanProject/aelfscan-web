@@ -57,7 +57,7 @@ export default function getColumns({
     },
     {
       title: (
-        <div className="cursor-pointer font-medium text-link">
+        <div className="cursor-pointer font-medium">
           <span>Method</span>
           <EPTooltip title="Function executed based on input data. " mode="dark">
             <IconFont className="ml-1 text-xs" type="question-circle" />
