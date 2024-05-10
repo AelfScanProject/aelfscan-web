@@ -13,23 +13,11 @@ import Link from 'next/link';
 import IconFont from '@_components/IconFont';
 import ContractToken from '@_components/ContractToken';
 import { AddressType } from '@_types/common';
-import TransactionsView from '@_components/TransactionsView';
 import EPTooltip from '@_components/EPToolTip';
 import Market from '@_components/Market';
 
 export default function getColumns({ timeFormat, handleTimeChange, chainId }): ColumnsType<IActivityTableData> {
   return [
-    {
-      title: (
-        <EPTooltip title="See preview of the transaction details." mode="dark">
-          <IconFont className="ml-[6px] cursor-pointer text-xs" type="question-circle" />
-        </EPTooltip>
-      ),
-      width: 40,
-      dataIndex: '',
-      key: 'view',
-      render: (record) => <TransactionsView record={record} />,
-    },
     {
       dataIndex: 'transactionId',
       width: 224,
@@ -85,7 +73,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
     },
     {
       title: '',
-      width: 50,
+      width: 90,
       dataIndex: 'market',
       key: 'market',
       render: (text, record) => {

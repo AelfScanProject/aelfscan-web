@@ -61,8 +61,8 @@ export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
               <div className="middle">
                 {isBlocks ? (
                   <>
-                    <span className="producer">
-                      Producer
+                    <span className="producer inline-block truncate">
+                      <span className="mr-1">Producer</span>
                       <EPTooltip title={ele.producerName} mode="dark" pointAtCenter={false}>
                         <Link href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
                           {ele.producerName
@@ -80,19 +80,21 @@ export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
                 ) : (
                   <>
                     <span className="from">
-                      From
+                      <span className="mr-1">From</span>
                       <ContractToken
                         address={ele?.from?.address}
                         showCopy={false}
-                        type={ele.from.addressType}
+                        type={ele.from?.addressType}
+                        name={ele.from?.name}
                         chainId={defaultChain as string}
                       />
                     </span>
                     <span className="to">
-                      To
+                      <span className="mr-1">To</span>
                       <ContractToken
                         address={ele.to?.address}
-                        type={AddressType.address}
+                        type={ele.to?.addressType}
+                        name={ele.to?.name}
                         showCopy={false}
                         chainId={defaultChain as string}
                       />
