@@ -20,7 +20,7 @@ type AntdMenuItem = Required<MenuProps>['items'][number];
 export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  const { chainArr } = useAppSelector((state) => state.getChainId);
+  const { chainArr, defaultChain } = useAppSelector((state) => state.getChainId);
   const toggleMenu = () => {
     setShowMobileMenu(!showMobileMenu);
   };
@@ -30,7 +30,6 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
   };
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
-
   const pathname = usePathname();
   const secondSlashIndex = pathname.slice(1).indexOf('/');
   const [current, setCurrent] = useState(secondSlashIndex === -1 ? pathname : getPathnameFirstSlash(pathname));
@@ -46,7 +45,7 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
   const jump = (url) => {
     window.history.pushState(null, '', url);
     window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
-    router.replace(url);
+    router.replace(`/${defaultChain}${url}`);
   };
   const convertMenuItems = (list) => {
     return list?.map((ele) => {

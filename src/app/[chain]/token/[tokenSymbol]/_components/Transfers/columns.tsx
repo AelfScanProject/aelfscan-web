@@ -21,7 +21,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chain }): Col
       width: 72,
       dataIndex: '',
       key: 'view',
-      render: (record) => <TransactionsView record={record} />,
+      render: (record) => <TransactionsView record={record} custom={true} />,
     },
     {
       title: (
