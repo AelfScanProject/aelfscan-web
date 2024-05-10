@@ -33,7 +33,7 @@ export default function DetailContainer({
               )}
               <div className="label text-sm leading-[22px] text-base-200">{item.label} :</div>
             </div>
-            <div className="value flex-1 text-sm leading-[22px] text-base-100">{item.value}</div>
+            <div className="value flex-1 break-all text-sm leading-[22px] text-base-100">{item.value}</div>
           </div>
         );
       })}

@@ -22,7 +22,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       width: 72,
       dataIndex: '',
       key: 'view',
-      render: (record) => <TransactionsView record={record} />,
+      render: (record) => <TransactionsView record={record} custom={true} />,
     },
     {
       dataIndex: 'transactionId',

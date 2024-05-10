@@ -5,8 +5,9 @@ import Link from 'next/link';
 import Status from '@_components/TransactionsStatus';
 import { addSymbol, divDecimals } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
-export default function TransactionsView({ record }) {
+export default function TransactionsView({ record, custom = false }) {
   const { chain } = useParams();
+  const transactionFee = custom && record.transactionFeeList.length ? record.transactionFeeList[0] : {};
   const PreviewCard = () => {
     return (
       <div className="preview-view">
@@ -28,7 +29,15 @@ export default function TransactionsView({ record }) {
           <div className="fee">
             <div className="label">Transaction Fee :</div>
             <div className="value text-xs leading-5 text-base-100">
-              {record.transactionFee ? addSymbol(divDecimals(record.transactionFee)) : '--'}
+              {!custom ? (
+                <span>{record.transactionFee ? addSymbol(divDecimals(record.transactionFee)) : '--'}</span>
+              ) : (
+                <span>
+                  {typeof transactionFee.amount === 'number'
+                    ? `${transactionFee.amount} ${transactionFee.symbol} `
+                    : '--'}
+                </span>
+              )}
             </div>
           </div>
         </div>

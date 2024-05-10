@@ -29,9 +29,6 @@
         @apply flex flex-wrap flex-col justify-center w-[203px];
         .producer {
           @apply text-[14px] font-[400] leading-[22px] w-full overflow-hidden text-ellipsis whitespace-nowrap;
-          a {
-            @apply text-link ml-2;
-          }
         }
         .txns {
           @apply text-[14px] font-[400] leading-[22px] text-base-200;
@@ -45,9 +42,6 @@
         .from,
         .to {
           @apply text-[14px] font-[400] leading-[22px] text-base-100 flex;
-          a {
-            @apply ml-2 text-link w-[134px] inline-block;
-          }
         }
       }
       .right {

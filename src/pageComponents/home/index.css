@@ -12,9 +12,13 @@
       @apply w-[50%] flex-1;
     }
     &-mobile {
-      @apply mx-3 flex flex-wrap;
+      @apply px-3 box-border flex flex-col flex-wrap;
       > .home-latest {
         @apply w-full;
+      }
+
+      .producer {
+        @apply !min-w-[200px] !max-w-[300px];
       }
     }
   }
