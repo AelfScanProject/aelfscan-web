@@ -45,6 +45,13 @@ const NFT_API_List = {
   getNFTInventory: `${BASE_API}/app/token/nft/inventory`,
 };
 
+const ADDRESS_API_LIST = {
+  getContractList: `${BASE_API}/app/address/contracts`,
+  getServerContractList: `${SERVER_BASE_API}/app/address/contracts`,
+  getTopAccounts: `${BASE_API}/app/address/accounts`,
+  getServerTopAccounts: `${SERVER_BASE_API}/app/address/accounts`,
+};
+
 const Common_API_List = {
   getPrice: '',
 };
@@ -64,6 +71,7 @@ export const API_List = {
   cms: CMS_API_List,
   token: Token_API_List,
   nfts: NFT_API_List,
+  address: ADDRESS_API_LIST,
 };
 
 type REQUEST_FUNCTION = (opt?: RequestWithParams) => Promise<any>;

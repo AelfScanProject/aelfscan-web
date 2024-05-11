@@ -12,10 +12,9 @@ import getColumns from './columnConfig';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { IBlocksResponse, IBlocksResponseItem } from '@_api/type';
+import { IBlocksResponse, IBlocksResponseItem, TChainID } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
 import { fetchBlocks } from '@_api/fetchBlocks';
-import { useAppSelector } from '@_store';
 import { useParams } from 'next/navigation';
 import { Spin } from 'antd';
 import { reloadBlockListData } from '@/app/actions';
@@ -41,12 +40,11 @@ export default function BlockList({ SSRData }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<IBlocksResponseItem[]>(SSRData.blocks);
-  const { defaultChain } = useAppSelector((state) => state.getChainId);
-  const { chain } = useParams();
+  const { chain } = useParams<{ chain: TChainID }>();
   const fetchData = useCallback(
     async (page, size) => {
       const params = {
-        chainId: defaultChain || 'AELF',
+        chainId: chain || 'AELF',
         skipCount: getPageNumber(page, size),
         maxResultCount: size,
       };
@@ -60,7 +58,7 @@ export default function BlockList({ SSRData }) {
       }
       setLoading(false);
     },
-    [defaultChain],
+    [chain],
   );
 
   const [timeFormat, setTimeFormat] = useState<string>('Age');

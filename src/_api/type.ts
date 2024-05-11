@@ -1,5 +1,5 @@
 import { ILogsProps } from '@_components/LogsContainer/type';
-import { SortEnum } from '@_types/common';
+import { AddressType, SortEnum } from '@_types/common';
 
 export type TChainID = 'AELF' | 'tDVV' | 'tDVW';
 
@@ -249,4 +249,41 @@ export interface ICollectionItemHoldersRequestParams extends RequestInit {
   symbol: string;
   orderBy?: string;
   sort?: string;
+}
+
+// Contract
+export interface IContractRequestParams extends RequestInit {
+  chainId: TChainID;
+  skipCount: number;
+  maxResultCount: number;
+}
+export interface IContractDataItem {
+  address: string;
+  contractName: string;
+  type: string;
+  contractVersion: string;
+  version: string;
+  balance: number;
+  txns: number;
+  lastUpdateTime: string;
+}
+
+export interface IContractResponseData {
+  total: number;
+  list: IContractDataItem[];
+}
+
+// top accounts
+export interface IAccountsItem {
+  balance: string;
+  transactionCount: number;
+  percentage: number;
+  address: string;
+  addressType: AddressType;
+}
+
+export interface IAccountResponseData {
+  total: number;
+  totalBalance: number;
+  list: IAccountsItem[];
 }
