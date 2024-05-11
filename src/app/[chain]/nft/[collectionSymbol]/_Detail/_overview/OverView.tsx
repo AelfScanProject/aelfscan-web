@@ -81,12 +81,16 @@ export default function OverView(props: OverViewProps) {
                 FLOOR PRICE
               </div>
               <div className="desc">
-                <span>${overview.floorPriceOfUsd}</span>
-                <span className="ml-1 text-xs leading-5 text-base-200">
-                  {overview.floorPrice || overview.floorPrice === 0
-                    ? `(${addSymbol(divDecimals(overview.floorPrice))})`
-                    : '-'}
-                </span>
+                {overview.floorPrice !== -1 ? (
+                  <>
+                    <span>${overview.floorPriceOfUsd}</span>
+                    <span className="ml-1 text-xs leading-5 text-base-200">
+                      ({addSymbol(divDecimals(overview.floorPrice))})
+                    </span>
+                  </>
+                ) : (
+                  '--'
+                )}
               </div>
             </li>
           </ul>
