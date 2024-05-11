@@ -24,6 +24,7 @@ interface IProps {
   }[];
 }
 export default function Footer({ footerMenuList }: IProps) {
+  console.log(footerMenuList, 'footerMenuList');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
   const isMobile = useMobileAll();
