@@ -10,3 +10,6 @@ export default async function AccountsPage({ params }) {
   });
   return <AccountsList SSRData={data} />;
 }
+
+export const revalidate = 1;
+export const dynamic = 'force-dynamic';
