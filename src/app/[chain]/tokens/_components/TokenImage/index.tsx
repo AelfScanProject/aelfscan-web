@@ -14,7 +14,7 @@ export default function TokenImage({ token }: ITokenImageProps) {
       {token?.imageUrl ? (
         <NFTImage className="size-6 rounded-xl" src={token.imageUrl} alt="logo" width="24px" height="24px" />
       ) : (
-        <div className="flex size-6 items-center justify-center rounded-xl border-[1px] bg-white">
+        <div className="flex size-6 items-center justify-center rounded-xl border-[1px] border-solid border-[#D0D0D0] bg-white">
           <Text size="small" fontWeight={FontWeightEnum.Bold}>
             {token?.symbol?.[0] || '--'}
           </Text>

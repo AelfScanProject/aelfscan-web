@@ -10,11 +10,12 @@ const { Text } = Typography;
 interface ITokenCellProps extends React.PropsWithChildren {
   token: Partial<IToken>;
   showSymbol?: boolean;
+  length?: number;
 }
 
-export default function TokenCell({ token, children, showSymbol = true }: ITokenCellProps) {
-  const symbol = useMemo(() => stringToDotString(token?.symbol, 25) || '--', [token?.symbol]);
-  const name = useMemo(() => stringToDotString(token?.name, 25) || '--', [token?.name]);
+export default function TokenCell({ token, children, showSymbol = true, length = 25 }: ITokenCellProps) {
+  const symbol = useMemo(() => stringToDotString(token?.symbol, length) || '--', [length, token?.symbol]);
+  const name = useMemo(() => stringToDotString(token?.name, length) || '--', [length, token?.name]);
 
   return (
     <Flex gap={4} align="center">
