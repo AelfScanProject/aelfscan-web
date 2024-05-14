@@ -11,17 +11,24 @@ export default function ContractToken({
   type,
   chainId,
   showCopy = true,
+  showContractAddress = false,
 }: {
   address: string;
   name?: string;
   type: AddressType;
   chainId: string;
   showCopy?: boolean;
+  showContractAddress?: boolean;
 }) {
-  return type === AddressType.address ? (
+  return type === AddressType.address || showContractAddress ? (
     <div className="address flex items-center">
+      {showContractAddress && (
+        <EPTooltip mode="dark" title="Contract">
+          <IconFont className="mr-1 text-sm" type="Contract" />
+        </EPTooltip>
+      )}
       <EPTooltip pointAtCenter={false} title={addressFormat(address || '', chainId)} mode="dark">
-        <Link className="text-link" href={`/${chainId}/address/${addressFormat(address || '', chainId)}`}>
+        <Link className="text-link" href={`/${chainId}/address/${addressFormat(address || '', chainId)}/${type}`}>
           {addressFormat(hiddenAddress(address || '', 4, 4), chainId)}
         </Link>
       </EPTooltip>

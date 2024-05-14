@@ -65,11 +65,11 @@ export default function TokensList({ SSRData }: TokensListProps) {
   );
   const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
 
-  const pageChange = async (page: number) => {
+  const pageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const pageSizeChange = async (page, size) => {
+  const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
   };

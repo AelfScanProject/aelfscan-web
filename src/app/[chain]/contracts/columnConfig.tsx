@@ -15,10 +15,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
       key: 'address',
       render: (text) => (
         <div className="flex items-center">
-          <EPTooltip mode="dark" title="Contract">
-            <IconFont className="mr-1 text-sm" type="Contract" />
-          </EPTooltip>
-          <ContractToken address={text} type={AddressType.address} chainId={chain} />
+          <ContractToken showContractAddress address={text} type={AddressType.Contract} chainId={chain} />
         </div>
       ),
     },

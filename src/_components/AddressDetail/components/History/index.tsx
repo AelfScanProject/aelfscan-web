@@ -1,41 +1,48 @@
 import addressFormat from '@_utils/urlUtils';
 import { useState } from 'react';
 import { IHistory } from './type';
-import { formatDate, validateVersion } from '@_utils/formatter';
+import { formatDate, getAddress } from '@_utils/formatter';
 import './index.css';
 import { useEffectOnce } from 'react-use';
-import fetchData from './mock';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useMobileContext } from '@app/pageProvider';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
-enum EventMapEnum {
-  CodeUpdated = 'Code Updated',
-  AuthorChanged = 'Author Changed',
-  ContractDeployed = 'Contract Deployed',
-}
+import { useParams, useRouter } from 'next/navigation';
+import { useMobileAll } from '@_hooks/useResponsive';
+import { fetchContractHistory } from '@_api/fetchContact';
+import { TChainID } from '@_api/type';
+import { AddressType } from '@_types/common';
+import dayjs from 'dayjs';
+
 export default function History({ SSRData = [], onTabClick }: { SSRData: IHistory[]; onTabClick: (string) => void }) {
   const [history, setHistory] = useState<IHistory[]>(SSRData);
   const isMobile = useMobileAll();
   const router = useRouter();
+  const { chain, address } = useParams<{
+    chain: string;
+    address: string;
+  }>();
   useEffectOnce(() => {
     async function getData() {
-      const res = await fetchData();
-      setHistory(res);
+      const res = await fetchContractHistory({
+        chainId: chain as TChainID,
+        address: getAddress(address as string),
+      });
+      setHistory(res.record || []);
     }
     getData();
   });
   const StepDescription = (props) => {
-    const { address, author, codeHash, txId, version, updateTime, blockHeight, onTabClick } = props;
+    const { address, author, codeHash, transactionId, version, blockTime, blockHeight, onTabClick } = props;
+    console.log(blockTime, 'blockTime');
     return (
       <>
         <div className="description-item">
           <span className="label">Author: </span>
           <div
-            className="break-words text-xs leading-5 text-link"
+            className="break-all text-link"
             onClick={() => {
-              if (author !== address) router.push('`/address/${addressFormat(author)}#contract`');
+              if (author !== address)
+                router.push(`/${chain}/address/${addressFormat(author, chain)}/${AddressType.address}#contract`);
               onTabClick('contract');
             }}>
             {addressFormat(author)}
@@ -47,21 +54,21 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
         </div>
         <div className="description-item">
           <span className="label">Version: </span>
-          <div className="value">{validateVersion(version) ? version : '-'}</div>
+          <div className="value">{version ? version : '-'}</div>
         </div>
         <div className="description-item">
           <span className="label">Transaction Hash: </span>
-          <Link className="break-words text-xs leading-5 text-link" href={`/tx/${txId}`}>
-            {txId}
+          <Link className="break-words text-link" href={`/${chain}/tx/${transactionId}?blockHeight=${blockHeight}`}>
+            {transactionId}
           </Link>
         </div>
         <div className="description-item">
           <span className="label">Date Time : </span>
-          <div className="value">{formatDate(updateTime, 'Date Time (UTC)', 'YYYY-MM-DD HH:mm:ss A (UTC)')}</div>
+          <div className="value">{formatDate(dayjs(blockTime).unix().valueOf(), 'Date Time (UTC)')}</div>
         </div>
         <div className="description-item">
           <span className="label">Block: </span>
-          <Link className="break-words text-xs leading-5 text-link" href={`/block/${blockHeight}`}>
+          <Link className="break-words text-link" href={`/${chain}/block/${blockHeight}`}>
             {blockHeight}
           </Link>
         </div>
@@ -70,11 +77,11 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
   };
   const items = history?.map((v, index) => {
     return {
-      key: v.id,
+      key: v.transactionId,
       title: (
         <>
           <div className={clsx(index === 0 ? 'active-bot' : 'disabled-bot', 'history-bot')}></div>
-          <div className="header-title">{EventMapEnum[v.event]}</div>
+          <div className="header-title">{v.contractOperationType}</div>
         </>
       ),
       description: StepDescription({ ...v, isLast: index === 0, onTabClick }),

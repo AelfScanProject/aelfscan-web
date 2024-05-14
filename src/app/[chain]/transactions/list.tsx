@@ -58,12 +58,12 @@ export default function List({ SSRData, showHeader = true }) {
     return `Showing the last 500k records`;
   }, []);
 
-  const pageChange = async (page: number) => {
+  const pageChange = (page: number) => {
     setCurrentPage(page);
     fetchData(page, pageSize);
   };
 
-  const pageSizeChange = async (page, size) => {
+  const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
     fetchData(page, size);

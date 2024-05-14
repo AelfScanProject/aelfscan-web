@@ -1,5 +1,5 @@
 .transaction-view {
-  @apply border cursor-pointer bg-white rounded border-color-divider w-6 h-6 box-border flex justify-center items-center focus:!bg-color-divider;
+  @apply border border-solid cursor-pointer bg-white rounded border-color-divider w-6 h-6 box-border flex justify-center items-center focus:!bg-color-divider;
 }
 .transaction-view:focus {
   @apply !bg-color-divider;

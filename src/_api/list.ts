@@ -49,7 +49,12 @@ const ADDRESS_API_LIST = {
   getContractList: `${BASE_API}/app/address/contracts`,
   getServerContractList: `${SERVER_BASE_API}/app/address/contracts`,
   getTopAccounts: `${BASE_API}/app/address/accounts`,
+  getAccountTransfers: `${BASE_API}/app/address/transfers`,
+  getAccountsDetailTokens: `${BASE_API}/app/address/tokens`,
+  getAccountsDetailNFTAssets: `${BASE_API}/app/address/nft-assets`,
+  getContractHistory: `${BASE_API}/app/address/contract/history`,
   getServerTopAccounts: `${SERVER_BASE_API}/app/address/accounts`,
+  getServerAccountDetail: `${SERVER_BASE_API}/app/address/detail`,
 };
 
 const Common_API_List = {

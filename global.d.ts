@@ -1,8 +1,11 @@
 import { TChainID } from '@_api/type';
+import { AddressType } from '@_types/common';
 
 type HashParams = {
-  hash: string;
+  address: string;
   chain: TChainID;
+  hash: string;
+  addressType: AddressType;
 };
 
 type ChainId = {

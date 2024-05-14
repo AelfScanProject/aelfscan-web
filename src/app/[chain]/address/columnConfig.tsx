@@ -26,12 +26,12 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
       width: '394px',
       render: (text, record) => (
         <div className="address flex items-center">
-          {record.addressType === AddressType.Contract && (
-            <EPTooltip title="Contract" mode="light">
-              <IconFont className="mr-1" type="Contract" />
-            </EPTooltip>
-          )}
-          <ContractToken address={text} type={AddressType.address} chainId={chain} />
+          <ContractToken
+            showContractAddress={record.addressType === AddressType.Contract}
+            address={text}
+            type={record.addressType}
+            chainId={chain}
+          />
         </div>
       ),
     },
