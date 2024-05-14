@@ -110,8 +110,8 @@ export default function TableApp({
           showTopSearch ? 'py-4' : 'p-4',
           `ep-table-header-${isMobile ? 'mobile' : 'pc'}`,
         )}>
-        <div className="header-left">
-          {isReactNode(headerTitle) ? headerTitle : <HeaderTitle {...headerTitle} />}
+        <div className="header-left mr-4 flex flex-1 flex-col justify-between lg:flex-row lg:items-center">
+          <div>{isReactNode(headerTitle) ? headerTitle : <HeaderTitle {...headerTitle} />}</div>
           {headerLeftNode}
         </div>
         <div className="header-pagination">

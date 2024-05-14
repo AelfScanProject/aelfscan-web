@@ -287,3 +287,35 @@ export interface IAccountResponseData {
   totalBalance: number;
   list: IAccountsItem[];
 }
+
+// account detail
+
+export interface IAccountDetailRequestParams extends RequestInit {
+  chainId: TChainID;
+  address: string;
+  maxResultCount?: number;
+  addressType: AddressType;
+}
+
+export interface IAccountTokensRequestParams extends RequestInit {
+  chainId: TChainID;
+  address: string;
+  skipCount: number;
+  maxResultCount: number;
+  sort?: SortEnum;
+  orderBy?: string;
+  search?: string;
+}
+
+export interface IContractHistoryRequestParams extends RequestInit {
+  chainId: TChainID;
+  address: string;
+}
+
+export interface IAccountTransfersRequestParams extends RequestInit {
+  chainId: TChainID;
+  address: string;
+  tokenType: number;
+  skipCount: number;
+  maxResultCount: number;
+}

@@ -50,11 +50,11 @@ export default function ItemActivityTable() {
     });
   }, [chain, timeFormat]);
 
-  const pageChange = async (page: number) => {
+  const pageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const pageSizeChange = async (page, size) => {
+  const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
   };

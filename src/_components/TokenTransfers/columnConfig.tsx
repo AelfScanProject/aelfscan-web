@@ -8,7 +8,6 @@
 import { ColumnsType } from 'antd/es/table';
 import { TokenTransfersItemType } from '@_types/commonDetail';
 import { formatDate } from '@_utils/formatter';
-import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
 import Copy from '@_components/Copy';
 import Link from 'next/link';
 import IconFont from '@_components/IconFont';
@@ -17,36 +16,45 @@ import ContractToken from '@_components/ContractToken';
 import { numberFormatter } from '../../_utils/formatter';
 import './index.css';
 import EPTooltip from '@_components/EPToolTip';
-import { AddressType } from '@_types/common';
-enum Status {
-  Success = 'Success',
-  fail = 'Fail',
-}
-export default function getColumns({ timeFormat, columnType, handleTimeChange }): ColumnsType<TokenTransfersItemType> {
+import { TransactionStatus } from '@_api/type';
+import TransactionsView from '@_components/TransactionsView';
+
+export default function getColumns({
+  timeFormat,
+  columnType,
+  handleTimeChange,
+  address,
+}): ColumnsType<TokenTransfersItemType> {
   return [
     {
-      title: <IconFont className="ml-[6px] text-xs" type="question-circle" />,
+      title: (
+        <EPTooltip title="See preview of the transaction details." mode="dark">
+          <IconFont className="ml-[6px] cursor-pointer text-xs" type="question-circle" />
+        </EPTooltip>
+      ),
       width: 72,
       dataIndex: '',
       key: 'view',
-      render: () => (
-        <div className="flex size-6 cursor-pointer items-center justify-center rounded border border-color-divider bg-white focus:bg-color-divider">
-          <IconFont type="view" />
-        </div>
-      ),
+      render: (record) => <TransactionsView record={record} custom />,
     },
     {
-      dataIndex: 'transactionHash',
+      dataIndex: 'transactionId',
       width: 168,
-      key: 'transactionHash',
+      key: 'transactionId',
       title: 'Txn Hash',
       render: (text, records) => {
+        const { chainId } = records;
         return (
           <div className="flex items-center">
-            {records.status === Status.fail && <IconFont className="mr-1" type="question-circle-error" />}
-            <Link className="block w-[120px] truncate text-xs leading-5 text-link" href={`tx/${text}`}>
-              {text}
-            </Link>
+            {records.status === TransactionStatus.Failed && <IconFont className="mr-1" type="question-circle-error" />}
+            <EPTooltip title={text} mode="dark">
+              <Link
+                className="block w-[120px] truncate text-link"
+                href={`/${chainId}/tx/${text}?blockHeight=${records.blockHeight}`}>
+                {text}
+              </Link>
+            </EPTooltip>
+            <Copy value={text}></Copy>
           </div>
         );
       },
@@ -55,7 +63,9 @@ export default function getColumns({ timeFormat, columnType, handleTimeChange })
       title: (
         <div className="cursor-pointer font-medium">
           <span>Method</span>
-          <IconFont className="ml-1 text-xs" type="question-circle" />
+          <EPTooltip title="Function executed based on input data. " mode="dark">
+            <IconFont className="ml-1 text-xs" type="question-circle" />
+          </EPTooltip>
         </div>
       ),
       width: 128,
@@ -72,29 +82,22 @@ export default function getColumns({ timeFormat, columnType, handleTimeChange })
           {timeFormat}
         </div>
       ),
-      width: 144,
-      dataIndex: 'timestamp',
-      key: 'timestamp',
+      width: 164,
+      dataIndex: 'blockTime',
+      key: 'blockTime',
       render: (text) => {
-        return <div className="text-xs leading-5">{formatDate(text, timeFormat)}</div>;
+        return <div>{formatDate(text, timeFormat)}</div>;
       },
     },
     {
       dataIndex: 'from',
       title: 'From',
       width: 196,
-      render: (text) => {
-        const { address } = JSON.parse(text);
+      render: (fromData, record) => {
+        if (!fromData) return null;
+        const { address } = fromData;
         return (
-          <div className="address flex items-center">
-            <EPTooltip title={addressFormat(address)} mode="dark" pointAtCenter={false}>
-              <Link className="text-link" href={`/address/${addressFormat(address)}`}>
-                {addressFormat(hiddenAddress(address, 4, 4))}
-              </Link>
-            </EPTooltip>
-            <Copy value={addressFormat(address)} />
-            <div className="flex items-center"></div>
-          </div>
+          <ContractToken address={address} name={fromData.name} chainId={record.chainId} type={fromData.addressType} />
         );
       },
     },
@@ -103,10 +106,14 @@ export default function getColumns({ timeFormat, columnType, handleTimeChange })
       width: 52,
       dataIndex: 'transferStatus',
       key: 'transferStatus',
-      render: (text) => {
+      render: (text, record) => {
         return (
           <div className="in-out-container">
-            {text === 'in' ? <div className="in-container">In</div> : <div className="out-container">Out</div>}
+            {address === record.from?.address ? (
+              <div className="out-container">Out</div>
+            ) : (
+              <div className="in-container">In</div>
+            )}
           </div>
         );
       },
@@ -115,23 +122,26 @@ export default function getColumns({ timeFormat, columnType, handleTimeChange })
       dataIndex: 'to',
       title: 'To',
       width: 196,
-      render: (text) => {
-        const { address } = JSON.parse(text);
-        return <ContractToken address={address} type={AddressType.address} chainId="AELF" />;
+      render: (toData, record) => {
+        if (!toData) return null;
+        const { address } = toData;
+        return (
+          <ContractToken address={address} name={toData.name} chainId={record.chainId} type={toData.addressType} />
+        );
       },
     },
     {
       title: 'Amount',
-      width: 192,
-      key: 'amount',
-      dataIndex: 'amount',
+      width: 172,
+      key: 'quantity',
+      dataIndex: 'quantity',
       render: (text) => {
         return <span className="text-base-100">{numberFormatter(text, '')}</span>;
       },
     },
     {
       title: columnType === 'Token' ? 'Token' : 'Item',
-      width: 224,
+      width: 204,
       key: columnType === 'Token' ? 'token' : 'item',
       dataIndex: columnType === 'Token' ? 'token' : 'item',
       render: (text) => {

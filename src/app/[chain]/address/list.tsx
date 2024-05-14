@@ -59,12 +59,12 @@ export default function List({ SSRData }) {
     return getColumns(currentPage, pageSize, chain);
   }, [currentPage, pageSize, chain]);
 
-  const pageChange = async (page: number) => {
+  const pageChange = (page: number) => {
     setCurrentPage(page);
     fetchData(page, pageSize);
   };
 
-  const pageSizeChange = async (page: number, pageSize: number) => {
+  const pageSizeChange = (page: number, pageSize: number) => {
     setPageSize(pageSize);
     setCurrentPage(page);
     fetchData(page, pageSize);

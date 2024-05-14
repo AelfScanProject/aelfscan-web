@@ -40,11 +40,11 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
     }
   }, [chain, tokenSymbol, currentPage, pageSize]);
 
-  const pageChange = async (page: number) => {
+  const pageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const pageSizeChange = async (page, size) => {
+  const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
   };

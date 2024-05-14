@@ -1,13 +1,23 @@
+import { IFromInfo, TransactionStatus } from '@_api/type';
+import { IToken } from './common';
+
+export interface ITransactionFeeItem {
+  symbol: string;
+  amount: number;
+  amountOfUsd: number;
+}
+
 export type TokenTransfersItemType = {
-  transactionHash: string;
-  status: string;
+  chainId: string;
+  transactionId: string;
   method: string;
-  timestamp: string;
-  from: string; // name+address
-  to: string; // name+address
-  transferStatus: string; //in/out
-  amount: string;
-  token: string;
+  blockHeight: number;
+  blockTime: number;
+  from: IFromInfo;
+  to: IFromInfo;
+  quantity: number;
+  status: TransactionStatus;
+  transactionFeeList: ITransactionFeeItem[];
 };
 
 export interface ITokenTransfers {
@@ -16,28 +26,28 @@ export interface ITokenTransfers {
 }
 
 export type TokensListItemType = {
-  asset: string;
-  symbol: string;
-  quantity: string;
-  balance: string;
-  priceInUsd: number;
-  pricePercentChange24h: number;
-  totalPriceInUsd: number;
+  token: IToken;
+  quantity: number;
+  valueOfUsd: number;
+  priceOfUsd: number;
+  priceOfUsdPercentChange24h: number;
+  priceOfElf: number;
+  valueOfElf: number;
 };
 
 export interface ITokens {
   assetInUsd: number;
-  assetPercentChange24h: number;
   assetInElf: number;
   total: number;
   list: TokensListItemType[];
 }
 
 export type NftsItemType = {
-  item: string;
-  collection: string;
-  quantity: string;
-  timestamp: string;
+  nftCollection: IToken;
+  token: IToken;
+  transferCount: number;
+  firstNftTime: string;
+  quantity: number;
 };
 
 export interface INfts {
@@ -79,21 +89,31 @@ export interface INftTransfers {
   list: NftTransfersItemType[];
 }
 
-export interface IAddressResponse {
-  symbol: string;
-  tokenBalance: string;
-  tokenPriceInUsd: number;
+export interface IAddressTokensDetail {
   tokenTotalPriceInUsd: number;
-  tokenHoldings: number; //
+  tokenTotalPriceInUsdRate: number;
+  tokenTotalPriceInElf: null;
+}
+
+export interface IAddressResponse extends IAddressTokensDetail {
+  symbol: string;
   contractName: string; // contract address
   author: string; // contract add
-  lastTxnSend: string; //CA/EOA address add
-  firstTxnSend: string; //CA/EOA address add
-  tokens: ITokens;
-  nfts: INfts;
-  transactions: ITransactions;
-  tokenTransfers: ITokenTransfers;
-  nftTransfers: INftTransfers;
+  tokenHoldings: number;
+  contractTransactionHash: string; // contract add
+  lastTransactionSend: {
+    transactionId: string;
+    blockHeight: number;
+    blockTime: string;
+  }; //CA/EOA address add
+  firstTransactionSend: {
+    transactionId: string;
+    blockHeight: number;
+    blockTime: string;
+  }; //CA/EOA address add
+  elfBalanceOfUsd: number;
+  elfBalance: number;
+  elfPriceInUsd: number;
 }
 
 export enum TitleEnum {

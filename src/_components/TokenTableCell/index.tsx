@@ -9,9 +9,10 @@ const { Text } = Typography;
 
 interface ITokenCellProps extends React.PropsWithChildren {
   token: Partial<IToken>;
+  showSymbol?: boolean;
 }
 
-export default function TokenCell({ token, children }: ITokenCellProps) {
+export default function TokenCell({ token, children, showSymbol = true }: ITokenCellProps) {
   const symbol = useMemo(() => stringToDotString(token?.symbol, 25) || '--', [token?.symbol]);
   const name = useMemo(() => stringToDotString(token?.name, 25) || '--', [token?.name]);
 
@@ -23,7 +24,7 @@ export default function TokenCell({ token, children }: ITokenCellProps) {
           <span className="text-[#000]">{name}</span>
         </EPTooltip>
       </Text>
-      {symbol && (
+      {symbol && showSymbol && (
         <Text className="!text-[#858585]" size="normal" fontWeight={FontWeightEnum.Medium}>
           <EPTooltip mode="dark" title={token?.symbol}>
             {`(${symbol})`}

@@ -78,10 +78,10 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
     [setSearchText],
   );
 
-  const pageChange = async (page: number) => {
+  const pageChange = (page: number) => {
     setCurrentPage(page);
   };
-  const pageSizeChange = async (page, size) => {
+  const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
   };

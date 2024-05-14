@@ -18,7 +18,7 @@ export default function Overview({ items, className, title }: IOverviewProps) {
         {items.map((item) => {
           return (
             <div key={item.label} className="list-items">
-              <div className="item-label font10px">{item.label}</div>
+              <div className="item-label text-xs leading-5">{item.label}</div>
               <div className="item-value">{item.value}</div>
             </div>
           );
