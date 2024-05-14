@@ -36,7 +36,7 @@ export default function ContractToken({
       <div className="flex items-center"></div>
     </div>
   ) : (
-    <div className="address">
+    <div className="address w-full truncate">
       <IconFont className="mr-1 text-sm" type="Contract" />
       <EPTooltip
         title={
@@ -47,7 +47,9 @@ export default function ContractToken({
         }
         mode="dark"
         pointAtCenter={false}>
-        <Link href={`/${chainId}/address/${addressFormat(address, chainId)}`}>{name}</Link>
+        <Link className="" href={`/${chainId}/address/${addressFormat(address, chainId)}`}>
+          {name}
+        </Link>
       </EPTooltip>
       {showCopy && <Copy value={addressFormat(address, chainId)} />}
     </div>

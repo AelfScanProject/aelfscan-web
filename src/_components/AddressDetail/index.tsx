@@ -37,14 +37,14 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
   const title = isAddress ? 'Address' : 'Contract';
   const {
     author,
-    tokenTotalPriceInUsdRate,
-    tokenTotalPriceInElf,
+    totalValueOfUsd,
+    totalValueOfElf,
+    totalValueOfUsdChangeRate,
     contractName,
     tokenHoldings,
     elfBalanceOfUsd,
     elfBalance,
     elfPriceInUsd,
-    tokenTotalPriceInUsd,
     lastTransactionSend,
     firstTransactionSend,
     contractTransactionHash,
@@ -89,6 +89,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           <div className="flex items-center">
             <EPTooltip mode="dark" title={lastTransactionSend?.transactionId}>
               <Link
+                className="h-[22px]"
                 href={`/${chain}/tx/${lastTransactionSend?.transactionId}?blockHeight=${lastTransactionSend?.blockHeight}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
                   {lastTransactionSend?.transactionId}
@@ -107,6 +108,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           <div className="flex items-center">
             <EPTooltip mode="dark" title={firstTransactionSend?.transactionId}>
               <Link
+                className="h-[22px]"
                 href={`/${chain}/tx/${firstTransactionSend?.transactionId}?blockHeight=${firstTransactionSend?.blockHeight}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
                   {firstTransactionSend?.transactionId}
@@ -154,9 +156,9 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         <Tokens
           tokenDetail={
             {
-              tokenTotalPriceInUsd,
-              tokenTotalPriceInUsdRate,
-              tokenTotalPriceInElf,
+              totalValueOfUsd,
+              totalValueOfElf,
+              totalValueOfUsdChangeRate,
             } as IAddressTokensDetail
           }
         />

@@ -5,6 +5,7 @@ import { Divider } from 'antd';
 import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { IAddressTokensDetail } from '@_types/commonDetail';
+
 export default function Tokens({ tokenDetail }: { tokenDetail: IAddressTokensDetail }) {
   const isMobile = useMobileAll();
   return (
@@ -14,21 +15,27 @@ export default function Tokens({ tokenDetail }: { tokenDetail: IAddressTokensDet
           <div className="item-label font10px leading-[18px] text-base-200">NET WORTH IN USD</div>
           <div className="item-value text-sm leading-[22px] text-base-100">
             <span className="inline-block text-sm leading-[22px] text-base-100">
-              ${thousandsNumber(tokenDetail.tokenTotalPriceInUsd)}
+              {typeof tokenDetail.totalValueOfUsd === 'number'
+                ? `${thousandsNumber(tokenDetail.totalValueOfUsd)}`
+                : '-'}
             </span>
             <span
               className={clsx(
                 'ml-1 inline-block text-xs leading-5',
-                tokenDetail.tokenTotalPriceInUsdRate >= 0 ? '!text-positive' : 'text-red-500',
+                tokenDetail.totalValueOfUsdChangeRate >= 0 ? '!text-positive' : 'text-red-500',
               )}>
-              ({tokenDetail.tokenTotalPriceInUsdRate}%)
+              (
+              {typeof tokenDetail.totalValueOfUsdChangeRate === 'number'
+                ? `${tokenDetail.totalValueOfUsdChangeRate}%`
+                : '-'}
+              )
             </span>
           </div>
         </div>
         <div className={clsx(isMobile && 'mt-4 !pl-0', 'list-items pl-4')}>
           <div className="item-label font10px leading-[18px] text-base-200">NET WORTH IN ELF</div>
           <div className="item-value text-sm leading-[22px] text-base-100">
-            {numberFormatter(tokenDetail.tokenTotalPriceInElf || '', '')}
+            {numberFormatter(tokenDetail.totalValueOfElf || '', '')}
           </div>
         </div>
       </div>
