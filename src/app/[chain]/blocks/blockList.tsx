@@ -78,12 +78,12 @@ export default function BlockList({ SSRData }) {
   const pageMaxBlock = data[0]?.blockHeight;
   const pageMinBlock = data[data.length - 1]?.blockHeight;
 
-  const pageChange = async (page: number) => {
+  const pageChange = (page: number) => {
     setCurrentPage(page);
     fetchData(page, pageSize);
   };
 
-  const pageSizeChange = async (page: number, pageSize: number) => {
+  const pageSizeChange = (page: number, pageSize: number) => {
     setPageSize(pageSize);
     setCurrentPage(page);
     fetchData(page, pageSize);

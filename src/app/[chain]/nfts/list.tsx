@@ -55,11 +55,11 @@ export default function TokensList({ SSRData }: TokensListProps) {
     [ChangeOrder, chain, currentPage, pageSize, sort],
   );
 
-  const pageChange = async (page: number) => {
+  const pageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const pageSizeChange = async (page, size) => {
+  const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
   };

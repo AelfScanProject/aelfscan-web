@@ -1,64 +1,74 @@
 import Table from '@_components/Table';
-import { useState } from 'react';
-import fetchData from './mock';
+import { useCallback, useEffect, useState } from 'react';
 import getColumns from './columnConfig';
 import './index.css';
 import { NftsItemType } from '@_types/commonDetail';
-import { useDebounce, useEffectOnce } from 'react-use';
-import { useMobileContext } from '@app/pageProvider';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
-export default function NFTAssets({ SSRData = { total: 0, list: [] } }) {
+import { useMobileAll } from '@_hooks/useResponsive';
+import { fetchAccountsDetailNFTAssets } from '@_api/fetchContact';
+import { useParams } from 'next/navigation';
+import { getAddress, getPageNumber } from '@_utils/formatter';
+import { TChainID } from '@_api/type';
+import { TableProps } from 'antd';
+import { SortEnum, TableSortEnum } from '@_types/common';
+
+type OnChange = NonNullable<TableProps<NftsItemType>['onChange']>;
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
+
+export default function NFTAssets() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [total, setTotal] = useState<number>(SSRData.total);
+  const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<NftsItemType[]>(SSRData.list);
+  const [data, setData] = useState<NftsItemType[]>([]);
   const [searchText, setSearchText] = useState<string>('');
-  useEffectOnce(() => {
-    async function getData() {
+  const [SearchFetchText, setSearchFetchText] = useState<string>('');
+  const { chain, address } = useParams();
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
+
+  const fetchData = useCallback(async () => {
+    try {
+      const params = {
+        skipCount: getPageNumber(currentPage, pageSize),
+        maxResultCount: pageSize,
+        chainId: chain as TChainID,
+        address: getAddress(address as string),
+        orderBy: sortedInfo.order ? (sortedInfo.columnKey as string) : undefined,
+        sort: sortedInfo.order ? SortEnum[TableSortEnum[sortedInfo.order]] : undefined,
+        search: SearchFetchText,
+      };
       setLoading(true);
-      const data = await fetchData({ page: currentPage, pageSize: pageSize });
-      setData(data.list);
+      const data = await fetchAccountsDetailNFTAssets(params);
       setTotal(data.total);
+      setData(data.list);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
-    getData();
-  });
-  const columns = getColumns();
+  }, [SearchFetchText, address, chain, currentPage, pageSize, sortedInfo]);
+  const columns = getColumns(chain, sortedInfo);
 
-  const pageChange = async (page: number) => {
-    setLoading(true);
+  const pageChange = (page: number) => {
     setCurrentPage(page);
-    const data = await fetchData({ page, pageSize: pageSize });
-    setData(data.list);
-    setTotal(data.total);
-    setLoading(false);
   };
 
-  const pageSizeChange = async (size) => {
-    setLoading(true);
+  const pageSizeChange = (page, size) => {
     setPageSize(size);
-    setCurrentPage(1);
-    const data = await fetchData({ page: 1, pageSize: size });
-    setData(data.list);
-    setTotal(data.total);
-    setLoading(false);
+    setCurrentPage(page);
   };
-  const searchChange = async () => {
-    setLoading(true);
-    setCurrentPage(1);
-    const data = await fetchData({ page: 1, pageSize: pageSize });
-    setData(data.list);
-    setTotal(data.total);
-    setLoading(false);
+
+  const searchChange = (value) => {
+    setSearchFetchText(value);
   };
-  useDebounce(
-    () => {
-      searchChange();
-    },
-    300,
-    [searchText],
-  );
+
+  const handleChange: OnChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter as Sorts);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   const isMobile = useMobileAll();
   return (
     <div className="asset-list">
@@ -68,8 +78,8 @@ export default function NFTAssets({ SSRData = { total: 0, list: [] } }) {
           showTopSearch
           headerTitle={{
             multi: {
-              title: 'NFT Assets',
-              desc: 'Total Value : $78,330.38',
+              title: `NFT Assets(${total})`,
+              desc: '',
             },
           }}
           topSearchProps={{
@@ -78,24 +88,16 @@ export default function NFTAssets({ SSRData = { total: 0, list: [] } }) {
             onChange: ({ currentTarget }) => {
               setSearchText(currentTarget.value);
             },
-            onSearchChange: () => {
-              searchChange();
+            onSearchChange: (value) => {
+              searchChange(value);
             },
           }}
-          options={[
-            {
-              label: 10,
-              value: 10,
-            },
-            {
-              label: 20,
-              value: 20,
-            },
-          ]}
+          onChange={handleChange}
+          options={[10, 20]}
           dataSource={data}
           columns={columns}
           isMobile={isMobile}
-          rowKey="item"
+          rowKey={(record) => record.token?.symbol}
           total={total}
           pageSize={pageSize}
           pageNum={currentPage}

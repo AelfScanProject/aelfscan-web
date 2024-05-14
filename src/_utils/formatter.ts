@@ -10,7 +10,7 @@ import utc from 'dayjs/plugin/utc';
 const SYMBOL = process.env.NEXT_PUBLIC_SYMBOL;
 dayjs.extend(utc);
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss Z') => {
-  if (date) {
+  if (typeof date === 'number') {
     if (type === 'Date Time (UTC)') {
       return dayjs.unix(date).format(format);
     }
@@ -39,10 +39,10 @@ export const validateNumber = (value: any) => {
   return !Number.isNaN(num);
 };
 
-export const numberFormatter = (number: string, symbol = SYMBOL): string => {
+export const numberFormatter = (number: string | number, symbol = SYMBOL): string => {
   const num = Number(number);
   if (Number.isNaN(num)) {
-    return number;
+    return '-';
   }
   return `${num.toLocaleString(undefined, { maximumFractionDigits: 8 })} ${symbol}`;
 };
@@ -69,4 +69,10 @@ export const divDecimals = (num: number | string, decimals = 1e8) => {
 
 export const getPageNumber = (page: number, pageSize: number): number => {
   return Math.floor((page - 1) * pageSize);
+};
+
+export const getAddress = (address: string) => {
+  const match = address.match(/(?:ELF_)?(.+?)(?:_[^_]+)?$/);
+  const substring = match ? match[1] : '';
+  return substring;
 };

@@ -1,12 +1,12 @@
 export interface IHistory {
-  id: number;
-  contractName: string;
+  blockHeight: number;
+  blockTime: string;
   address: string;
   codeHash: string;
   author: string;
-  event: string;
-  txId: string;
-  blockHeight: number;
-  version: string;
-  updateTime: string;
+  version: 1;
+  nameHash: string;
+  contractType: string;
+  transactionId: string;
+  contractOperationType: string;
 }

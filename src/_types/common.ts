@@ -32,3 +32,8 @@ export enum SortEnum {
   asc = 'Asc',
   desc = 'Desc',
 }
+
+export enum TableSortEnum {
+  ascend = 'asc',
+  descend = 'desc',
+}
