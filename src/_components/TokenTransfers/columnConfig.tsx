@@ -18,6 +18,8 @@ import './index.css';
 import EPTooltip from '@_components/EPToolTip';
 import { TransactionStatus } from '@_api/type';
 import TransactionsView from '@_components/TransactionsView';
+import TokenTableCell from '@_components/TokenTableCell';
+import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
 
 export default function getColumns({
   timeFormat,
@@ -144,14 +146,25 @@ export default function getColumns({
       width: 204,
       key: columnType === 'Token' ? 'token' : 'item',
       dataIndex: columnType === 'Token' ? 'token' : 'item',
-      render: (text) => {
+      render: (text, record) => {
+        const { chainId, symbol, symbolName } = record;
         return columnType === 'Token' ? (
           <div className="flex items-center">
-            <IconFont type="Aelf-transfer" />
-            <span className="mx-1 inline-block max-w-[79px] truncate leading-5 text-base-100">{text}</span>
-            <span className="flex items-center text-base-200">
-              (<span className="inline-block max-w-[50px] truncate leading-5">ELFELDDDDDDFELF</span>)
-            </span>
+            <Link href={`/${chainId}/token/${symbol}`}>
+              <TokenTableCell
+                token={{
+                  name: symbolName,
+                  symbol,
+                }}
+                length={7}>
+                <TokenImage
+                  token={{
+                    name: symbolName,
+                    symbol,
+                  }}
+                />
+              </TokenTableCell>
+            </Link>
           </div>
         ) : (
           <div className="item-container flex items-center">

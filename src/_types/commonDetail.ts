@@ -18,6 +18,8 @@ export type TokenTransfersItemType = {
   quantity: number;
   status: TransactionStatus;
   transactionFeeList: ITransactionFeeItem[];
+  symbol: string;
+  symbolName: string;
 };
 
 export interface ITokenTransfers {
@@ -90,9 +92,9 @@ export interface INftTransfers {
 }
 
 export interface IAddressTokensDetail {
-  tokenTotalPriceInUsd: number;
-  tokenTotalPriceInUsdRate: number;
-  tokenTotalPriceInElf: null;
+  totalValueOfUsd: number;
+  totalValueOfUsdChangeRate: number;
+  totalValueOfElf: number;
 }
 
 export interface IAddressResponse extends IAddressTokensDetail {
