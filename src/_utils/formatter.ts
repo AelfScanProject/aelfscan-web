@@ -7,7 +7,7 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-const SYMBOL = process.env.NEXT_PUBLIC_SYMBOL;
+import { SYMBOL } from '@_utils/contant';
 dayjs.extend(utc);
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss Z') => {
   if (typeof date === 'number') {
@@ -59,7 +59,7 @@ export const stringToDotString = (str?: string, maxLength?: number) => {
 };
 
 export const addSymbol = (str: string | number) => {
-  return `${str} ${process.env.NEXT_PUBLIC_SYMBOL}`;
+  return `${str} ${SYMBOL}`;
 };
 
 export const divDecimals = (num: number | string, decimals = 1e8) => {
