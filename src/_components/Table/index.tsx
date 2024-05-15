@@ -7,12 +7,14 @@ import clsx from 'clsx';
 import React, { ReactNode, useMemo } from 'react';
 import CommonEmpty from './empty';
 import './index.css';
+import EPTooltip from '@_components/EPToolTip';
 
 export interface ITableSearch extends Omit<ISearchProps, 'onPressEnter'> {
   value?: string;
   onSearchChange: (value: string) => void;
   onClear?: () => void;
   onPressEnter?: (value: string) => void;
+  disabledTooltip?: boolean;
 }
 
 export interface IHeaderTitleProps {
@@ -95,7 +97,7 @@ export default function TableApp({
   headerLeftNode,
   ...params
 }: ICommonTableProps<any>) {
-  const { onSearchChange, ...searchProps } = topSearchProps || {};
+  const { onSearchChange, disabledTooltip = true, ...searchProps } = topSearchProps || {};
   const locale = useMemo(() => {
     return {
       emptyText: emptyStatus({ emptyType, emptyText }),
@@ -116,17 +118,24 @@ export default function TableApp({
         </div>
         <div className="header-pagination">
           {showTopSearch ? (
-            <EPSearch
-              {...searchProps}
-              onPressEnter={({ currentTarget }) => {
-                onSearchChange?.(currentTarget.value);
-                topSearchProps?.onPressEnter?.(currentTarget.value);
-              }}
-              onClear={() => {
-                topSearchProps?.onSearchChange('');
-                topSearchProps?.onClear?.();
-              }}
-            />
+            <EPTooltip
+              title={disabledTooltip ? '' : topSearchProps?.placeholder}
+              placement="topLeft"
+              trigger={['focus']}
+              pointAtCenter={false}
+              mode="dark">
+              <EPSearch
+                {...searchProps}
+                onPressEnter={({ currentTarget }) => {
+                  onSearchChange?.(currentTarget.value);
+                  topSearchProps?.onPressEnter?.(currentTarget.value);
+                }}
+                onClear={() => {
+                  topSearchProps?.onSearchChange('');
+                  topSearchProps?.onClear?.();
+                }}
+              />
+            </EPTooltip>
           ) : (
             <Pagination
               current={pageNum}

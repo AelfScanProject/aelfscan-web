@@ -123,20 +123,20 @@ export default function getColumns({
     },
     {
       title: 'Value',
-      width: 178,
+      width: 148,
       key: 'transactionValue',
       dataIndex: 'transactionValue',
       render: (text) => {
-        return <span className="text-base-100">{addSymbol(divDecimals(text))}</span>;
+        return <span className="break-all text-base-100">{addSymbol(divDecimals(text))}</span>;
       },
     },
     {
       title: 'Txn Fee',
-      width: 178,
+      width: 158,
       key: 'transactionFee',
       dataIndex: 'transactionFee',
       render: (text) => {
-        return <span className="text-base-200">{addSymbol(divDecimals(text))}</span>;
+        return <span className="break-all text-base-200">{addSymbol(divDecimals(text))}</span>;
       },
     },
   ];
