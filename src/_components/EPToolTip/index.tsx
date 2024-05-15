@@ -5,15 +5,14 @@ import './index.css';
 import { useMobileContext } from '@app/pageProvider';
 import { TooltipPlacement } from 'antd/es/tooltip';
 import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
+import { TriggerType } from 'antd/es/color-picker/interface';
 
-interface IToolTip
-  extends Omit<ITooltipProps, 'children' | 'color' | 'overlayClassName' | 'trigger' | 'arrow' | 'placement'> {
+interface IToolTip extends Omit<ITooltipProps, 'children' | 'color' | 'overlayClassName' | 'arrow' | 'placement'> {
   pointAtCenter?: boolean;
   children: ReactNode;
   mode: 'light' | 'dark';
   className?: string;
   placement?: TooltipPlacement;
-  trigger?: 'click' | 'hover';
 }
 
 export default function EPTooltip({

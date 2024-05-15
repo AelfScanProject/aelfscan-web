@@ -68,7 +68,7 @@ export default function List({ SSRData }) {
         headerTitle={{
           multi: {
             title: multiTitle,
-            desc: '(Showing the last 1,000 contracts only)',
+            desc: total > 1000 ? '(Showing the last 1,000 contracts only)' : '',
           },
         }}
         loading={loading}

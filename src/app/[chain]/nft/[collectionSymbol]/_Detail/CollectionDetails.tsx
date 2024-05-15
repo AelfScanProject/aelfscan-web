@@ -86,6 +86,7 @@ export default function NFTDetails(props: NFTDetailsProps) {
   const topSearchProps = {
     value: text,
     onChange,
+    disabledTooltip: false,
     onSearchChange: handleSearchChange,
     onClear: handleClear,
     onPressEnter: handlePressEnter,
