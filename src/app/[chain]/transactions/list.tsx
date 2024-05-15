@@ -15,9 +15,16 @@ export default function List({ SSRData, showHeader = true }) {
   console.log(SSRData, 'transactionSSRData');
   const isMobile = useMobileAll();
 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(25);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(SSRData.total);
+  const [data, setData] = useState<ITransactionsResponseItem[]>(SSRData.transactions);
+  const [timeFormat, setTimeFormat] = useState<string>('Age');
   const { chain } = useParams();
   const fetchData = useCallback(
     async (page, pageSize) => {
+      setLoading(true);
       const params = {
         chainId: chain as TChainID,
         skipCount: getPageNumber(page, pageSize),
@@ -27,19 +34,12 @@ export default function List({ SSRData, showHeader = true }) {
         const res = await fetchTransactionList(params);
         setTotal(res.total);
         setData(res.transactions);
-      } catch (error) {
+      } finally {
         setLoading(false);
       }
     },
     [chain],
   );
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(25);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [total, setTotal] = useState<number>(SSRData.total);
-  const [data, setData] = useState<ITransactionsResponseItem[]>(SSRData.transactions);
-  const [timeFormat, setTimeFormat] = useState<string>('Age');
   const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
     return getColumns({
       timeFormat,

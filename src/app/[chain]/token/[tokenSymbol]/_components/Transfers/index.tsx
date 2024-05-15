@@ -18,8 +18,8 @@ interface ITransfersProps extends ITokenSearchProps {}
 
 const labelStyle: React.CSSProperties = {
   color: '#858585',
-  fontSize: '10px',
-  lineHeight: '18px',
+  fontSize: '14px',
+  lineHeight: '22px',
 };
 
 const contentStyle: React.CSSProperties = {
@@ -148,6 +148,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
             onSearchInputChange(currentTarget.value);
           },
           onSearchChange,
+          placeholder: 'Filter Address / Txn Hash',
         }}
         showTopSearch
         loading={loading}

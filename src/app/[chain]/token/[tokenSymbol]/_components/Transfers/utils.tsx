@@ -15,7 +15,7 @@ export function getSearchByHolderItems(
   return [
     {
       key: 'desc',
-      label: 'Filtered by Token Txn Hash',
+      label: 'Filtered by Token Holder',
       children: <AddressWithCopy address={address} />,
       labelStyle: {
         color: '#252525',
@@ -26,7 +26,7 @@ export function getSearchByHolderItems(
     {
       key: 'balance',
       label: 'BALANCE',
-      children: thousandsNumber(sourceData?.balance || ''),
+      children: thousandsNumber(sourceData?.balance as number),
       labelStyle: {
         marginTop,
       },
@@ -35,7 +35,7 @@ export function getSearchByHolderItems(
     {
       key: 'value',
       label: 'VALUE',
-      children: thousandsNumber(sourceData?.value || ''),
+      children: thousandsNumber(sourceData?.value as number),
       labelStyle: {
         marginTop,
       },
@@ -54,16 +54,15 @@ export function getSearchByHashItems(
   return [
     {
       key: 'desc',
-      label: 'Filtered by Token Holder',
+      label: 'Filtered by Token Txn Hash',
       labelStyle: {
         color: '#252525',
         fontWeight: 500,
       },
       children: (
         <Link
-          className="block w-[400px] truncate text-xs leading-5 text-link"
-          // href={`/${chain}/tx/${address}?blockHeight=${blockHeight}`}>
-          href="">
+          className="block w-[400px] truncate text-link"
+          href={`/${chain}/tx/${address}?blockHeight=${blockHeight}`}>
           {address}
         </Link>
       ),

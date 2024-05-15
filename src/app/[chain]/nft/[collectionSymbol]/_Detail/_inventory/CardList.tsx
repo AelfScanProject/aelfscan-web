@@ -126,6 +126,7 @@ export default function CardList({
   ...params
 }: Props) {
   const isMobile = useMobileAll();
+  const { disabledTooltip = true } = topSearchProps || {};
   return (
     <Spin spinning={loading}>
       <div className="ep-table rounded-lg bg-white shadow-table">
@@ -141,17 +142,24 @@ export default function CardList({
           </div>
           <div className="header-pagination">
             {showTopSearch ? (
-              <EPSearch
-                {...topSearchProps}
-                onPressEnter={({ currentTarget }) => {
-                  topSearchProps?.onSearchChange(currentTarget.value);
-                  topSearchProps?.onPressEnter?.(currentTarget.value);
-                }}
-                onClear={() => {
-                  topSearchProps?.onSearchChange('');
-                  topSearchProps?.onClear?.();
-                }}
-              />
+              <EPTooltip
+                title={disabledTooltip ? '' : topSearchProps?.placeholder}
+                placement="topLeft"
+                trigger={['focus']}
+                pointAtCenter={false}
+                mode="dark">
+                <EPSearch
+                  {...topSearchProps}
+                  onPressEnter={({ currentTarget }) => {
+                    topSearchProps?.onSearchChange(currentTarget.value);
+                    topSearchProps?.onPressEnter?.(currentTarget.value);
+                  }}
+                  onClear={() => {
+                    topSearchProps?.onSearchChange('');
+                    topSearchProps?.onClear?.();
+                  }}
+                />
+              </EPTooltip>
             ) : (
               <Pagination
                 current={pageNum}
