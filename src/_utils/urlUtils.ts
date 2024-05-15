@@ -1,6 +1,6 @@
-const SYMBOL = process.env.NEXT_PUBLIC_SYMBOL;
 import { store } from '@_store';
 import { Chain } from 'global';
+import { SYMBOL } from './contant';
 
 export function getPathnameFirstSlash(pathname: string) {
   const secondSlashIndex = pathname.slice(1).indexOf('/');

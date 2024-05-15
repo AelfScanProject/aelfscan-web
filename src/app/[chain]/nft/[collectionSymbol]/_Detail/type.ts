@@ -80,6 +80,7 @@ export interface InventoryItem {
   lastTransactionId: string;
   lastSaleAmountSymbol: string;
   blockHeight: number;
+  lastSalePrice: number;
 }
 export interface CollectionInventoryData {
   total: number;

@@ -64,18 +64,18 @@ function NftCardList(props: NftCardListProps) {
                 </div>
                 <div className="item-center flex text-xs leading-5">
                   <div className="w-[58px] text-base-200">Last Sale:</div>
-                  {itemObj.lastSaleAmount === -1 ? (
+                  {itemObj.lastSalePrice === -1 ? (
                     <span className="text-base-100">N/A</span>
                   ) : (
                     <EPTooltip
                       mode="dark"
-                      title={`Click to see transaction with last sale price of $${itemObj.lastSalePriceInUsd} (${itemObj.lastSaleAmount} ${itemObj.lastSaleAmountSymbol})`}>
+                      title={`Click to see transaction with last sale price of $${itemObj.lastSalePriceInUsd} (${itemObj.lastSalePrice} ${itemObj.lastSaleAmountSymbol})`}>
                       <Link
                         className="inline-block truncate"
                         href={`/${chain}/tx/${itemObj.lastTransactionId}?blockHeight=${itemObj.blockHeight}`}>
                         <span className="mx-1">${itemObj.lastSalePriceInUsd}</span>
                         <span>
-                          ({itemObj.lastSaleAmount} {itemObj.lastSaleAmountSymbol})
+                          ({itemObj.lastSalePrice} {itemObj.lastSaleAmountSymbol})
                         </span>
                       </Link>
                     </EPTooltip>
