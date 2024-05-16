@@ -1,7 +1,5 @@
 'use client';
-import { useIsGovernance } from '@_hooks/useIsPath';
-import { Skeleton } from 'antd';
+import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 export default function Loading() {
-  const isGovernance = useIsGovernance();
-  return !isGovernance && <Skeleton className="main-skeleton top-[104px] h-[calc(100vh-474px)]" />;
+  return <PageLoadingSkeleton />;
 }

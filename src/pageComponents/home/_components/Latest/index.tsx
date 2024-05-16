@@ -10,7 +10,6 @@ import { IBlocksResponseItem, ITransactionsResponseItem } from '@_api/type';
 import { divDecimals, formatDate } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
 import ContractToken from '@_components/ContractToken';
-import { AddressType } from '@_types/common';
 
 interface IProps {
   isBlocks: boolean;
@@ -98,9 +97,6 @@ export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
                         showCopy={false}
                         chainId={defaultChain as string}
                       />
-                      {/* <EPTooltip title={ele.to} mode="dark" pointAtCenter={false}>
-                        <Link href={`${ele.to}`}>{addressFormat(hiddenAddress(ele.to))}</Link>
-                      </EPTooltip> */}
                       {isMobile && RewrdInfo(ele)}
                     </span>
                   </>
