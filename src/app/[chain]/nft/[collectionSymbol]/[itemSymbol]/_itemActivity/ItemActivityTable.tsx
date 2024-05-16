@@ -66,10 +66,9 @@ export default function ItemActivityTable() {
   return (
     <div>
       <Table
-        headerLeftNode={`A total of ${total} records found`}
         headerTitle={{
           multi: {
-            title: '',
+            title: `A total of ${total} records found`,
             desc: '',
           },
         }}
