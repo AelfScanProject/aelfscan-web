@@ -319,3 +319,15 @@ export interface IAccountTransfersRequestParams extends RequestInit {
   skipCount: number;
   maxResultCount: number;
 }
+
+export interface IBlockchainOverviewResponse {
+  tokenPriceInUsd: number;
+  tokenPriceRate24h: number;
+  transactions: number;
+  tps: number;
+  tpsTime: string;
+  reward: string;
+  blockHeight: number;
+  accounts: number;
+  citizenWelfare: string;
+}

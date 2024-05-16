@@ -28,7 +28,7 @@ export async function fetchTokenDetail(params: ITokenDetailRequestParams): Promi
   const result = await request.token.getTokenDetail({
     params: params,
   });
-  const data = result?.data;
+  const data = result?.data || {};
   return data;
 }
 export async function fetchTokenDetailTransfers(params: ITokenTransfersRequestParams): Promise<ITransferTableData> {
