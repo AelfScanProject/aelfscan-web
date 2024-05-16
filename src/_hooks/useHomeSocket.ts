@@ -1,29 +1,34 @@
 import { useEffect, useMemo, useState } from 'react';
 import Socket from '@_socket';
-import { IBlocksResponseItem, ITransactionsResponseItem, TChainID } from '@_api/type';
+import { IBlockchainOverviewResponse, IBlocksResponseItem, ITransactionsResponseItem, TChainID } from '@_api/type';
 interface IIntervalData {
   blocks: Array<IBlocksResponseItem>;
   transactions: ITransactionsResponseItem[];
   blocksLoading: boolean;
   transactionsLoading: boolean;
+  overviewLoading: boolean;
+  BlockchainOverview: IBlockchainOverviewResponse | undefined;
 }
 const useHomeSocket = (chain: TChainID) => {
   const [blocks, setBlocks] = useState<Array<IBlocksResponseItem>>([]);
+  const [BlockchainOverview, setBlockchainOverview] = useState<IBlockchainOverviewResponse>();
   const [transactions, setTransactions] = useState<ITransactionsResponseItem[]>([]);
   const [blocksLoading, setBlocksLoading] = useState<boolean>(true);
   const [transactionsLoading, setTransactionsLoading] = useState<boolean>(true);
+  const [overviewLoading, setOverviewLoading] = useState<boolean>(true);
   console.log('signalR----------refresh');
   const socket = Socket();
 
   const data: IIntervalData = useMemo(() => {
-    // console.log('xxxxx', isCanBeBid, auctionInfo?.finishIdentifier);
     return {
       blocks,
       blocksLoading,
       transactionsLoading,
       transactions,
+      BlockchainOverview,
+      overviewLoading,
     };
-  }, [blocks, blocksLoading, transactions, transactionsLoading]);
+  }, [blocks, blocksLoading, transactions, transactionsLoading, BlockchainOverview, overviewLoading]);
 
   useEffect(() => {
     function fetchAndReceiveWs() {
@@ -37,12 +42,18 @@ const useHomeSocket = (chain: TChainID) => {
         setBlocksLoading(false);
       });
       socket.registerHandler('ReceiveLatestTransactions', (data) => {
-        setTransactions(data.transactions);
+        setTransactions(data.transactions || []);
         console.log('transactions---2', data);
         setTransactionsLoading(false);
       });
+      socket.registerHandler('ReceiveBlockchainOverview', (data) => {
+        setBlockchainOverview(data || {});
+        console.log('ReceiveBlockchainOverview---3', data);
+        setOverviewLoading(false);
+      });
       socket.sendEvent('RequestLatestTransactions', { chainId: chain });
       socket.sendEvent('RequestLatestBlocks', { chainId: chain });
+      socket.sendEvent('RequestBlockchainOverview', { chainId: chain });
     }
 
     fetchAndReceiveWs();

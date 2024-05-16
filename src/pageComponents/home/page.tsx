@@ -23,7 +23,7 @@ const BannerPc = '/image/banner_pc.png';
 const BannerMobile = '/image/banner_mobile.png';
 const clsPrefix = 'home-container';
 import { useEnvContext } from 'next-runtime-env';
-import { Spin } from 'antd';
+import { Col, Row, Skeleton, Spin } from 'antd';
 import { useAppSelector } from '@_store';
 import { useSearchParams } from 'next/navigation';
 import useHomeSocket from '@_hooks/useHomeSocket';
@@ -44,55 +44,21 @@ const getConnectionBuilder = (url: string) => {
   return connect;
 };
 export default function Home({ overviewSSR }: IProps) {
-  const { NEXT_PUBLIC_API_URL: HOST } = useEnvContext();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const searchParmas = useSearchParams();
   const chain = searchParmas.get('chainId') || defaultChain;
 
-  const { blocks, blocksLoading, transactionsLoading, transactions } = useHomeSocket(chain as TChainID);
+  const { blocks, blocksLoading, transactionsLoading, transactions, BlockchainOverview, overviewLoading } =
+    useHomeSocket(chain as TChainID);
 
   const isMobile = useMobileAll();
 
   const OverView: React.FC = () => {
-    const [connection, setConnection] = useState<null | HubConnection>(null);
-    const [overview, setOverView] = useState<IOverviewSSR>(overviewSSR);
-    useEffect(() => {
-      const connect = getConnectionBuilder(`${HOST}/signalr-hubs/overview`);
-      setConnection(connect);
-    }, []);
-    useEffect(() => {
-      setOverView({
-        tokenPriceInUsd: 1,
-        tokenPricePercent: '2',
-        transactions: '3',
-        tps: '4',
-        reward: '5',
-        blockHeight: 6,
-        accounts: 7,
-        citizenWelfare: '8',
-      });
-      //TODO
-      // connection
-      //   ?.start()
-      //   .then(async () => {
-      //     await connection.invoke('RequestOverview', {
-      //       CHAIN_ID: CHAIN_ID,
-      //     });
-      //     connection.on('ReceiveOverview', ({ code, data }) => {
-      //       if (code === '20000') {
-      //         setOverView(data);
-      //       }
-      //     });
-      //   })
-      //   .catch((error) => console.log(error));
-      // return () => {
-      //   connection?.invoke('UnsubscribeOverview', {
-      //     CHAIN_ID: CHAIN_ID,
-      //   });
-      // };
-    }, [connection]);
-
-    return <InfoSection isMobile={isMobile} overview={overview}></InfoSection>;
+    return BlockchainOverview && !overviewLoading ? (
+      <InfoSection isMobile={isMobile} overview={BlockchainOverview}></InfoSection>
+    ) : (
+      <Skeleton active />
+    );
   };
 
   const LatestAll = () => {
@@ -136,7 +102,7 @@ export default function Home({ overviewSSR }: IProps) {
           <SearchComp isMobile={isMobile} />
         </div>
       </div>
-      {/* <OverView></OverView> */}
+      <OverView></OverView>
       <LatestAll></LatestAll>
       {/* <Chart></Chart> */}
       {/* <Link

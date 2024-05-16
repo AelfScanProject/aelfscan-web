@@ -3,77 +3,79 @@ import clsx from 'clsx';
 import './index.css';
 
 import IconFont from '@_components/IconFont';
-import { IOverviewSSR } from '@pageComponents/home/type';
-import { useEffect, useState } from 'react';
+import { IBlockchainOverviewResponse } from '@_api/type';
+import { addSymbol, thousandsNumber, unitConverter } from '@_utils/formatter';
 const clsPrefix = 'home-info-section';
 interface IProps {
   isMobile: boolean;
-  overview: IOverviewSSR;
+  overview: IBlockchainOverviewResponse;
 }
 
 const InfoSection = ({ isMobile, overview }: IProps) => {
-  const [range, setRange] = useState('');
-  useEffect(() => {
-    setRange(overview.tokenPricePercent);
-  }, [overview]);
+  const range = overview.tokenPriceRate24h;
   return (
     <div className={clsx(`${clsPrefix}`, isMobile && `${clsPrefix}-mobile`)}>
       <div className={`${clsPrefix}-col-item`}>
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-price`)}>
-          <IconFont type="elf-price"></IconFont>
+          <div className="home-price flex size-12 items-center justify-center rounded-full bg-[#F7F8FA]">
+            <IconFont width={24} height={24} type="ELF"></IconFont>
+          </div>
           <div className="content">
-            <span className="title">Price</span>
+            <span className="title">ELF Price</span>
             <span className="desc">
-              {overview.tokenPriceInUsd || '-'}
+              {typeof overview.tokenPriceInUsd === 'number' ? `$${thousandsNumber(overview.tokenPriceInUsd)}` : '-'}
               <span className={clsx('range', +range >= 0 ? 'rise' : 'fall')}>
                 ({+range >= 0 ? '+' : ''}
-                {(+range)?.toFixed(2)}%)
+                {+range}%)
               </span>
             </span>
           </div>
         </div>
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-height`)}>
           {' '}
-          <IconFont type="confirmed-blocks"></IconFont>
+          <IconFont type="home-blocks"></IconFont>
           <div className="content">
             <span className="title">Block Height</span>
-            <span className="desc">{overview.blockHeight}</span>
+            <span className="desc">{thousandsNumber(overview.blockHeight)}</span>
           </div>
         </div>
       </div>
       <div className={`${clsPrefix}-col-item`}>
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-transaction`)}>
           {' '}
-          <IconFont type="transactions"></IconFont>
+          <IconFont type="transactions-d6cj46ag"></IconFont>
           <div className="content">
             <span className="title">Transactions</span>
-            <span className="desc">{overview.transactions}</span>
+            <div>
+              <span className="desc">{unitConverter(overview.transactions, 2)}</span>
+              <span className="text-sm leading-[22px] text-base-200">（{overview.tps} TPS）</span>
+            </div>
           </div>
         </div>
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-accounts`)}>
           {' '}
-          <IconFont type="account"></IconFont>
+          <IconFont type="account-d6cj465m"></IconFont>
           <div className="content">
             <span className="title">Accounts</span>
-            <span className="desc">{overview.accounts}</span>
+            <span className="desc">{thousandsNumber(overview.accounts)}</span>
           </div>
         </div>
       </div>
       <div className={`${clsPrefix}-col-item`}>
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-reward`)}>
           {' '}
-          <IconFont type="reward-dollar"></IconFont>
+          <IconFont type="reward"></IconFont>
           <div className="content">
-            <span className="title">Reward</span>
-            <span className="desc">{overview.reward}</span>
+            <span className="title">Governance Rewards</span>
+            <span className="desc">{addSymbol(overview.reward)}</span>
           </div>
         </div>
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-walfare`)}>
           {' '}
-          <IconFont type="citizen-welfare"></IconFont>
+          <IconFont type="welfare"></IconFont>
           <div className="content">
             <span className="title">Citizen Welfare</span>
-            <span className="desc">{overview.citizenWelfare}</span>
+            <span className="desc">{addSymbol(overview.citizenWelfare)}</span>
           </div>
         </div>
       </div>

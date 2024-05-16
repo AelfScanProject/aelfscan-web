@@ -40,14 +40,17 @@ async function service(url: string, options: RequestWithParams) {
 
   try {
     const response = await fetch(url, options);
-
     if (response.ok) {
       return await response.json();
     } else {
-      console.log(response.status);
+      return {
+        data: null,
+      };
     }
   } catch (error) {
-    console.log(error, 'r');
+    return {
+      data: null,
+    };
     // TODO: need to recover
     // return Promise.reject(error);
   }
