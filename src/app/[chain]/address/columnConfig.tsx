@@ -52,7 +52,7 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
       title: (
         <div>
           <span>Percentage</span>
-          <EPTooltip title="The percentage of the circulating ELF supply held by the account" mode="light">
+          <EPTooltip title="The percentage of the circulating ELF supply held by the account" mode="dark">
             <IconFont className="ml-[6px] text-xs" type="question-circle" />
           </EPTooltip>
         </div>
@@ -67,7 +67,7 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
       title: (
         <div>
           <span>Transfers</span>
-          <EPTooltip title="Total transactions related to the account" mode="light">
+          <EPTooltip title="Total transactions related to the account" mode="dark">
             <IconFont className="ml-[6px] text-xs" type="question-circle" />
           </EPTooltip>
         </div>

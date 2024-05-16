@@ -211,7 +211,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
               <Copy className="!ml-4" value={address} />
               <EPTooltip
                 placement="bottom"
-                mode="light"
+                mode="dark"
                 getPopupContainer={(node) => node}
                 trigger="click"
                 title={<QrCode value={address} />}>
