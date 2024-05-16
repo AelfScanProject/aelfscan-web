@@ -15,6 +15,7 @@ import ContractToken from '@_components/ContractToken';
 import { AddressType } from '@_types/common';
 import EPTooltip from '@_components/EPToolTip';
 import Market from '@_components/Market';
+import dayjs from 'dayjs';
 
 export default function getColumns({ timeFormat, handleTimeChange, chainId }): ColumnsType<IActivityTableData> {
   return [
@@ -55,7 +56,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       dataIndex: 'blockTime',
       key: 'blockTime',
       render: (text) => {
-        return <div className="text-xs leading-5">{formatDate(text, timeFormat)}</div>;
+        return <div className="text-xs leading-5">{formatDate(dayjs(text).unix().valueOf(), timeFormat)}</div>;
       },
     },
     {
@@ -103,8 +104,9 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       title: 'From',
       width: 196,
       render: (from) => {
-        const { address } = from;
-        return <ContractToken name={address.name} address={address} type={AddressType.address} chainId={chainId} />;
+        if (!from) return <div></div>;
+        const { address, name } = from;
+        return <ContractToken name={name} address={address} type={AddressType.address} chainId={chainId} />;
       },
     },
     {
@@ -119,8 +121,9 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       title: 'To',
       // width: 196,
       render: (to) => {
-        const { address } = to;
-        return <ContractToken name={address.name} address={address} type={AddressType.address} chainId={chainId} />;
+        if (!to) return <div></div>;
+        const { address, name } = to;
+        return <ContractToken name={name} address={address} type={AddressType.address} chainId={chainId} />;
       },
     },
   ];
