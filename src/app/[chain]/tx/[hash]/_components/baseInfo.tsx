@@ -89,7 +89,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
               type={data?.from?.addressType}
               chainId={chain as string}
             />
-            {data.from.isManager && <Tag color="processing">Manager</Tag>}
+            {data.from?.isManager && <Tag color="processing">Manager</Tag>}
           </div>
         ),
       },
@@ -99,7 +99,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         value: (
           <div>
             {/* <ContractToken address="AELF.Contract.Token" /> */}
-            {data.to.address ? (
+            {data.to?.address ? (
               <ContractToken
                 address={data?.to?.address}
                 name={data?.to?.name}
@@ -139,7 +139,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         tip: 'List of tokens transferred in the transaction.',
         value: (
           <div>
-            {data.tokenTransferreds.length > 0
+            {data.tokenTransferreds?.length > 0
               ? data.tokenTransferreds.map((tokenTransfer, idx) => {
                   return (
                     <div
@@ -190,7 +190,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         tip: 'The amount of txn fee token transacted.',
         value: (
           <div>
-            {data.nftsTransferreds.length > 0
+            {data.nftsTransferreds?.length > 0
               ? data.nftsTransferreds.map((nftsTransfer, idx) => {
                   return (
                     <div
@@ -247,7 +247,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         tip: 'The amount of txn fee token transacted.',
         value: (
           <div className={clsx('flex', isMobile ? 'flex-col items-start' : 'items-center')}>
-            {data.transactionValues.map((transactionValue, idx) => {
+            {data.transactionValues?.map((transactionValue, idx) => {
               return (
                 <div
                   key={idx}

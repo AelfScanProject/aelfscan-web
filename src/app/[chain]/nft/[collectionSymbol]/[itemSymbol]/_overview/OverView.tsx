@@ -94,7 +94,7 @@ export default function OverView(props: OverViewProps) {
           </div>
         </div>
         <div className="nft-detail">
-          <Collapse items={collapseItems} ghost />
+          <Collapse defaultActiveKey={['1']} items={collapseItems} ghost />
         </div>
       </div>
     </div>

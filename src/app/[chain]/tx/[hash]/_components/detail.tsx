@@ -16,19 +16,19 @@ import IconFont from '@_components/IconFont';
 
 export default function Detail({ SSRData }: { SSRData: ITransactionDetailData }) {
   console.log(SSRData, 'SSRData');
-  const router = useRouter();
+  // const router = useRouter();
   const [detailData] = useState(SSRData);
-  const isFirst = detailData.transactionId === '';
-  const isLast = detailData.transactionId === '';
-  const jump = (type: JumpTypes) => {
-    switch (type) {
-      case JumpTypes.Prev:
-        router.push(`/tx/${detailData.transactionId}`);
-        break;
-      case JumpTypes.Next:
-        router.push(`/tx/${detailData.transactionId}`);
-    }
-  };
+  // const isFirst = detailData.transactionId === '';
+  // const isLast = detailData.transactionId === '';
+  // const jump = (type: JumpTypes) => {
+  //   switch (type) {
+  //     case JumpTypes.Prev:
+  //       router.push(`/tx/${detailData.transactionId}`);
+  //       break;
+  //     case JumpTypes.Next:
+  //       router.push(`/tx/${detailData.transactionId}`);
+  //   }
+  // };
   const [showMore, setShowMore] = useState<boolean>(false);
   const moreChange = useCallback(() => {
     setShowMore(!showMore);
@@ -49,7 +49,7 @@ export default function Detail({ SSRData }: { SSRData: ITransactionDetailData })
       key: 'logs',
       label: (
         <div>
-          Logs<span className="ml-[2px]">({detailData.logEvents.length})</span>
+          Logs<span className="ml-[2px]">({detailData.logEvents?.length})</span>
         </div>
       ),
       children: (
