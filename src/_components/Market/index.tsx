@@ -1,12 +1,11 @@
 import EPTooltip from '@_components/EPToolTip';
-import Image from 'next/image';
-const ForestIcon = '/image/forest.svg';
+import NFTImage from '@_components/NFTImage';
 
-export default function Market() {
+export default function Market({ url }: { url: string }) {
   return (
     <div>
       <EPTooltip title="Forest" mode="dark">
-        <Image width={20} height={20} src={ForestIcon} alt="Forest"></Image>
+        <NFTImage className="rounded-full" width={20} height={20} src={url} alt="Forest"></NFTImage>
       </EPTooltip>
     </div>
   );

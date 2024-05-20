@@ -88,7 +88,9 @@ export default function TokensList({ SSRData }: TokensListProps) {
         columns={columns}
         isMobile={isMobile}
         options={pageSizeOption}
-        rowKey="rank"
+        rowKey={(record) => {
+          return record.token?.symbol;
+        }}
         total={total}
         pageSize={pageSize}
         pageNum={currentPage}

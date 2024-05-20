@@ -3,14 +3,14 @@ import Table from '@_components/Table';
 import getColumns from './column';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
-import { IActivityTableData } from '../type';
+import { IActivityTableData, ItemSymbolDetailOverview } from '../type';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchNFTItemActivity } from '@_api/fetchNFTS';
 import { useParams } from 'next/navigation';
 import { getPageNumber } from '@_utils/formatter';
 import { TChainID } from '@_api/type';
 
-export default function ItemActivityTable() {
+export default function ItemActivityTable({ detailData }: { detailData: ItemSymbolDetailOverview }) {
   const isMobile = useMobileAll();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -47,8 +47,9 @@ export default function ItemActivityTable() {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
       chainId: chain,
+      detailData,
     });
-  }, [chain, timeFormat]);
+  }, [chain, detailData, timeFormat]);
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
@@ -78,6 +79,7 @@ export default function ItemActivityTable() {
         isMobile={isMobile}
         rowKey="transactionId"
         total={total}
+        options={[10, 25, 50]}
         pageSize={pageSize}
         pageNum={currentPage}
         pageChange={pageChange}

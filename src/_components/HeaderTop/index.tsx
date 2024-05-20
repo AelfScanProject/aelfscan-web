@@ -34,7 +34,7 @@ export default function HeaderTop({ price, range, networkList, headerMenuList }:
   const isHideSearch = pathname === '/' || pathname.includes('search-');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const networkType = NEXT_PUBLIC_NETWORK_TYPE;
-  const finalUrl = networkList.find((ele) => ele.key === networkType)?.path;
+  const finalUrl = networkList.find((ele) => ele?.network_id.key === networkType)?.network_id?.path;
   const { chain } = useParams();
   const router = useRouter();
 
