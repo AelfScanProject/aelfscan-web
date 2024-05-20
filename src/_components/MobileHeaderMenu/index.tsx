@@ -11,6 +11,7 @@ import { setDefaultChain } from '@_store/features/chainIdSlice';
 import { getPathnameFirstSlash } from '@_utils/urlUtils';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
+import { useEffectOnce } from 'react-use';
 interface IProps {
   headerMenuList: MenuItem[];
   networkList: NetworkItem[];
@@ -18,6 +19,7 @@ interface IProps {
 type AntdMenuItem = Required<MenuProps>['items'][number];
 
 export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps) {
+  console.log(networkList, 'networkList');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const { chainArr, defaultChain } = useAppSelector((state) => state.getChainId);
@@ -31,8 +33,10 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
   const pathname = usePathname();
-  const secondSlashIndex = pathname.slice(1).indexOf('/');
-  const [current, setCurrent] = useState(secondSlashIndex === -1 ? pathname : getPathnameFirstSlash(pathname));
+  const secondSlashIndex = pathname.slice(6).indexOf('/');
+  const [current, setCurrent] = useState(
+    secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5)),
+  );
   const router = useRouter();
   function getItem(label: React.ReactNode, key: React.Key, children?: AntdMenuItem[], type?: 'group'): AntdMenuItem {
     return {
@@ -42,6 +46,18 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
       type,
     } as AntdMenuItem;
   }
+
+  useEffectOnce(() => {
+    if (current.startsWith('/nft')) {
+      setCurrent('/nfts');
+    } else if (current.startsWith('/token')) {
+      setCurrent('blockchain');
+    } else if (current === '/') {
+      setCurrent('');
+    } else {
+      setCurrent('blockchain');
+    }
+  });
   const jump = (url) => {
     window.history.pushState(null, '', url);
     window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
@@ -70,7 +86,7 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
       'Explorers',
       'explorers',
       networkList.map((ele) => {
-        return getItem(<Link href={ele.path}>{ele.label}</Link>, ele.key);
+        return getItem(<Link href={ele.network_id?.path}>{ele.network_id?.label}</Link>, ele.network_id?.key);
       }),
     ),
     getItem(

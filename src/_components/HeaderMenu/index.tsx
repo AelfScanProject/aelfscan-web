@@ -13,6 +13,7 @@ import { getPathnameFirstSlash } from '@_utils/urlUtils';
 import { useMemoizedFn } from 'ahooks';
 import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
 import { useAppSelector } from '@_store';
+import { useEffectOnce } from 'react-use';
 interface IProps {
   networkList: NetworkItem[];
   headerMenuList: MenuItem[];
@@ -63,11 +64,26 @@ export default function HeaderMenu({ networkList, headerMenuList }: IProps) {
       }
     });
   }, [headerMenuList, jump]);
+
   const pathname = usePathname();
   const secondSlashIndex = pathname.slice(6).indexOf('/');
   const [current, setCurrent] = useState(
     secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5)),
   );
+
+  useEffectOnce(() => {
+    if (current.startsWith('/nft')) {
+      setCurrent('/nfts');
+    } else if (current.startsWith('/token')) {
+      setCurrent('blockchain');
+    } else if (current === '/') {
+      setCurrent('');
+    } else {
+      setCurrent('blockchain');
+    }
+  });
+
+  console.log(current, 'current');
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);
   };

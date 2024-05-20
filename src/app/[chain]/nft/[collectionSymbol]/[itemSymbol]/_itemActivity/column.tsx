@@ -17,7 +17,12 @@ import EPTooltip from '@_components/EPToolTip';
 import Market from '@_components/Market';
 import dayjs from 'dayjs';
 
-export default function getColumns({ timeFormat, handleTimeChange, chainId }): ColumnsType<IActivityTableData> {
+export default function getColumns({
+  timeFormat,
+  handleTimeChange,
+  chainId,
+  detailData,
+}): ColumnsType<IActivityTableData> {
   return [
     {
       dataIndex: 'transactionId',
@@ -56,7 +61,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       dataIndex: 'blockTime',
       key: 'blockTime',
       render: (text) => {
-        return <div className="text-xs leading-5">{formatDate(dayjs(text).unix().valueOf(), timeFormat)}</div>;
+        return <div>{formatDate(dayjs(text).unix().valueOf(), timeFormat)}</div>;
       },
     },
     {
@@ -78,7 +83,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       dataIndex: 'market',
       key: 'market',
       render: (text, record) => {
-        return <div>{record.action === 'Sale' && <Market />}</div>;
+        return <div>{record.action === 'Sale' && <Market url={detailData?.marketPlaces?.marketLogo} />}</div>;
       },
     },
     {

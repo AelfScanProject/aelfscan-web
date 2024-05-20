@@ -20,7 +20,7 @@ export default function NFTDetails(props: NFTDetailsProps) {
     {
       key: '',
       label: 'Item Activity',
-      children: <ItemActivityTable />,
+      children: <ItemActivityTable detailData={overview} />,
     },
     {
       key: holders,

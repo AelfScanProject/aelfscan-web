@@ -45,13 +45,13 @@ export default function OverViewDetail(props: OverViewDetailProps) {
           <span>Owners:</span>
         </div>
         <div className="nft-detail-item-right">
-          {owner.length === 1 && (
+          {owner?.length === 1 && (
             <span>
               {' '}
               <ContractToken address={owner[0]} type={AddressType.address} chainId={chain} />
             </span>
           )}
-          {owner.length > 1 && (
+          {owner?.length > 1 && (
             <Dropdown
               menu={{
                 items: owner.map((item) => {
@@ -82,12 +82,12 @@ export default function OverViewDetail(props: OverViewDetailProps) {
           <span>Issuer:</span>
         </div>
         <div className="nft-detail-item-right">
-          {issuer.length === 1 && (
+          {issuer?.length === 1 && (
             <span>
               <ContractToken address={issuer[0]} type={AddressType.address} chainId={chain} />
             </span>
           )}
-          {issuer.length > 1 && (
+          {issuer?.length > 1 && (
             <Dropdown
               menu={{
                 items: issuer.map((item) => {
@@ -164,7 +164,13 @@ export default function OverViewDetail(props: OverViewDetailProps) {
               onClick={() => {
                 window?.open(overview.marketPlaces?.marketUrl);
               }}>
-              <NFTImage src={overview.marketPlaces?.marketLogo} alt="" width={20} height={20} />
+              <NFTImage
+                className="rounded-full"
+                src={overview.marketPlaces?.marketLogo}
+                alt=""
+                width={20}
+                height={20}
+              />
               <Tooltip title={`view on ${overview.marketPlaces?.marketName}`}>
                 <span className="ml-1">{overview.marketPlaces?.marketName}</span>
               </Tooltip>
