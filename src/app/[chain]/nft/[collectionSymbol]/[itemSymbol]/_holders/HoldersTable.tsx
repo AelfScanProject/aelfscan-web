@@ -55,10 +55,9 @@ export default function Holder() {
   return (
     <div>
       <Table
-        headerLeftNode={`A total of ${total} holders found`}
         headerTitle={{
           multi: {
-            title: '',
+            title: `A total of ${total} holders found`,
             desc: '',
           },
         }}

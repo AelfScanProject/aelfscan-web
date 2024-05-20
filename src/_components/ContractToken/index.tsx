@@ -20,7 +20,7 @@ export default function ContractToken({
   showCopy?: boolean;
   showContractAddress?: boolean;
 }) {
-  return type === AddressType.address || showContractAddress ? (
+  return type === AddressType.address || showContractAddress || (type === AddressType.Contract && !name) ? (
     address ? (
       <div className="address flex items-center">
         {showContractAddress && (
@@ -41,7 +41,9 @@ export default function ContractToken({
     )
   ) : name ? (
     <div className="address w-full truncate">
-      <IconFont className="mr-1 text-sm" type="Contract" />
+      <EPTooltip mode="dark" title="Contract">
+        <IconFont className="mr-1 text-sm" type="Contract" />
+      </EPTooltip>
       <EPTooltip
         title={
           <div>

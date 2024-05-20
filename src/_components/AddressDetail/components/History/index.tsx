@@ -12,6 +12,7 @@ import { fetchContractHistory } from '@_api/fetchContact';
 import { TChainID } from '@_api/type';
 import { AddressType } from '@_types/common';
 import dayjs from 'dayjs';
+import { Skeleton } from 'antd';
 
 export default function History({ SSRData = [], onTabClick }: { SSRData: IHistory[]; onTabClick: (string) => void }) {
   const [history, setHistory] = useState<IHistory[]>(SSRData);
@@ -21,13 +22,16 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
     chain: string;
     address: string;
   }>();
+  const [loading, setLoading] = useState<boolean>(false);
   useEffectOnce(() => {
     async function getData() {
+      setLoading(true);
       const res = await fetchContractHistory({
         chainId: chain as TChainID,
         address: getAddress(address as string),
       });
       setHistory(res.record || []);
+      setLoading(false);
     }
     getData();
   });
@@ -87,7 +91,11 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
       description: StepDescription({ ...v, isLast: index === 0, onTabClick }),
     };
   });
-  return (
+  return loading ? (
+    <div className="p-2">
+      <Skeleton active />
+    </div>
+  ) : (
     <div className="history-pane">
       {items.map((item, index) => {
         return (
