@@ -12,6 +12,7 @@ import { useParams } from 'next/navigation';
 import EPTooltip from '@_components/EPToolTip';
 import { useMobileAll } from '@_hooks/useResponsive';
 import NFTImage from '@_components/NFTImage';
+import CommonEmpty from '@_components/Table/empty';
 
 export interface IHeaderTitleProps {
   single?: {
@@ -175,7 +176,8 @@ export default function CardList({
             )}
           </div>
         </div>
-        <MemoNftCardList list={dataSource} />
+        {dataSource.length ? <MemoNftCardList list={dataSource} /> : <CommonEmpty type="nodata" />}
+
         <div className="p-4">
           <Pagination
             current={pageNum}

@@ -34,7 +34,7 @@ export async function fetchServerBlocksDetail(params: IBlocksDetailRequestParams
   const result = await request.block.getServerBlockDetail({
     params: params,
   });
-  const data = result?.data;
+  const data = result?.data || {};
   return data;
 }
 

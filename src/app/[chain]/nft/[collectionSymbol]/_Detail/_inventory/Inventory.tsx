@@ -6,6 +6,7 @@ import { ITableSearch } from '@_components/Table';
 import { NftCollectionPageParams } from 'global';
 import { fetchNFTInventory } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
+import { Skeleton } from 'antd';
 export interface InventoryProps {
   search?: string;
   topSearchProps?: ITableSearch;
@@ -51,7 +52,6 @@ export default function Inventory(props: InventoryProps) {
     fetchInventoryListWrap();
   }, [fetchInventoryListWrap]);
 
-  console.log(111);
   return (
     <div>
       <CardList
@@ -61,9 +61,9 @@ export default function Inventory(props: InventoryProps) {
             title: `A total of ${total} records found`,
           },
         }}
+        loading={loading}
         showTopSearch={true}
         topSearchProps={topSearchProps}
-        loading={loading}
         dataSource={data}
         pageSize={pageSize}
         pageNum={currentPage}

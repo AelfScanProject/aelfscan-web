@@ -101,9 +101,9 @@ export default function BaseInfo({ data, tabChange }) {
         value: (
           <div>
             <span className="text-link">
-              {data.producer.name ? data.producer.name : addressFormat(data.producer.address, chain as string)}
+              {data.producer?.name ? data.producer?.name : addressFormat(data.producer?.address, chain as string)}
             </span>
-            <Copy value={addressFormat(data.producer.address, chain as string)} />
+            <Copy value={addressFormat(data.producer?.address, chain as string)} />
             <span className="ml-1">in 0.5 secs</span>
           </div>
         ),
@@ -113,8 +113,8 @@ export default function BaseInfo({ data, tabChange }) {
         tip: 'The block reward given by aelf network, unaffected by the specific transaction.',
         value: (
           <div className="flex items-center ">
-            <span className="mr-1">{addSymbol(divDecimals(data.reward.elfReward))}</span>
-            {data.reward.usdReward && <DollarCurrency price={data.reward.usdReward} />}
+            <span className="mr-1">{addSymbol(divDecimals(data.reward?.elfReward))}</span>
+            {data.reward?.usdReward && <DollarCurrency price={data.reward?.usdReward} />}
           </div>
         ),
       },
@@ -132,8 +132,8 @@ export default function BaseInfo({ data, tabChange }) {
         tip: 'Each transaction will burn 10% of its Size Fee.',
         value: (
           <div className="flex items-center text-sm leading-[22px]">
-            <span className="mr-1">{addSymbol(divDecimals(data.burntFee.elfFee))}</span>
-            {data.burntFee.usdFee && <DollarCurrency price={data.burntFee.usdFee} />}
+            <span className="mr-1">{addSymbol(divDecimals(data.burntFee?.elfFee))}</span>
+            {data.burntFee?.usdFee && <DollarCurrency price={data.burntFee?.usdFee} />}
           </div>
         ),
       },

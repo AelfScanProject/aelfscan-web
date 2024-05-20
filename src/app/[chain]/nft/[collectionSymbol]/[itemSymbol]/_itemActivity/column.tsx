@@ -7,7 +7,7 @@
  */
 import { ColumnsType } from 'antd/es/table';
 import { IActivityTableData } from '../type';
-import { formatDate } from '@_utils/formatter';
+import { formatDate, getAddress } from '@_utils/formatter';
 import Copy from '@_components/Copy';
 import Link from 'next/link';
 import IconFont from '@_components/IconFont';
@@ -106,7 +106,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       render: (from) => {
         if (!from) return <div></div>;
         const { address, name } = from;
-        return <ContractToken name={name} address={address} type={AddressType.address} chainId={chainId} />;
+        return <ContractToken name={name} address={getAddress(address)} type={AddressType.address} chainId={chainId} />;
       },
     },
     {
@@ -123,7 +123,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       render: (to) => {
         if (!to) return <div></div>;
         const { address, name } = to;
-        return <ContractToken name={name} address={address} type={AddressType.address} chainId={chainId} />;
+        return <ContractToken name={name} address={getAddress(address)} type={AddressType.address} chainId={chainId} />;
       },
     },
   ];
