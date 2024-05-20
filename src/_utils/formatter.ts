@@ -72,6 +72,7 @@ export const getPageNumber = (page: number, pageSize: number): number => {
 };
 
 export const getAddress = (address: string) => {
+  if (!address) return '';
   const match = address.match(/(?:ELF_)?(.+?)(?:_[^_]+)?$/);
   const substring = match ? match[1] : '';
   return substring;

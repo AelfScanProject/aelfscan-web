@@ -1,7 +1,6 @@
 import IconFont from '@_components/IconFont';
 import { Tooltip } from 'aelf-design';
 import { Dropdown } from 'antd';
-import Image from 'next/image';
 import { ItemSymbolDetailOverview } from '../type';
 import { checkMainNet } from '@_utils/isMainNet';
 import { useParams } from 'next/navigation';
@@ -11,6 +10,7 @@ import { formatDate, thousandsNumber } from '@_utils/formatter';
 import EPTooltip from '@_components/EPToolTip';
 import ContractToken from '@_components/ContractToken';
 import { AddressType } from '@_types/common';
+import NFTImage from '@_components/NFTImage';
 
 export interface OverViewDetailProps {
   overview: ItemSymbolDetailOverview;
@@ -164,9 +164,9 @@ export default function OverViewDetail(props: OverViewDetailProps) {
               onClick={() => {
                 window?.open(overview.marketPlaces?.marketUrl);
               }}>
-              <Image src={overview.marketPlaces?.marketLogo} alt="" width={20} height={20} />
+              <NFTImage src={overview.marketPlaces?.marketLogo} alt="" width={20} height={20} />
               <Tooltip title={`view on ${overview.marketPlaces?.marketName}`}>
-                {overview.marketPlaces?.marketName}
+                <span className="ml-1">{overview.marketPlaces?.marketName}</span>
               </Tooltip>
             </span>
           </div>

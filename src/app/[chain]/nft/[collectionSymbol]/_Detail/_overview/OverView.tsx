@@ -6,7 +6,7 @@ import ContractToken from '@_components/ContractToken';
 import { AddressType } from '@_types/common';
 import { useParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
-import { addSymbol, divDecimals, thousandsNumber } from '@_utils/formatter';
+import { addSymbol, thousandsNumber } from '@_utils/formatter';
 import EPTooltip from '@_components/EPToolTip';
 
 export interface OverViewProps {
