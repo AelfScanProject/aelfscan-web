@@ -20,6 +20,7 @@ export type TokenTransfersItemType = {
   transactionFeeList: ITransactionFeeItem[];
   symbol: string;
   symbolName: string;
+  symbolImageUrl: string;
 };
 
 export interface ITokenTransfers {

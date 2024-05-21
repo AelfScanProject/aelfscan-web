@@ -1,26 +1,25 @@
 'use client';
 import { Menu } from 'antd';
 import { MenuProps } from 'rc-menu';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import clsx from 'clsx';
 import './index.css';
 import IconFont from '@_components/IconFont';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import ChainSelect from '@_components/ChainSelect';
 import { MenuItem, NetworkItem } from '@_types';
 import { getPathnameFirstSlash } from '@_utils/urlUtils';
 import { useMemoizedFn } from 'ahooks';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
 import { useAppSelector } from '@_store';
-import { useEffectOnce } from 'react-use';
 interface IProps {
   networkList: NetworkItem[];
   headerMenuList: MenuItem[];
+  setCurrent: (key: string) => void;
+  selectedKey: string;
 }
 
 const clsPrefix = 'header-menu-container';
-export default function HeaderMenu({ networkList, headerMenuList }: IProps) {
+export default function HeaderMenu({ networkList, selectedKey, setCurrent, headerMenuList }: IProps) {
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const router = useRouter();
   const jump = useMemoizedFn((url) => {
@@ -65,25 +64,6 @@ export default function HeaderMenu({ networkList, headerMenuList }: IProps) {
     });
   }, [headerMenuList, jump]);
 
-  const pathname = usePathname();
-  const secondSlashIndex = pathname.slice(6).indexOf('/');
-  const [current, setCurrent] = useState(
-    secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5)),
-  );
-
-  useEffectOnce(() => {
-    if (current.startsWith('/nft')) {
-      setCurrent('/nfts');
-    } else if (current.startsWith('/token')) {
-      setCurrent('blockchain');
-    } else if (current === '/') {
-      setCurrent('');
-    } else {
-      setCurrent('blockchain');
-    }
-  });
-
-  console.log(current, 'current');
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);
   };
@@ -91,7 +71,7 @@ export default function HeaderMenu({ networkList, headerMenuList }: IProps) {
   return (
     <div className={clsx(`${clsPrefix}`)}>
       <div className={`${clsPrefix}-content`}>
-        <Menu className="flex-1" onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items}></Menu>
+        <Menu className="flex-1" onClick={onClick} selectedKeys={[selectedKey]} mode="horizontal" items={items}></Menu>
         <ChainSelect />
       </div>
     </div>

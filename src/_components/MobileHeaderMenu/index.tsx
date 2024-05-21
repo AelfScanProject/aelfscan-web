@@ -11,14 +11,16 @@ import { setDefaultChain } from '@_store/features/chainIdSlice';
 import { getPathnameFirstSlash } from '@_utils/urlUtils';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
-import { useEffectOnce } from 'react-use';
+
 interface IProps {
   headerMenuList: MenuItem[];
   networkList: NetworkItem[];
+  setCurrent: (key: string) => void;
+  selectedKey: string;
 }
 type AntdMenuItem = Required<MenuProps>['items'][number];
 
-export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps) {
+export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedKey, networkList }: IProps) {
   console.log(networkList, 'networkList');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
@@ -32,11 +34,6 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
   };
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
-  const pathname = usePathname();
-  const secondSlashIndex = pathname.slice(6).indexOf('/');
-  const [current, setCurrent] = useState(
-    secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5)),
-  );
   const router = useRouter();
   function getItem(label: React.ReactNode, key: React.Key, children?: AntdMenuItem[], type?: 'group'): AntdMenuItem {
     return {
@@ -47,17 +44,6 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
     } as AntdMenuItem;
   }
 
-  useEffectOnce(() => {
-    if (current.startsWith('/nft')) {
-      setCurrent('/nfts');
-    } else if (current.startsWith('/token')) {
-      setCurrent('blockchain');
-    } else if (current === '/') {
-      setCurrent('');
-    } else {
-      setCurrent('blockchain');
-    }
-  });
   const jump = (url) => {
     window.history.pushState(null, '', url);
     window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
@@ -79,6 +65,9 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
     dispatch(setDefaultChain(value));
     router.push(`/?chainId=${value}`);
   };
+
+  const pathname = usePathname();
+
   const items: MenuProps['items'] = [
     ...convertMenuItems(headerMenuList),
     { type: 'divider' },
@@ -122,7 +111,7 @@ export default function MobileHeaderMenu({ headerMenuList, networkList }: IProps
             onClick={onClick}
             style={{ width: 256 }}
             expandIcon={<IconFont className="submenu-right-arrow" type="Down"></IconFont>}
-            selectedKeys={[current]}
+            selectedKeys={[selectedKey]}
             mode="inline"
             items={items}
           />

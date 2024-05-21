@@ -147,7 +147,7 @@ export default function getColumns({
       key: columnType === 'Token' ? 'token' : 'item',
       dataIndex: columnType === 'Token' ? 'token' : 'item',
       render: (text, record) => {
-        const { chainId, symbol, symbolName } = record;
+        const { chainId, symbol, symbolImageUrl, symbolName } = record;
         return columnType === 'Token' ? (
           <div className="flex items-center">
             <Link href={`/${chainId}/token/${symbol}`}>
@@ -160,6 +160,7 @@ export default function getColumns({
                 <TokenImage
                   token={{
                     name: symbolName,
+                    imageUrl: symbolImageUrl,
                     symbol,
                   }}
                 />
