@@ -24,8 +24,10 @@ interface IProps {
   range: string;
   networkList: NetworkItem[];
   headerMenuList: MenuItem[];
+  setCurrent: (key: string) => void;
+  selectedKey: string;
 }
-export default function HeaderTop({ price, range, networkList, headerMenuList }: IProps) {
+export default function HeaderTop({ price, range, setCurrent, selectedKey, networkList, headerMenuList }: IProps) {
   const isMobile = useMobileAll();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   // const isShowPrice = defaultChain === 'AELF' && isMainNet;
@@ -50,6 +52,7 @@ export default function HeaderTop({ price, range, networkList, headerMenuList }:
           height="32"
           onClick={() => {
             router.push(`/?chainId=${chain}`);
+            setCurrent('/');
           }}
         />
         <>
@@ -91,7 +94,14 @@ export default function HeaderTop({ price, range, networkList, headerMenuList }:
             </div>
           </div>
         </>
-        {isMobile && <MobileHeaderMenu headerMenuList={headerMenuList} networkList={networkList} />}
+        {isMobile && (
+          <MobileHeaderMenu
+            setCurrent={setCurrent}
+            selectedKey={selectedKey}
+            headerMenuList={headerMenuList}
+            networkList={networkList}
+          />
+        )}
       </div>
     </div>
   );
