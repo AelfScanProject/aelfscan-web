@@ -25,7 +25,7 @@ export default async function TransactionDetails({
     transactionId: params.hash,
     blockHeight: searchParams.blockHeight,
   };
-  // http://localhost:3000/tDVW/tx/412a0b59572e9c4056b308e6d5b584d649ecb2415580f29f466f62a2c784f24b?blockHeight=114844339
+
   const transactionDetailDataList = await fetchTransactionDetails(paramsForTransactionDetails);
   const transactionDetailData = transactionDetailDataList?.list?.[0] || {};
   console.log(JSON.stringify(transactionDetailData));
