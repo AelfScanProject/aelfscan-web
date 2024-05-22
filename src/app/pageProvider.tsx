@@ -29,7 +29,7 @@ const useMobileContext = () => {
 };
 export { useMobileContext };
 
-function RootProvider({ children, isMobileSSR }) {
+function RootProvider({ children, isMobileSSR, config }) {
   const { NEXT_PUBLIC_REMOTE_URL } = useEnvContext();
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
@@ -88,7 +88,7 @@ function RootProvider({ children, isMobileSSR }) {
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
       <ConfigProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
-        <MobileContext.Provider value={{ isMobileSSR: isMobileSSR }}>
+        <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config }}>
           <ReduxProvider store={storeRef.current}>
             {isGovernance && (
               <>

@@ -6,6 +6,7 @@ import OverViewProperty from './OverViewProperty';
 import { ItemSymbolDetailOverview } from '../type';
 import NFTImage from '@_components/NFTImage';
 import { Typography } from 'antd';
+import { useParams } from 'next/navigation';
 
 const { Paragraph } = Typography;
 
@@ -17,6 +18,7 @@ export interface OverViewProps {
 export default function OverView(props: OverViewProps) {
   const { overview, onHolderClick } = props;
   const { description, properties } = overview;
+  const { chain } = useParams();
   const collapseItems: CollapseProps['items'] = [
     {
       key: '1',
@@ -88,7 +90,7 @@ export default function OverView(props: OverViewProps) {
             <div className="nft-thumb-image-wrap">
               <NFTImage className="aspect-square w-full object-cover" src={overview.nftCollection?.imageUrl} />
             </div>
-            <Link href="/" className="text-link">
+            <Link href={`/${chain}/nft/${overview.nftCollection?.symbol}`} className="text-link">
               {overview.nftCollection?.name}
             </Link>
           </div>

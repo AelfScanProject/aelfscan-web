@@ -13,7 +13,7 @@ function LogsContainer({ Logs = [] }: { Logs: ILogsProps[] }) {
     <div className="log-container">
       <div className="log-list">
         {Logs.map((item, index) => (
-          <div key={item.contractInfo?.address} className="">
+          <div key={index} className="">
             <DetailContainer
               infoList={[
                 {
