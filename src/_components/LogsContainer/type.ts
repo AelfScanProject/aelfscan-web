@@ -8,6 +8,6 @@ export interface ILogsProps {
     isManager: boolean;
     isProducer: boolean;
   };
-  indexed: never[];
+  indexed: string;
   nonIndexed: string;
 }

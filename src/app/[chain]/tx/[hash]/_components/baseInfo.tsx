@@ -144,10 +144,10 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                   return (
                     <div
                       key={idx}
-                      className={clsx(isMobile && 'flex-col !items-start gap-2', 'mb-4 flex items-center')}>
+                      className={clsx(isMobile && 'flex-col !items-start gap-2', 'mb-4 flex w-full items-center')}>
                       <div className="flex items-center">
                         <IconFont type="arrow" />
-                        <span className="mx-1 text-base-200">From</span>
+                        <div className="mx-1 shrink-0 text-base-200">From</div>
                         <ContractToken
                           address={tokenTransfer?.from?.address}
                           name={tokenTransfer?.from?.name}
@@ -156,7 +156,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                         />
                       </div>
                       <div className="flex items-center">
-                        <span className="mx-1 text-base-200">To</span>
+                        <div className="mx-1 shrink-0 text-base-200">To</div>
                         <ContractToken
                           address={tokenTransfer?.to?.address}
                           name={tokenTransfer?.to?.name}
@@ -165,7 +165,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                         />
                       </div>
                       <div className="flex items-center">
-                        <span className="mx-1 text-base-200">For</span>
+                        <div className="mx-1 shrink-0 text-base-200">For</div>
                         <span>{divDecimals(tokenTransfer.amount)}</span>
                         <DollarCurrencyRate nowPrice={tokenTransfer.nowPrice} tradePrice={tokenTransfer.tradePrice} />
                       </div>
@@ -209,19 +209,19 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
 
                       <div className="nft-info ml-1">
                         <div className="text-xs leading-5">
-                          <span className="inline-block text-base-200">For</span>
-                          <span className="mx-1 inline-block">{idx + 1} Of NFT</span>
+                          <span className="inline-block shrink-0 text-base-200">For</span>
+                          <span className="mx-1 inline-block  shrink-0">{idx + 1} Of NFT</span>
                           <span className="inline-block text-link">{`${nftsTransfer.name}(${nftsTransfer.symbol})`}</span>
                         </div>
                         <div className="flex items-center">
-                          <span className="mr-1 inline-block">From</span>
+                          <span className="mr-1 inline-block shrink-0">From</span>
                           <ContractToken
                             address={nftsTransfer?.from?.address}
                             name={nftsTransfer?.from?.name}
                             type={nftsTransfer?.from?.addressType}
                             chainId={chain as string}
                           />
-                          <span className="mx-1 inline-block text-base-200">To</span>
+                          <span className="mx-1 inline-block shrink-0 text-base-200">To</span>
                           <ContractToken
                             address={nftsTransfer?.to?.address}
                             name={nftsTransfer?.to?.name}
