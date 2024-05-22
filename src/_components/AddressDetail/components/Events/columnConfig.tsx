@@ -15,13 +15,13 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       title: (
         <div className="flex items-center font-medium">
           <span>Txn Hash</span>
-          <IconFont className="text-xs ml-1" type="question-circle" />
+          <IconFont className="ml-1 text-xs" type="question-circle" />
         </div>
       ),
       render: (text) => {
         return (
           <div className="flex items-center">
-            <Link className="text-link text-xs block w-[120px] truncate leading-5" href={`tx/${text}`}>
+            <Link className="block w-[120px] truncate text-xs leading-5 text-link" href={`tx/${text}`}>
               {text}
             </Link>
           </div>
@@ -34,7 +34,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       dataIndex: 'blockHeight',
       key: 'blockHeight',
       render: (text) => (
-        <Link className="text-link text-xs block leading-5" href={`block/${text}`}>
+        <Link className="block text-xs leading-5 text-link" href={`block/${text}`}>
           {text}
         </Link>
       ),
@@ -42,10 +42,10 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
     {
       title: (
         <div
-          className="time flex items-center text-link cursor-pointer font-medium"
+          className="time flex cursor-pointer items-center font-medium text-link"
           onClick={handleTimeChange}
           onKeyDown={handleTimeChange}>
-          <IconFont className="text-xs mr-1" type="Rank" />
+          <IconFont className="mr-1 text-xs" type="Rank" />
           {timeFormat}
         </div>
       ),
@@ -66,14 +66,15 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
     {
       title: (
         <div>
-          <IconFont className="text-xs leading-5 mr-1" type="log" />
+          <IconFont className="mr-1 text-xs leading-5" type="log" />
           <span>Logs</span>
         </div>
       ),
       width: 672,
       dataIndex: 'logs',
       key: 'logs',
-      render: (text) => <LogItems data={text} />,
+      // render: (text) => <LogItems data={text} />,
+      render: (text) => <div>code</div>,
     },
   ];
 }

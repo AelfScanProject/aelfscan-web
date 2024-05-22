@@ -21,10 +21,8 @@ export default function ChainSelect() {
 
   const onChangeHandler = (value: string) => {
     // microApp.setData('governance', { type: 'logoutSilently' });
-    setTimeout(() => {
-      dispatch(setDefaultChain(value));
-      router.push(`/?chainId=${value}`);
-    }, 0);
+    dispatch(setDefaultChain(value));
+    router.push(`/?chainId=${value}`);
   };
 
   useEffectOnce(() => {

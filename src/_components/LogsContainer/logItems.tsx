@@ -1,30 +1,60 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ILogsProps } from './type';
 import CodeBlock from '@_components/CodeBlock';
 import { Button } from 'aelf-design';
 import './logItem.css';
+import { deserializeLog } from '@_utils/deserializeLog';
+import { useParams } from 'next/navigation';
+import { message } from 'antd';
+import { useEffectOnce } from 'react-use';
+import { useMobileContext } from '@app/pageProvider';
 function LogItems({ data }: { data: ILogsProps }) {
-  const [result] = useState(
-    JSON.stringify(
-      {
-        indexed: data.indexed,
-        nonIndexed: data.nonIndexed,
-        decode: undefined,
-      },
-      null,
-      2,
-    ),
-  );
-  const [hasDecoded, setHasDecoded] = useState<boolean>(false);
+  const { config } = useMobileContext();
+  const originData = useMemo(() => {
+    return {
+      Indexed: data.indexed && JSON.parse(data.indexed),
+      NonIndexed: data.nonIndexed,
+      Address: data.contractInfo?.address,
+      Name: data.eventName,
+    };
+  }, [data]);
+  const [loading, setLoading] = useState(true);
+  const code = JSON.stringify(originData, null, 2);
+  const [result, setResult] = useState<any>();
+  const { chain } = useParams<{ chain: string }>();
+
+  const [hasDecoded, setHasDecoded] = useState<boolean>(true);
+
+  function decodeData() {
+    deserializeLog(originData, config['rpcUrl' + chain])
+      .then((res) => {
+        if (Object.keys(res).length === 0) {
+          throw new Error('Decode failed');
+        }
+        setResult(res);
+        setLoading(false);
+        setHasDecoded(true);
+      })
+      .catch(() => {
+        message.error('Decode failed');
+        setLoading(false);
+      });
+  }
+
+  useEffectOnce(() => {
+    decodeData();
+  });
+
   function decode() {
     setHasDecoded(!hasDecoded);
   }
+
   return (
     <div className="log-item">
       {
         <>
-          <CodeBlock value={hasDecoded ? JSON.stringify(data.contractInfo) : result} />
-          <Button type="primary" className="log-button mt-2 text-xs leading-5" onClick={decode}>
+          <CodeBlock value={hasDecoded ? JSON.stringify(result, null, 2) : code} />
+          <Button type="primary" className="log-button mt-2 text-xs leading-5" loading={loading} onClick={decode}>
             {hasDecoded ? 'Encode' : 'Decode'}
           </Button>
         </>

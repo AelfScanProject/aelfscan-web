@@ -4,7 +4,7 @@ const data = Array.from(new Array(25).keys()).map((item) => {
     logs: {
       address: '0a3b5e972db484b758109ef2f0d50bfadd88ac92862592427a034bf066c22275',
       eventName: 'MiningInformationUpdated',
-      indexed: [],
+      indexed: '',
       nonIndexed: '',
       contractInfo: {
         name: '0458ad2ec4d8944bff7f3ab7b56a90ffca784b0632bdf8c4a952da153b24b3fbbda5432f5ef293ab7ced791969f5fe02b0b5e6bc5af7ce074a9dc386c8dab0e6db',
