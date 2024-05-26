@@ -34,7 +34,7 @@ export default function List({ showHeader = true }) {
       chainId: chain,
       skipCount: getPageNumber(currentPage, pageSize),
       maxResultCount: pageSize,
-      tokenType: 0,
+      tokenType: 1,
       address: getAddress(address),
     };
     setLoading(true);

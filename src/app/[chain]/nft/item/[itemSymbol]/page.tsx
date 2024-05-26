@@ -9,10 +9,10 @@ import { notFound } from 'next/navigation';
 import './index.css';
 // import request from '@_api';
 import NFTDetails from './NFTDetails';
-import { ChainId, CollectionSymbol, ItemSymbol } from 'global';
+import { ChainId, ItemSymbol } from 'global';
 import { fetchServerCollectionItemDetail } from '@_api/fetchNFTS';
-export default async function NFTDetailsPage({ params }: { params: ChainId & CollectionSymbol & ItemSymbol }) {
-  if (!params.collectionSymbol) {
+export default async function NFTDetailsPage({ params }: { params: ChainId & ItemSymbol }) {
+  if (!params.itemSymbol) {
     return notFound();
   }
   const { chain, itemSymbol } = params;
@@ -20,8 +20,12 @@ export default async function NFTDetailsPage({ params }: { params: ChainId & Col
     fetchServerCollectionItemDetail({
       chainId: chain,
       symbol: itemSymbol,
+      cache: 'no-store',
     }),
   ]);
 
   return <NFTDetails overview={overview} />;
 }
+
+export const revalidate = 1;
+export const dynamic = 'force-dynamic';

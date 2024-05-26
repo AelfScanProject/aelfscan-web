@@ -27,21 +27,25 @@ const SearchContextProvider = ({
   children: React.ReactNode;
   validator?: TSearchValidator;
 }) => {
-  const INITIAL_STATE: TSearchState = {
-    query: '',
-    selectedItem: {},
-    highLight: {
-      idx: -1,
-      txt: '',
-    },
-    canShowListBox: false,
-    queryResultData: {
-      dataWithOrderIdx: {},
-      allList: [],
-    },
-    filterType: validator && validator.length > 0 ? validator[0] : undefined,
-  };
+  const INITIAL_STATE: TSearchState = useMemo(() => {
+    return {
+      query: '',
+      selectedItem: {},
+      highLight: {
+        idx: -1,
+        txt: '',
+      },
+      canShowListBox: false,
+      queryResultData: {
+        dataWithOrderIdx: undefined,
+        allList: [],
+      },
+      filterType: validator && validator.length > 0 ? validator[0] : undefined,
+    };
+  }, [validator]);
+
   const [state, dispatch]: [TSearchState, BasicActions<SearchActions>['dispatch']] = useReducer(reducer, INITIAL_STATE);
+
   return (
     <SearchContext.Provider
       value={useMemo(

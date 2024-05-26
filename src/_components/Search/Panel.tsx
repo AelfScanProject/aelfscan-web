@@ -1,11 +1,11 @@
 'use client';
 
-import { MouseEvent, memo, useEffect, useRef, useState } from 'react';
+import { MouseEvent, memo, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import animateScrollTo from 'animated-scroll-to';
 import { useSearchContext } from './SearchProvider';
 import Item from './Item';
-import { TSearchPanelProps, TSingle } from './type';
+import { TSearchPanelProps, TSingle, TType } from './type';
 import { useKeyEvent } from '@_hooks/useSearch';
 import { useThrottleFn } from 'ahooks';
 import IconFont from '@_components/IconFont';
@@ -38,12 +38,10 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
 
       const y: number = panelRef.current.scrollTop;
       const scrollTopArr: number[] = anchorArr.current.map((item) => item.offsetTop);
-
       let tmpActiveIdx = -1;
       if (
         // highlight the last item if bottom is reached
-        (panelRef.current as HTMLElement).getBoundingClientRect().height + y ===
-        (panelRef.current as HTMLElement).scrollHeight
+        y >= scrollTopArr[scrollTopArr.length - 1]
       ) {
         tmpActiveIdx = scrollTopArr.length - 1;
       } else {
@@ -84,6 +82,11 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
     });
   }
 
+  const previewData = useMemo<[string, any][]>(() => {
+    if (!dataWithOrderIdx) return [];
+    return Object.entries(dataWithOrderIdx).filter(([filterType, list]) => list && Array.isArray(list));
+  }, [dataWithOrderIdx]);
+
   if (!query) {
     return null;
   }
@@ -92,7 +95,7 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
     return (
       <div className="search-result-panel">
         <div className="search-result-empty">
-          <IconFont type="result-empty" className="w-3 h-3 mr-1" />
+          <IconFont type="result-empty" className="mr-1 size-3" />
           <span>Sorry, search not found.</span>
         </div>
       </div>
@@ -101,28 +104,33 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
 
   return (
     <div id={id} className="search-result-panel">
-      <div className="border-color-divider border-b">
-        <div className="p-4 flex gap-2">
-          {Object.entries(dataWithOrderIdx).map(([searchType], idx) => {
+      <div className="border-b border-color-divider">
+        <div className="flex gap-2 p-4">
+          {previewData.map(([searchType, list], idx) => {
             return (
               <div
                 className={clsx('search-result-panel-anchor', activeTabIdx === idx && 'selected')}
                 key={searchType + idx}
                 onMouseDown={(e) => tabMouseDownHandler(e, idx)}>
                 <span>{searchType}</span>
-                <span>{`(${idx})`}</span>
+                <span>{`(${list?.length})`}</span>
               </div>
             );
           })}
         </div>
       </div>
       <ul className="search-result-ul" ref={panelRef}>
-        {Object.entries(dataWithOrderIdx).map(([searchType, searchData]: [string, any], pIdx: number) => {
+        {previewData.map(([searchType, searchData]: [string, any], pIdx: number) => {
           return (
             <div key={searchType + pIdx} className="search-result-ul-wrap">
               <p className="search-result-ul-title">{searchType}</p>
-              {searchData.list.map((item: Partial<TSingle>, index: number) => (
-                <Item key={`item${index}`} index={item.sortIdx as number} item={item} />
+              {searchData.map((item: Partial<TSingle>, index: number) => (
+                <Item
+                  key={`item${index}`}
+                  searchType={searchType as TType}
+                  index={item.sortIdx as number}
+                  item={item}
+                />
               ))}
             </div>
           );
@@ -132,10 +140,10 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
         <div className="flex gap-4">
           <div className="search-result-bottom-button-wrap">
             <div className="search-result-bottom-button">
-              <IconFont className="w-3 h-3" type="Down" />
+              <IconFont className="size-3" type="Down" />
             </div>
             <div className="search-result-bottom-button">
-              <IconFont className="w-3 h-3" type="Up" />
+              <IconFont className="size-3" type="Up" />
             </div>
             <span>Navigator</span>
           </div>
@@ -149,7 +157,7 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
         <div>
           <div className="search-result-bottom-button-wrap">
             <div className="search-result-bottom-button !w-9">
-              <IconFont className="w-3 h-3" type="Union" />
+              <IconFont className="size-3" type="Union" />
             </div>
             <span>Enter</span>
           </div>

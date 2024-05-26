@@ -1,5 +1,5 @@
 .not-found-wrap{
-  @apply text-xs rounded-lg font-normal flex justify-center items-center flex-col bg-white shadow-table min-h-[412px];
+  @apply text-xs rounded-lg font-normal flex justify-center items-center flex-col bg-white shadow-table mt-10 min-h-[412px];
   .not-found-logo-wrap{
     @apply w-16 h-16 relative flex justify-center items-center;
   }
@@ -7,7 +7,7 @@
     @apply mt-3 text-main-blue text-xl font-medium;
   }
   .not-found-h2{
-    @apply leading-20 text-base-200;
+    @apply px-10 leading-20 text-base-200;
   }
   .not-found-h3{
     @apply leading-20 text-[#FAAD14] flex;

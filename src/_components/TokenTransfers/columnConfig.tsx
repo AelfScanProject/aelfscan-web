@@ -169,14 +169,18 @@ export default function getColumns({
           </div>
         ) : (
           <div className="item-container flex items-center">
-            <div className="nft-img mr-1 size-10 rounded-lg bg-base-200"></div>
-            <div className="info">
-              <div className="name max-w-[139px] truncate text-xs leading-5 text-black">
-                Unisocks.Fi - Genesis AirGenesis Air
-              </div>
+            <TokenImage
+              token={{
+                name: symbolName,
+                imageUrl: symbolImageUrl,
+                symbol,
+              }}
+            />
+            <div className="info ml-1">
+              <div className="name max-w-[139px] truncate text-xs leading-5 text-black">{symbolName}</div>
               <div className="message flex items-center leading-[18px]">
                 <span className="font10px inline-block max-w-[149.39759px] truncate leading-[18px] text-base-200">
-                  NFT: Unisocks Genesis AiAiAi
+                  {symbol}
                 </span>
               </div>
             </div>

@@ -11,24 +11,21 @@ import InfoSection from './_components/InfoSection';
 import SearchComp from './_components/SearchWithClient';
 import clsx from 'clsx';
 import './index.css';
-import { useEffect, useState } from 'react';
-import { HubConnection, HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
+import { useMemo } from 'react';
+import { HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
 import { IOverviewSSR } from './type';
 // import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
 import Latest from './_components/Latest';
 import TPSChart from './_components/TPSChart';
-import tpsData from './mock';
 import { useMobileAll } from '@_hooks/useResponsive';
 const BannerPc = '/image/banner_pc.png';
 const BannerMobile = '/image/banner_mobile.png';
 const clsPrefix = 'home-container';
-import { useEnvContext } from 'next-runtime-env';
-import { Col, Row, Skeleton, Spin } from 'antd';
+import { Skeleton, Spin } from 'antd';
 import { useAppSelector } from '@_store';
 import { useSearchParams } from 'next/navigation';
 import useHomeSocket from '@_hooks/useHomeSocket';
 import { TChainID } from '@_api/type';
-
 interface IProps {
   overviewSSR: IOverviewSSR;
 }
@@ -45,23 +42,23 @@ const getConnectionBuilder = (url: string) => {
 };
 export default function Home({ overviewSSR }: IProps) {
   const { defaultChain } = useAppSelector((state) => state.getChainId);
-  const searchParmas = useSearchParams();
-  const chain = searchParmas.get('chainId') || defaultChain;
+  const searchParams = useSearchParams();
+  const chain = searchParams.get('chainId') || defaultChain;
 
-  const { blocks, blocksLoading, transactionsLoading, transactions, BlockchainOverview, overviewLoading } =
+  const { blocks, blocksLoading, transactionsLoading, tpsData, transactions, BlockchainOverview, overviewLoading } =
     useHomeSocket(chain as TChainID);
 
   const isMobile = useMobileAll();
 
-  const OverView: React.FC = () => {
+  const OverView = useMemo(() => {
     return BlockchainOverview && !overviewLoading ? (
       <InfoSection isMobile={isMobile} overview={BlockchainOverview}></InfoSection>
     ) : (
       <Skeleton active />
     );
-  };
+  }, [BlockchainOverview, isMobile, overviewLoading]);
 
-  const LatestAll = () => {
+  const LatestAll = useMemo(() => {
     return (
       <div className={clsx('latest-all', isMobile && 'latest-all-mobile')}>
         <div className="flex-1">
@@ -76,12 +73,7 @@ export default function Home({ overviewSSR }: IProps) {
         </div>
       </div>
     );
-  };
-
-  const Chart = () => {
-    const data = tpsData;
-    return <TPSChart isMobile={isMobile} data={data}></TPSChart>;
-  };
+  }, [isMobile, blocksLoading, blocks, transactionsLoading, transactions]);
 
   return (
     <main className={clsx(`${clsPrefix}`, isMobile && `${clsPrefix}-mobile`)}>
@@ -102,9 +94,9 @@ export default function Home({ overviewSSR }: IProps) {
           <SearchComp isMobile={isMobile} />
         </div>
       </div>
-      <OverView></OverView>
-      <LatestAll></LatestAll>
-      {/* <Chart></Chart> */}
+      {OverView}
+      {LatestAll}
+      {tpsData ? <TPSChart isMobile={isMobile} data={tpsData}></TPSChart> : <Skeleton active />}
       {/* <Link
         className="px-4 py-1 text-sm font-semibold text-purple-600 border border-purple-200 rounded-full hover:text-white hover:bg-base-100 hover:border-transparent "
         href="/address">

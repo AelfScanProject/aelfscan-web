@@ -17,7 +17,6 @@ export default function DetailContainer({
   infoList: { label: string; value: React.ReactNode | string; tip?: React.ReactNode | string }[];
 }) {
   const isMobile = useMobileAll();
-  console.log(isMobile, 'isMobile');
   return (
     <div className="wrap basic px-4">
       {infoList.map((item) => {
