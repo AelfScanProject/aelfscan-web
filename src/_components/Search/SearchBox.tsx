@@ -7,7 +7,7 @@
  */
 'use client';
 // import request from '@_api';
-import { useState, useRef, MouseEvent, memo, isValidElement } from 'react';
+import { useState, useRef, MouseEvent, memo, isValidElement, useMemo } from 'react';
 import clsx from 'clsx';
 import Panel from './Panel';
 import SearchSelect from './Select';
@@ -17,6 +17,13 @@ import { useSearchContext } from './SearchProvider';
 import { setQuery, setClear } from './action';
 import { Button } from 'aelf-design';
 import IconFont from '@_components/IconFont';
+import { useAppSelector } from '@_store';
+import { TChainID } from '@_api/type';
+import { fetchSearchData } from '@_api/fetchSearch';
+import { useRouter } from 'next/navigation';
+import addressFormat from '@_utils/urlUtils';
+import { AddressType } from '@_types/common';
+import { getAddress } from '@_utils/formatter';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -35,22 +42,25 @@ const Search = ({
 }: ISearchProps) => {
   // Global state from context
   const { state, dispatch } = useSearchContext();
-  const { query, selectedItem, highLight, canShowListBox } = state;
+  const { query, selectedItem, highLight, filterType, queryResultData, canShowListBox } = state;
 
   // Component state
   const [hasFocus, setHasFocus] = useState<boolean>(false);
-
+  const { defaultChain } = useAppSelector((state) => state.getChainId);
   // DOM references
   const queryInput = useRef<HTMLInputElement>(null);
-
+  const { dataWithOrderIdx } = queryResultData;
   // Calculated states
-  const isExpanded = hasFocus && canShowListBox;
+  const isExpanded = useMemo(() => {
+    return hasFocus && canShowListBox && dataWithOrderIdx && !dataWithOrderIdx?.transaction && !dataWithOrderIdx?.block;
+  }, [canShowListBox, dataWithOrderIdx, hasFocus]);
+
   const hasClearButton = !!query && deleteIcon;
   const hasEnterButton = !!query && enterIcon;
 
   useUpdateDataByQuery();
   useSelected(selectedItem, queryInput);
-  useHighlight(highLight, queryInput);
+  // useHighlight(highLight, queryInput);
 
   function cancelBtnHandler(e: MouseEvent<HTMLElement>) {
     e.preventDefault();
@@ -58,8 +68,47 @@ const Search = ({
     dispatch(setClear());
   }
 
-  const onSearchHandler = () => {
-    onSearchButtonClickHandler && onSearchButtonClickHandler(queryInput.current!.value);
+  const router = useRouter();
+
+  const onSearchHandler = async () => {
+    if (dataWithOrderIdx.transaction) {
+      const { transactionId, blockHeight } = dataWithOrderIdx.transaction;
+      router.push(`/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`);
+    } else if (dataWithOrderIdx.block) {
+      const { blockHeight } = dataWithOrderIdx.block;
+      router.push(`/${defaultChain}/block/${blockHeight}`);
+    } else {
+      const params = {
+        filterType: filterType?.filterType,
+        chainId: defaultChain as TChainID,
+        keyword: getAddress(query.trim()),
+        searchType: 0,
+      };
+      const res = await fetchSearchData(params);
+      const { tokens, nfts, accounts, contracts } = res;
+      if (tokens.length) {
+        router.push(`/${defaultChain}/token/${tokens[0].symbol}`);
+      } else if (nfts.length) {
+        if (nfts[0]?.type === 2) {
+          // collection
+          router.push(`/${defaultChain}/nft/${nfts[0].symbol}`);
+        } else {
+          router.push(`/${defaultChain}/nft/item/${nfts[0].symbol}`);
+        }
+      } else if (accounts.length) {
+        router.push(
+          `/${defaultChain}/address/${addressFormat((accounts[0] as string) || '', defaultChain)}/${AddressType.address}`,
+        );
+      } else if (contracts.length) {
+        router.push(
+          `/${defaultChain}/address/${addressFormat(contracts[0].address || '', defaultChain)}/${AddressType.Contract}`,
+        );
+      } else {
+        router.push(`/${defaultChain}/search/${query.trim()}`);
+      }
+    }
+
+    // onSearchButtonClickHandler && onSearchButtonClickHandler(queryInput.current!.value);
   };
 
   function renderButton() {
@@ -102,6 +151,11 @@ const Search = ({
           }}
           onChange={(e) => {
             dispatch(setQuery(e.target.value));
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              onSearchHandler();
+            }
           }}
         />
         {hasClearButton && (

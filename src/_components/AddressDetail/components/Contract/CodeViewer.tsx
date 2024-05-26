@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-csharp';
 import 'ace-builds/src-noconflict/theme-github';
@@ -24,7 +24,7 @@ const languageDetector = [
 function getLanguage(name) {
   return languageDetector.filter((v) => v.test.test(name))[0].language;
 }
-const CodeViewer = ({ data, name, auto }) => {
+const CodeViewer = ({ data, name, auto, path }) => {
   const [language, setLanguage] = useState('csharp');
   useEffect(() => {
     const lang = getLanguage(name);
@@ -35,6 +35,7 @@ const CodeViewer = ({ data, name, auto }) => {
   };
   return (
     <div className="code-viewer-container">
+      <div className="mb-2 text-sm leading-[22px] text-base-100">{path}</div>
       <AceEditor
         mode={language}
         className={clsx('ace-editor !w-full rounded-lg', !auto && 'resize')}
@@ -44,7 +45,7 @@ const CodeViewer = ({ data, name, auto }) => {
         theme="textmate"
         name="UNIQUE_ID_OF_DIV"
         showPrintMargin={false}
-        height={!auto ? '350px' : 'auto'}
+        height={!auto ? '800px' : 'auto'}
         maxLines={auto ? 10000 : 0}
         setOptions={{
           readOnly: true,
@@ -59,4 +60,4 @@ const CodeViewer = ({ data, name, auto }) => {
   );
 };
 
-export default CodeViewer;
+export default memo(CodeViewer);

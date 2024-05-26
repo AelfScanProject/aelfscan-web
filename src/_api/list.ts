@@ -15,7 +15,7 @@ const Block_API_List = {
   getServerBlockList: `${SERVER_BASE_API}/app/blockchain/blocks`,
   getBlockDetail: `${BASE_API}/app/blockchain/blockDetail`,
   getServerBlockDetail: `${SERVER_BASE_API}/app/blockchain/blockDetail`,
-  query: 'https://dummyjson.com/products/search',
+  query: `${BASE_API}/app/blockchain/search`,
 };
 
 const Transaction_API_List = {
@@ -53,12 +53,14 @@ const ADDRESS_API_LIST = {
   getAccountsDetailTokens: `${BASE_API}/app/address/tokens`,
   getAccountsDetailNFTAssets: `${BASE_API}/app/address/nft-assets`,
   getContractHistory: `${BASE_API}/app/address/contract/history`,
+  getContractCode: `${BASE_API}/app/address/contract/file`,
   getServerTopAccounts: `${SERVER_BASE_API}/app/address/accounts`,
   getServerAccountDetail: `${SERVER_BASE_API}/app/address/detail`,
 };
 
 const Common_API_List = {
   getPrice: '',
+  getSearchFilter: `${BASE_API}/app/blockchain/filters`,
 };
 
 const CMS_API_List = {

@@ -14,7 +14,7 @@ function reducer(state: TSearchState, { type, payload }: { type: SearchActions; 
         query: payload.query,
       };
       if (state.filterType && Object.keys(state.filterType).length > 0) {
-        if (payload.query.length < state.filterType.limitNumber) {
+        if (payload.query.length < (state.filterType?.limitNumber || 0)) {
           newState.canShowListBox = false;
         }
       }

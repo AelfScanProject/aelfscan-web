@@ -1,11 +1,3 @@
-/*
- * @Author: aelf-lxy
- * @Date: 2023-08-02 00:20:45
- * @LastEditors: aelf-lxy
- * @LastEditTime: 2023-08-04 14:49:17
- * @Description: server
- */
-
 export type RequestWithParams = {
   params?: any;
 } & RequestInit;
@@ -44,15 +36,15 @@ async function service(url: string, options: RequestWithParams) {
       return await response.json();
     } else {
       return {
-        data: null,
+        type: 'error',
+        message: 'fetch fail',
       };
     }
   } catch (error) {
     return {
-      data: null,
+      type: 'error',
+      message: error,
     };
-    // TODO: need to recover
-    // return Promise.reject(error);
   }
 }
 
@@ -68,6 +60,11 @@ myServer.prototype.send = async function (url: string, options: RequestWithParam
   if (rs?.type === 'timeout') {
     // console.error('timeout');
     throw new Error('fetch timeout');
+  } else if (rs?.type === 'error') {
+    // console.error('error');
+    throw new Error(rs.message);
+  } else if (rs.code && rs.code !== '20000') {
+    throw new Error(rs.message);
   }
   return rs;
 };

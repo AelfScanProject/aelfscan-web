@@ -37,7 +37,6 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
   });
   const StepDescription = (props) => {
     const { address, author, codeHash, transactionId, version, blockTime, blockHeight, onTabClick } = props;
-    console.log(blockTime, 'blockTime');
     return (
       <>
         <div className="description-item">

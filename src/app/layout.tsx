@@ -46,7 +46,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const headersList = headers();
   const isMobile = isMobileOnServer(headersList);
   const { headerMenuList, footerMenuList, chainList, networkList, config } = await fetchCMS();
-  console.log(footerMenuList, 'layout');
   return (
     <html lang="en">
       <Script

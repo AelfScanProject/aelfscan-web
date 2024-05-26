@@ -27,6 +27,18 @@ const nextConfig = {
             destination: '/',
             // permanent: false,
           },
+          // {
+          //   source: '/api/app/blockChain/search/:path*',
+          //   destination: 'http://192.168.11.17:8001/api/app/blockChain/search/:path*',
+          //   // permanent: false,
+          //   // basePath: false,
+          // },
+          // {
+          //   source: '/api/app/blockchain/transactions/:path*',
+          //   destination: 'http://192.168.11.16:8001/api/app/blockChain/transactions/:path*',
+          //   // permanent: false,
+          //   // basePath: false,
+          // },
           {
             source: '/api/:path*',
             destination: 'https://aelfscan.io/api/:path*',

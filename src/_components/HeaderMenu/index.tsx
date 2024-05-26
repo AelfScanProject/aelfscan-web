@@ -72,7 +72,7 @@ export default function HeaderMenu({ networkList, selectedKey, setCurrent, heade
     <div className={clsx(`${clsPrefix}`)}>
       <div className={`${clsPrefix}-content`}>
         <Menu className="flex-1" onClick={onClick} selectedKeys={[selectedKey]} mode="horizontal" items={items}></Menu>
-        <ChainSelect />
+        <ChainSelect setCurrent={setCurrent} />
       </div>
     </div>
   );

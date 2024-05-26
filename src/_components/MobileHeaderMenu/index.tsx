@@ -64,6 +64,7 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   const onSelectHandler = (value: string) => {
     dispatch(setDefaultChain(value));
     router.push(`/?chainId=${value}`);
+    setCurrent('/');
   };
 
   const pathname = usePathname();

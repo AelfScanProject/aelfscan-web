@@ -20,16 +20,17 @@ function SearchSelect({ searchValidator }: { searchValidator?: TSearchValidator 
     return null;
   }
 
-  const items = searchValidator.map((ele) => ({ label: ele.label, key: ele.key }));
+  const items = searchValidator.map((ele) => ({ label: ele.filterInfo, key: ele.filterType }));
 
   const filterClickHandler: MenuProps['onClick'] = (obj) => {
     dispatch(setFilterType(searchValidator[obj.key]));
   };
+
   return (
     <Dropdown
       // open={true}
       trigger={['click']}
-      menu={{ items, onClick: filterClickHandler, selectable: true, defaultSelectedKeys: ['0'] }}
+      menu={{ items, onClick: filterClickHandler, selectable: true, defaultSelectedKeys: [items[0]?.key.toString()] }}
       dropdownRender={(menu) => (
         <div>
           {cloneElement(menu as ReactElement, {
@@ -38,7 +39,7 @@ function SearchSelect({ searchValidator }: { searchValidator?: TSearchValidator 
         </div>
       )}>
       <div className="filter-wrap">
-        <span>{filterType?.label}</span>
+        <span>{filterType?.filterInfo}</span>
         <IconFont className="right-arrow" type="Down" />
       </div>
     </Dropdown>

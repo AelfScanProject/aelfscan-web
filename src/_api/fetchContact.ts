@@ -9,6 +9,7 @@ import {
 } from './type';
 import { IAddressResponse, INfts, ITokenTransfers, ITokens } from '@_types/commonDetail';
 import { IHistory } from '@_components/AddressDetail/components/History/type';
+import { IContractSourceCode } from '@_components/AddressDetail/components/Contract/sourceCode';
 const defaultListData = {
   total: 0,
   list: [],
@@ -77,6 +78,13 @@ export async function fetchServerAccountDetail(params: IAccountDetailRequestPara
 }
 export async function fetchContractHistory(params: IContractHistoryRequestParams): Promise<{ record: IHistory[] }> {
   const result = await request.address.getContractHistory({
+    params: params,
+  });
+  const data = result?.data || {};
+  return data;
+}
+export async function fetchContractCode(params: IContractHistoryRequestParams): Promise<IContractSourceCode> {
+  const result = await request.address.getContractCode({
     params: params,
   });
   const data = result?.data || {};

@@ -10,9 +10,6 @@ export default async function TransactionDetails({
   params: HashParams;
   searchParams: TSearchParamsForTransactionDetail;
 }) {
-  console.log('params', params);
-  console.log('searchParams', searchParams);
-
   if (!params.hash || !params.chain) {
     return notFound();
   }
@@ -20,14 +17,17 @@ export default async function TransactionDetails({
     return notFound();
   }
 
-  const paramsForTransactionDetails = {
+  const transactionDetailDataList = await fetchTransactionDetails({
     chainId: params.chain,
     transactionId: params.hash,
     blockHeight: searchParams.blockHeight,
-  };
+    cache: 'no-store',
+  });
 
-  const transactionDetailDataList = await fetchTransactionDetails(paramsForTransactionDetails);
   const transactionDetailData = transactionDetailDataList?.list?.[0] || {};
   console.log(JSON.stringify(transactionDetailData));
   return <Detail SSRData={transactionDetailData} />;
 }
+
+export const revalidate = 1;
+export const dynamic = 'force-dynamic';

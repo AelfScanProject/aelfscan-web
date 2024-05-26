@@ -13,6 +13,7 @@ export type TSingle = {
   unit: string;
   address: string;
   sortIdx: number;
+  type?: number;
 };
 
 export type TItem = {
@@ -20,22 +21,58 @@ export type TItem = {
   list: Partial<TSingle>[];
 };
 
-type TType = 'tokens' | 'nfts' | 'accounts' | 'contracts';
+export enum FilterTypeEnum {
+  AllFilter,
+  Tokens,
+  Accounts,
+  Contracts,
+  Nfts,
+}
 
-export type TSearchList = {
-  [key in TType]?: TItem;
-};
+export type TType = 'tokens' | 'nfts' | 'accounts' | 'contracts';
+
+interface ITokens {
+  image: string;
+  name: string;
+  symbol: string;
+  price: number;
+  type?: number;
+}
+
+interface IContactItem {
+  name: string;
+  address: string;
+}
+
+export interface ISearchResponse {
+  tokens: ITokens[];
+  nfts: ITokens[];
+  accounts: string[];
+  contracts: IContactItem[];
+  block?: {
+    blockHeight: number;
+    blockHash: string;
+  };
+  transaction: {
+    transactionId: string;
+    blockHeight: number;
+    blockHash: string;
+  };
+}
+
+export type TSearchList = ISearchResponse;
 
 export type TFormatSearchList = {
-  dataWithOrderIdx: TSearchList;
+  dataWithOrderIdx?: TSearchList;
   allList: Partial<TSingle>[];
 };
 
 export type TValidator = {
-  label: string;
-  limitNumber: number;
-  key: number;
+  filterInfo: string;
+  filterType: number;
+  limitNumber?: number;
 };
+
 export type TSearchValidator = Array<TValidator>;
 
 export type TSearchPanelProps = {
