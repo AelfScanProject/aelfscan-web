@@ -9,55 +9,57 @@ import { useSearchContext } from '@_components/Search/SearchProvider';
 import { setQueryResult, highlightPrev, highlightNext, setClear } from '@_components/Search/action';
 import { TSingle, TSearchList } from '@_components/Search/type';
 import { RefObject, useEffect } from 'react';
-import request from '@_api';
 import animateScrollTo from 'animated-scroll-to';
 import { useDebounce } from 'react-use';
+import { fetchSearchData } from '@_api/fetchSearch';
+import { useAppSelector } from '@_store';
+import { TChainID } from '@_api/type';
+import { getAddress } from '@_utils/formatter';
 export const useUpdateDataByQuery = () => {
   const { state, dispatch } = useSearchContext();
   const { query, filterType } = state;
-
+  const { defaultChain } = useAppSelector((state) => state.getChainId);
   useDebounce(
     () => {
       if (!query) {
         return;
       }
-      function tmp(arr) {
-        return {
-          tokens: {
-            total: 11,
-            list: arr.slice(0, 5).map((ele) => ({ address: ele.description, name: ele.title })),
-          },
-          nfts: {
-            total: 11,
-            list: arr.slice(5, 10).map((ele) => ({ address: ele.description, name: ele.title })),
-          },
-        };
-      }
 
       const formatData = (data: TSearchList) => {
         try {
-          const arr: Partial<TSingle>[] = Object.values(data).reduce((acc, ele) => {
-            return acc.concat(ele.list);
-          }, [] as Partial<TSingle>[]);
-          arr.forEach((ele, idx) => {
-            ele.sortIdx = idx;
-          });
+          const arr: Partial<TSingle>[] = Object.values(data)
+            .filter((item) => item && Array.isArray(item))
+            .reduce((acc, ele) => {
+              return acc.concat(ele);
+            }, [] as Partial<TSingle>[])
+            .map((ele, idx) => {
+              if (typeof ele !== 'string') {
+                ele.sortIdx = idx;
+              }
+              return ele;
+            });
           return {
             dataWithOrderIdx: data,
             allList: arr,
           };
         } catch (e) {
-          throw new Error('format data error');
+          throw new Error(e as string);
         }
       };
 
       const fetchData = async () => {
-        const { products } = await request.block.query({ params: { q: query } });
-        dispatch(setQueryResult(formatData(tmp(products))));
+        const params = {
+          filterType: filterType?.filterType,
+          chainId: defaultChain as TChainID,
+          keyword: getAddress(query.trim()),
+          searchType: 0,
+        };
+        const res = await fetchSearchData(params);
+        dispatch(setQueryResult(formatData(res)));
       };
       if (typeof filterType === 'object' && filterType !== null) {
         const { limitNumber } = filterType;
-        if (query.length >= limitNumber) {
+        if (query.length >= (limitNumber || 0)) {
           fetchData();
         }
       } else {

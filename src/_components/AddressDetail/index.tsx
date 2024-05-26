@@ -33,7 +33,6 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     addressType: string;
   }>();
   const isAddress = addressType === '0';
-  console.log(addressType, isAddress, '');
   const title = isAddress ? 'Address' : 'Contract';
   const {
     author,

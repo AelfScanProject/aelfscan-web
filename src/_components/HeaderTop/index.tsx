@@ -29,9 +29,7 @@ interface IProps {
 }
 export default function HeaderTop({ price, range, setCurrent, selectedKey, networkList, headerMenuList }: IProps) {
   const isMobile = useMobileAll();
-  const { defaultChain } = useAppSelector((state) => state.getChainId);
-  // const isShowPrice = defaultChain === 'AELF' && isMainNet;
-  const isShowPrice = false;
+  const { tokenInfo, defaultChain } = useAppSelector((state) => state.getChainId);
   const pathname = usePathname();
   const isHideSearch = pathname === '/' || pathname.includes('search-');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
@@ -51,22 +49,26 @@ export default function HeaderTop({ price, range, setCurrent, selectedKey, netwo
           width="96"
           height="32"
           onClick={() => {
-            router.push(`/?chainId=${chain}`);
+            router.push(`/?chainId=${chain || defaultChain}`);
             setCurrent('/');
           }}
         />
         <>
-          {isShowPrice && (
+          {isMainNet && tokenInfo && (
             <div className={clsx(`${clsPrefix}-price`)}>
               <span className="title">ELF Price</span>
-              <span className="price">${price}</span>
-              <span className={clsx(`${range.startsWith('+') ? 'text-rise-red' : 'text-fall-green'}`, 'range')}>
-                {range}
+              <span className="price">${tokenInfo?.tokenPriceInUsd}</span>
+              <span
+                className={clsx(
+                  `${tokenInfo?.tokenPriceRate24h ?? ''.startsWith('+') ? 'text-rise-red' : 'text-fall-green'}`,
+                  'range',
+                )}>
+                {tokenInfo?.tokenPriceRate24h}%
               </span>
             </div>
           )}
 
-          {/* {!isHideSearch && (
+          {!isHideSearch && (
             <Search
               searchIcon={true}
               searchButton={false}
@@ -82,7 +84,7 @@ export default function HeaderTop({ price, range, setCurrent, selectedKey, netwo
               placeholder={'Search by Address / Txn Hash / Block'}
               lightMode={!isMainNet}
             />
-          )} */}
+          )}
           <div className={clsx(`${clsPrefix}-right`)} onClick={() => (window.location.href = finalUrl || '')}>
             <div className={clsx(`${clsPrefix}-explorer-change`)}>
               <Image

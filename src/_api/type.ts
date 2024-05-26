@@ -223,6 +223,7 @@ export interface TTransactionsListRequestParams extends RequestInit {
   chainId: TChainID;
   skipCount?: number;
   maxResultCount: number;
+  address?: string;
 }
 
 // collection
@@ -330,4 +331,11 @@ export interface IBlockchainOverviewResponse {
   blockHeight: number;
   accounts: number;
   citizenWelfare: string;
+}
+
+export interface ISearchParams extends RequestInit {
+  chainId: TChainID;
+  filterType: number;
+  keyword: string;
+  searchType: number;
 }

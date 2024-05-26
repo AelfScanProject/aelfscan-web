@@ -9,7 +9,7 @@ import './index.css';
 import { useMemo } from 'react';
 import { useEffectOnce } from 'react-use';
 
-export default function ChainSelect() {
+export default function ChainSelect({ setCurrent }) {
   const { chainArr, defaultChain } = useAppSelector((state) => state.getChainId);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -23,6 +23,7 @@ export default function ChainSelect() {
     // microApp.setData('governance', { type: 'logoutSilently' });
     dispatch(setDefaultChain(value));
     router.push(`/?chainId=${value}`);
+    setCurrent('/');
   };
 
   useEffectOnce(() => {

@@ -5,24 +5,91 @@ import CodeViewer from './CodeViewer';
 import { handelCopy } from '@_utils/copy';
 import Download from '@_components/Download';
 import copy from 'copy-to-clipboard';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
+import FileTree from '../FileTree';
+import { useParams } from 'next/navigation';
+import { getAddress } from '@_utils/formatter';
+import './code.css';
 
-export default function SourceCode() {
+export interface IContractSourceCode {
+  contractName: string;
+  contractVersion: string;
+  contractSourceCode: any[];
+}
+
+function getDefaultFile(files: any[] = [], names: string[] = [], index = 0, path = '') {
+  const filtered = files.filter((v) => v.name === names[index]);
+  if (filtered.length === 0) {
+    return {};
+  }
+  const newPath = `${path}${filtered[0].name}/`;
+  if (index === names.length - 1) {
+    if (Array.isArray(filtered[0].files) && filtered[0].files.length > 0) {
+      return {
+        ...filtered[0].files[0],
+        path: `${newPath}${filtered[0].files[0].name}`,
+      };
+    }
+    return {
+      ...filtered[0],
+      path: `${path}${filtered[0].name}`,
+    };
+  }
+  if (Array.isArray(filtered[0].files)) {
+    return getDefaultFile(filtered[0].files, names, index + 1, newPath);
+  }
+  return {
+    ...filtered[0],
+    path: newPath,
+  };
+}
+
+function handleFiles(data: IContractSourceCode) {
+  let defaultFile;
+  let result;
+  try {
+    result = data.contractSourceCode || [];
+  } catch (e) {
+    result = data.contractSourceCode;
+  } finally {
+    defaultFile = getDefaultFile(result, [result[0].name]);
+  }
+  return {
+    result,
+    defaultFile,
+  };
+}
+
+export interface IFileItem {
+  name: string;
+  content: string;
+  fileType: string;
+  path: string;
+}
+
+export default function SourceCode({ contractInfo }: { contractInfo: IContractSourceCode }) {
   const isMobile = useMobileAll();
-  const files = [
-    {
-      name: 'AllCalculateFeeCoefficients.cs',
-      fileType: 'txt',
-      content:
-        'dXNpbmcgRUJyaWRnZS5Db250cmFjdHMuU3RyaW5nQWdncmVnYXRvcjsNCnVzaW5nIEdvb2dsZS5Qcm90b2J1ZjsNCnVzaW5nIEdvb2dsZS5Qcm90b2J1Zi5Db2xsZWN0aW9uczsNCnVzaW5nIEdvb2dsZS5Qcm90b2J1Zi5SZWZsZWN0aW9uOw0KdXNpbmcgU3lzdGVtOw0KdXNpbmcgU3lzdGVtLkRpYWdub3N0aWNzOw0KDQpuYW1lc3BhY2UgQUVsZi5Db250cmFjdHMuTXVsdGlUb2tlbg0Kew0KCWludGVybmFsIHNlYWxlZCBjbGFzcyBBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHMgOiBJTWVzc2FnZTxBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHM+LCBJTWVzc2FnZSwgSUVxdWF0YWJsZTxBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHM+LCBJRGVlcENsb25lYWJsZTxBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHM+DQoJew0KCQlwcml2YXRlIHN0YXRpYyByZWFkb25seSBNZXNzYWdlUGFyc2VyPEFsbENhbGN1bGF0ZUZlZUNvZWZmaWNpZW50cz4gX3BhcnNlcjsNCg0KCQlwcml2YXRlIFVua25vd25GaWVsZFNldCBfdW5rbm93bkZpZWxkczsNCg0KCQlwdWJsaWMgY29uc3QgaW50IFZhbHVlRmllbGROdW1iZXIgPSAxOw0KDQoJCXByaXZhdGUgc3RhdGljIHJlYWRvbmx5IEZpZWxkQ29kZWM8Q2FsY3VsYXRlRmVlQ29lZmZpY2llbnRzPiBfcmVwZWF0ZWRfdmFsdWVfY29kZWM7DQoNCgkJcHJpdmF0ZSByZWFkb25seSBSZXBlYXRlZEZpZWxkPENhbGN1bGF0ZUZlZUNvZWZmaWNpZW50cz4gdmFsdWVfOw0KDQoJCVtEZWJ1Z2dlck5vblVzZXJDb2RlXQ0KCQlwdWJsaWMgc3RhdGljIE1lc3NhZ2VQYXJzZXI8QWxsQ2FsY3VsYXRlRmVlQ29lZmZpY2llbnRzPiBQYXJzZXINCgkJew0KCQkJZ2V0DQoJCQl7DQoJCQkJRXhlY3V0aW9uT2JzZXJ2ZXJQcm94eS5DYWxsQ291bnQoKTsNCgkJCQlyZXR1cm4gX3BhcnNlcjsNCgkJCX0NCgkJfQ0KDQoJCVtEZWJ1Z2dlck5vblVzZXJDb2RlXQ0KCQlwdWJsaWMgc3RhdGljIE1lc3NhZ2VEZXNjcmlwdG9yIERlc2NyaXB0b3INCgkJew0KCQkJZ2V0DQoJCQl7DQoJCQkJRXhlY3V0aW9uT2JzZXJ2ZXJQcm94eS5DYWxsQ291bnQoKTsNCgkJCQlyZXR1cm4gVG9rZW5Db250cmFjdFJlZmxlY3Rpb24uRGVzY3JpcHRvci5NZXNzYWdlVHlwZXNbMzhdOw0KCQkJfQ0KCQl9DQoNCgkJW0RlYnVnZ2VyTm9uVXNlckNvZGVdDQoJCU1lc3NhZ2VEZXNjcmlwdG9yIElNZXNzYWdlLkRlc2NyaXB0b3INCgkJew0KCQkJZ2V0DQoJCQl7DQoJCQkJRXhlY3V0aW9uT2JzZXJ2ZXJQcm94eS5DYWxsQ291bnQoKTsNCgkJCQlyZXR1cm4gRGVzY3JpcHRvcjsNCgkJCX0NCgkJfQ0KDQoJCVtEZWJ1Z2dlck5vblVzZXJDb2RlXQ0KCQlwdWJsaWMgUmVwZWF0ZWRGaWVsZDxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHM+IFZhbHVlDQoJCXsNCgkJCWdldA0KCQkJew0KCQkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQ2FsbENvdW50KCk7DQoJCQkJcmV0dXJuIHZhbHVlXzsNCgkJCX0NCgkJfQ0KDQoJCVtEZWJ1Z2dlck5vblVzZXJDb2RlXQ0KCQlwdWJsaWMgQWxsQ2FsY3VsYXRlRmVlQ29lZmZpY2llbnRzKCkNCgkJew0KCQkJRXhlY3V0aW9uT2JzZXJ2ZXJQcm94eS5DYWxsQ291bnQoKTsNCgkJCXZhbHVlXyA9IG5ldyBSZXBlYXRlZEZpZWxkPENhbGN1bGF0ZUZlZUNvZWZmaWNpZW50cz4oKTsNCgkJCWJhc2UuXzAwMkVjdG9yKCk7DQoJCX0NCg0KCQlbRGVidWdnZXJOb25Vc2VyQ29kZV0NCgkJcHVibGljIEFsbENhbGN1bGF0ZUZlZUNvZWZmaWNpZW50cyhBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHMgb3RoZXIpDQoJCXsNCgkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQ2FsbENvdW50KCk7DQoJCQl0aGlzLl8wMDJFY3RvcigpOw0KCQkJdmFsdWVfID0gb3RoZXIudmFsdWVfLkNsb25lKCk7DQoJCQlfdW5rbm93bkZpZWxkcyA9IFVua25vd25GaWVsZFNldC5DbG9uZShvdGhlci5fdW5rbm93bkZpZWxkcyk7DQoJCX0NCg0KCQlbRGVidWdnZXJOb25Vc2VyQ29kZV0NCgkJcHVibGljIEFsbENhbGN1bGF0ZUZlZUNvZWZmaWNpZW50cyBDbG9uZSgpDQoJCXsNCgkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQ2FsbENvdW50KCk7DQoJCQlyZXR1cm4gbmV3IEFsbENhbGN1bGF0ZUZlZUNvZWZmaWNpZW50cyh0aGlzKTsNCgkJfQ0KDQoJCVtEZWJ1Z2dlck5vblVzZXJDb2RlXQ0KCQlwdWJsaWMgb3ZlcnJpZGUgYm9vbCBFcXVhbHMob2JqZWN0IG90aGVyKQ0KCQl7DQoJCQlFeGVjdXRpb25PYnNlcnZlclByb3h5LkNhbGxDb3VudCgpOw0KCQkJcmV0dXJuIEVxdWFscyhvdGhlciBhcyBBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHMpOw0KCQl9DQoNCgkJW0RlYnVnZ2VyTm9uVXNlckNvZGVdDQoJCXB1YmxpYyBib29sIEVxdWFscyhBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHMgb3RoZXIpDQoJCXsNCgkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQ2FsbENvdW50KCk7DQoJCQlpZiAob3RoZXIgPT0gbnVsbCkNCgkJCXsNCgkJCQlyZXR1cm4gZmFsc2U7DQoJCQl9DQoJCQlpZiAob3RoZXIgPT0gdGhpcykNCgkJCXsNCgkJCQlyZXR1cm4gdHJ1ZTsNCgkJCX0NCgkJCWlmICghdmFsdWVfLkVxdWFscyhvdGhlci52YWx1ZV8pKQ0KCQkJew0KCQkJCXJldHVybiBmYWxzZTsNCgkJCX0NCgkJCXJldHVybiBvYmplY3QuRXF1YWxzKF91bmtub3duRmllbGRzLCBvdGhlci5fdW5rbm93bkZpZWxkcyk7DQoJCX0NCg0KCQlbRGVidWdnZXJOb25Vc2VyQ29kZV0NCgkJcHVibGljIG92ZXJyaWRlIGludCBHZXRIYXNoQ29kZSgpDQoJCXsNCgkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQ2FsbENvdW50KCk7DQoJCQlpbnQgbnVtID0gMTsNCgkJCW51bSBePSB2YWx1ZV8uR2V0SGFzaENvZGUoKTsNCgkJCWlmIChfdW5rbm93bkZpZWxkcyAhPSBudWxsKQ0KCQkJew0KCQkJCW51bSBePSBfdW5rbm93bkZpZWxkcy5HZXRIYXNoQ29kZSgpOw0KCQkJfQ0KCQkJcmV0dXJuIG51bTsNCgkJfQ0KDQoJCVtEZWJ1Z2dlck5vblVzZXJDb2RlXQ0KCQlwdWJsaWMgb3ZlcnJpZGUgc3RyaW5nIFRvU3RyaW5nKCkNCgkJew0KCQkJRXhlY3V0aW9uT2JzZXJ2ZXJQcm94eS5DYWxsQ291bnQoKTsNCgkJCXJldHVybiBKc29uRm9ybWF0dGVyLlRvRGlhZ25vc3RpY1N0cmluZyh0aGlzKTsNCgkJfQ0KDQoJCVtEZWJ1Z2dlck5vblVzZXJDb2RlXQ0KCQlwdWJsaWMgdm9pZCBXcml0ZVRvKENvZGVkT3V0cHV0U3RyZWFtIG91dHB1dCkNCgkJew0KCQkJRXhlY3V0aW9uT2JzZXJ2ZXJQcm94eS5DYWxsQ291bnQoKTsNCgkJCXZhbHVlXy5Xcml0ZVRvKG91dHB1dCwgX3JlcGVhdGVkX3ZhbHVlX2NvZGVjKTsNCgkJCWlmIChfdW5rbm93bkZpZWxkcyAhPSBudWxsKQ0KCQkJew0KCQkJCV91bmtub3duRmllbGRzLldyaXRlVG8ob3V0cHV0KTsNCgkJCX0NCgkJfQ0KDQoJCVtEZWJ1Z2dlck5vblVzZXJDb2RlXQ0KCQlwdWJsaWMgaW50IENhbGN1bGF0ZVNpemUoKQ0KCQl7DQoJCQlFeGVjdXRpb25PYnNlcnZlclByb3h5LkNhbGxDb3VudCgpOw0KCQkJaW50IG51bSA9IDA7DQoJCQljaGVja2VkDQoJCQl7DQoJCQkJbnVtICs9IHZhbHVlXy5DYWxjdWxhdGVTaXplKF9yZXBlYXRlZF92YWx1ZV9jb2RlYyk7DQoJCQkJaWYgKF91bmtub3duRmllbGRzICE9IG51bGwpDQoJCQkJew0KCQkJCQludW0gKz0gX3Vua25vd25GaWVsZHMuQ2FsY3VsYXRlU2l6ZSgpOw0KCQkJCX0NCgkJCQlyZXR1cm4gbnVtOw0KCQkJfQ0KCQl9DQoNCgkJW0RlYnVnZ2VyTm9uVXNlckNvZGVdDQoJCXB1YmxpYyB2b2lkIE1lcmdlRnJvbShBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHMgb3RoZXIpDQoJCXsNCgkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQ2FsbENvdW50KCk7DQoJCQlpZiAob3RoZXIgIT0gbnVsbCkNCgkJCXsNCgkJCQl2YWx1ZV8uQWRkKG90aGVyLnZhbHVlXyk7DQoJCQkJX3Vua25vd25GaWVsZHMgPSBVbmtub3duRmllbGRTZXQuTWVyZ2VGcm9tKF91bmtub3duRmllbGRzLCBvdGhlci5fdW5rbm93bkZpZWxkcyk7DQoJCQl9DQoJCX0NCg0KCQlbRGVidWdnZXJOb25Vc2VyQ29kZV0NCgkJcHVibGljIHZvaWQgTWVyZ2VGcm9tKENvZGVkSW5wdXRTdHJlYW0gaW5wdXQpDQoJCXsNCgkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQ2FsbENvdW50KCk7DQoJCQl1aW50IG51bTsNCgkJCXdoaWxlICgobnVtID0gaW5wdXQuUmVhZFRhZygpKSAhPSAwKQ0KCQkJew0KCQkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQnJhbmNoQ291bnQoKTsNCgkJCQlpZiAobnVtICE9IDEwKQ0KCQkJCXsNCgkJCQkJX3Vua25vd25GaWVsZHMgPSBVbmtub3duRmllbGRTZXQuTWVyZ2VGaWVsZEZyb20oX3Vua25vd25GaWVsZHMsIGlucHV0KTsNCgkJCQl9DQoJCQkJZWxzZQ0KCQkJCXsNCgkJCQkJdmFsdWVfLkFkZEVudHJpZXNGcm9tKGlucHV0LCBfcmVwZWF0ZWRfdmFsdWVfY29kZWMpOw0KCQkJCX0NCgkJCX0NCgkJfQ0KDQoJCXN0YXRpYyBBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHMoKQ0KCQl7DQoJCQlFeGVjdXRpb25PYnNlcnZlclByb3h5LkNhbGxDb3VudCgpOw0KCQkJX3BhcnNlciA9IG5ldyBNZXNzYWdlUGFyc2VyPEFsbENhbGN1bGF0ZUZlZUNvZWZmaWNpZW50cz4oKEZ1bmM8QWxsQ2FsY3VsYXRlRmVlQ29lZmZpY2llbnRzPilkZWxlZ2F0ZQ0KCQkJew0KCQkJCUV4ZWN1dGlvbk9ic2VydmVyUHJveHkuQ2FsbENvdW50KCk7DQoJCQkJcmV0dXJuIG5ldyBBbGxDYWxjdWxhdGVGZWVDb2VmZmljaWVudHMoKTsNCgkJCX0pOw0KCQkJX3JlcGVhdGVkX3ZhbHVlX2NvZGVjID0gRmllbGRDb2RlYy5Gb3JNZXNzYWdlKDEwdSwgQ2FsY3VsYXRlRmVlQ29lZmZpY2llbnRzLlBhcnNlcik7DQoJCX0NCgl9DQp9DQo=',
-    },
-  ];
+  const { result, defaultFile } = handleFiles(contractInfo);
+  const files = useMemo(() => {
+    return result;
+  }, [result]);
+  const [viewerConfig, setViewerConfig] = useState<IFileItem>(defaultFile);
   const [linkStatus, setLinkStatus] = useState(false);
   const copyCode = () => {
-    handelCopy(window.atob(files[0].content));
+    handelCopy(window.atob(viewerConfig.content));
   };
+
+  const onFileChange = (names) => {
+    const selectedFile = getDefaultFile(files, names);
+    if (Object.keys(selectedFile).length > 0) {
+      setViewerConfig({
+        ...selectedFile,
+      });
+    }
+  };
+
   const copyLink = () => {
     try {
       copy(window.location.href);
@@ -39,6 +106,8 @@ export default function SourceCode() {
   const viewChange = () => {
     setCodeAuto(!codeAuto);
   };
+
+  const { address } = useParams<{ address: string }>();
   return (
     <div className="contract-source-code px-4">
       <div
@@ -48,7 +117,7 @@ export default function SourceCode() {
           <span className="inline-block text-sm leading-[22px] text-base-100">Contract Source Code</span>
         </div>
         <div className={clsx(isMobile && 'mt-2', 'view flex items-center')}>
-          <Download files={files} fileName={'contract'} />
+          <Download files={files} fileName={getAddress(address)} />
           <Button
             className="view-button mx-2"
             icon={<IconFont className="!text-xs" type="view-copy" />}
@@ -66,8 +135,16 @@ export default function SourceCode() {
           />
         </div>
       </div>
-      <div className="code-container">
-        <CodeViewer auto={codeAuto} data={window.atob(files[0].content)} name={files[0].name} />
+      <div className="flex w-full overflow-x-auto pb-10">
+        <FileTree files={files} onChange={onFileChange} />
+        <div className="ml-1 flex-1">
+          <CodeViewer
+            auto={codeAuto}
+            data={window.atob(viewerConfig?.content || '')}
+            name={viewerConfig?.name}
+            path={viewerConfig?.path || ''}
+          />
+        </div>
       </div>
     </div>
   );

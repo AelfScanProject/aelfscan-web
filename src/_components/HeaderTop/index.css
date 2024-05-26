@@ -52,12 +52,12 @@
     @apply mr-6;
   }
   .header-top-container-price {
-    width: 169px;
+    min-width: 169px;
     height: 30px;
     @apply py-1 pl-1 pr-2 mr-auto;
     .title,
     .price {
-      @apply text-[16px] leading-[22px] text-white mr-2;
+      @apply text-[14px] leading-[22px] text-white mr-2;
     }
   }
   .header-top-container-explorer-change {

@@ -1,6 +1,6 @@
 'use client';
 import Table from '@_components/Table';
-import getColumns from '../../_Detail/_holders/column';
+import getColumns from '../../../[collectionSymbol]/_Detail/_holders/column';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
@@ -9,7 +9,7 @@ import { getPageNumber } from '@_utils/formatter';
 import { TChainID } from '@_api/type';
 import { useParams } from 'next/navigation';
 import { pageSizeOption } from '@_utils/contant';
-import { HolderItem } from '../../_Detail/type';
+import { HolderItem } from '../../../[collectionSymbol]/_Detail/type';
 
 export default function Holder() {
   const isMobile = useMobileAll();

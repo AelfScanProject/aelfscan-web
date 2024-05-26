@@ -13,10 +13,7 @@ import {
   CollectionInventoryData,
   CollectionTransfersData,
 } from '@app/[chain]/nft/[collectionSymbol]/_Detail/type';
-import {
-  ItemSymbolDetailActivity,
-  ItemSymbolDetailOverview,
-} from '@app/[chain]/nft/[collectionSymbol]/[itemSymbol]/type';
+import { ItemSymbolDetailActivity, ItemSymbolDetailOverview } from '@app/[chain]/nft/item/[itemSymbol]/type';
 
 const defaultTokenListData = {
   total: 0,

@@ -9,7 +9,8 @@ import { pageSizeOption } from '@_utils/contant';
 import { ITransactionsResponseItem, TChainID } from '@_api/type';
 import { useParams } from 'next/navigation';
 import { fetchTransactionList } from '@_api/fetchTransactions';
-import { getPageNumber } from '@_utils/formatter';
+import { getAddress, getPageNumber } from '@_utils/formatter';
+import { useEffectOnce } from 'react-use';
 
 export default function List({ SSRData, showHeader = true }) {
   console.log(SSRData, 'transactionSSRData');
@@ -21,7 +22,7 @@ export default function List({ SSRData, showHeader = true }) {
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<ITransactionsResponseItem[]>(SSRData.transactions);
   const [timeFormat, setTimeFormat] = useState<string>('Age');
-  const { chain } = useParams();
+  const { chain, address } = useParams();
   const fetchData = useCallback(
     async (page, pageSize) => {
       setLoading(true);
@@ -29,6 +30,7 @@ export default function List({ SSRData, showHeader = true }) {
         chainId: chain as TChainID,
         skipCount: getPageNumber(page, pageSize),
         maxResultCount: pageSize,
+        address: address && getAddress(address as string),
       };
       try {
         const res = await fetchTransactionList(params);
@@ -38,8 +40,13 @@ export default function List({ SSRData, showHeader = true }) {
         setLoading(false);
       }
     },
-    [chain],
+    [address, chain],
   );
+
+  useEffectOnce(() => {
+    if (showHeader) return;
+    fetchData(currentPage, pageSize);
+  });
   const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
     return getColumns({
       timeFormat,

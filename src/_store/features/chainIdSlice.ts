@@ -4,14 +4,17 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { ChainItem } from '@_types';
 import { ChainId } from '@_utils/contant';
 import { Chain } from 'global';
+import { IBlockchainOverviewResponse } from '@_api/type';
 
 export interface IChainState {
   chainArr: ChainItem[];
   defaultChain: Chain | undefined;
+  tokenInfo: IBlockchainOverviewResponse | null;
 }
 const initialState: IChainState = {
   chainArr: [],
   defaultChain: ChainId,
+  tokenInfo: null,
 };
 
 export const chainIdSlice = createSlice({
@@ -24,6 +27,9 @@ export const chainIdSlice = createSlice({
     setChainArr: (state, action) => {
       state.chainArr = action.payload;
     },
+    setTokenInfo: (state, action) => {
+      state.tokenInfo = action.payload;
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -34,6 +40,6 @@ export const chainIdSlice = createSlice({
     },
   },
 });
-export const { setDefaultChain, setChainArr } = chainIdSlice.actions;
+export const { setDefaultChain, setChainArr, setTokenInfo } = chainIdSlice.actions;
 export const chainInfo = (state: AppState) => state.getChainId;
 export default chainIdSlice.reducer;
