@@ -7,9 +7,8 @@ import getColumns from './columnConfig';
 import './index.css';
 import { useDebounce, useEffectOnce } from 'react-use';
 import EPSearch from '@_components/EPSearch';
-import { useMobileContext } from '@app/pageProvider';
 import clsx from 'clsx';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
+import { useMobileAll } from '@_hooks/useResponsive';
 
 export default function Events({ SSRData = { total: 0, list: [] } }) {
   const [currentPage, setCurrentPage] = useState<number>(1);

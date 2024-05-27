@@ -1,6 +1,6 @@
 import request from '@_api';
 
-const showPath = ['blockchain', '/tokens', '/nfts', '/contracts', '/address'];
+const showPath = ['blockchain', '/tokens', '/nfts', '/contracts', '/address', '/'];
 const showLabel = ['Blocks', 'Transactions', 'Contracts', 'Top Accounts'];
 export async function fetchCMS() {
   const result = await request.cms.getGlobalConfig({ params: { cache: 'no-store' } });

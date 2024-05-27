@@ -7,7 +7,7 @@ import { CollectionTransfer } from '../type';
 import { useParams } from 'next/navigation';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { NftCollectionPageParams } from 'global';
-import { getPageNumber } from '@_utils/formatter';
+import { getAddress, getPageNumber } from '@_utils/formatter';
 import { fetchNFTTransfers } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
 export interface ItemActivityTableProps {
@@ -31,7 +31,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
       const data = await fetchNFTTransfers({
         maxResultCount: pageSize,
         skipCount: getPageNumber(currentPage, pageSize),
-        search: search ?? '',
+        search: getAddress(search ?? ''),
         collectionSymbol: collectionSymbol,
         chainId: chain as TChainID,
       });
