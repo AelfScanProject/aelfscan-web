@@ -75,7 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <Header chainList={chainList} networkList={networkList} headerMenuList={headerMenuList} />
                 </Suspense>
                 <Suspense>
-                  <MainContainer isMobileSSR={isMobile}>{children}</MainContainer>
+                  <MainContainer>{children}</MainContainer>
                 </Suspense>
                 <Suspense>
                   <Footer isMobileSSR={isMobile} footerMenuList={footerMenuList} />

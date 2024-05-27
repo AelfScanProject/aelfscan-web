@@ -1,11 +1,11 @@
 import EPTooltip from '@_components/EPToolTip';
 import IconFont from '@_components/IconFont';
-import { useMobileContext } from '@app/pageProvider';
 import { FontWeightEnum, Typography } from 'aelf-design';
 import { Divider, Flex } from 'antd';
 import { useCallback, useMemo } from 'react';
 import './index.css';
 import { IOverviewCardProps, IOverviewItem } from './type';
+import { useMobileAll } from '@_hooks/useResponsive';
 
 const { Text } = Typography;
 
@@ -17,7 +17,7 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
     return [col1Items, col2Items];
   }, [breakIndex, items]);
 
-  const { isMobileSSR: isMobile } = useMobileContext();
+  const isMobile = useMobileAll();
 
   const renderItem = useCallback(
     (item: IOverviewItem, index: number) => {

@@ -11,7 +11,7 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { pageSizeOption } from '@_utils/contant';
 import { TChainID } from '@_api/type';
 import { useParams } from 'next/navigation';
-import { getPageNumber } from '@_utils/formatter';
+import { getAddress, getPageNumber } from '@_utils/formatter';
 import { fetchTokenDetailTransfers } from '@_api/fetchTokens';
 
 interface ITransfersProps extends ITokenSearchProps {}
@@ -54,7 +54,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
         symbol: tokenSymbol as string,
         skipCount: getPageNumber(currentPage, pageSize),
         maxResultCount: pageSize,
-        search: searchText || '',
+        search: getAddress(searchText ?? ''.trim()),
       };
       const res = await fetchTokenDetailTransfers(params);
       const { balance, value, list, total } = res;

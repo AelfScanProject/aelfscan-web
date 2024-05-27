@@ -1,7 +1,6 @@
 'use client';
 import HeadTitle from '@_components/HeaderTitle';
 import Table from '@_components/Table';
-import { useMobileContext } from '@app/pageProvider';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import getColumns from './columnConfig';
 import { INFTsTableData, INFTsTableItem } from './type';
@@ -11,6 +10,7 @@ import { TChainID } from '@_api/type';
 import { SortEnum } from '@_types/common';
 import { fetchNFTSList } from '@_api/fetchNFTS';
 import { pageSizeOption } from '@_utils/contant';
+import { useMobileAll } from '@_hooks/useResponsive';
 
 interface TokensListProps {
   SSRData: INFTsTableData;
@@ -18,7 +18,7 @@ interface TokensListProps {
 
 export default function TokensList({ SSRData }: TokensListProps) {
   console.log(SSRData, 'SSRData');
-  const { isMobileSSR: isMobile } = useMobileContext();
+  const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(50);
   const [loading, setLoading] = useState<boolean>(false);

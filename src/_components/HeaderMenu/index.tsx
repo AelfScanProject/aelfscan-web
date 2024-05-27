@@ -24,7 +24,7 @@ export default function HeaderMenu({ networkList, selectedKey, setCurrent, heade
   const router = useRouter();
   const jump = useMemoizedFn((url) => {
     // microApp.setData('governance', { path: url });
-    router.replace(`/${defaultChain}${url}`);
+    router.replace(url === '/' ? `${url}?chainId=${defaultChain}` : `/${defaultChain}${url}`);
     // window.history?.pushState(null, '', url);
     // window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
   });

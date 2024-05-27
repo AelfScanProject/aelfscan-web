@@ -7,6 +7,7 @@ import { NftCollectionPageParams } from 'global';
 import { fetchNFTInventory } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
 import { Skeleton } from 'antd';
+import { getAddress } from '@_utils/formatter';
 export interface InventoryProps {
   search?: string;
   topSearchProps?: ITableSearch;
@@ -29,7 +30,7 @@ export default function Inventory(props: InventoryProps) {
         chainId: chain as TChainID,
         skipCount: (currentPage - 1) * pageSize,
         maxResultCount: pageSize,
-        search: search ?? '',
+        search: getAddress(search ?? ''),
         collectionSymbol: collectionSymbol,
       });
       setTotal(res.total);

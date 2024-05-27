@@ -11,6 +11,8 @@ import { setDefaultChain } from '@_store/features/chainIdSlice';
 import { getPathnameFirstSlash } from '@_utils/urlUtils';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
+import { useMobileAll } from '@_hooks/useResponsive';
+import clsx from 'clsx';
 
 interface IProps {
   headerMenuList: MenuItem[];
@@ -23,6 +25,8 @@ type AntdMenuItem = Required<MenuProps>['items'][number];
 export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedKey, networkList }: IProps) {
   console.log(networkList, 'networkList');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  const isMobile = useMobileAll();
 
   const { chainArr, defaultChain } = useAppSelector((state) => state.getChainId);
   const toggleMenu = () => {
@@ -47,7 +51,7 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   const jump = (url) => {
     window.history.pushState(null, '', url);
     window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
-    router.replace(`/${defaultChain}${url}`);
+    router.replace(url === '/' ? `?chainId=${defaultChain}` : `/${defaultChain}${url}`);
   };
   const convertMenuItems = (list) => {
     return list?.map((ele) => {
@@ -103,9 +107,12 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
           closable={false}
           zIndex={40}
           styles={{ mask: { background: 'transparent' } }}
-          className={`header-drawer-menu-wrapper ${isMainNet ? 'header-main-drawer-menu-wrapper' : ''} ${
-            pathname === '/' && 'home-header-drawer-menu-wrapper'
-          }`}
+          className={clsx(
+            'header-drawer-menu-wrapper',
+            isMainNet ? 'header-main-drawer-menu-wrapper' : '',
+            pathname === '/' && 'home-header-drawer-menu-wrapper',
+            isMobile && pathname !== '/' ? '!mt-28' : '',
+          )}
           rootClassName={`header-drawer-menu-root-wrapper`}
           onClose={() => toggleMenu()}>
           <Menu
