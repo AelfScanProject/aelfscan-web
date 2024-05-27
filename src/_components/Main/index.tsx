@@ -10,7 +10,18 @@ import React from 'react';
 import './index.css';
 import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
-export default function MainContainer({ children, isMobileSSR }) {
+import { usePathname } from 'next/navigation';
+export default function MainContainer({ children }) {
+  const path = usePathname();
   const isMobile = useMobileAll();
-  return <div className={clsx(isMobile && 'main-container-mobile', 'main-container w-full')}>{children}</div>;
+  return (
+    <div
+      className={clsx(
+        isMobile && 'main-container-mobile',
+        'main-container w-full',
+        path !== '/' && isMobile && '!pt-28',
+      )}>
+      {children}
+    </div>
+  );
 }

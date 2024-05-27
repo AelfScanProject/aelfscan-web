@@ -2,7 +2,6 @@ import { Tooltip, ITooltipProps } from 'aelf-design';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 import './index.css';
-import { useMobileContext } from '@app/pageProvider';
 import { TooltipPlacement } from 'antd/es/tooltip';
 import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
 import { TriggerType } from 'antd/es/color-picker/interface';

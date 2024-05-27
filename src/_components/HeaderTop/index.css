@@ -16,6 +16,12 @@
     }
   }
 
+  &-search {
+    @apply h-14 px-3 py-2;
+
+    box-shadow: 0 -1px 0 0 #3a4668 inset;
+  }
+
   &-explorer-change {
     @apply hidden lg:flex cursor-pointer w-10 h-10 items-center justify-center rounded border border-[#BFBFBF] ml-2;
     .explorer-change-icon {
@@ -65,9 +71,9 @@
   }
 }
 .header-top-container-mobile {
-  @apply w-full;
+  @apply w-full h-auto;
   .header-top-container-content {
-    @apply w-[100vw] mx-0 px-3;
+    @apply w-[100vw] mx-0 px-3 h-14;
     .header-top-container-icon {
       @apply ml-0;
     }
