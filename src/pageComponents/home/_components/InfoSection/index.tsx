@@ -3,17 +3,18 @@ import clsx from 'clsx';
 import './index.css';
 
 import IconFont from '@_components/IconFont';
-import { IBlockchainOverviewResponse } from '@_api/type';
 import { addSymbol, thousandsNumber, unitConverter } from '@_utils/formatter';
+import { useAppSelector } from '@_store';
+import { Skeleton } from 'antd';
 const clsPrefix = 'home-info-section';
 interface IProps {
   isMobile: boolean;
-  overview: IBlockchainOverviewResponse;
 }
 
-const InfoSection = ({ isMobile, overview }: IProps) => {
-  const range = overview.tokenPriceRate24h;
-  return (
+const InfoSection = ({ isMobile }: IProps) => {
+  const { tokenInfo: overview } = useAppSelector((state) => state.getChainId);
+  const range = overview?.tokenPriceRate24h || 0;
+  return overview ? (
     <div className={clsx(`${clsPrefix}`, isMobile && `${clsPrefix}-mobile`)}>
       <div className={`${clsPrefix}-col-item`}>
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-price`)}>
@@ -80,6 +81,8 @@ const InfoSection = ({ isMobile, overview }: IProps) => {
         </div>
       </div>
     </div>
+  ) : (
+    <Skeleton active />
   );
 };
 export default InfoSection;

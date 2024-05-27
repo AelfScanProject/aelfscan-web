@@ -52,14 +52,7 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   const networkArr = networkList.map((ele) => ele.network_id);
   return (
     <div className={clsx(clsPrefix)}>
-      <HeaderTop
-        price={100}
-        range={'99'}
-        selectedKey={current}
-        setCurrent={setCurrent}
-        networkList={networkList}
-        headerMenuList={headerList}
-      />
+      <HeaderTop selectedKey={current} setCurrent={setCurrent} networkList={networkList} headerMenuList={headerList} />
       {!isMobile && (
         <HeaderMenu
           headerMenuList={headerList}

@@ -45,18 +45,13 @@ export default function Home({ overviewSSR }: IProps) {
   const searchParams = useSearchParams();
   const chain = searchParams.get('chainId') || defaultChain;
 
-  const { blocks, blocksLoading, transactionsLoading, tpsData, transactions, BlockchainOverview, overviewLoading } =
-    useHomeSocket(chain as TChainID);
+  const { blocks, blocksLoading, transactionsLoading, tpsData, transactions } = useHomeSocket(chain as TChainID);
 
   const isMobile = useMobileAll();
 
   const OverView = useMemo(() => {
-    return BlockchainOverview && !overviewLoading ? (
-      <InfoSection isMobile={isMobile} overview={BlockchainOverview}></InfoSection>
-    ) : (
-      <Skeleton active />
-    );
-  }, [BlockchainOverview, isMobile, overviewLoading]);
+    return <InfoSection isMobile={isMobile}></InfoSection>;
+  }, [isMobile]);
 
   const LatestAll = useMemo(() => {
     return (
