@@ -11,6 +11,8 @@ import { MenuItem, NetworkItem } from '@_types';
 import { useEnvContext } from 'next-runtime-env';
 import { useParams, useRouter } from 'next/navigation';
 import { checkMainNet } from '@_utils/isMainNet';
+import useBlockchainOverview from '@_hooks/useBlockchainOverview';
+import { TChainID } from '@_api/type';
 
 // at public file
 const TopIconMain = '/image/aelf-header-top.svg';
@@ -20,16 +22,14 @@ const ChangeIcoTest = '/image/aelf-header-top-test-change.svg';
 
 const clsPrefix = 'header-top-container';
 interface IProps {
-  price: number;
-  range: string;
   networkList: NetworkItem[];
   headerMenuList: MenuItem[];
   setCurrent: (key: string) => void;
   selectedKey: string;
 }
-export default function HeaderTop({ price, range, setCurrent, selectedKey, networkList, headerMenuList }: IProps) {
+export default function HeaderTop({ setCurrent, selectedKey, networkList, headerMenuList }: IProps) {
   const isMobile = useMobileAll();
-  const { tokenInfo, defaultChain } = useAppSelector((state) => state.getChainId);
+  const { defaultChain } = useAppSelector((state) => state.getChainId);
   const pathname = usePathname();
   const isHideSearch = pathname === '/' || pathname.includes('search-');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
@@ -37,6 +37,9 @@ export default function HeaderTop({ price, range, setCurrent, selectedKey, netwo
   const finalUrl = networkList.find((ele) => ele?.network_id.key === networkType)?.network_id?.path;
   const { chain } = useParams();
   const router = useRouter();
+  const { BlockchainOverview, overviewLoading } = useBlockchainOverview(defaultChain as TChainID);
+
+  const { tokenPriceRate24h = 0, tokenPriceInUsd = 0 } = BlockchainOverview || {};
 
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
   return (
@@ -54,16 +57,12 @@ export default function HeaderTop({ price, range, setCurrent, selectedKey, netwo
           }}
         />
         <>
-          {isMainNet && tokenInfo && (
+          {isMainNet && !overviewLoading && tokenPriceInUsd && (
             <div className={clsx(`${clsPrefix}-price`)}>
               <span className="title">ELF Price</span>
-              <span className="price">${tokenInfo?.tokenPriceInUsd}</span>
-              <span
-                className={clsx(
-                  `${tokenInfo?.tokenPriceRate24h ?? ''.startsWith('+') ? 'text-rise-red' : 'text-fall-green'}`,
-                  'range',
-                )}>
-                {tokenInfo?.tokenPriceRate24h}%
+              <span className="price">${tokenPriceInUsd}</span>
+              <span className={clsx(`${tokenPriceInUsd < 0 ? 'text-rise-red' : 'text-fall-green'}`, 'range')}>
+                {tokenPriceRate24h <= 0 ? tokenPriceRate24h : `+${tokenPriceRate24h}`}%
               </span>
             </div>
           )}
