@@ -94,7 +94,7 @@ export default function TableApp({
   pageSizeChange,
   options,
   headerTitle,
-  showLast,
+  showLast = true,
   emptyText,
   headerLeftNode,
   ...params

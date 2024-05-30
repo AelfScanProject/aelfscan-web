@@ -32,6 +32,11 @@ export interface IBlocksData {
   blocks: IBlocksResponseItem[];
 }
 
+function isLastPage(totalItems, itemsPerPage, currentPage) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  return currentPage >= totalPages;
+}
+
 export default function BlockList({ SSRData }) {
   console.log(SSRData, ' SSRData');
   const isMobile = useMobileAll();
@@ -43,10 +48,12 @@ export default function BlockList({ SSRData }) {
   const { chain } = useParams<{ chain: TChainID }>();
   const fetchData = useCallback(
     async (page, size) => {
+      const isLast = isLastPage(total, size, page);
       const params = {
         chainId: chain || 'AELF',
-        skipCount: getPageNumber(page, size),
+        skipCount: isLast ? 0 : getPageNumber(page, size),
         maxResultCount: size,
+        isLastPage: isLast,
       };
       setLoading(true);
       try {
@@ -58,7 +65,7 @@ export default function BlockList({ SSRData }) {
       }
       setLoading(false);
     },
-    [chain],
+    [chain, total],
   );
 
   const [timeFormat, setTimeFormat] = useState<string>('Age');
