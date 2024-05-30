@@ -72,6 +72,7 @@ export interface IBlocksRequestParams extends RequestInit {
   chainId: TChainID;
   skipCount: number;
   maxResultCount: number;
+  isLastPage?: boolean;
 }
 
 export interface IBlocksResponseItem {
