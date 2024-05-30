@@ -7,8 +7,8 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchTokenDetailHolders } from '@_api/fetchTokens';
 import { useParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
-import { getPageNumber } from '@_utils/formatter';
 import { pageSizeOption } from '@_utils/contant';
+import { PageTypeEnum } from '@_types';
 
 interface HoldersProps extends ITokenSearchProps {}
 
@@ -22,31 +22,49 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<IHolderItem[]>();
+  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const params = {
         chainId: chain as TChainID,
         symbol: tokenSymbol as string,
-        skipCount: getPageNumber(currentPage, pageSize),
         maxResultCount: pageSize,
+        orderInfos: [
+          { orderBy: 'FormatAmount', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+          { orderBy: 'Address', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+        ],
+        searchAfter:
+          currentPage !== 1 && data && data.length
+            ? [
+                pageType === PageTypeEnum.NEXT ? data[data.length - 1].quantity : data[0].quantity,
+                pageType === PageTypeEnum.NEXT ? data[data.length - 1].address.address : data[0].address.address,
+              ]
+            : ([] as any[]),
       };
       const res = await fetchTokenDetailHolders(params);
-      setData(res.list);
+      setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? res.list : res.list.reverse());
       setTotal(res.total);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
-  }, [chain, tokenSymbol, currentPage, pageSize]);
+  }, [chain, tokenSymbol, pageSize, pageType, currentPage]);
 
   const pageChange = (page: number) => {
+    if (page > currentPage) {
+      setPageType(PageTypeEnum.NEXT);
+    } else {
+      setPageType(PageTypeEnum.PREV);
+    }
     setCurrentPage(page);
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
+    setPageType(PageTypeEnum.NEXT);
   };
 
   useEffect(() => {
@@ -79,6 +97,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
         isMobile={isMobile}
         rowKey="index"
         total={total}
+        showLast={false}
         pageSize={pageSize}
         pageNum={currentPage}
         pageChange={pageChange}

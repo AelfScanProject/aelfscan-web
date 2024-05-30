@@ -7,9 +7,10 @@ import { CollectionTransfer } from '../type';
 import { useParams } from 'next/navigation';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { NftCollectionPageParams } from 'global';
-import { getAddress, getPageNumber } from '@_utils/formatter';
+import { getAddress } from '@_utils/formatter';
 import { fetchNFTTransfers } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
+import { PageTypeEnum } from '@_types';
 export interface ItemActivityTableProps {
   search?: string;
   topSearchProps?: ITableSearch;
@@ -24,25 +25,35 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<CollectionTransfer[]>([]);
+  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
 
   const fetchTableData = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await fetchNFTTransfers({
+      const res = await fetchNFTTransfers({
         maxResultCount: pageSize,
-        skipCount: getPageNumber(currentPage, pageSize),
         search: getAddress(search ?? ''),
         collectionSymbol: collectionSymbol,
         chainId: chain as TChainID,
+        orderInfos: [
+          { orderBy: 'BlockHeight', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+          { orderBy: 'TransactionId', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+        ],
+        searchAfter:
+          currentPage !== 1 && data && data.length
+            ? [
+                pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockHeight : data[0].blockHeight,
+                pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
+              ]
+            : ([] as any[]),
       });
-      setData(data.list);
-      setTotal(data.total);
-      console.log(data, 'data');
+      setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? res.list : res.list.reverse());
+      setTotal(res.total);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
-  }, [pageSize, currentPage, search, collectionSymbol, chain]);
+  }, [pageSize, currentPage, search, collectionSymbol, chain, pageType]);
 
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const columns = useMemo<ColumnsType<CollectionTransfer>>(() => {
@@ -56,12 +67,24 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
   }, [chain, timeFormat]);
 
   const pageChange = (page: number) => {
+    if (page > currentPage) {
+      setPageType(PageTypeEnum.NEXT);
+    } else {
+      setPageType(PageTypeEnum.PREV);
+    }
     setCurrentPage(page);
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
+    setPageType(PageTypeEnum.NEXT);
+  };
+
+  const onSearchChange = (value) => {
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+    topSearchProps?.onSearchChange(value);
   };
 
   useEffect(() => {
@@ -77,11 +100,12 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
           },
         }}
         showTopSearch={true}
-        topSearchProps={topSearchProps}
+        topSearchProps={{ ...topSearchProps, onSearchChange }}
         loading={loading}
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
+        showLast={false}
         rowKey="transactionId"
         total={total}
         pageSize={pageSize}

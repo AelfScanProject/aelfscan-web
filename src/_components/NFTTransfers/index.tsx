@@ -5,11 +5,12 @@ import getColumns from '@_components/TokenTransfers/columnConfig';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { ITokenTransfers, TokenTransfersItemType } from '@_types/commonDetail';
-import { getAddress, getPageNumber, thousandsNumber } from '@_utils/formatter';
+import { getAddress, thousandsNumber } from '@_utils/formatter';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
 import { fetchAccountTransfers } from '@_api/fetchContact';
+import { PageTypeEnum } from '@_types';
 export interface IResponseData {
   total: number;
   data: TokenTransfersItemType[];
@@ -23,6 +24,7 @@ export default function List({ showHeader = true }) {
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<TokenTransfersItemType[]>([]);
   const [timeFormat, setTimeFormat] = useState<string>('Age');
+  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
 
   const { chain, address } = useParams<{
     chain: TChainID;
@@ -32,21 +34,31 @@ export default function List({ showHeader = true }) {
   const fetchData = useCallback(async () => {
     const params = {
       chainId: chain,
-      skipCount: getPageNumber(currentPage, pageSize),
       maxResultCount: pageSize,
       tokenType: 1,
       address: getAddress(address),
+      orderInfos: [
+        { orderBy: 'BlockHeight', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+        { orderBy: 'TransactionId', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+      ],
+      searchAfter:
+        currentPage !== 1 && data && data.length
+          ? [
+              pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockHeight : data[0].blockHeight,
+              pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
+            ]
+          : ([] as any[]),
     };
     setLoading(true);
     try {
       const res: ITokenTransfers = await fetchAccountTransfers(params);
       setTotal(res.total);
-      setData(res.list);
+      setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? res.list : res.list.reverse());
     } catch (error) {
       setLoading(false);
     }
     setLoading(false);
-  }, [address, chain, currentPage, pageSize]);
+  }, [address, chain, currentPage, pageSize, pageType]);
 
   const columns = useMemo<ColumnsType<TokenTransfersItemType>>(() => {
     return getColumns({
@@ -64,12 +76,18 @@ export default function List({ showHeader = true }) {
   }, [total]);
 
   const pageChange = (page: number) => {
+    if (page > currentPage) {
+      setPageType(PageTypeEnum.NEXT);
+    } else {
+      setPageType(PageTypeEnum.PREV);
+    }
     setCurrentPage(page);
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
+    setPageType(PageTypeEnum.NEXT);
   };
 
   useEffect(() => {
@@ -91,6 +109,7 @@ export default function List({ showHeader = true }) {
         isMobile={isMobile}
         rowKey="transactionId"
         total={total}
+        showLast={false}
         pageSize={pageSize}
         pageNum={currentPage}
         pageChange={pageChange}
