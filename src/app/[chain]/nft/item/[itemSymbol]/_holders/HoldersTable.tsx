@@ -5,11 +5,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchNFTItemHolders } from '@_api/fetchNFTS';
+import { getPageNumber } from '@_utils/formatter';
 import { TChainID } from '@_api/type';
 import { useParams } from 'next/navigation';
 import { pageSizeOption } from '@_utils/contant';
 import { HolderItem } from '../../../[collectionSymbol]/_Detail/type';
-import { PageTypeEnum } from '@_types';
 
 export default function Holder() {
   const isMobile = useMobileAll();
@@ -19,50 +19,33 @@ export default function Holder() {
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<HolderItem[]>([]);
-  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
   const fetchHolderDataWrap = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchNFTItemHolders({
+      const data = await fetchNFTItemHolders({
         chainId: chain as TChainID,
+        skipCount: getPageNumber(currentPage, pageSize),
         maxResultCount: pageSize,
         symbol: itemSymbol as string,
-        orderInfos: [
-          { orderBy: 'FormatAmount', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
-          { orderBy: 'Address', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
-        ],
-        searchAfter:
-          currentPage !== 1 && data && data.length
-            ? [
-                pageType === PageTypeEnum.NEXT ? data[data.length - 1].quantity : data[0].quantity,
-                pageType === PageTypeEnum.NEXT ? data[data.length - 1].address.address : data[0].address.address,
-              ]
-            : ([] as any[]),
       });
-      setTotal(res.total);
-      setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? res.list : res.list.reverse());
+      setTotal(data.total);
+      setData(data.list);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
-  }, [chain, currentPage, itemSymbol, pageSize, pageType]);
+  }, [chain, currentPage, itemSymbol, pageSize]);
   const columns = useMemo<ColumnsType<HolderItem>>(() => {
     return getColumns(currentPage, pageSize, chain);
   }, [chain, currentPage, pageSize]);
 
   const pageChange = (page: number) => {
-    if (page > currentPage) {
-      setPageType(PageTypeEnum.NEXT);
-    } else {
-      setPageType(PageTypeEnum.PREV);
-    }
     setCurrentPage(page);
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
-    setPageType(PageTypeEnum.NEXT);
   };
 
   useEffect(() => {
@@ -80,7 +63,6 @@ export default function Holder() {
         }}
         loading={loading}
         dataSource={data}
-        showLast={false}
         columns={columns}
         isMobile={isMobile}
         rowKey={(record) => {

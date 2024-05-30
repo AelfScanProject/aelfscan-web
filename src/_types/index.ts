@@ -16,8 +16,3 @@ export interface MenuItem {
   children: MenuItem[];
   key?: string;
 }
-
-export enum PageTypeEnum {
-  PREV,
-  NEXT,
-}

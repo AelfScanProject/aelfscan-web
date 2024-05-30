@@ -23,8 +23,3 @@ export const getChainByPath = (path: string) => {
   const chainId = searchParams.get('chainId');
   return chainId as unknown as Chain;
 };
-
-export function isURL(text: string): boolean {
-  const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-  return urlPattern.test(text);
-}

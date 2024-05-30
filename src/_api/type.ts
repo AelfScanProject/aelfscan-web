@@ -72,7 +72,6 @@ export interface IBlocksRequestParams extends RequestInit {
   chainId: TChainID;
   skipCount: number;
   maxResultCount: number;
-  isLastPage?: boolean;
 }
 
 export interface IBlocksResponseItem {
@@ -137,7 +136,6 @@ export interface ITokensTransferrdItem {
   name: string;
   symbol: string;
   amount: number;
-  amountString: number;
   nowPrice: string;
   tradePrice: string;
   imageUrl: string;
@@ -155,7 +153,6 @@ export type TNftsTransferred = INftsTransferredItem[];
 export interface ITransactionValues {
   symbol: string;
   amount: number;
-  amountString: number;
   nowPrice: string;
   tradePrice: string;
 }
@@ -193,29 +190,20 @@ export interface ITransactionDetailDataList {
   list: ITransactionDetailData[];
 }
 
-export interface ISortInfo {
-  orderBy: string;
-  sort: string;
-}
-
 export interface ITokenHoldersRequestParams extends RequestInit {
   chainId: TChainID;
   symbol: string;
-  skipCount?: number;
+  skipCount: number;
   maxResultCount: number;
-  orderInfos: ISortInfo[];
-  searchAfter: any[];
   // search: string;
 }
 
 export interface ITokenTransfersRequestParams extends RequestInit {
   chainId: TChainID;
-  skipCount?: number;
+  skipCount: number;
   maxResultCount: number;
   symbol: string;
   search: string;
-  orderInfos: ISortInfo[];
-  searchAfter: any[];
 }
 
 export interface ITokenDetailRequestParams extends RequestInit {
@@ -247,25 +235,21 @@ export interface ICollectionDetailRequestParams extends RequestInit {
 
 export interface ICollectionTransfersRequestParams extends RequestInit {
   chainId: TChainID;
-  skipCount?: number;
+  skipCount: number;
   maxResultCount: number;
   collectionSymbol: string;
   search: string;
   orderBy?: string;
   sort?: string;
-  orderInfos?: ISortInfo[];
-  searchAfter?: any[];
 }
 
 export interface ICollectionItemHoldersRequestParams extends RequestInit {
   chainId: TChainID;
-  skipCount?: number;
+  skipCount: number;
   maxResultCount: number;
   symbol: string;
   orderBy?: string;
   sort?: string;
-  orderInfos?: ISortInfo[];
-  searchAfter?: any[];
 }
 
 // Contract
@@ -317,13 +301,11 @@ export interface IAccountDetailRequestParams extends RequestInit {
 export interface IAccountTokensRequestParams extends RequestInit {
   chainId: TChainID;
   address: string;
-  skipCount?: number;
+  skipCount: number;
   maxResultCount: number;
   sort?: SortEnum;
   orderBy?: string;
   search?: string;
-  orderInfos?: ISortInfo[];
-  searchAfter?: any[];
 }
 
 export interface IContractHistoryRequestParams extends RequestInit {

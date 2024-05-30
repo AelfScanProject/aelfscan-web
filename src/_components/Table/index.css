@@ -69,9 +69,3 @@
     }
   }
 }
-
-.ep-table-hidden-page {
-  .explorer-pageNumber-container {
-    @apply hidden;
-  }
-}

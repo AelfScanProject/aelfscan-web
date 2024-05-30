@@ -11,9 +11,8 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { pageSizeOption } from '@_utils/contant';
 import { TChainID } from '@_api/type';
 import { useParams } from 'next/navigation';
-import { getAddress } from '@_utils/formatter';
+import { getAddress, getPageNumber } from '@_utils/formatter';
 import { fetchTokenDetailTransfers } from '@_api/fetchTokens';
-import { PageTypeEnum } from '@_types';
 
 interface ITransfersProps extends ITokenSearchProps {}
 
@@ -43,7 +42,6 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
   const [timeFormat, setTimeFormat] = useState<string>('Date Time (UTC)');
   const [address, setAddress] = useState<string>('');
   const [searchData, setSearchData] = useState<TTransferSearchData>();
-  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
 
   const { chain, tokenSymbol } = useParams();
   const [, setSearchText] = useState<string>('');
@@ -54,30 +52,20 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
       const params = {
         chainId: chain as TChainID,
         symbol: tokenSymbol as string,
+        skipCount: getPageNumber(currentPage, pageSize),
         maxResultCount: pageSize,
         search: getAddress(searchText ?? ''.trim()),
-        orderInfos: [
-          { orderBy: 'BlockHeight', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
-          { orderBy: 'TransactionId', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
-        ],
-        searchAfter:
-          currentPage !== 1 && data && data.length
-            ? [
-                pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockHeight : data[0].blockHeight,
-                pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
-              ]
-            : ([] as any[]),
       };
       const res = await fetchTokenDetailTransfers(params);
       const { balance, value, list, total } = res;
-      setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? list : list.reverse());
+      setData(list);
       setSearchData({ balance, value });
       setTotal(total);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
-  }, [chain, tokenSymbol, currentPage, pageSize, searchText, pageType]);
+  }, [chain, tokenSymbol, currentPage, pageSize, searchText]);
 
   useImperativeHandle(
     ref,
@@ -85,25 +73,17 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
       setSearchStr(val: string) {
         setAddress(val);
         setSearchText(val);
-        setCurrentPage(1);
-        setPageType(PageTypeEnum.NEXT);
       },
     }),
     [setSearchText],
   );
 
   const pageChange = (page: number) => {
-    if (page > currentPage) {
-      setPageType(PageTypeEnum.NEXT);
-    } else {
-      setPageType(PageTypeEnum.PREV);
-    }
     setCurrentPage(page);
   };
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
-    setPageType(PageTypeEnum.NEXT);
   };
 
   useEffect(() => {
@@ -178,7 +158,6 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
         isMobile={isMobile}
         rowKey="transactionHash"
         total={total}
-        showLast={false}
         pageSize={pageSize}
         pageNum={currentPage}
         pageChange={pageChange}

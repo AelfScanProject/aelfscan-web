@@ -8,7 +8,7 @@ import IconFont from '@_components/IconFont';
 import { useRouter } from 'next/navigation';
 import ChainSelect from '@_components/ChainSelect';
 import { MenuItem, NetworkItem } from '@_types';
-import { getPathnameFirstSlash, isURL } from '@_utils/urlUtils';
+import { getPathnameFirstSlash } from '@_utils/urlUtils';
 import { useMemoizedFn } from 'ahooks';
 import { useAppSelector } from '@_store';
 interface IProps {
@@ -24,11 +24,7 @@ export default function HeaderMenu({ networkList, selectedKey, setCurrent, heade
   const router = useRouter();
   const jump = useMemoizedFn((url) => {
     // microApp.setData('governance', { path: url });
-    if (isURL(url)) {
-      window.open(url);
-    } else {
-      router.replace(url === '/' ? `${url}?chainId=${defaultChain}` : `/${defaultChain}${url}`);
-    }
+    router.replace(url === '/' ? `${url}?chainId=${defaultChain}` : `/${defaultChain}${url}`);
     // window.history?.pushState(null, '', url);
     // window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
   });
@@ -69,9 +65,7 @@ export default function HeaderMenu({ networkList, selectedKey, setCurrent, heade
   }, [headerMenuList, jump]);
 
   const onClick: MenuProps['onClick'] = (e) => {
-    if (!e.key.startsWith('http')) {
-      setCurrent(e.key);
-    }
+    setCurrent(e.key);
   };
 
   return (

@@ -166,7 +166,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                       </div>
                       <div className="flex items-center">
                         <div className="mx-1 shrink-0 text-base-200">For</div>
-                        <span>{tokenTransfer.amountString}</span>
+                        <span>{divDecimals(tokenTransfer.amount)}</span>
                         <DollarCurrencyRate nowPrice={tokenTransfer.nowPrice} tradePrice={tokenTransfer.tradePrice} />
                       </div>
                       <div className="ml-1 flex items-center">
@@ -252,7 +252,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                 <div
                   key={idx}
                   className={clsx('flex items-center', idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider')}>
-                  <span>{transactionValue.amountString}</span>
+                  <span>{divDecimals(transactionValue.amount)}</span>
                   <span>{transactionValue.symbol}</span>
                   <DollarCurrencyRate nowPrice={transactionValue.nowPrice} tradePrice={transactionValue.tradePrice} />
                 </div>

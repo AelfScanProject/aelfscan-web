@@ -44,7 +44,6 @@ export interface ICommonTableProps<T> extends ITableProps<T> {
   pageChange?: (page: number, pageSize?: number) => void;
   pageSizeChange?: (page: number, pageSize: number) => void;
   emptyPic?: string;
-  showLast?: boolean;
   headerLeftNode?: ReactNode;
 }
 
@@ -94,7 +93,6 @@ export default function TableApp({
   pageSizeChange,
   options,
   headerTitle,
-  showLast = true,
   emptyText,
   headerLeftNode,
   ...params
@@ -107,7 +105,7 @@ export default function TableApp({
   }, [emptyType, emptyText]);
 
   return (
-    <div className={clsx('ep-table rounded-lg bg-white shadow-table', !showLast && 'ep-table-hidden-page')}>
+    <div className="ep-table rounded-lg bg-white shadow-table">
       <div
         className={clsx(
           'ep-table-header',
@@ -147,7 +145,6 @@ export default function TableApp({
               defaultPageSize={pageSize}
               defaultCurrent={defaultCurrent}
               showSizeChanger={false}
-              showLast={showLast}
               pageChange={pageChange}
               pageSizeChange={pageSizeChange}
             />
@@ -162,7 +159,6 @@ export default function TableApp({
           defaultPageSize={pageSize}
           total={total}
           pageSize={pageSize}
-          showLast={showLast}
           defaultCurrent={defaultCurrent}
           pageChange={pageChange}
           pageSizeChange={pageSizeChange}

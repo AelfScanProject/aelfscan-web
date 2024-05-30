@@ -100,7 +100,6 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       title: 'To',
       width: 196,
       render: (toData) => {
-        console.log(toData, 'toData');
         const { address } = toData;
         return <ContractToken address={address} name={toData.name} chainId={chainId} type={toData.addressType} />;
       },
