@@ -11,20 +11,48 @@ const timeoutPromise = (delay: number) => {
     }, delay);
   });
 };
+function formatQueryParams(params) {
+  const queryStrings = <any>[];
+
+  function processObject(obj, prefix?, isObject?) {
+    Object.keys(obj).forEach((key) => {
+      const value = obj[key];
+      const prefixedKey = prefix ? (isObject ? `${prefix}.${key}` : `${prefix}[${key}]`) : key;
+
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          if (typeof item === 'object' && item !== null) {
+            processObject(item, `${prefixedKey}[${index}]`, true);
+          } else {
+            queryStrings.push(`${prefixedKey}[${index}]=${encodeURIComponent(item)}`);
+          }
+        });
+      } else if (typeof value === 'object' && value !== null) {
+        processObject(value, prefixedKey);
+      } else if ((value !== undefined && value) || value === 0) {
+        queryStrings.push(`${prefixedKey}=${encodeURIComponent(value)}`);
+      }
+    });
+  }
+
+  processObject(params);
+
+  return queryStrings.join('&');
+}
 
 async function service(url: string, options: RequestWithParams) {
   const { params = {} } = options || {};
-  const paramsArr: Array<any> = [];
   if (Object.keys(params).length > 0) {
-    for (const item in params) {
-      if ((params[item] !== undefined && params[item]) || params[item] === 0) {
-        paramsArr.push(item + '=' + params[item]);
-      }
+    let query;
+    try {
+      query = formatQueryParams(params);
+    } catch (error) {
+      console.log(error, error);
     }
     if (url.search(/\?/) === -1) {
-      url += '?' + paramsArr.join('&');
+      url += '?' + query;
     } else {
-      url += '&' + paramsArr.join('&');
+      url += '&' + query;
     }
   }
 

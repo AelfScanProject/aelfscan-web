@@ -29,7 +29,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
                         'flex items-center',
                         idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider',
                       )}>
-                      <span>{transactionFee.amount}</span>
+                      <span>{transactionFee.amountString}</span>
                       <span>{transactionFee.symbol}</span>
                       <DollarCurrencyRate nowPrice={transactionFee.nowPrice} tradePrice={transactionFee.tradePrice} />
                     </div>
@@ -62,7 +62,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
                         'flex items-center',
                         idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider',
                       )}>
-                      <span>{burntFee.amount}</span>
+                      <span>{burntFee.amountString}</span>
                       <span>{burntFee.symbol}</span>
                       <DollarCurrencyRate nowPrice={burntFee.nowPrice} tradePrice={burntFee.tradePrice} />
                     </div>

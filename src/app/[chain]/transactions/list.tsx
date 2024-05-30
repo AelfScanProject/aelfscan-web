@@ -54,8 +54,9 @@ export default function List({ SSRData, showHeader = true }) {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
       type: 'tx',
+      chainId: chain as string,
     });
-  }, [timeFormat]);
+  }, [chain, timeFormat]);
 
   const multiTitle = useMemo(() => {
     return `More than > ${total} transactions found`;

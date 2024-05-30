@@ -8,7 +8,7 @@ import { useState } from 'react';
 import './index.css';
 import { useAppDispatch, useAppSelector } from '@_store';
 import { setDefaultChain } from '@_store/features/chainIdSlice';
-import { getPathnameFirstSlash } from '@_utils/urlUtils';
+import { getPathnameFirstSlash, isURL } from '@_utils/urlUtils';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
 import { useMobileAll } from '@_hooks/useResponsive';
@@ -33,7 +33,9 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
     setShowMobileMenu(!showMobileMenu);
   };
   const onClick: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key);
+    if (!e.key.startsWith('http')) {
+      setCurrent(e.key);
+    }
     setShowMobileMenu(false);
   };
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
@@ -49,9 +51,13 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   }
 
   const jump = (url) => {
-    window.history.pushState(null, '', url);
-    window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
-    router.replace(url === '/' ? `?chainId=${defaultChain}` : `/${defaultChain}${url}`);
+    if (isURL(url)) {
+      window.open(url);
+    } else {
+      window.history.pushState(null, '', url);
+      window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
+      router.replace(url === '/' ? `?chainId=${defaultChain}` : `/${defaultChain}${url}`);
+    }
   };
   const convertMenuItems = (list) => {
     return list?.map((ele) => {

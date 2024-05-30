@@ -1,14 +1,13 @@
-name: Build and Deploy feature
+name: Build and Deploy Testnet
 
 on:
   push:
-    branches: ['refactor/nextjs-13-develop']
-env:
-  DOTNET_INSTALL_DIR: "./.dotnet"
+    branches:
+      - 'release/*'
 
 jobs:
   build-and-push-image:
-    runs-on: block-explorer-runner
+    runs-on: aelfscan-runner
     permissions:
       contents: read
     outputs:
@@ -21,7 +20,6 @@ jobs:
         run: |
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
           echo "short_sha=$calculatedSha" >> "$GITHUB_OUTPUT"
-
       - name: Create image tag
         id: meta
         uses: docker/metadata-action@v5
@@ -29,10 +27,8 @@ jobs:
           images: ${{ secrets.REPOSITORY_REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/aelf-block-explorer
           tags: |
             type=sha
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -44,7 +40,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
   dispatch:
-    runs-on: block-explorer-runner
+    runs-on: aelfscan-runner
     needs: build-and-push-image
     steps:
       - name: Deploy

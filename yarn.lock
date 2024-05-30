@@ -7,17 +7,17 @@
   resolved "https://registry.npmmirror.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@aelf-design/common@1.0.0-alpha.14":
-  version "1.0.0-alpha.14"
-  resolved "https://registry.npmjs.org/@aelf-design/common/-/common-1.0.0-alpha.14.tgz#961de14539521fbc4ed884ff0273a0e4414b68f3"
-  integrity sha512-RT5LvtxGXR3Q2V4OF15lDmtMJo4z002xRWGR+j/Pzaw33n+lJg+bxCfoxVKZmcpE1QlGtbtyB5FOgv9rP9ndBg==
+"@aelf-design/common@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@aelf-design/common/-/common-1.1.0.tgz#2f8c2cf1facb9dbe5f60b29baaf8ec922f55278e"
+  integrity sha512-a9QdvCco1EBuSvsGsTbFXGHdlqJm9VXqmkkftfHZRPIIUTWS4jLwpfyScG8f8mYV3tJOixW3Mk7AOk24/p92XQ==
   dependencies:
     "@ant-design/cssinjs" "^1.18.2"
 
-"@aelf-design/icons@1.0.0-alpha.15":
-  version "1.0.0-alpha.15"
-  resolved "https://registry.npmjs.org/@aelf-design/icons/-/icons-1.0.0-alpha.15.tgz#76b0ae463e3a44ade66525f9197ffe2494e3f021"
-  integrity sha512-l9h5BBKPR6jpLmU2GnXQxHbce0QVT1Fl4VjbQaru/j4EvhP2Nrs19BfXqVum+rvqLwLkvFz243cE72ztIBY7VA==
+"@aelf-design/icons@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@aelf-design/icons/-/icons-1.1.0.tgz#ac6b06130ae367b285dacbebfe553afd75bce728"
+  integrity sha512-3M5uyAkVeduDXbzmFcj56ohbR0hJQn8SLSFxurycDUmX6VRtO3Tb0huuUn7RZo1tGv8f4fMg0to9ZMNEB7+4Fg==
   dependencies:
     "@ant-design/cssinjs" "^1.18.2"
     antd-style "^3.5.2"
@@ -2590,13 +2590,13 @@ add-stream@^1.0.0:
   resolved "https://registry.npmmirror.com/add-stream/-/add-stream-1.0.0.tgz"
   integrity sha512-qQLMr+8o0WC4FZGQTcJiKBVC59JylcPSrTtk6usvmIDFUOCKegapy1VHQwRbFMOFyb/inzUVqHs+eMYKDM1YeQ==
 
-aelf-design@^1.0.0-alpha.15:
-  version "1.0.0-alpha.15"
-  resolved "https://registry.npmjs.org/aelf-design/-/aelf-design-1.0.0-alpha.15.tgz#5735da39e18ccc8d4d413a58ebff309f3e00c687"
-  integrity sha512-3i4js4uzPljDwEOvnCqOELiKug8gxPjlXwQCrYxMM6FSy94L3bkYDxeBlNqJELDSxfG5/gzFQC4Zj+ej5Wz8VA==
+aelf-design@^1.0.0-alpha.17:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/aelf-design/-/aelf-design-1.1.0.tgz#59a1504946752721fb13f0c5d78e280e0ab7216e"
+  integrity sha512-ktKcRHRxtcI574w406QgLmsLy74KO+b737p3vGqf6FwfIAkWdtTs78v0OIswBIgAqI18hbJ6wOulIVpQ5UvQ7A==
   dependencies:
-    "@aelf-design/common" "1.0.0-alpha.14"
-    "@aelf-design/icons" "1.0.0-alpha.15"
+    "@aelf-design/common" "1.1.0"
+    "@aelf-design/icons" "1.1.0"
     "@ant-design/cssinjs" "^1.18.2"
     "@aws-sdk/client-cognito-identity" "^3.410.0"
     "@aws-sdk/client-s3" "^3.410.0"
