@@ -7,10 +7,10 @@ import getColumns from './column';
 import { useParams } from 'next/navigation';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { NftCollectionPageParams } from 'global';
-import { getPageNumber } from '@_utils/formatter';
 import { fetchNFTHolders } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
+import { PageTypeEnum } from '@_types';
 
 export interface HolderProps {
   topSearchProps?: ITableSearch;
@@ -26,35 +26,58 @@ export default function Holder(props: HolderProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<HolderItem[]>([]);
+  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
   const fetchHolderDataWrap = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await fetchNFTHolders({
+      const res = await fetchNFTHolders({
         chainId: chain as TChainID,
-        skipCount: getPageNumber(currentPage, pageSize),
         maxResultCount: pageSize,
         collectionSymbol: collectionSymbol,
         search: '',
+        orderInfos: [
+          { orderBy: 'FormatAmount', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+          { orderBy: 'Address', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+        ],
+        searchAfter:
+          currentPage !== 1 && data && data.length
+            ? [
+                pageType === PageTypeEnum.NEXT ? data[data.length - 1].quantity : data[0].quantity,
+                pageType === PageTypeEnum.NEXT ? data[data.length - 1].address.address : data[0].address.address,
+              ]
+            : ([] as any[]),
       });
-      setTotal(data.total);
-      setData(data.list);
+      setTotal(res.total);
+      setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? res.list : res.list.reverse());
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
-  }, [chain, collectionSymbol, currentPage, pageSize]);
+  }, [chain, collectionSymbol, currentPage, pageSize, pageType]);
 
   const columns = useMemo<ColumnsType<HolderItem>>(() => {
     return getColumns(currentPage, pageSize, chain);
   }, [chain, currentPage, pageSize]);
 
   const pageChange = (page: number) => {
+    if (page > currentPage) {
+      setPageType(PageTypeEnum.NEXT);
+    } else {
+      setPageType(PageTypeEnum.PREV);
+    }
     setCurrentPage(page);
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
+    setPageType(PageTypeEnum.NEXT);
+  };
+
+  const onSearchChange = (value) => {
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+    topSearchProps?.onSearchChange(value);
   };
 
   useEffect(() => {
@@ -70,7 +93,7 @@ export default function Holder(props: HolderProps) {
           },
         }}
         showTopSearch={true}
-        topSearchProps={topSearchProps}
+        topSearchProps={{ ...topSearchProps, onSearchChange }}
         loading={loading}
         dataSource={data}
         columns={columns}
@@ -79,6 +102,7 @@ export default function Holder(props: HolderProps) {
         total={total}
         options={pageSizeOption}
         pageSize={pageSize}
+        showLast={false}
         pageNum={currentPage}
         pageChange={pageChange}
         pageSizeChange={pageSizeChange}></Table>

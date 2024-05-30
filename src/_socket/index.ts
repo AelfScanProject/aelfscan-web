@@ -7,7 +7,7 @@ export default function Socket() {
   const [socket, setSocket] = useState<SignalR | null>(null);
   const pathName = usePathname();
   useEffect(() => {
-    const signalR = new SignalR({ url: 'https://aelfscan.io/api/app/blockchain/explore' });
+    const signalR = new SignalR({ url: '/api/app/blockchain/explore' });
     console.log('signalR---', signalR);
     // if (error !== false) {
     signalR

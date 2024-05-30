@@ -45,7 +45,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
       key: 'contractVersion',
       width: 152,
       render(version) {
-        return validateVersion(version) ? `V ${version}` : '-';
+        return version ? `V ${version}` : '-';
       },
     },
     {
@@ -54,7 +54,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
       width: 208,
       key: 'balance',
       render(balance) {
-        return typeof balance === 'number' && balance >= 0 ? addSymbol(divDecimals(balance)) : '-';
+        return typeof balance === 'number' && balance >= 0 ? addSymbol(balance) : '-';
       },
     },
     {
