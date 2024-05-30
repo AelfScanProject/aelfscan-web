@@ -50,7 +50,7 @@ export default function BlockList({ SSRData }) {
     async (page, size) => {
       const isLast = isLastPage(total, size, page);
       const params = {
-        chainId: chain || 'AELF',
+        chainId: chain,
         skipCount: isLast ? 0 : getPageNumber(page, size),
         maxResultCount: size,
         isLastPage: isLast,
