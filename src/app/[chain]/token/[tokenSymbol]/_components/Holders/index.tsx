@@ -1,6 +1,6 @@
 'use client';
 import Table from '@_components/Table';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IHolderItem, ITokenSearchProps } from '../../type';
 import getColumns from './columns';
 import { useMobileAll } from '@_hooks/useResponsive';
@@ -9,46 +9,66 @@ import { useParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
 import { PageTypeEnum } from '@_types';
+import { getHoldersSearchAfter, getSort } from '@_utils/formatter';
+import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 
 interface HoldersProps extends ITokenSearchProps {}
 
+const TAB_NAME = 'holders';
 export default function Holders({ search, onSearchChange, onSearchInputChange }: HoldersProps) {
   const isMobile = useMobileAll();
 
   const { chain, tokenSymbol } = useParams();
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(50);
+  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(
+    50,
+    TAB_NAME,
+  );
+  const [currentPage, setCurrentPage] = useState<number>(defaultPage);
+  const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<IHolderItem[]>();
-  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
-
+  const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
+  const mountRef = useRef(false);
+  const updateQueryParams = useUpdateQueryParams();
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
+      const sort = getSort(pageType, currentPage);
+      const searchAfter = getHoldersSearchAfter(currentPage, data, pageType);
       const params = {
         chainId: chain as TChainID,
         symbol: tokenSymbol as string,
         maxResultCount: pageSize,
         orderInfos: [
-          { orderBy: 'FormatAmount', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
-          { orderBy: 'Address', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+          { orderBy: 'FormatAmount', sort },
+          { orderBy: 'Address', sort },
         ],
         searchAfter:
-          currentPage !== 1 && data && data.length
-            ? [
-                pageType === PageTypeEnum.NEXT ? data[data.length - 1].quantity : data[0].quantity,
-                pageType === PageTypeEnum.NEXT ? data[data.length - 1].address.address : data[0].address.address,
-              ]
-            : ([] as any[]),
+          !mountRef.current && defaultSearchAfter && activeTab ? JSON.parse(defaultSearchAfter) : searchAfter,
       };
+      try {
+        if (mountRef.current) {
+          updateQueryParams({
+            p: currentPage,
+            ps: pageSize,
+            pageType,
+            tab: TAB_NAME,
+            searchAfter: JSON.stringify(searchAfter),
+          });
+        }
+      } catch (error) {
+        console.log(error, 'error.rr');
+      }
       const res = await fetchTokenDetailHolders(params);
       setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? res.list : res.list.reverse());
       setTotal(res.total);
       setLoading(false);
+      mountRef.current = true;
     } catch (error) {
       setLoading(false);
+      mountRef.current = true;
     }
   }, [chain, tokenSymbol, pageSize, pageType, currentPage]);
 

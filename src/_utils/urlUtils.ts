@@ -28,3 +28,14 @@ export function isURL(text: string): boolean {
   const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
   return urlPattern.test(text);
 }
+
+export function updateQueryParams(params: { [K in string]: any }) {
+  const url = new URL(window.location.href);
+  for (const key in params) {
+    if (Object.prototype.hasOwnProperty.call(params, key)) {
+      url.searchParams.set(key, params[key]);
+    }
+  }
+  console.log(window, url.toString(), 'windowsdfsad');
+  window.history.replaceState(null, '', url.toString());
+}

@@ -11,16 +11,19 @@ import { TChainID } from '@_api/type';
 import { getPageNumber } from '@_utils/formatter';
 import { pageSizeOption } from '@_utils/contant';
 import { SortEnum } from '@_types/common';
+import { updateQueryParams } from '@_utils/urlUtils';
 
 interface TokensListProps {
   SSRData: ITokenList;
+  defaultPage: string;
+  defaultPageSize: string;
 }
 
-export default function TokensList({ SSRData }: TokensListProps) {
+export default function TokensList({ SSRData, defaultPage, defaultPageSize }: TokensListProps) {
   console.log(SSRData, 'tokenSSRData');
   const isMobile = useMobileAll();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(50);
+  const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
+  const [pageSize, setPageSize] = useState<number>(Number(defaultPageSize));
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<ITokenListItem[]>(SSRData.list);
@@ -67,10 +70,12 @@ export default function TokensList({ SSRData }: TokensListProps) {
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
+    updateQueryParams({ p: page, ps: pageSize });
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
+    updateQueryParams({ p: page, ps: size });
     setCurrentPage(page);
   };
 

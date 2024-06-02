@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { SYMBOL } from '@_utils/contant';
+import { PageTypeEnum } from '@_types';
 dayjs.extend(utc);
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss Z') => {
   if (typeof date === 'number') {
@@ -108,4 +109,26 @@ export const unitConverter = (num?: number | BigNumber | string, decimal = 5) =>
   const conversionNum = enConverter(bigNum, decimal);
   if (conversionNum) return conversionNum;
   return fixedDecimals(bigNum, decimal);
+};
+
+export const getSort = (pageType: PageTypeEnum, currentPage) => {
+  return pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc';
+};
+
+export const getTransferSearchAfter = (currentPage, data, pageType) => {
+  return currentPage !== 1 && data && data.length
+    ? [
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockHeight : data[0].blockHeight,
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
+      ]
+    : ([] as any[]);
+};
+
+export const getHoldersSearchAfter = (currentPage, data, pageType) => {
+  return currentPage !== 1 && data && data.length
+    ? [
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1].quantity : data[0].quantity,
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1].address.address : data[0].address.address,
+      ]
+    : ([] as any[]);
 };
