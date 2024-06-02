@@ -41,8 +41,8 @@ export default function Header({ chainList, networkList, headerMenuList }) {
     } else if (current.startsWith('/nft')) {
       setCurrent('/nfts');
     } else if (current.startsWith('/token')) {
-      setCurrent('blockchain');
-    } else if (current === '/') {
+      setCurrent('/tokens');
+    } else if (!current || current === '/') {
       setCurrent('/');
     } else {
       setCurrent('blockchain');

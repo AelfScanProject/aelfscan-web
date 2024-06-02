@@ -24,7 +24,8 @@ import { TChainID } from '@_api/type';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import ContractToken from '@_components/ContractToken';
-import { AddressType } from '../../_types/common';
+import { AddressType, TablePageSize } from '../../_types/common';
+import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   console.log(SSRData, 'SSRData');
   const { chain, address, addressType } = useParams<{
@@ -48,6 +49,8 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     firstTransactionSend,
     contractTransactionHash,
   } = SSRData;
+
+  const { defaultPage, defaultPageSize } = useSearchAfterParams(TablePageSize.mini, 'transactions');
   const OverviewInfo = useMemo(() => {
     return [
       {
@@ -166,7 +169,14 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     {
       key: 'Txns',
       label: 'Transactions',
-      children: <TransctionList showHeader={false} SSRData={{ total: 0, data: [] }} />,
+      children: (
+        <TransctionList
+          showHeader={false}
+          SSRData={{ total: 0, data: [] }}
+          defaultPage={defaultPage}
+          defaultPageSize={defaultPageSize}
+        />
+      ),
     },
     {
       key: 'tokentxns',

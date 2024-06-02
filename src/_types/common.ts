@@ -37,3 +37,8 @@ export enum TableSortEnum {
   ascend = 'asc',
   descend = 'desc',
 }
+
+export enum TablePageSize {
+  mini = 25,
+  small = 50,
+}

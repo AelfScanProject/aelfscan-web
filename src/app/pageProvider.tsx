@@ -44,15 +44,15 @@ function RootProvider({ children, isMobileSSR, config }) {
   const pathname = usePathname();
   const isGovernance = useIsGovernance();
   const [show, setShow] = useState(false);
-  useEffect(() => {
-    if (!isGovernance) {
-      // jump from governance to others maybe scroll
-      const app = document.querySelector('body');
-      if (app) {
-        app.scrollIntoView({ block: 'start', behavior: 'auto' });
-      }
-    }
-  }, [pathname, isGovernance, router]);
+  // useEffect(() => {
+  //   if (!isGovernance) {
+  //     // jump from governance to others maybe scroll
+  //     const app = document.querySelector('body');
+  //     if (app) {
+  //       app.scrollIntoView({ block: 'start', behavior: 'auto' });
+  //     }
+  //   }
+  // }, [pathname, isGovernance, router]);
   useEffect(() => {
     microApp.start({
       lifeCycles: {

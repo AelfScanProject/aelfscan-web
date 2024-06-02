@@ -8,19 +8,21 @@
 
 import { fetchServerNFTSList } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
-import { SortEnum } from '@_types/common';
-import { ChainId } from 'global';
+import { SortEnum, TablePageSize } from '@_types/common';
 import List from './list';
-export default async function Nfts({ params }: { params: ChainId }) {
+import { getPageNumber } from '@_utils/formatter';
+export default async function Nfts({ params, searchParams }) {
+  const p = searchParams['p'] || 1;
+  const ps = searchParams['ps'] || TablePageSize.small;
   const data = await fetchServerNFTSList({
-    skipCount: 0,
-    maxResultCount: 50,
+    skipCount: getPageNumber(Number(p), ps),
+    maxResultCount: ps,
     chainId: params.chain as TChainID,
     orderBy: 'HolderCount',
     sort: SortEnum.desc,
     cache: 'no-store',
   });
-  return <List SSRData={data} />;
+  return <List SSRData={data} defaultPage={p} defaultPageSize={ps} />;
 }
 
 export const revalidate = 1;

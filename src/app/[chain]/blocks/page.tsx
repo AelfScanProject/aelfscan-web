@@ -1,14 +1,18 @@
 import { fetchServerBlocks } from '@_api/fetchBlocks';
 import BlockList from './blockList';
+import { getPageNumber } from '@_utils/formatter';
+import { TablePageSize } from '@_types/common';
 
-export default async function BlocksPage({ params }) {
+export default async function BlocksPage({ params, searchParams }) {
+  const p = searchParams['p'] || 1;
+  const ps = searchParams['ps'] || TablePageSize.mini;
   const data = await fetchServerBlocks({
-    chainId: params.chain || 'AELF',
-    maxResultCount: 25,
-    skipCount: 0,
+    chainId: params.chain,
+    maxResultCount: ps,
+    skipCount: getPageNumber(Number(p), ps),
     cache: 'no-store',
   });
-  return <BlockList SSRData={data} />;
+  return <BlockList SSRData={data} defaultPage={p} defaultPageSize={ps} />;
 }
 
 export const revalidate = 1;

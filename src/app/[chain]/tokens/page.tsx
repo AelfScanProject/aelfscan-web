@@ -1,26 +1,21 @@
-/*
- * @Author: abigail.deng
- * @Date: 2023-07-31 16:04:07
- * @LastEditors: abigail.deng
- * @LastEditTime: 2023-08-01 17:13:27
- * @Description: Tokens
- */
-import { ChainId } from 'global';
 import TokensList from './tokensList';
 import { fetchServerTokenList } from '@_api/fetchTokens';
 import { TChainID } from '@_api/type';
-import { SortEnum } from '@_types/common';
+import { SortEnum, TablePageSize } from '@_types/common';
+import { getPageNumber } from '@_utils/formatter';
 
-export default async function TokensPage({ params }: { params: ChainId }) {
+export default async function TokensPage({ params, searchParams }) {
+  const p = searchParams['p'] || 1;
+  const ps = searchParams['ps'] || TablePageSize.small;
   const data = await fetchServerTokenList({
-    skipCount: 0,
-    maxResultCount: 50,
+    skipCount: getPageNumber(Number(p), ps),
+    maxResultCount: ps,
     chainId: params.chain as TChainID,
     orderBy: 'HolderCount',
     sort: SortEnum.desc,
     cache: 'no-store',
   });
-  return <TokensList SSRData={data} />;
+  return <TokensList SSRData={data} defaultPage={p} defaultPageSize={ps} />;
 }
 
 export const revalidate = 1;
