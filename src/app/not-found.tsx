@@ -11,7 +11,7 @@ const NotFound = () => {
         <Image className="object-contain" fill src={Logo} alt="" />
       </div>
       <h1 className="not-found-h1">Search not found!</h1>
-      <h2 className="not-found-h2">Oops! The search string you entered was: xxx</h2>
+      {/* <h2 className="not-found-h2">Oops! The search string you entered was: xxx</h2> */}
       <h3 className="not-found-h3">
         <div className="not-found-icon">
           <IconFont type="Warning" />
