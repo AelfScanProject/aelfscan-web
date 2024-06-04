@@ -50,7 +50,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         value: (
           <div className="flex items-center">
             {data.confirmed && <IconFont className="mr-1" type="correct" />}
-            <Link href={`/${chain}/block/${data.blockHeight}`} className="mr-2">
+            <Link href={`/${chain}/block/${data.blockHeight}`} className="mr-2 text-link">
               {data.blockHeight}
             </Link>
             <ConfirmStatus status={data.confirmed ? StatusEnum.Confirmed : StatusEnum.Unconfrimed} />
