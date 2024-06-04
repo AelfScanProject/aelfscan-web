@@ -137,6 +137,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
       {
         label: 'Tokens Transferred ',
         tip: 'List of tokens transferred in the transaction.',
+        hidden: !(data.tokenTransferreds?.length > 0),
         value: (
           <div>
             {data.tokenTransferreds?.length > 0
@@ -183,11 +184,13 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
       },
       {
         label: 'divider3',
+        hidden: !(data.tokenTransferreds?.length > 0),
         value: 'divider',
       },
       {
         label: 'NFTs Transferred ',
         tip: 'The amount of txn fee token transacted.',
+        hidden: !(data.nftsTransferreds?.length > 0),
         value: (
           <div>
             {data.nftsTransferreds?.length > 0
@@ -240,6 +243,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
       },
       {
         label: 'divider4',
+        hidden: !(data.nftsTransferreds?.length > 0),
         value: 'divider',
       },
       {
