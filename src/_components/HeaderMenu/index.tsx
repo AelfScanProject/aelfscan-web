@@ -60,7 +60,7 @@ export default function HeaderMenu({ networkList, selectedKey, setCurrent, heade
           const secondSlashIndex = path.slice(1).indexOf('/');
           item.children?.push({
             label: <a onClick={() => jump(path)}>{label}</a>,
-            key: secondSlashIndex === -1 ? path : getPathnameFirstSlash(path),
+            key: secondSlashIndex === -1 || isURL(path) ? path : getPathnameFirstSlash(path),
           });
         });
         return item;

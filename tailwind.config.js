@@ -28,7 +28,7 @@ module.exports = {
         32: '#327DEC',
         F7: '#F7F8FA',
         'color-divider': '#E6E6E6',
-        confirm: '#05BD72',
+        confirm: '#00A186',
         'confirm-br': '#BCE1D8',
         'confirm-bg': '#EAF5F3',
         ECEEF2: '#ECEEF2',
