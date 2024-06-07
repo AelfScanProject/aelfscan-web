@@ -6,14 +6,13 @@ import Search from '@_components/Search';
 import MobileHeaderMenu from '@_components/MobileHeaderMenu';
 import { usePathname } from 'next/navigation';
 import { useAppSelector } from '@_store';
-import { useMobileAll } from '@_hooks/useResponsive';
+import { usePad } from '@_hooks/useResponsive';
 import { MenuItem, NetworkItem } from '@_types';
 import { useEnvContext } from 'next-runtime-env';
 import { useParams, useRouter } from 'next/navigation';
 import { checkMainNet } from '@_utils/isMainNet';
 import useBlockchainOverview from '@_hooks/useBlockchainOverview';
 import { TChainID } from '@_api/type';
-import { Divider } from 'antd';
 
 // at public file
 const TopIconMain = '/image/aelf-header-top.svg';
@@ -29,7 +28,7 @@ interface IProps {
   selectedKey: string;
 }
 export default function HeaderTop({ setCurrent, selectedKey, networkList, headerMenuList }: IProps) {
-  const isMobile = useMobileAll();
+  const isMobile = usePad();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const pathname = usePathname();
   const isHideSearch = pathname === '/' || pathname.includes('search-');

@@ -10,7 +10,10 @@ export default function useResponsive() {
     return width < 640;
   }, [width]);
   const isMD = useMemo(() => {
-    return width < 768;
+    return width < 769;
+  }, [width]);
+  const isPad = useMemo(() => {
+    return width < 993;
   }, [width]);
   const isLG = useMemo(() => {
     return width < 1024;
@@ -25,6 +28,7 @@ export default function useResponsive() {
   return {
     isMobile: isLG || isMobileDevices(),
     isSM,
+    isPad,
     isMD,
     isLG,
     isXL,
@@ -40,4 +44,14 @@ export const useMobileAll = () => {
     setIsMobile(isMobileClient);
   }, [isMobileClient]);
   return useMemo(() => isMobile, [isMobile]);
+};
+
+export const usePad = () => {
+  const { isMobileSSR } = useMobileContext();
+  const [isPad, setIsPad] = useState(isMobileSSR);
+  const { isPad: isPadResponsive } = useResponsive();
+  useEffect(() => {
+    setIsPad(isPadResponsive);
+  }, [isPadResponsive]);
+  return useMemo(() => isPad, [isPad]);
 };

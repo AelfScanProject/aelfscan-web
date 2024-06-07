@@ -10,14 +10,15 @@ import { IBlocksResponseItem, ITransactionsResponseItem } from '@_api/type';
 import { divDecimals, formatDate } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
 import ContractToken from '@_components/ContractToken';
+import { usePad } from '@_hooks/useResponsive';
 
 interface IProps {
   isBlocks: boolean;
   iconType: string;
   data: IBlocksResponseItem[] | ITransactionsResponseItem[];
-  isMobile: boolean;
 }
-export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
+export default function Latest({ isBlocks, data, iconType }: IProps) {
+  const isMobile = usePad();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const RewrdInfo = (ele) => {
     return (
