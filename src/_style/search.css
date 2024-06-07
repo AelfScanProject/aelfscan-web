@@ -1,7 +1,6 @@
 
 .searchbox-wrap {
-
-  @apply flex relative items-center text-base-100 bg-white rounded-lg border z-[1] border-link border-solid p-[3px] pl-4 w-full  md:w-[728px];
+  @apply flex relative items-center text-base-100 bg-white rounded-lg border z-[1] border-link border-solid p-[3px] pl-4 w-full  min-[993px]:w-[728px] min-[769px]:w-[721px];
   .filter-wrap {
     @apply w-[98px] h-[22px] text-sm font-normal pr-4 flex items-center justify-between cursor-pointer border-r border-[#E6E6E6] hover:text-32 active:text-button_active max-[500px]:hidden;
     .right-arrow {

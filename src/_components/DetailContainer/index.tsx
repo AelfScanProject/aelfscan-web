@@ -14,7 +14,13 @@ import { useMobileAll } from '@_hooks/useResponsive';
 export default function DetailContainer({
   infoList,
 }: {
-  infoList: { label: string; value: React.ReactNode | string; tip?: React.ReactNode | string; hidden?: boolean }[];
+  infoList: {
+    label: string;
+    value: React.ReactNode | string;
+    tip?: React.ReactNode | string;
+    hidden?: boolean;
+    row?: boolean;
+  }[];
 }) {
   const isMobile = useMobileAll();
   return (
@@ -24,14 +30,16 @@ export default function DetailContainer({
           item.value === 'divider' ? (
             <Divider key={item.label} className="!my-3 border-color-divider" />
           ) : (
-            <div key={item.label} className={clsx(isMobile ? 'flex flex-col' : 'row flex items-start', 'py-2')}>
-              <div className={clsx('label mr-4 flex w-[312px] items-center', isMobile && 'mb-2')}>
+            <div
+              key={item.label}
+              className={clsx(isMobile && !item.row ? 'flex flex-col' : 'row flex items-start', 'py-3')}>
+              <div className={clsx('label mr-4 flex max-w-[312px] items-center', isMobile && 'mb-2')}>
                 {item.tip && (
                   <Tooltip title={item.tip}>
                     <IconFont className="text-sm" style={{ marginRight: '4px' }} type="question-circle" />
                   </Tooltip>
                 )}
-                <div className="label text-sm leading-[22px] text-base-200">{item.label} :</div>
+                <div className="label text-sm font-medium leading-[22px] text-title">{item.label} :</div>
               </div>
               <div className="value flex-1 break-all text-sm leading-[22px] text-base-100">{item.value}</div>
             </div>
