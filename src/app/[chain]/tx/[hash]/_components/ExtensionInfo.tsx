@@ -17,6 +17,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
     return [
       {
         label: 'Transaction Fee ',
+        row: !data.transactionFees?.length,
         tip: 'The amount of token paid to process the transaction in ELF and fiat value. The transaction fee equals the Size fee + Method Fee - Exempted Fee.',
         value: (
           <div className={clsx('flex', isMobile ? 'flex-col items-start' : 'items-center')}>
@@ -41,6 +42,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
       },
       {
         label: 'Resources Fee ',
+        row: !data.resourcesFee,
         tip: 'The amount of resource tokens paid to process the transaction.',
         value: <span>{data.resourcesFee ? data.resourcesFee : '-'}</span>,
       },
@@ -50,6 +52,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
       },
       {
         label: 'Burnt Fee ',
+        row: !data.burntFees?.length,
         tip: 'Each transaction will burn 10% of its Size Fee.',
         value: (
           <div className={clsx('flex', isMobile ? 'flex-col items-start' : 'items-center')}>
@@ -97,6 +100,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
       },
       {
         label: 'Return Value ',
+        row: !data.returnValue,
         tip: 'The output parameters of the transaction.',
         value: <span>{data.returnValue || '-'}</span>,
       },

@@ -19,7 +19,6 @@ import Latest from './_components/Latest';
 import TPSChart from './_components/TPSChart';
 import { useMobileAll } from '@_hooks/useResponsive';
 const BannerPc = '/image/banner_pc.png';
-const BannerMobile = '/image/banner_mobile.png';
 const clsPrefix = 'home-container';
 import { Skeleton, Spin } from 'antd';
 import { useAppSelector } from '@_store';
@@ -46,24 +45,23 @@ export default function Home({ overviewSSR }: IProps) {
   const chain = searchParams.get('chainId') || defaultChain;
 
   const { blocks, blocksLoading, transactionsLoading, tpsData, transactions } = useHomeSocket(chain as TChainID);
-
   const isMobile = useMobileAll();
 
   const OverView = useMemo(() => {
-    return <InfoSection isMobile={isMobile}></InfoSection>;
-  }, [isMobile]);
+    return <InfoSection></InfoSection>;
+  }, []);
 
   const LatestAll = useMemo(() => {
     return (
       <div className={clsx('latest-all', isMobile && 'latest-all-mobile')}>
         <div className="flex-1">
           <Spin spinning={blocksLoading}>
-            <Latest iconType="latest-block" isBlocks={true} data={blocks} isMobile={isMobile}></Latest>
+            <Latest iconType="latest-block" isBlocks={true} data={blocks}></Latest>
           </Spin>
         </div>
         <div className="flex-1">
           <Spin spinning={transactionsLoading}>
-            <Latest iconType="latest-tx" isBlocks={false} data={transactions} isMobile={isMobile}></Latest>
+            <Latest iconType="latest-tx" isBlocks={false} data={transactions}></Latest>
           </Spin>
         </div>
       </div>
@@ -73,17 +71,8 @@ export default function Home({ overviewSSR }: IProps) {
   return (
     <main className={clsx(`${clsPrefix}`, isMobile && `${clsPrefix}-mobile`)}>
       <div className="banner-section">
-        {isMobile ? (
-          <Image
-            src={BannerMobile}
-            layout="fill"
-            objectFit="contain"
-            objectPosition={'0 top'}
-            priority
-            alt="Picture of the banner mobile"></Image>
-        ) : (
-          <Image src={BannerPc} layout="fill" objectFit="contain" priority alt="Picture of the banner"></Image>
-        )}
+        <div className={clsx('banner-img-warp')}></div>
+        {/* <Image src={BannerPc} layout="fill" objectFit="contain" priority alt="Picture of the banner"></Image> */}
         <h2>AELF Explorer</h2>
         <div className="search-section">
           <SearchComp isMobile={isMobile} />

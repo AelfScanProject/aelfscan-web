@@ -19,6 +19,7 @@ import ContractToken from '@_components/ContractToken';
 import { useParams } from 'next/navigation';
 import { StatusEnum } from '@_types/status';
 import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
+import NFTImage from '@_components/NFTImage';
 
 export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
   const isMobile = useMobileAll();
@@ -38,6 +39,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
       {
         label: 'Status',
         tip: 'The status of the transaction.',
+        row: true,
         value: (
           <div className="flex">
             <TransactionsStatus status={data.status} />
@@ -165,15 +167,15 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                           chainId={chain as string}
                         />
                       </div>
-                      <div className="flex items-center">
+                      <div className="flex flex-wrap items-center">
                         <div className="mx-1 shrink-0 text-base-200">For</div>
                         <span>{tokenTransfer.amountString}</span>
                         <DollarCurrencyRate nowPrice={tokenTransfer.nowPrice} tradePrice={tokenTransfer.tradePrice} />
-                      </div>
-                      <div className="ml-1 flex items-center">
-                        <TokenImage token={tokenTransfer}></TokenImage>
-                        <span className="mx-1 text-link">{tokenTransfer.name}</span>
-                        <span>{`(${tokenTransfer.symbol})`}</span>
+                        <div className="ml-1 flex items-center">
+                          <TokenImage token={tokenTransfer}></TokenImage>
+                          <span className="mx-1 text-link">{tokenTransfer.name}</span>
+                          <span>{`(${tokenTransfer.symbol})`}</span>
+                        </div>
                       </div>
                     </div>
                   );
@@ -202,37 +204,35 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                         isMobile && 'flex-col !items-start gap-2',
                         'nft-transferred mb-4 flex items-center',
                       )}>
-                      {/* <Image
-                    className={clsx(isMobile && 'mb-2', 'rounded-lg bg-slate-200')}
-                    src={nftsTransfer.imageUrl}
-                    alt=""
-                    width={40}
-                    height={40}
-                  /> */}
-
-                      <div className="nft-info ml-1">
-                        <div className="text-xs leading-5">
-                          <span className="inline-block shrink-0 text-base-200">For</span>
-                          <span className="mx-1 inline-block  shrink-0">{idx + 1} Of NFT</span>
-                          <span className="inline-block text-link">{`${nftsTransfer.name}(${nftsTransfer.symbol})`}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <span className="mr-1 inline-block shrink-0">From</span>
-                          <ContractToken
-                            address={nftsTransfer?.from?.address}
-                            name={nftsTransfer?.from?.name}
-                            type={nftsTransfer?.from?.addressType}
-                            chainId={chain as string}
-                          />
-                          <span className="mx-1 inline-block shrink-0 text-base-200">To</span>
-                          <ContractToken
-                            address={nftsTransfer?.to?.address}
-                            name={nftsTransfer?.to?.name}
-                            type={nftsTransfer?.to?.addressType}
-                            chainId={chain as string}
-                          />
-                          <HashAddress size="small" address={nftsTransfer.to.address} preLen={8} endLen={8} />
-                        </div>
+                      <NFTImage
+                        className={clsx('rounded-lg bg-slate-200')}
+                        src={nftsTransfer.imageUrl}
+                        alt=""
+                        width={40}
+                        height={40}
+                      />
+                      <div className="text-xs leading-5">
+                        <span className="inline-block shrink-0 text-base-200">For</span>
+                        <span className="mx-1 inline-block  shrink-0">{nftsTransfer.amountString} Of NFT</span>
+                        <span className="inline-block text-link">{`${nftsTransfer.name}(${nftsTransfer.symbol})`}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="mx-1 inline-block shrink-0">From</span>
+                        <ContractToken
+                          address={nftsTransfer?.from?.address}
+                          name={nftsTransfer?.from?.name}
+                          type={nftsTransfer?.from?.addressType}
+                          chainId={chain as string}
+                        />
+                      </div>
+                      <div className="flex items-center">
+                        <span className="mx-1 inline-block shrink-0">From</span>
+                        <ContractToken
+                          address={nftsTransfer?.from?.address}
+                          name={nftsTransfer?.from?.name}
+                          type={nftsTransfer?.from?.addressType}
+                          chainId={chain as string}
+                        />
                       </div>
                     </div>
                   );

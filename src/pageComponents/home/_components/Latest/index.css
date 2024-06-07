@@ -6,9 +6,9 @@
   .content {
     @apply h-[480px] px-4 overflow-auto;
     .item {
-      @apply py-4 h-[80px] shadow-[0_-1px_0_0_#E6E6E6_inset] flex flex-row align-middle;
+      @apply py-4 min-h-[80px] shadow-[0_-1px_0_0_#E6E6E6_inset] flex min-[993px]:gap-4 flex-row align-middle;
       .left {
-        @apply flex flex-row flex-wrap  w-[203px];
+        @apply flex flex-row flex-wrap  min-[993px]:max-w-[203px] min-[993px]:flex-nowrap ;
         .anticon {
           @apply mr-2;
           svg {
@@ -26,9 +26,9 @@
         }
       }
       .middle {
-        @apply flex flex-wrap flex-col justify-center w-[203px];
+        @apply flex flex-wrap flex-col justify-center min-[993px]:max-w-[223px] min-[993px]:flex-nowrap;
         .producer {
-          @apply text-[14px] font-[400] leading-[22px] w-full overflow-hidden text-ellipsis whitespace-nowrap;
+          @apply flex min-[993px]:flex-wrap text-[14px] font-[400] leading-[22px] w-full overflow-hidden text-ellipsis whitespace-nowrap;
         }
         .txns {
           @apply text-[14px] font-[400] leading-[22px] text-base-200;
@@ -41,11 +41,11 @@
         }
         .from,
         .to {
-          @apply w-full text-[14px] font-[400] leading-[22px] text-base-100 flex;
+          @apply flex flex-wrap w-full text-[14px] font-[400] leading-[22px] text-base-100;
         }
       }
       .right {
-        @apply flex w-[138px] flex-1 items-center;
+        @apply flex min-[993px]:max-w-[138px] flex-1 items-center;
         .button {
           @apply h-6 flex justify-center ml-auto border-[1px] rounded-[4px] px-2 text-[10px] font-[500] leading-[18px] items-center;
           .reward {
@@ -80,7 +80,7 @@
   .content {
     @apply h-[576px] overflow-auto;
     .item {
-      @apply flex flex-wrap h-[96px];
+      @apply flex flex-wrap w-full h-[96px];
       .left {
         @apply w-full;
         .time {
