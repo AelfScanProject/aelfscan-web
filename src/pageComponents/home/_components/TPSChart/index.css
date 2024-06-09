@@ -7,7 +7,7 @@
     @apply h-[297px] p-4 flex;
   }
   &-mobile {
-    @apply mt-4 mx-3;
+    @apply mt-4;
     .chart {
       @apply h-[260px];
     }

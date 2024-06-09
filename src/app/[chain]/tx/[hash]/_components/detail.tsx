@@ -38,7 +38,7 @@ export default function Detail({ SSRData }: { SSRData: ITransactionDetailData })
       key: '',
       label: 'Overview',
       children: (
-        <div className="overview-container">
+        <div className="overview-container pb-4">
           <BaseInfo data={detailData} />
           {showMore && <ExtensionInfo data={detailData} />}
           <MoreContainer diver={true} showMore={showMore} onChange={moreChange} />
