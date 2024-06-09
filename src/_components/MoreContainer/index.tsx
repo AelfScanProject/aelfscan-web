@@ -14,10 +14,11 @@ function MoreContainer({
   const detail = [
     {
       label: 'More Details ',
+      row: true,
       value: (
-        <div className="flex justify-start items-center" onClick={onChange}>
+        <div className="flex items-center justify-start" onClick={onChange}>
           <IconFont className="text-xs" type={showMore ? 'Less' : 'More'} />
-          <span className="cursor-pointer text-link ml-1">Click to show {showMore ? 'less' : 'more'}</span>
+          <span className="ml-1 cursor-pointer text-link">Click to show {showMore ? 'less' : 'more'}</span>
         </div>
       ),
     },

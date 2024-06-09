@@ -74,6 +74,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
       {
         label: 'Method ',
         tip: 'Function executed based on input data.',
+        row: true,
         value: <Method text={data.method} tip={data.method} truncate={false} />,
       },
       {
