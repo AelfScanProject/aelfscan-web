@@ -55,3 +55,13 @@ export const usePad = () => {
   }, [isPadResponsive]);
   return useMemo(() => isPad, [isPad]);
 };
+
+export const useMD = () => {
+  const { isMobileSSR } = useMobileContext();
+  const [isMD, setIsMD] = useState(isMobileSSR);
+  const { isMD: isMDResponsive } = useResponsive();
+  useEffect(() => {
+    setIsMD(isMDResponsive);
+  }, [isMDResponsive]);
+  return useMemo(() => isMD, [isMD]);
+};
