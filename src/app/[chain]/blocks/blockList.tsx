@@ -19,6 +19,7 @@ import { useParams } from 'next/navigation';
 import { Spin } from 'antd';
 import { reloadBlockListData } from '@/app/actions';
 import { getPageNumber } from '@_utils/formatter';
+import { updateQueryParams } from '@_utils/urlUtils';
 
 export enum pageType {
   first,
@@ -37,11 +38,11 @@ function isLastPage(totalItems, itemsPerPage, currentPage) {
   return currentPage >= totalPages;
 }
 
-export default function BlockList({ SSRData }) {
+export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
   console.log(SSRData, ' SSRData');
   const isMobile = useMobileAll();
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(25);
+  const [currentPage, setCurrentPage] = useState<number>(defaultPage);
+  const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<IBlocksResponseItem[]>(SSRData.blocks);
@@ -87,12 +88,14 @@ export default function BlockList({ SSRData }) {
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
+    updateQueryParams({ p: page, ps: pageSize });
     fetchData(page, pageSize);
   };
 
   const pageSizeChange = (page: number, pageSize: number) => {
     setPageSize(pageSize);
     setCurrentPage(page);
+    updateQueryParams({ p: page, ps: pageSize });
     fetchData(page, pageSize);
   };
 

@@ -1,57 +1,78 @@
 'use client';
 import Table, { ITableSearch } from '@_components/Table';
 import getColumns from './column';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { CollectionTransfer } from '../type';
 import { useParams } from 'next/navigation';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { NftCollectionPageParams } from 'global';
-import { getAddress } from '@_utils/formatter';
+import { getAddress, getSort, getTransferSearchAfter } from '@_utils/formatter';
 import { fetchNFTTransfers } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
 import { PageTypeEnum } from '@_types';
+import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 export interface ItemActivityTableProps {
   search?: string;
   topSearchProps?: ITableSearch;
 }
+
+const TAB_NAME = 'transfers';
 export default function ItemActivityTable(props: ItemActivityTableProps) {
   const { collectionSymbol, chain } = useParams<NftCollectionPageParams>();
   const { topSearchProps, search } = props;
   const isMobile = useMobileAll();
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(50);
+  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(
+    50,
+    TAB_NAME,
+  );
+  const [currentPage, setCurrentPage] = useState<number>(defaultPage);
+  const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<CollectionTransfer[]>([]);
-  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
-
+  const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
+  const mountRef = useRef(false);
+  const updateQueryParams = useUpdateQueryParams();
   const fetchTableData = useCallback(async () => {
     setLoading(true);
+
     try {
+      const sort = getSort(pageType, currentPage);
+      const searchAfter = getTransferSearchAfter(currentPage, data, pageType);
+      try {
+        if (mountRef.current) {
+          updateQueryParams({
+            p: currentPage,
+            ps: pageSize,
+            pageType,
+            tab: TAB_NAME,
+            searchAfter: JSON.stringify(searchAfter),
+          });
+        }
+      } catch (error) {
+        console.log(error, 'error.rr');
+      }
       const res = await fetchNFTTransfers({
         maxResultCount: pageSize,
         search: getAddress(search ?? ''),
         collectionSymbol: collectionSymbol,
         chainId: chain as TChainID,
         orderInfos: [
-          { orderBy: 'BlockHeight', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
-          { orderBy: 'TransactionId', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+          { orderBy: 'BlockHeight', sort },
+          { orderBy: 'TransactionId', sort },
         ],
         searchAfter:
-          currentPage !== 1 && data && data.length
-            ? [
-                pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockHeight : data[0].blockHeight,
-                pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
-              ]
-            : ([] as any[]),
+          !mountRef.current && defaultSearchAfter && activeTab ? JSON.parse(defaultSearchAfter) : searchAfter,
       });
       setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? res.list : res.list.reverse());
       setTotal(res.total);
       setLoading(false);
-    } catch (error) {
+      mountRef.current = true;
+    } finally {
       setLoading(false);
+      mountRef.current = true;
     }
   }, [pageSize, currentPage, search, collectionSymbol, chain, pageType]);
 

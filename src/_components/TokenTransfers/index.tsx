@@ -1,59 +1,79 @@
 'use client';
 import Table from '@_components/Table';
 import getColumns from './columnConfig';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { ITokenTransfers, TokenTransfersItemType } from '@_types/commonDetail';
-import { getAddress, thousandsNumber } from '@_utils/formatter';
+import { getAddress, getSort, getTransferSearchAfter, thousandsNumber } from '@_utils/formatter';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useParams } from 'next/navigation';
 import { fetchAccountTransfers } from '@_api/fetchContact';
 import { TChainID } from '@_api/type';
 import { PageTypeEnum } from '@_types';
-
+// import { updateQueryParams } from '@_utils/urlUtils';
+import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+const TAB_NAME = 'tokenTransfer';
 export default function List() {
   const isMobile = useMobileAll();
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(25);
+  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(
+    25,
+    TAB_NAME,
+  );
+  const [currentPage, setCurrentPage] = useState<number>(defaultPage);
+  const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<TokenTransfersItemType[]>([]);
   const [timeFormat, setTimeFormat] = useState<string>('Age');
-  const [pageType, setPageType] = useState<PageTypeEnum>(PageTypeEnum.NEXT);
-
+  const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
+  const mountRef = useRef(false);
   const { chain, address } = useParams<{
     chain: TChainID;
     address: string;
   }>();
 
+  const updateQueryParams = useUpdateQueryParams();
+
   const fetchData = useCallback(async () => {
+    const sort = getSort(pageType, currentPage);
+    const searchAfter = getTransferSearchAfter(currentPage, data, pageType);
     const params = {
       chainId: chain,
       maxResultCount: pageSize,
       tokenType: 0,
       address: getAddress(address),
       orderInfos: [
-        { orderBy: 'BlockHeight', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
-        { orderBy: 'TransactionId', sort: pageType === PageTypeEnum.NEXT || currentPage === 1 ? 'Desc' : 'Asc' },
+        { orderBy: 'BlockHeight', sort },
+        { orderBy: 'TransactionId', sort },
       ],
-      searchAfter:
-        currentPage !== 1 && data && data.length
-          ? [
-              pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockHeight : data[0].blockHeight,
-              pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
-            ]
-          : ([] as any[]),
+      searchAfter: !mountRef.current && defaultSearchAfter && activeTab ? JSON.parse(defaultSearchAfter) : searchAfter,
     };
     setLoading(true);
+    try {
+      if (mountRef.current) {
+        updateQueryParams({
+          p: currentPage,
+          ps: pageSize,
+          pageType,
+          tab: TAB_NAME,
+          searchAfter: JSON.stringify(searchAfter),
+        });
+      }
+    } catch (error) {
+      console.log(error, 'error.rr');
+    }
     try {
       const res: ITokenTransfers = await fetchAccountTransfers(params);
       setTotal(res.total);
       setData(pageType === PageTypeEnum.NEXT || currentPage === 1 ? res.list : res.list.reverse());
     } catch (error) {
+      mountRef.current = true;
+      setLoading(false);
+    } finally {
+      mountRef.current = true;
       setLoading(false);
     }
-    setLoading(false);
   }, [address, chain, currentPage, pageSize]);
 
   const columns = useMemo<ColumnsType<TokenTransfersItemType>>(() => {

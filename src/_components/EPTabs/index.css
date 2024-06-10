@@ -15,11 +15,11 @@
       @apply bg-white;
     }
     .explorer-tabs-tab-btn {
-      @apply font-medium text-xs leading-5 hover:text-link;
+      @apply font-medium text-sm leading-[22px] hover:text-link;
     }
     .explorer-tabs-tab-active {
       .explorer-tabs-tab-btn {
-        @apply font-medium text-xs leading-5 text-link;
+        @apply font-medium text-sm leading-[22px] text-link;
       }
     }
     .explorer-tabs-nav .explorer-tabs-nav-wrap::after {

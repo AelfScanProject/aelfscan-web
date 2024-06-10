@@ -41,7 +41,7 @@ export default function Detail({ tokenDetail }: IDetailProps) {
 
   const items: TabsProps['items'] = useMemo(() => {
     const transfersItem = {
-      key: 'transfers',
+      key: '',
       label: 'Transfers',
       children: (
         <Transfers
@@ -87,7 +87,7 @@ export default function Detail({ tokenDetail }: IDetailProps) {
           className="ml-1 !text-[#858585]">{`(${tokenDetail?.token?.symbol || '--'})`}</Title>
       </HeadTitle>
       <OverView data={tokenDetail} />
-      <EPTabs items={items} selectKey="transfers" />
+      <EPTabs items={items} />
     </div>
   );
 }

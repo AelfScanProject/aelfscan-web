@@ -4,7 +4,7 @@ import HeaderTop from '@_components/HeaderTop';
 import HeaderMenu from '@_components/HeaderMenu';
 import './index.css';
 import clsx from 'clsx';
-import { useMobileAll } from '@_hooks/useResponsive';
+import { usePad } from '@_hooks/useResponsive';
 import { useAppDispatch } from '@_store';
 import { setChainArr } from '@_store/features/chainIdSlice';
 import { usePathname } from 'next/navigation';
@@ -13,7 +13,7 @@ import { useEffectOnce } from 'react-use';
 
 const clsPrefix = 'header-container';
 export default function Header({ chainList, networkList, headerMenuList }) {
-  const isMobile = useMobileAll();
+  const isPad = usePad();
   const chainArr = chainList.map((ele) => ele.chainList_id);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -41,8 +41,8 @@ export default function Header({ chainList, networkList, headerMenuList }) {
     } else if (current.startsWith('/nft')) {
       setCurrent('/nfts');
     } else if (current.startsWith('/token')) {
-      setCurrent('blockchain');
-    } else if (current === '/') {
+      setCurrent('/tokens');
+    } else if (!current || current === '/') {
       setCurrent('/');
     } else {
       setCurrent('blockchain');
@@ -53,7 +53,7 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   return (
     <div className={clsx(clsPrefix)}>
       <HeaderTop selectedKey={current} setCurrent={setCurrent} networkList={networkList} headerMenuList={headerList} />
-      {!isMobile && (
+      {!isPad && (
         <HeaderMenu
           headerMenuList={headerList}
           selectedKey={current}

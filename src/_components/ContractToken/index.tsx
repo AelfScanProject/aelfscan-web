@@ -53,7 +53,7 @@ export default function ContractToken({
         }
         mode="dark"
         pointAtCenter={false}>
-        <Link className="" href={`/${chainId}/address/${addressFormat(address, chainId)}`}>
+        <Link className="" href={`/${chainId}/address/${addressFormat(address, chainId)}/${type}`}>
           {name}
         </Link>
       </EPTooltip>

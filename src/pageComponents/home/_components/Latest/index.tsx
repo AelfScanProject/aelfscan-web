@@ -10,14 +10,15 @@ import { IBlocksResponseItem, ITransactionsResponseItem } from '@_api/type';
 import { divDecimals, formatDate } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
 import ContractToken from '@_components/ContractToken';
+import { useMD } from '@_hooks/useResponsive';
 
 interface IProps {
   isBlocks: boolean;
   iconType: string;
   data: IBlocksResponseItem[] | ITransactionsResponseItem[];
-  isMobile: boolean;
 }
-export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
+export default function Latest({ isBlocks, data, iconType }: IProps) {
+  const isMD = useMD();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const RewrdInfo = (ele) => {
     return (
@@ -34,7 +35,7 @@ export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
     );
   };
   return (
-    <div className={clsx(clsPrefix, isMobile && `${clsPrefix}-mobile`)}>
+    <div className={clsx(clsPrefix, isMD && `${clsPrefix}-mobile`)}>
       <div className="title">{`Latest ${isBlocks ? 'Blocks' : 'Transactions'}`}</div>
       <div className="content">
         {data.map((ele) => {
@@ -63,7 +64,9 @@ export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
                     <span className="producer inline-block truncate">
                       <span className="mr-1">Producer</span>
                       <EPTooltip title={ele.producerName} mode="dark" pointAtCenter={false}>
-                        <Link href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
+                        <Link
+                          className="truncate"
+                          href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
                           {ele.producerName
                             ? ele.producerName
                             : `${addressFormat(hiddenAddress(ele.producerAddress || '', 4, 4), defaultChain)}`}
@@ -73,7 +76,7 @@ export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
                     <span className="txns">
                       <Link href={`/${defaultChain}/block/${ele.blockHeight}#txns`}>{ele.transactionCount} txns</Link>
                       <span className="time">in {formatDate(ele.timestamp, 'Age')}</span>
-                      {isMobile && RewrdInfo(ele)}
+                      {isMD && RewrdInfo(ele)}
                     </span>
                   </>
                 ) : (
@@ -97,12 +100,12 @@ export default function Latest({ isBlocks, data, iconType, isMobile }: IProps) {
                         showCopy={false}
                         chainId={defaultChain as string}
                       />
-                      {isMobile && RewrdInfo(ele)}
+                      {isMD && RewrdInfo(ele)}
                     </span>
                   </>
                 )}
               </div>
-              {!isMobile && <div className="right">{RewrdInfo(ele)}</div>}
+              {!isMD && <div className="right">{RewrdInfo(ele)}</div>}
             </div>
           );
         })}

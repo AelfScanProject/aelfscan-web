@@ -11,10 +11,11 @@ import './index.css';
 import IconFont from '@_components/IconFont';
 import BackToTopButton from '@_components/BackToTopBtn';
 import Image from 'next/image';
-import { useMobileAll } from '@_hooks/useResponsive';
+import useResponsive, { usePad } from '@_hooks/useResponsive';
 import { MenuItem } from '@_types';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
+import { useMobileContext } from '@app/pageProvider';
 const FoorterBgTets = '/image/footer-bg.png';
 const clsPrefix = 'footer-container';
 interface IProps {
@@ -27,7 +28,7 @@ export default function Footer({ footerMenuList }: IProps) {
   console.log(footerMenuList, 'footerMenuList');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
-  const isMobile = useMobileAll();
+  const isPad = usePad();
   const rightLinkCom = footerMenuList.map((ele) => {
     const item = ele.footerMenu_id;
     const subItem = item.children.map((element) => {
@@ -47,7 +48,7 @@ export default function Footer({ footerMenuList }: IProps) {
     );
   });
   return (
-    <div className={clsx(clsPrefix, isMainNet && `${clsPrefix}-main`, isMobile && `${clsPrefix}-mobile`)}>
+    <div className={clsx(clsPrefix, isMainNet && `${clsPrefix}-main`, isPad && `${clsPrefix}-mobile`)}>
       {!isMainNet && (
         <Image src={`${FoorterBgTets}`} alt={''} width="1400" height="330" className={`${clsPrefix}-bg`}></Image>
       )}

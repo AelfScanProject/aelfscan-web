@@ -3,6 +3,7 @@ import type { ITabsProps } from 'aelf-design';
 import { useEffect, useImperativeHandle, useState, forwardRef } from 'react';
 import './index.css';
 import { useEffectOnce } from 'react-use';
+import { useDeleteQueryParam } from '@_hooks/useUpdateQueryParams';
 
 export interface EPTabsRef {
   setActiveKey: (key: string) => void;
@@ -15,6 +16,7 @@ interface EPTabsProps {
 // eslint-disable-next-line react/display-name
 const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChange }, ref) => {
   const [activeKey, setActiveKey] = useState<string>('');
+  const deleteQueryParam = useDeleteQueryParam();
   useEffectOnce(() => {
     setActiveKey(window.location.hash.replace('#', ''));
   });
@@ -32,6 +34,7 @@ const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChan
     } else {
       window.location.hash = activeKey;
     }
+    deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'searchAfter']);
     setActiveKey(activeKey);
   };
 
