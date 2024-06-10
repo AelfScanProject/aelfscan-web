@@ -64,7 +64,9 @@ export default function Latest({ isBlocks, data, iconType }: IProps) {
                     <span className="producer inline-block truncate">
                       <span className="mr-1">Producer</span>
                       <EPTooltip title={ele.producerName} mode="dark" pointAtCenter={false}>
-                        <Link href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
+                        <Link
+                          className="truncate"
+                          href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
                           {ele.producerName
                             ? ele.producerName
                             : `${addressFormat(hiddenAddress(ele.producerAddress || '', 4, 4), defaultChain)}`}
