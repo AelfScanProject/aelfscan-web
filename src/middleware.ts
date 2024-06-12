@@ -1,26 +1,16 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  try {
-    const pathname = request.nextUrl.pathname;
-    const queryTxt = pathname.split('/').pop();
-    if (queryTxt === 'about') {
-      return NextResponse.rewrite(new URL('/blocks', request.url));
-    } else if (pathname.includes('token') || pathname.includes('nft')) {
-      const chainId = pathname.split('/')[1];
-      // console.log(pathname, chainId, CHAIN_ID);
-      // if (chainId !== CHAIN_ID) {
-      //   return NextResponse.redirect(new URL(`/${CHAIN_ID}/search-failed`, request.url));
-      // }
-    }
-  } catch (e) {
-    throw new Error('middleware execute fail');
-  }
+import { NextRequest, NextResponse } from 'next/server';
 
-  // return NextResponse.redirect(new URL('/blocks', request.url));
+export function middleware(request: NextRequest) {
+  // Check that the request path matches your plug-in route
+  if (request.nextUrl.pathname.startsWith('/nft')) {
+    return NextResponse.rewrite(new URL('/pluginsPage', request.url));
+  } else if (request.nextUrl.pathname.startsWith('/nftItem')) {
+    return NextResponse.rewrite(new URL('/pluginsPage', request.url));
+  }
+  return NextResponse.next();
 }
 
-// export const config = {
-//   matcher: '/search/:path*',
-// };
+// Specify which paths the Middleware should be applied to
+export const config = {
+  matcher: ['/nft/:path*', '/nft', '/nftItem', '/nftItem/:path*'],
+};
