@@ -33,6 +33,12 @@ const nextConfig = {
             // permanent: false,
             // basePath: false,
           },
+          // {
+          //   source: '/api/:path*',
+          //   destination: 'https://testnet.aelfscan.io/api/:path*',
+          //   // permanent: false,
+          //   // basePath: false,
+          // },
           {
             source: '/chain/:path*',
             destination: 'http://localhost:3001/chain/:path*',

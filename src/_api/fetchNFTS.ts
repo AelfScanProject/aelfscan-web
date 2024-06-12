@@ -7,13 +7,8 @@ import {
   TTokenListRequestParams,
 } from './type';
 import { INFTsTableData } from '@app/[chain]/nfts/type';
-import {
-  CollectionDetailData,
-  CollectionHoldersData,
-  CollectionInventoryData,
-  CollectionTransfersData,
-} from '@app/[chain]/nft/[collectionSymbol]/_Detail/type';
-import { ItemSymbolDetailActivity, ItemSymbolDetailOverview } from '@app/[chain]/nft/item/[itemSymbol]/type';
+import { CollectionDetailData, CollectionHoldersData, CollectionInventoryData, CollectionTransfersData } from './type';
+import { ItemSymbolDetailActivity, ItemSymbolDetailOverview } from './type';
 
 const defaultTokenListData = {
   total: 0,
@@ -38,6 +33,22 @@ export async function fetchServerCollectionDetail(
   params: ICollectionDetailRequestParams,
 ): Promise<CollectionDetailData> {
   const result = await request.nfts.getServerCollectionDetail({
+    params: params,
+  });
+  const data = result?.data || {};
+  return data;
+}
+
+export async function getCollectionDetail(params: ICollectionDetailRequestParams): Promise<CollectionDetailData> {
+  const result = await request.nfts.getCollectionDetail({
+    params: params,
+  });
+  const data = result?.data || {};
+  return data;
+}
+
+export async function fetchCollectionItemDetail(params: ITokenDetailRequestParams): Promise<ItemSymbolDetailOverview> {
+  const result = await request.nfts.getCollectionItemDetail({
     params: params,
   });
   const data = result?.data || {};
