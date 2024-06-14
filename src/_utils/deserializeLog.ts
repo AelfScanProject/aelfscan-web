@@ -68,3 +68,17 @@ export async function deserializeLog(log, rpc) {
   deserializeLogResult = AElf.utils.transform.transformArrayToMap(dataType, deserializeLogResult);
   return deserializeLogResult;
 }
+
+/**
+ * use token contract for examples to demonstrate how to get a contract instance.
+ * @param tokenContractAddress address of token contract
+ * @returns a contract instance.
+ */
+export const getContractInstance = async (tokenContractAddress: string, rpcUrl: string) => {
+  // const aelf = new AElf(new AElf.providers.HttpProvider('https://explorer-test.aelf.io/chain'));
+  const aelf = getAElf(rpcUrl);
+  const wallet = AElf.wallet.createNewWallet();
+
+  const contract = await aelf.chain.contractAt(tokenContractAddress, wallet);
+  return contract;
+};

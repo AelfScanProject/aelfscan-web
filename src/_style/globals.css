@@ -76,6 +76,5 @@ button,
 [type='reset'],
 [type='submit'] {
   appearance: button;
-  background-color: rgb(26 26 26 / 25%);
   background-image: none;
 }
