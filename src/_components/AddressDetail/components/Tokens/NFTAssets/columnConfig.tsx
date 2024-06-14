@@ -20,7 +20,7 @@ export default function getColumns(chain, sortedInfo): ColumnsType<NftsItemType>
             <NFTImage className="rounded-lg" src={token.imageUrl} width="40px" height="40px" alt="img"></NFTImage>
             <div className="info ml-1">
               <EPTooltip mode="dark" title={token.name}>
-                <Link href={`/${chain}/nft/${token.symbol}`}>
+                <Link href={`/nft?chainId=${chain}&&collectionSymbol=${token.symbol}`}>
                   <div className="name max-w-[175px] truncate text-base-100">{token.name}</div>
                 </Link>
               </EPTooltip>

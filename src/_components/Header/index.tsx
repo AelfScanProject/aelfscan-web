@@ -38,7 +38,7 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   useEffectOnce(() => {
     if (menus.find((item) => item.path === current)) {
       return;
-    } else if (current.startsWith('/nft')) {
+    } else if (pathname.includes('/nft')) {
       setCurrent('/nfts');
     } else if (current.startsWith('/token')) {
       setCurrent('/tokens');

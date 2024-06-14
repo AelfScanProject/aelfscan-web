@@ -26,7 +26,7 @@
         }
       }
       .middle {
-        @apply flex flex-wrap flex-col justify-center min-[769px]:max-w-[223px] min-[769px]:flex-nowrap;
+        @apply flex-shrink-0 flex flex-1 flex-wrap flex-col justify-center min-[769px]:max-w-[230px] min-[769px]:flex-nowrap;
         .producer {
           @apply flex min-[769px]:flex-wrap text-[14px] font-[400] leading-[22px] w-full overflow-hidden text-ellipsis whitespace-nowrap;
         }
@@ -45,7 +45,7 @@
         }
       }
       .right {
-        @apply flex min-[769px]:max-w-[138px] flex-1 items-center;
+        @apply flex min-[769px]:max-w-[138px]  min-[769px]:flex-auto flex-1 items-center;
         .button {
           @apply h-6 flex justify-center ml-auto border-[1px] rounded-[4px] px-2 text-[10px] font-[500] leading-[18px] items-center;
           .reward {

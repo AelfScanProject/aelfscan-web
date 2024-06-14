@@ -27,9 +27,9 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     if (searchType === 'nfts') {
       if (item.type === 2) {
         // collection
-        return `/${defaultChain}/nft/${item.symbol}`;
+        return `/nft/?chainId=${defaultChain}&&collectionSymbol=${item.symbol}`;
       } else {
-        return `/${defaultChain}/nft/item/${item.symbol}`;
+        return `/nftItem?chainId=${defaultChain}&&itemSymbol=${item.symbol}`;
       }
     } else if (searchType === 'tokens') {
       return `/${defaultChain}/token/${item.symbol}`;

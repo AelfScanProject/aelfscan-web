@@ -91,9 +91,9 @@ const Search = ({
       } else if (nfts.length) {
         if (nfts[0]?.type === 2) {
           // collection
-          router.push(`/${defaultChain}/nft/${nfts[0].symbol}`);
+          router.push(`/nft?chainId=${defaultChain}&&collectionSymbol=${nfts[0].symbol}`);
         } else {
-          router.push(`/${defaultChain}/nft/item/${nfts[0].symbol}`);
+          return `/nftItem?chainId=${defaultChain}&&itemSymbol=${nfts[0].symbol}`;
         }
       } else if (accounts.length) {
         router.push(

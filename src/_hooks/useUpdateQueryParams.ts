@@ -15,7 +15,9 @@ export const useUpdateQueryParams = () => {
     const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}${currentUrl.hash}`;
 
     // Use Next.js router to replace the state
-    router.replace(newUrl, { scroll: false });
+    if (newUrl !== window.location.href) {
+      router.replace(newUrl, { scroll: false });
+    }
   };
 
   return updateQueryParams;
@@ -36,7 +38,9 @@ export const useDeleteQueryParam = () => {
     const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}${currentUrl.hash}`;
 
     // Use Next.js router to replace the state
-    router.replace(newUrl, undefined);
+    if (newUrl !== window.location.href) {
+      router.replace(newUrl, { scroll: false });
+    }
   };
 
   return deleteQueryParam;

@@ -23,7 +23,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, sort, c
       dataIndex: 'nftCollection',
       key: 'nftCollection',
       render: (collection: IToken) => (
-        <Link href={`/${chain}/nft/${collection.symbol}`}>
+        <Link href={`/nft?chainId=${chain}&&collectionSymbol=${collection.symbol}`}>
           <TokenTableCell token={collection}>
             <NFTImage className="rounded-lg" src={collection.imageUrl} width="40px" height="40px" alt="img"></NFTImage>
           </TokenTableCell>
