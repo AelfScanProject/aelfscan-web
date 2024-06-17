@@ -5,6 +5,7 @@ import { Button, Input } from 'aelf-design';
 import { useState } from 'react';
 import ReactJson from 'react-json-view';
 import { IMethod } from '../Contract';
+import { useConnectWallet } from '@aelf-web-login/wallet-adapter-react';
 
 export default function FormItem({
   name,
@@ -17,6 +18,8 @@ export default function FormItem({
   const [form] = Form.useForm();
   const [res, setRes] = useState<any>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { connectWallet, walletInfo, isConnected } = useConnectWallet();
   const query = async () => {
     setLoading(true);
     // get all fileds value with param true
@@ -49,7 +52,7 @@ export default function FormItem({
               View
             </Button>
             {type === 'write' && (
-              <Button className="bg-link" disabled type="primary">
+              <Button className="bg-link" disabled={!isConnected} type="primary">
                 Send
               </Button>
             )}

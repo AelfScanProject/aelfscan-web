@@ -14,7 +14,8 @@ const nextConfig = {
       ssr: true,
     },
   },
-  reactStrictMode: false,
+  transpilePackages: ['antd-mobile'],
+  reactStrictMode: true,
   experimental: {
     proxyTimeout: 300000,
   },
@@ -27,18 +28,18 @@ const nextConfig = {
             destination: '/',
             // permanent: false,
           },
-          {
-            source: '/api/:path*',
-            destination: 'https://aelfscan.io/api/:path*',
-            // permanent: false,
-            // basePath: false,
-          },
           // {
           //   source: '/api/:path*',
-          //   destination: 'https://testnet.aelfscan.io/api/:path*',
+          //   destination: 'https://aelfscan.io/api/:path*',
           //   // permanent: false,
           //   // basePath: false,
           // },
+          {
+            source: '/api/:path*',
+            destination: 'https://testnet.aelfscan.io/api/:path*',
+            // permanent: false,
+            // basePath: false,
+          },
           {
             source: '/chain/:path*',
             destination: 'http://localhost:3001/chain/:path*',
