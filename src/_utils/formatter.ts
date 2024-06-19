@@ -132,3 +132,17 @@ export const getHoldersSearchAfter = (currentPage, data, pageType) => {
       ]
     : ([] as any[]);
 };
+
+export function getFirstHashValue(url) {
+  const urlObj = new URL(url);
+  const hash = urlObj.hash.slice(1);
+  const hashParts = hash.split('#');
+  return hashParts[0];
+}
+
+export function getSecondHashValue(url) {
+  const urlObj = new URL(url);
+  const hash = urlObj.hash.slice(1);
+  const hashParts = hash.split('#');
+  return hashParts[1];
+}
