@@ -1,13 +1,11 @@
 'use client';
 import { PortkeyDiscoverWallet } from '@aelf-web-login/wallet-adapter-portkey-discover';
 import { PortkeyAAWallet } from '@aelf-web-login/wallet-adapter-portkey-aa';
-import { NightElfWallet } from '@aelf-web-login/wallet-adapter-night-elf';
-import { IBridgeAPI, IConfigProps } from '@aelf-web-login/wallet-adapter-bridge';
+import { IConfigProps } from '@aelf-web-login/wallet-adapter-bridge';
 import { TChainId, SignInDesignEnum, NetworkEnum } from '@aelf-web-login/wallet-adapter-base';
-// import { WebLoginProvider, init } from '@aelf-web-login/wallet-adapter-react';
 import { useMemo } from 'react';
-import dynamic from 'next/dynamic';
-import { init } from '@aelf-web-login/wallet-adapter-react';
+import { WebLoginProvider, init } from '@aelf-web-login/wallet-adapter-react';
+import { NightElfWallet } from '@aelf-web-login/wallet-adapter-night-elf';
 
 const APP_NAME = 'explorer.aelf.io';
 const WEBSITE_ICON = 'https://explorer.aelf.io/favicon.main.ico';
@@ -15,10 +13,11 @@ const WEBSITE_ICON = 'https://explorer.aelf.io/favicon.main.ico';
 export default function ExWebLoginProvider({ children, config }) {
   const NETWORK_TYPE = config.NETWORK_TYPE === 'test' ? NetworkEnum.TESTNET : NetworkEnum.MAINNET;
   const chain = config.chain;
-  console.log(config, 'config');
   const chainId = useMemo(() => {
     return chain as TChainId;
   }, [chain]);
+
+  // const [NightElfWallet, setNightElfWallet] = useState();
 
   const didConfig = {
     graphQLUrl: config.GRAPHQL_SERVER,
@@ -44,7 +43,6 @@ export default function ExWebLoginProvider({ children, config }) {
     titleForSocialDesign: 'Crypto wallet',
     iconSrcForSocialDesign: 'url or base64',
   };
-
   const wallets = [
     new PortkeyAAWallet({
       appName: APP_NAME,
@@ -81,14 +79,6 @@ export default function ExWebLoginProvider({ children, config }) {
       },
     }),
   ];
-
-  const WebLoginProvider = dynamic(
-    async () => {
-      const weblogin = await import('@aelf-web-login/wallet-adapter-react').then((module) => module);
-      return weblogin.WebLoginProvider;
-    },
-    { ssr: false },
-  ) as any;
 
   const loginConfig: IConfigProps = {
     didConfig,

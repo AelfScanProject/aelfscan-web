@@ -20,8 +20,6 @@ import { Spin } from 'antd';
 import { reloadBlockListData } from '@/app/actions';
 import { getPageNumber } from '@_utils/formatter';
 import { updateQueryParams } from '@_utils/urlUtils';
-import { useConnectWallet } from '@aelf-web-login/wallet-adapter-react';
-import { Button } from 'aelf-design';
 
 export enum pageType {
   first,
@@ -105,23 +103,8 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
     return `Total of ${total} blocks`;
   }, [total]);
 
-  const { connectWallet, disConnectWallet, isConnected, walletInfo } = useConnectWallet();
-  console.log(walletInfo, 'walletInfo');
-  const onConnectBtnClickHandler = async () => {
-    try {
-      const rs = await connectWallet();
-    } catch (e: any) {
-      console.log(e.message);
-    }
-  };
   return (
     <div>
-      <Button onClick={onConnectBtnClickHandler} disabled={isConnected}>
-        connect
-      </Button>
-      <Button disabled={!isConnected} onClick={disConnectWallet}>
-        disConnect
-      </Button>
       <HeadTitle content="Blocks"></HeadTitle>
       <Spin spinning={loading}>
         <Table

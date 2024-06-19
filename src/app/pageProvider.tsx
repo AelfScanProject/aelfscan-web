@@ -11,13 +11,14 @@
 import { PREFIXCLS, THEME_CONFIG } from '@_lib/AntdThemeConfig';
 import { makeStore, AppStore } from '@_store';
 // import { wrapper } from '@_store';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AELFDProvider } from 'aelf-design';
 import 'aelf-design/css';
 import { ConfigProvider } from 'antd';
 import { Provider as ReduxProvider } from 'react-redux';
 import useResponsive from '@_hooks/useResponsive';
 import WebLoginProvider from './webLoginProvider';
+import dynamic from 'next/dynamic';
 
 const MobileContext = createContext<any>({});
 
@@ -37,6 +38,15 @@ function RootProvider({ children, isMobileSSR, config }) {
   useEffect(() => {
     setIsMobile(isMobileClient);
   }, [isMobileClient]);
+
+  const WebLoginProvider = useMemo(() => {
+    return dynamic(
+      async () => {
+        return import('./webLoginProvider');
+      },
+      { ssr: false },
+    );
+  }, []);
 
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>

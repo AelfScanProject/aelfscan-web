@@ -15,7 +15,7 @@ const nextConfig = {
     },
   },
   transpilePackages: ['antd-mobile'],
-  reactStrictMode: true,
+  reactStrictMode: false,
   experimental: {
     proxyTimeout: 300000,
   },
