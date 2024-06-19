@@ -48,12 +48,19 @@ export default function FormItem({
     setLoading(true);
     // get all fileds value with param true
     const filedsValue = form.getFieldsValue();
+    console.log(filedsValue, 'filedsValue');
     try {
       const result =
         filedsValue && Object.keys(filedsValue).length
           ? await contract[name].call(filedsValue)
           : await contract[name].call();
-      setRes(result);
+      if (result) {
+        setRes(result);
+      } else {
+        setRes({
+          data: null,
+        });
+      }
     } catch (e: any) {
       setRes(e);
     } finally {

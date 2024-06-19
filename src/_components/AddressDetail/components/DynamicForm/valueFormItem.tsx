@@ -6,17 +6,30 @@ import Image from 'next/image';
 import addIcon from 'public/image/add.svg';
 import downIcon from 'public/image/down.svg';
 import './index.css';
-import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
-
-const getLog10 = (value) => {
-  const bigX = new BigNumber(value);
-  const log10Value = Math.log(bigX.toNumber()) / Math.log(10);
-  return Math.ceil(new BigNumber(log10Value).toNumber());
-};
 
 export default function ValueFormItem({ data, form, type }: { data: IInputItem; form: any; type: string }) {
   const [value, setValue] = useState('');
+
+  const [customValue, setCustomValue] = useState('');
+  const [customValueView, setCustomValueView] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value: inputValue } = e.target;
+    const reg = /^-?\d*(\.\d*)?$/;
+    if (reg.test(inputValue) || inputValue === '' || inputValue === '-') {
+      setCustomValue(inputValue);
+    }
+  };
+
+  const handleBlur = useCallback((e) => {
+    const target = e.target as HTMLInputElement;
+    if (!target.value) {
+      return;
+    }
+    setValue(1 + '0'.repeat(Number(target.value)));
+    setCustomValueView(target.value);
+  }, []);
   const items: MenuProps['items'] = useMemo(() => {
     return [
       {
@@ -26,7 +39,7 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
             <span className="min">8</span>
           </div>
         ),
-        key: 100000000,
+        key: '10,8',
       },
       {
         label: (
@@ -35,7 +48,7 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
             <span className="min">12</span>
           </div>
         ),
-        key: 1000000000000,
+        key: '10,12',
       },
       {
         label: (
@@ -44,7 +57,7 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
             <span className="min">16</span>
           </div>
         ),
-        key: 10000000000000000,
+        key: '10,16',
       },
       {
         label: (
@@ -53,7 +66,7 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
             <span className="min">18</span>
           </div>
         ),
-        key: 1000000000000000000,
+        key: '10,18',
       },
       {
         label: (
@@ -62,7 +75,7 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
             <span className="min">20</span>
           </div>
         ),
-        key: 100000000000000000000,
+        key: '10,20',
       },
       {
         label: (
@@ -74,12 +87,10 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
             <span className="max">10 ^</span>
             <Input
               allowClear={false}
-              onPressEnter={(e) => {
-                const target = e.target as HTMLInputElement;
-                const bigNumberInstance = new BigNumber(10);
-                const result = bigNumberInstance.pow(Number(target.value));
-                setValue(result.toString());
-              }}
+              value={customValue}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onPressEnter={handleBlur}
               className="!h-5 w-10 py-0 !text-xs !text-base-100"
               size="small"
             />
@@ -88,13 +99,14 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
         key: 'input',
       },
     ];
-  }, []);
+  }, [customValue, handleBlur]);
 
   const handleMenuClick: MenuProps['onClick'] = useCallback((e) => {
-    console.log('clickMenuProps', e);
     if (e.key !== 'input') {
       console.log('clickMenuProps2', e);
-      setValue(e.key);
+      const [, log] = e.key.split(',');
+      setValue(1 + '0'.repeat(log));
+      setCustomValueView(log);
     }
   }, []);
   const label = useMemo(() => {
@@ -110,7 +122,7 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
               form.setFieldsValue({ [data.name]: value });
             }}>
             <span className="max">10</span>
-            <span className="min">{getLog10(value)}</span>
+            <span className="min">{customValueView}</span>
           </div>
         )}
         <Dropdown
@@ -128,7 +140,7 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
         </Dropdown>
       </div>
     );
-  }, [data, form, handleMenuClick, items, type, value]);
+  }, [customValueView, data.name, form, handleMenuClick, items, type, value]);
   return (
     <Form.Item key={data.name} label={label} name={data.name}>
       <Input size="small" />
