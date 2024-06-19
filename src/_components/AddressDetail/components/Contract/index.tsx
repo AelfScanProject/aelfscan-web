@@ -5,24 +5,31 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { fetchContractCode } from '@_api/fetchContact';
 import { TChainID } from '@_api/type';
-import { getAddress } from '@_utils/formatter';
+import { getAddress, getFirstHashValue, getSecondHashValue } from '@_utils/formatter';
 import { Skeleton } from 'antd';
 import { useMobileContext } from '@app/pageProvider';
 import { getAElf, getContractInstance } from '@_utils/deserializeLog';
 import { getContractMethods } from '@portkey/contracts';
 import { useEffectOnce } from 'react-use';
-import BasicTabs from '@_components/BasicTabs';
 import DynamicForm from '../DynamicForm';
+import './index.css';
+
+export interface IInputItem {
+  name: string;
+  type: string;
+}
 
 export interface IMethod {
   name: string;
-  input: string[];
+  input: IInputItem[];
   fn: any;
   address?: string;
   type: 'read' | 'write';
   key?: string | number;
   activeKey?: string | number;
 }
+
+export const contractKey = ['ReadContract', 'WriteContract'];
 
 export default function Contract() {
   const isMobile = useMobileAll();
@@ -44,7 +51,13 @@ export default function Contract() {
     for (let i = 0; i < keysArr.length; i++) {
       const temp: any = {};
       temp.name = keysArr[i];
-      temp.input = Object.keys(methodsObj[keysArr[i]].fields);
+      const fields = methodsObj[keysArr[i]].fields;
+      temp.input = Object.keys(fields).map((item) => {
+        return {
+          name: item,
+          type: fields[item].type,
+        };
+      });
       temp.type = temp.input.length ? 'write' : 'read';
       temp.fn = methodsObj[keysArr[i]];
       if (temp.input.length) {
@@ -82,6 +95,11 @@ export default function Contract() {
 
   const [activeKey, setActiveKey] = useState<string>('Code');
 
+  const tabChange = (key) => {
+    setActiveKey(key);
+    window.location.hash = key;
+  };
+
   const items = useMemo(() => {
     return [
       {
@@ -106,32 +124,59 @@ export default function Contract() {
         ),
       },
       {
-        key: 'WriteContract',
-        label: 'Write Contract',
-        children: <DynamicForm methods={writeMethods} contract={contract} address={address} />,
+        key: 'ReadContract',
+        label: 'Read Contract',
+        children: <DynamicForm methods={readMethods} contract={contract} chain={chain} address={address} />,
       },
       {
-        key: 'Read',
-        label: 'Read Contract',
-        children: <DynamicForm methods={readMethods} contract={contract} address={address} />,
+        key: 'WriteContract',
+        label: 'Write Contract',
+        children: <DynamicForm methods={writeMethods} contract={contract} chain={chain} address={address} />,
       },
     ];
-  }, [address, contract, contractInfo, isMobile, readMethods, writeMethods]);
+  }, [address, chain, contract, contractInfo, isMobile, readMethods, writeMethods]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   useEffectOnce(() => {
+    const hash = getFirstHashValue(window.location.href);
+    console.log('hash', hash);
+    setActiveKey(hash);
     getMethod();
   });
+
   return loading ? (
     <div className="p-2">
       <Skeleton active />
     </div>
   ) : (
-    <div>
-      <BasicTabs items={items} selectKey={activeKey} onTabChange={setActiveKey}></BasicTabs>
+    <div className="contract-container px-4">
+      <div className="pb-5">
+        <ul className="contract-button-container flex gap-[9px]">
+          {items.map((item) => {
+            return (
+              <li key={item.key} className="contract-button" onClick={() => tabChange(item.key)}>
+                <a
+                  className={clsx('contract-button-link', activeKey === item.key && 'active-button-link')}
+                  href="javascript:;">
+                  <span>{item.label}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <div className="contract-pane-container">
+        {items.map((item) => {
+          return (
+            <div className={clsx('contract-pane', activeKey === item.key ? 'block' : 'hidden')} key={item.key}>
+              {item.children}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

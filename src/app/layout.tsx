@@ -5,7 +5,7 @@
  * @LastEditTime: 2023-08-16 15:57:46
  * @Description: root layout
  */
-
+import 'antd-mobile/es/global';
 import '@_style/globals.css';
 import type { Metadata } from 'next';
 import RootProvider from './pageProvider';
@@ -15,8 +15,6 @@ import MainContainer from '@_components/Main';
 import { headers } from 'next/headers';
 import { isMobileOnServer } from '@_utils/isMobile';
 import { Suspense } from 'react';
-import { NetworkItem } from '@_types';
-import request from '@_api';
 import StyleRegistry from './StyleRegistry';
 import { fetchCMS } from '@_api/fetchCMS';
 import { PublicEnvProvider } from 'next-runtime-env';

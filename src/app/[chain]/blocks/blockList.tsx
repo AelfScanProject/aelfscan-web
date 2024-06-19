@@ -102,6 +102,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
   const multiTitle = useMemo(() => {
     return `Total of ${total} blocks`;
   }, [total]);
+
   return (
     <div>
       <HeadTitle content="Blocks"></HeadTitle>

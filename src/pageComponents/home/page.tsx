@@ -6,40 +6,22 @@
  * @Description: home page
  */
 'use client';
-import Image from 'next/image';
 import InfoSection from './_components/InfoSection';
 import SearchComp from './_components/SearchWithClient';
 import clsx from 'clsx';
 import './index.css';
 import { useMemo } from 'react';
-import { HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
-import { IOverviewSSR } from './type';
 // import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
 import Latest from './_components/Latest';
 import TPSChart from './_components/TPSChart';
 import { useMobileAll } from '@_hooks/useResponsive';
-const BannerPc = '/image/banner_pc.png';
 const clsPrefix = 'home-container';
 import { Skeleton, Spin } from 'antd';
 import { useAppSelector } from '@_store';
 import { useSearchParams } from 'next/navigation';
 import useHomeSocket from '@_hooks/useHomeSocket';
 import { TChainID } from '@_api/type';
-interface IProps {
-  overviewSSR: IOverviewSSR;
-}
-const getConnectionBuilder = (url: string) => {
-  const connect = new HubConnectionBuilder()
-    .withUrl(url, {
-      skipNegotiation: true,
-      transport: HttpTransportType.WebSockets,
-    })
-    // .withHubProtocol(new MessagePackHubProtocol())
-    .withAutomaticReconnect()
-    .build();
-  return connect;
-};
-export default function Home({ overviewSSR }: IProps) {
+export default function Home() {
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const searchParams = useSearchParams();
   const chain = searchParams.get('chainId') || defaultChain;
