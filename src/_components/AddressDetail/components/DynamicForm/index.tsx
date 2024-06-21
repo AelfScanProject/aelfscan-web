@@ -100,7 +100,14 @@ export default function DynamicForm({
                 items={[
                   {
                     key: item.name,
-                    label: `${index + 1}. ${item.name}`,
+                    label: (
+                      <div className={`w-full truncate pr-1 ${isMd && 'min-w-0'}`}>
+                        {index + 1}.
+                        <EPTooltip mode="dark" placement="top" title={item.name}>
+                          <span>{item.name}</span>
+                        </EPTooltip>
+                      </div>
+                    ),
                     extra: (
                       <div className="flex items-center gap-4">
                         <EPTooltip mode="dark" placement="top" title="Copy Method Name">
@@ -137,13 +144,6 @@ export default function DynamicForm({
           );
         })}
       </div>
-      {/* <Collapse defaultActiveKey={['0']} className="rounded-md">
-        {methods.map((ele) => {
-          return (
-            <Panel key={ele.name} showArrow={true} header={<span className="font-semibold">{ele.name}</span>}></Panel>
-          );
-        })}
-      </Collapse> */}
     </div>
   );
 }
