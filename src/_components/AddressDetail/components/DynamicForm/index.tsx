@@ -1,4 +1,4 @@
-import { Collapse } from 'antd';
+import { Collapse, message } from 'antd';
 
 import FormItem from './formItem';
 import { IMethod } from '../Contract';
@@ -14,7 +14,6 @@ import { useMD } from '@_hooks/useResponsive';
 import IconFont from '@_components/IconFont';
 import clsx from 'clsx';
 import copy from 'copy-to-clipboard';
-import { message } from 'antd';
 import EPTooltip from '@_components/EPToolTip';
 import { useEffect } from 'react';
 import { getSecondHashValue } from '@_utils/formatter';
@@ -37,7 +36,9 @@ export default function DynamicForm({
     try {
       const rs = await connectWallet();
     } catch (e: any) {
-      console.log(e.message);
+      console.log(e.message, 'e.message');
+      // console.log(did, 'diddiddid');
+      message.error(e.message);
     }
   };
   const handleCopy = (value) => {
