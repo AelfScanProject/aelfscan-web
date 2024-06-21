@@ -104,7 +104,7 @@ export default function FormItem({
               <Button
                 type="primary"
                 size="small"
-                className="mr-8 bg-link"
+                className="mr-3 bg-link"
                 disabled={(writeLoading || !submittable) && type !== 'read'}
                 loading={loading}
                 onClick={query}>

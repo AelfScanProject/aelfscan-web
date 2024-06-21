@@ -16,7 +16,7 @@
     @apply  !px-3 !py-1 !items-center;
   }
   .explorer-collapse-header-text {
-    @apply text-xs leading-5 text-base-100;
+    @apply text-xs leading-5 text-base-100 flex-1 min-w-0 mr-1;
   }
   .explorer-collapse-content {
     @apply !border-color-divider;
