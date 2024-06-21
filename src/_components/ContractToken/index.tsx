@@ -11,10 +11,12 @@ export default function ContractToken({
   type,
   chainId,
   showCopy = true,
+  count = 4,
   showContractAddress = false,
 }: {
   address: string;
   name?: string;
+  count?: number;
   type: AddressType;
   chainId: string;
   showCopy?: boolean;
@@ -30,7 +32,7 @@ export default function ContractToken({
         )}
         <EPTooltip pointAtCenter={false} title={addressFormat(address || '', chainId)} mode="dark">
           <Link className="text-link" href={`/${chainId}/address/${addressFormat(address || '', chainId)}/${type}`}>
-            {addressFormat(hiddenAddress(address || '', 4, 4), chainId)}
+            {addressFormat(hiddenAddress(address || '', count, count), chainId)}
           </Link>
         </EPTooltip>
         {showCopy && <Copy value={addressFormat(address, chainId)} />}

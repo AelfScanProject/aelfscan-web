@@ -12,15 +12,13 @@ import { PREFIXCLS, THEME_CONFIG } from '@_lib/AntdThemeConfig';
 import { makeStore, AppStore } from '@_store';
 // import { wrapper } from '@_store';
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import microApp from '@micro-zoe/micro-app';
 import { AELFDProvider } from 'aelf-design';
 import 'aelf-design/css';
-import { ConfigProvider, Skeleton } from 'antd';
-import { usePathname, useRouter } from 'next/navigation';
+import { ConfigProvider } from 'antd';
 import { Provider as ReduxProvider } from 'react-redux';
-import { useIsGovernance } from '@_hooks/useIsPath';
 import useResponsive from '@_hooks/useResponsive';
-import { useEnvContext } from 'next-runtime-env';
+import WebLoginProvider from './webLoginProvider';
+import dynamic from 'next/dynamic';
 
 const MobileContext = createContext<any>({});
 
@@ -30,79 +28,34 @@ const useMobileContext = () => {
 export { useMobileContext };
 
 function RootProvider({ children, isMobileSSR, config }) {
-  const { NEXT_PUBLIC_REMOTE_URL } = useEnvContext();
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = makeStore();
   }
+
   const [isMobile, setIsMobile] = useState(isMobileSSR);
   const { isMobile: isMobileClient } = useResponsive();
   useEffect(() => {
     setIsMobile(isMobileClient);
   }, [isMobileClient]);
-  const router = useRouter();
-  const pathname = usePathname();
-  const isGovernance = useIsGovernance();
-  const [show, setShow] = useState(false);
-  // useEffect(() => {
-  //   if (!isGovernance) {
-  //     // jump from governance to others maybe scroll
-  //     const app = document.querySelector('body');
-  //     if (app) {
-  //       app.scrollIntoView({ block: 'start', behavior: 'auto' });
-  //     }
-  //   }
-  // }, [pathname, isGovernance, router]);
-  useEffect(() => {
-    microApp.start({
-      lifeCycles: {
-        mounted() {
-          setShow(true);
-        },
+
+  const WebLoginProvider = useMemo(() => {
+    return dynamic(
+      async () => {
+        return import('./webLoginProvider');
       },
-    });
-    // const onPopstate = () => {
-    //   const { href, origin } = window.location;
-    //   router.replace(href.replace(origin, ''));
-    // };
-    // window.addEventListener('popstate', onPopstate);
-    microApp.addDataListener('governance', ({ pathname: path }) => {
-      // jump at remote app
-      // setTimeout(
-      //   () =>
-      //     window.scroll({
-      //       top: 0,
-      //       left: 0,
-      //       behavior: 'smooth',
-      //     }),
-      //   0,
-      // );
-      router.push(path);
-    });
-    return () => {
-      // window.removeEventListener('popstate', onPopstate);
-      microApp.clearDataListener('governance');
-    };
-  }, [pathname, router]);
+      { ssr: false },
+    );
+  }, []);
 
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
       <ConfigProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
         <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config }}>
           <ReduxProvider store={storeRef.current}>
-            {isGovernance && (
-              <>
-                <micro-app
-                  name="governance"
-                  url={NEXT_PUBLIC_REMOTE_URL}
-                  keep-alive
-                  class={isMobile ? 'mobile-micro-app' : ''}></micro-app>
-                {!show && <Skeleton className="relative top-[104px] mb-[104px] h-[calc(100vh-434px)]" />}
-              </>
-            )}
-            <div className={isGovernance ? 'no-use-main' : 'flex min-h-screen flex-col justify-between'}>
-              {children}
-            </div>
+            <WebLoginProvider config={config}>
+              <div className="flex min-h-screen flex-col justify-between">{children}</div>
+            </WebLoginProvider>
           </ReduxProvider>
         </MobileContext.Provider>
       </ConfigProvider>

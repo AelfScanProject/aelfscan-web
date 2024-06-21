@@ -29,7 +29,7 @@ body {
     .explorer-dropdown-menu-item {
       @apply !text-xs !leading-20 !text-base-100 !px-2 !py-[6px];
       &:hover {
-        @apply !bg-[#D8DDE5];
+        @apply !bg-F7;
       }
     }
     .explorer-dropdown-menu-item-selected {
@@ -76,6 +76,5 @@ button,
 [type='reset'],
 [type='submit'] {
   appearance: button;
-  background-color: rgb(26 26 26 / 25%);
   background-image: none;
 }

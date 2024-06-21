@@ -26,6 +26,7 @@ import Link from 'next/link';
 import ContractToken from '@_components/ContractToken';
 import { AddressType, TablePageSize } from '../../_types/common';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   console.log(SSRData, 'SSRData');
   const { chain, address, addressType } = useParams<{
@@ -147,6 +148,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
   }, [author, chain, contractName, contractTransactionHash]);
 
   const [selectKey, setSelectKey] = useState<string>('');
+
   const onTabClick = (key) => {
     setSelectKey(key);
   };
@@ -192,7 +194,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
   if (!isAddress) {
     items.push(
       {
-        key: 'contract',
+        key: 'Code',
         label: 'Contract',
         children: <Contract />,
       },
