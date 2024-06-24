@@ -86,7 +86,16 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
       'Explorers',
       'explorers',
       networkList.map((ele) => {
-        return getItem(<Link href={ele.network_id?.path}>{ele.network_id?.label}</Link>, ele.network_id?.key);
+        return getItem(
+          <a
+            target="_blank"
+            className={`text-sm leading-[22px] !text-base-100 ${window.location.origin === ele.network_id?.path && !'text-link'}`}
+            href={ele.network_id?.path}
+            rel="noopener noreferrer">
+            {ele.network_id?.label}
+          </a>,
+          ele.network_id?.key,
+        );
       }),
     ),
     getItem(

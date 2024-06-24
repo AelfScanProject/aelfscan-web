@@ -13,6 +13,9 @@ import { useParams, useRouter } from 'next/navigation';
 import { checkMainNet } from '@_utils/isMainNet';
 import useBlockchainOverview from '@_hooks/useBlockchainOverview';
 import { TChainID } from '@_api/type';
+import { Dropdown } from 'aelf-design';
+import { useMemo } from 'react';
+import { MenuProps } from 'antd';
 
 // at public file
 const TopIconMain = '/image/aelf-header-top.svg';
@@ -33,8 +36,23 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   const pathname = usePathname();
   const isHideSearch = pathname === '/' || pathname.includes('search-');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
-  const networkType = NEXT_PUBLIC_NETWORK_TYPE;
-  const finalUrl = networkList.find((ele) => ele?.network_id.key === networkType)?.network_id?.path;
+  const items: MenuProps['items'] = useMemo(() => {
+    return networkList.map((item) => {
+      return {
+        key: item?.network_id?.key,
+        label: (
+          <a
+            target="_blank"
+            className={`text-sm leading-[22px] ${window.location.origin === item.network_id?.path ? '!text-link' : '!text-base-100'}`}
+            href={item.network_id?.path}
+            rel="noopener noreferrer">
+            {item.network_id?.label}
+          </a>
+        ),
+      };
+    });
+  }, [networkList]);
+
   const { chain } = useParams();
   const router = useRouter();
   const { BlockchainOverview, overviewLoading } = useBlockchainOverview(defaultChain as TChainID);
@@ -86,16 +104,18 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
             </div>
           )}
 
-          <div className={clsx(`${clsPrefix}-right`)} onClick={() => (window.location.href = finalUrl || '')}>
-            <div className={clsx(`${clsPrefix}-explorer-change`)}>
-              <Image
-                className={`${clsPrefix}-change-icon`}
-                width="16"
-                height="16"
-                src={`${isMainNet ? ChangeIconMain : ChangeIcoTest}`}
-                alt={'explorer-change-icon'}></Image>
+          <Dropdown trigger={['click']} overlayClassName="network-drop w-[180px]" menu={{ items }}>
+            <div className={clsx(`${clsPrefix}-right`)}>
+              <div className={clsx(`${clsPrefix}-explorer-change`)}>
+                <Image
+                  className={`${clsPrefix}-change-icon`}
+                  width="16"
+                  height="16"
+                  src={`${isMainNet ? ChangeIconMain : ChangeIcoTest}`}
+                  alt={'explorer-change-icon'}></Image>
+              </div>
             </div>
-          </div>
+          </Dropdown>
         </>
         {isMobile && (
           <MobileHeaderMenu
