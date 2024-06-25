@@ -35,7 +35,8 @@ export default function Contract() {
   const isMobile = useMobileAll();
   const { config } = useMobileContext();
   const { chain, address } = useParams<{ chain: TChainID; address: string }>();
-  const RPC_URL = config['rpcUrl' + chain];
+  // const RPC_URL = config['rpcUrl' + chain];
+  const RPC_URL = 'https://explorer-test-side02.aelf.io/chain';
 
   const aelfInstance = getAElf(RPC_URL);
   const [loading, setLoading] = useState<boolean>();
@@ -44,7 +45,8 @@ export default function Contract() {
   const [readMethods, setReadMethods] = useState<IMethod[]>([]);
   const [contract, setContract] = useState<any>();
 
-  const transferMethods = (methodsObj: any) => {
+  const transferMethods = async (methodsObj: any) => {
+    const viewMethod: string[] = await aelfInstance?.chain.getContractViewMethodList(getAddress(address));
     const res: IMethod[] = [];
     const readRes: IMethod[] = [];
     const keysArr = Object.keys(methodsObj);
@@ -58,12 +60,13 @@ export default function Contract() {
           type: fields[item].type,
         };
       });
-      temp.type = temp.input.length ? 'write' : 'read';
+      const isRead = viewMethod.includes(temp.name);
+      temp.type = !isRead ? 'write' : 'read';
       temp.fn = methodsObj[keysArr[i]];
-      if (temp.input.length) {
-        res.push(temp);
-      } else {
+      if (isRead) {
         readRes.push(temp);
+      } else {
+        res.push(temp);
       }
     }
     return {
@@ -75,7 +78,7 @@ export default function Contract() {
     const methods = await getContractMethods(aelfInstance, address);
     const contract = await getContractInstance(getAddress(address), RPC_URL);
     setContract(contract);
-    const { readMethods, writeMethods } = transferMethods(methods);
+    const { readMethods, writeMethods } = await transferMethods(methods);
     setWriteMethods(writeMethods);
     setReadMethods(readMethods);
     console.log(methods, 'methods', readMethods, writeMethods);
@@ -142,7 +145,6 @@ export default function Contract() {
 
   useEffectOnce(() => {
     const hash = getFirstHashValue(window.location.href);
-    console.log('hash', hash);
     setActiveKey(hash);
     getMethod();
   });

@@ -100,22 +100,22 @@ export default function FormItem({
         )}
         <Form.Item>
           <div className="flex w-full items-center">
-            {
+            {type === 'read' && (
               <Button
                 type="primary"
                 size="small"
                 className="mr-3 bg-link"
-                disabled={(writeLoading || !submittable) && type !== 'read'}
+                disabled={!submittable && !!input.length}
                 loading={loading}
                 onClick={query}>
                 Query
               </Button>
-            }
+            )}
             {type === 'write' && (
               <Button
                 size="small"
                 className="bg-link"
-                disabled={!isConnected || loading || !submittable}
+                disabled={!isConnected || !submittable}
                 loading={writeLoading}
                 type="primary"
                 onClick={write}>
