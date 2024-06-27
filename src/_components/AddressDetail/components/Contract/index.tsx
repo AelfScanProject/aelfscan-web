@@ -35,8 +35,7 @@ export default function Contract() {
   const isMobile = useMobileAll();
   const { config } = useMobileContext();
   const { chain, address } = useParams<{ chain: TChainID; address: string }>();
-  // const RPC_URL = config['rpcUrl' + chain];
-  const RPC_URL = 'https://explorer-test-side02.aelf.io/chain';
+  const RPC_URL = config['rpcUrl' + chain];
 
   const aelfInstance = getAElf(RPC_URL);
   const [loading, setLoading] = useState<boolean>();
