@@ -1,0 +1,137 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+
+  .col-12 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  @media (width >= 993px) {
+    .col-lg-4 {
+      flex: 0 0 auto;
+      width: 33.3333%;
+    }
+  }
+
+  @media (width >= 1200px) {
+    .col-xl-3 {
+      flex: 0 0 auto;
+      width: 25%;
+    }
+  }
+
+  @media (width >= 993px) {
+    .mb-lg-0 {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  @media (width >= 993px) {
+    .col-lg-8 {
+      flex: 0 0 auto;
+      width: 66.6667%;
+    }
+  }
+
+  @media (width >= 1200px) {
+    .col-xl-9 {
+      flex: 0 0 auto;
+      width: 75%;
+    }
+  }
+}
+
+@media (width >= 993px) {
+  .col-lg-4 {
+    flex: 0 0 auto;
+    width: 33.3333%;
+  }
+}
+
+@media (width >= 1200px) {
+  .col-xl-3 {
+    flex: 0 0 auto;
+    width: 25%;
+  }
+}
+
+@media (width >= 993px) {
+  .mb-lg-0 {
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (width >= 993px) {
+  .d-lg-block {
+      display: block !important;
+  }
+}
+
+@media (width >= 993px) {
+  .col-lg-3 {
+      flex: 0 0 auto;
+      width: 25%;
+  }
+}
+
+@media (width >= 1200px) {
+  .col-xl-2 {
+      flex: 0 0 auto;
+      width: 16.6667%;
+  }
+}
+
+@media (width >= 993px) {
+  .col-lg-8 {
+    flex: 0 0 auto;
+    width: 66.6667%;
+  }
+}
+
+@media (width >= 1200px) {
+  .col-xl-9 {
+    flex: 0 0 auto;
+    width: 75%;
+  }
+}
+
+.row > * {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.nav {
+  &:hover {
+    svg {
+      @apply stroke-link;
+    }
+  }
+}
+
+.charts-container {
+  .explorer-anchor::before {
+    @apply hidden;
+  }
+  .explorer-anchor-link {
+    @apply !px-3 !py-[7px] mb-1;
+  }
+  .explorer-anchor-link-active {
+    background-color: #ECEEF2!important;
+    border-radius: 8px;
+  }
+  .explorer-anchor .explorer-anchor-ink.explorer-anchor-ink-visible {
+    @apply !hidden;
+  }
+  .explorer-anchor-ink-visible {
+    @apply hidden;
+  }
+
+  .explorer-anchor-wrapper .explorer-anchor .explorer-anchor-link-title {
+    @apply !text-base-100 font-medium text-sm leading-[22px];
+  }
+  .explorer-card-body {
+    @apply p-4;
+  }
+}
