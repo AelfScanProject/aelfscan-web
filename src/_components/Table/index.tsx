@@ -32,6 +32,7 @@ export interface ICommonTableProps<T> extends ITableProps<T> {
   pageSize?: number;
   isMobile?: boolean;
   showTopSearch?: boolean;
+  hiddenTitle?: boolean;
   headerTitle?: IHeaderTitleProps | ReactNode;
   defaultCurrent?: number;
   className?: string;
@@ -94,6 +95,7 @@ export default function TableApp({
   pageSizeChange,
   options,
   headerTitle,
+  hiddenTitle,
   showLast = true,
   emptyText,
   headerLeftNode,
@@ -115,7 +117,7 @@ export default function TableApp({
           `ep-table-header-${isMobile ? 'mobile' : 'pc'}`,
         )}>
         <div className="header-left mr-4 flex flex-1 flex-col justify-between lg:flex-row lg:items-center">
-          <div>{isReactNode(headerTitle) ? headerTitle : <HeaderTitle {...headerTitle} />}</div>
+          {!hiddenTitle && <div>{isReactNode(headerTitle) ? headerTitle : <HeaderTitle {...headerTitle} />}</div>}
           {headerLeftNode}
         </div>
         <div className="header-pagination">

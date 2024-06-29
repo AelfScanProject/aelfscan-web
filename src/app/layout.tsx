@@ -5,7 +5,6 @@
  * @LastEditTime: 2023-08-16 15:57:46
  * @Description: root layout
  */
-import 'antd-mobile/es/global';
 import '@_style/globals.css';
 import type { Metadata } from 'next';
 import RootProvider from './pageProvider';

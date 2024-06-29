@@ -5913,6 +5913,21 @@ hdkey@^1.1.1:
     safe-buffer "^5.1.1"
     secp256k1 "^3.0.1"
 
+highcharts-exporting@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.npmjs.org/highcharts-exporting/-/highcharts-exporting-0.1.7.tgz#f38024b9ef78ce2ac3a39f853f83b55822ae1630"
+  integrity sha512-f+M2vuJA84LufzmpCD/E2AgIyiOrM/F6nru2lbvjZLj3N0VHjhhVyQkkAcQN0cWHR4xwGqLvcljc1tPX2VEi3w==
+
+highcharts-react-official@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.npmjs.org/highcharts-react-official/-/highcharts-react-official-3.2.1.tgz#4b62a7af2969bdebde6b338d36f6b9bf1f1029bc"
+  integrity sha512-hyQTX7ezCxl7JqumaWiGsroGWalzh24GedQIgO3vJbkGOZ6ySRAltIYjfxhrq4HszJOySZegotEF7v+haQ75UA==
+
+highcharts@^11.4.3:
+  version "11.4.3"
+  resolved "https://registry.npmjs.org/highcharts/-/highcharts-11.4.3.tgz#a6cd961e0a7d4bf749ff32db41a90125a6ab4673"
+  integrity sha512-rMmvYvcdwyUVfnRPfiZ0PnW6TgVhoS0FTBI8fc4Fp8l8ocoC9dMecvxS6E6tm7h7LrnSGoEo3b/0IRHuLatD2w==
+
 hmac-drbg@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmmirror.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz"
@@ -7653,6 +7668,11 @@ pako@~1.0.2:
   version "1.0.11"
   resolved "https://registry.npmmirror.com/pako/-/pako-1.0.11.tgz"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
+
+papaparse@^5.4.1:
+  version "5.4.1"
+  resolved "https://registry.npmjs.org/papaparse/-/papaparse-5.4.1.tgz#f45c0f871853578bd3a30f92d96fdcfb6ebea127"
+  integrity sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==
 
 parent-module@^1.0.0:
   version "1.0.1"

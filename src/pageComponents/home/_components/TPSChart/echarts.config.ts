@@ -1,6 +1,6 @@
 import * as echarts from 'echarts/core';
 
-import { BarChart, PieChart } from 'echarts/charts';
+import { BarChart, PieChart, LineChart } from 'echarts/charts';
 
 import {
   TitleComponent,
@@ -29,6 +29,7 @@ echarts.use([
   LegendComponent,
   PieChart,
   MarkLineComponent,
+  LineChart,
 ]);
 
 export default echarts;

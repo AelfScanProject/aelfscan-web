@@ -1,6 +1,8 @@
 import { store } from '@_store';
 import { Chain } from 'global';
 import { SYMBOL } from './contant';
+import Papa from 'papaparse';
+import { saveAs } from 'file-saver';
 
 export function getPathnameFirstSlash(pathname: string) {
   const secondSlashIndex = pathname.slice(1).indexOf('/');
@@ -39,3 +41,9 @@ export function updateQueryParams(params: { [K in string]: any }) {
   console.log(window, url.toString(), 'windowsdfsad');
   window.history.replaceState(null, '', url.toString());
 }
+
+export const exportToCSV = (title, columns, rows) => {
+  const csv = Papa.unparse({ fields: columns, data: rows });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  saveAs(blob, title);
+};
