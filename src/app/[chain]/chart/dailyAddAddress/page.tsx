@@ -17,9 +17,9 @@ const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, item.addressCount]);
+    allData.push([item.date, item.totalUniqueAddressees]);
     customMap[item.date] = {};
-    customMap[item.date].totalUniqueAddressees = item.totalUniqueAddressees;
+    customMap[item.date].addressCount = item.addressCount;
   });
 
   return {
@@ -92,8 +92,8 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const value = point.y;
-        const total = customMap[date].totalUniqueAddressees;
+        const total = point.y;
+        const value = customMap[date].addressCount;
         return `
           ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Unique Addresses</b>: <b>${thousandsNumber(total)}</b><br/>Daily Increase: <b>${thousandsNumber(value)}</b><br/>
         `;
