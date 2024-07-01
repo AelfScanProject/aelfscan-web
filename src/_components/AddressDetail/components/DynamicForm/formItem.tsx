@@ -115,7 +115,7 @@ export default function FormItem({
               <Button
                 size="small"
                 className="bg-link"
-                disabled={!isConnected || !submittable}
+                disabled={!isConnected || (!submittable && !!input.length)}
                 loading={writeLoading}
                 type="primary"
                 onClick={write}>

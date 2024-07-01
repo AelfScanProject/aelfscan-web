@@ -108,7 +108,7 @@ export default function Page() {
   }, [fetchData]);
   return (
     <div>
-      <Title title="Blocks Produces" hiddenBorder></Title>
+      <Title title="aelf Block Producers" hiddenBorder></Title>
       <Table
         headerLeftNode={
           <Select
