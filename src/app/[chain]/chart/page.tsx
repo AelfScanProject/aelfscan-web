@@ -6,78 +6,84 @@ import './index.css';
 import ChartSVG from 'public/image/chart.svg';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useEnvContext } from 'next-runtime-env';
+import { checkMainNet } from '@_utils/isMainNet';
+import { useMemo } from 'react';
 
-const chartData = [
-  // {
-  //   id: 'section-market-data',
-  //   title: 'Market Data',
-  //   charts: [
-  //     {
-  //       title: 'AelfDaily Transactions Chart',
-  //       path: '/chart/DailyTransactions',
-  //       imgUrl: ChartSVG,
-  //     },
-  //   ],
-  // },
-  {
-    id: 'section-blockchain-data',
-    title: 'Blockchain Data',
-    charts: [
-      {
-        title: 'aelf Daily Transactions Chart',
-        path: '/chart/DailyTransactions',
-        imgUrl: '/image/aelfDailyTransactionChart.png',
-      },
-      {
-        title: 'aelf Unique Addresses Chart',
-        path: '/chart/dailyAddAddress',
-        imgUrl: '/image/AelfUniqueAddressesChart.png?v0.0.1',
-      },
-      {
-        title: 'Active aelf Addresses Chart',
-        path: '/chart/dailyActiveAddress',
-        imgUrl: '/image/ActiveAelfAddressesChart.png?v0.0.2',
-      },
-    ],
-  },
-  {
-    id: 'section-network-data',
-    title: 'Network Data',
-    charts: [
-      {
-        title: 'aelf Block Production Rate Chart',
-        path: '/chart/BlockProductionRate',
-        imgUrl: '/image/aelfBlockProductionRateChart.png',
-      },
-      {
-        title: 'aelf Daily Cycle Count Chart',
-        path: '/chart/AelfDailyCycleCount',
-        imgUrl: '/image/aelfDailyCycleCountChart.png',
-      },
-      {
-        title: 'aelf AVG Block Duration Chart',
-        path: '/chart/AelfAVGBlockDuration',
-        imgUrl: '/image/aelfAvgBlockDurationChart.png',
-      },
-      {
-        title: 'aelf Block Producers',
-        path: '/chart/nodeBlockProduce',
-        imgUrl: ChartSVG,
-      },
-    ],
-  },
-  // {
-  //   id: 'section-contracts-data',
-  //   title: 'Contracts Data',
-  //   charts: [
-  //     {
-  //       title: 'AelfDaily Transactions Chart',
-  //       path: '/chart/DailyTransactions',
-  //       imgUrl: ChartSVG,
-  //     },
-  //   ],
-  // },
-];
+const getChartData = (network, chain) => {
+  const chainPath = chain !== 'AELF' ? `side/` : '';
+  return [
+    // {
+    //   id: 'section-market-data',
+    //   title: 'Market Data',
+    //   charts: [
+    //     {
+    //       title: 'AelfDaily Transactions Chart',
+    //       path: '/chart/DailyTransactions',
+    //       imgUrl: ChartSVG,
+    //     },
+    //   ],
+    // },
+    {
+      id: 'section-blockchain-data',
+      title: 'Blockchain Data',
+      charts: [
+        {
+          title: 'aelf Daily Transactions Chart',
+          path: '/chart/DailyTransactions',
+          imgUrl: `/image/${network}/${chainPath}aelfDailyTransactionChart.png?v0.0.1`,
+        },
+        {
+          title: 'aelf Unique Addresses Chart',
+          path: '/chart/dailyAddAddress',
+          imgUrl: `/image/${network}/${chainPath}AelfUniqueAddressesChart.png?v0.0.1`,
+        },
+        {
+          title: 'Active aelf Addresses Chart',
+          path: '/chart/dailyActiveAddress',
+          imgUrl: `/image/${network}/${chainPath}ActiveAelfAddressesChart.png?v0.0.1`,
+        },
+      ],
+    },
+    {
+      id: 'section-network-data',
+      title: 'Network Data',
+      charts: [
+        {
+          title: 'aelf Block Production Rate Chart',
+          path: '/chart/BlockProductionRate',
+          imgUrl: `/image/${network}/${chainPath}aelfBlockProductionRateChart.png?v0.0.1`,
+        },
+        {
+          title: 'aelf Daily Cycle Count Chart',
+          path: '/chart/AelfDailyCycleCount',
+          imgUrl: `/image/${network}/${chainPath}aelfDailyCycleCountChart.png?v0.0.1`,
+        },
+        {
+          title: 'aelf AVG Block Duration Chart',
+          path: '/chart/AelfAVGBlockDuration',
+          imgUrl: `/image/${network}/${chainPath}aelfAvgBlockDurationChart.png?v0.0.1`,
+        },
+        {
+          title: 'aelf Block Producers',
+          path: '/chart/nodeBlockProduce',
+          imgUrl: '/image/table-preview.png?v0.0.1',
+        },
+      ],
+    },
+    // {
+    //   id: 'section-contracts-data',
+    //   title: 'Contracts Data',
+    //   charts: [
+    //     {
+    //       title: 'AelfDaily Transactions Chart',
+    //       path: '/chart/DailyTransactions',
+    //       imgUrl: ChartSVG,
+    //     },
+    //   ],
+    // },
+  ];
+};
 
 const items = [
   // {
@@ -103,7 +109,12 @@ const items = [
 ];
 
 export default function Page() {
+  const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
+  const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
   const { chain } = useParams();
+  const chartData = useMemo(() => {
+    return getChartData(isMainNet ? 'main' : 'testnet', chain);
+  }, [chain, isMainNet]);
   return (
     <div className="mb-[-40px]">
       <div className="mb-6 border-b border-solid border-color-divider py-6 text-[20px] font-medium leading-[28px] text-base-100">
