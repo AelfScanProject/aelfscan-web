@@ -82,3 +82,10 @@
     @apply flex flex-1 justify-end;
   }
 }
+
+
+.network-drop {
+  .explorer-dropdown-menu {
+    @apply p-2;
+  }
+}
