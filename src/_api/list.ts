@@ -65,6 +65,16 @@ const Common_API_List = {
   getSearchFilter: `${BASE_API}/app/blockchain/filters`,
 };
 
+const CHART_API_LIST = {
+  getBlockProduceRate: `${BASE_API}/app/statistics/blockProduceRate`,
+  getAvgBlockDuration: `${BASE_API}/app/statistics/avgBlockDuration`,
+  getCycleCount: `${BASE_API}/app/statistics/cycleCount`,
+  getUniqueAddresses: `${BASE_API}/app/statistics/uniqueAddresses`,
+  getDailyTransactions: `${BASE_API}/app/statistics/dailyTransactions`,
+  getDailyActiveAddresses: `${BASE_API}/app/statistics/dailyActiveAddresses`,
+  getNodeBlockProduce: `${BASE_API}/app/statistics/nodeBlockProduce`,
+};
+
 const CMS_API_List = {
   getGlobalConfig: `${process.env.NEXT_PUBLIC_CMS_URL}/items/globalConfig?fields%5B%5D=*&fields%5B%5D=networkList.network_id.*&deep%5BnetworkList%5D%5B_sort%5D=-network_id.index&fields%5B%5D=headerMenuList.headerMenu_id.*&fields%5B%5D=headerMenuList.headerMenu_id.children.*&deep%5BheaderMenuList%5D%5B_sort%5D=-headerMenu_id.index&deep%5BheaderMenuList%5D%5BheaderMenu_id%5D%5Bchildren%5D%5B_sort%5D=-index&fields%5B%5D=footerMenuList.footerMenu_id.*&fields%5B%5D=footerMenuList.footerMenu_id.children.*&deep%5BfooterMenuList%5D%5B_sort%5D=-footerMenu_id.index&deep%5BfooterMenuList%5D%5BfooterMenu_id%5D%5Bchildren%5D%5B_sort%5D=-index&fields%5B%5D=chainList.chainList_id.*&deep%5BchainList%5D%5B_sort%5D=-chainList_id.index`,
 };
@@ -81,6 +91,7 @@ export const API_List = {
   token: Token_API_List,
   nfts: NFT_API_List,
   address: ADDRESS_API_LIST,
+  chart: CHART_API_LIST,
 };
 
 type REQUEST_FUNCTION = (opt?: RequestWithParams) => Promise<any>;

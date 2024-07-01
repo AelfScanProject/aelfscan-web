@@ -78,3 +78,7 @@ button,
   appearance: button;
   background-image: none;
 }
+
+.anticon {
+  display: inline-flex !important;
+}
