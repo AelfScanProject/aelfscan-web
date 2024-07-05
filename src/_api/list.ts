@@ -78,6 +78,7 @@ const CHART_API_LIST = {
   getDailyBlockReward: `${BASE_API}/app/statistics/dailyBlockReward`,
   getDailyTotalBurnt: `${BASE_API}/app/statistics/dailyTotalBurnt`,
   getDailyDeployContract: `${BASE_API}/app/statistics/dailyDeployContract`,
+  getDailyAvgBlockSize: `${BASE_API}/app/statistics/dailyAvgBlockSize`,
 };
 
 const CMS_API_List = {

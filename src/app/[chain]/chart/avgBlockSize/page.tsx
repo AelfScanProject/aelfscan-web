@@ -3,20 +3,18 @@ import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useMemo, useState } from 'react';
-import { ChartColors, IAvgBlockSizeData, IHIGHLIGHTDataItem } from '../type';
+import { ChartColors, IAvgBlockSizeData } from '../type';
 const title = 'Average Block Size Chart';
-import dayjs from 'dayjs';
 import { exportToCSV } from '@_utils/urlUtils';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
-import { fetchDailyActiveAddresses } from '@_api/fetchChart';
+import { fetchDailyAvgBlockSize } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { AvgBlocksizeData } from '@_components/charts/mock';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   list.forEach((item) => {
-    allData.push([item.date, Number(item.avgSize)]);
+    allData.push([item.date, Number(item.avgBlockSize)]);
   });
 
   return {
@@ -119,8 +117,8 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      // const res = await fetchDailyActiveAddresses({ chainId: chain });
-      setData(AvgBlocksizeData);
+      const res = await fetchDailyAvgBlockSize({ chainId: chain });
+      setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
     } finally {
