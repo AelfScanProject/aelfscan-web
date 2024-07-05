@@ -18,4 +18,4 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=sqp_7538ed4d664bf997eef35c20eccbdd1a1084ed64
+            -Dsonar.projectKey=aelfscan-web
