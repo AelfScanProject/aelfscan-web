@@ -5,6 +5,7 @@
  * @LastEditTime: 2023-08-16 15:57:46
  * @Description: root layout
  */
+
 import '@_style/globals.css';
 import type { Metadata } from 'next';
 import RootProvider from './pageProvider';
@@ -53,13 +54,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','G-MXXFJ3C8GY');`,
+          })(window,document,'script','dataLayer','GTM-NZFQDZCT');`,
         }}></Script>
+
       <body>
         <noscript
           dangerouslySetInnerHTML={{
             __html: `<iframe
-                src="https://www.googletagmanager.com/ns.html?id=G-MXXFJ3C8GY"
+                src="https://www.googletagmanager.com/ns.html?id=GTM-NZFQDZCT"
                 height="0"
                 width="0"
                 style="display:none;visibility:hidden"></iframe>`,

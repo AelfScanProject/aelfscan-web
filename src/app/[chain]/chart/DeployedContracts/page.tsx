@@ -1,26 +1,25 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
+import '../index.css';
 import { thousandsNumber } from '@_utils/formatter';
 import { useCallback, useMemo, useState } from 'react';
-import { ChartColors, IBlockProductionRateData, IHIGHLIGHTDataItem } from '../type';
+import { ChartColors, IDeployedContractsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
-const title = 'aelf Block Production Rate Chart';
-import dayjs from 'dayjs';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useEffectOnce } from 'react-use';
-import { fetchBlockProduceRate } from '@_api/fetchChart';
+import { fetchDailyDeployContract } from '@_api/fetchChart';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
+import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 
+const title = 'aelf Deployed Contracts Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.blockProductionRate)]);
+    allData.push([item.date, Number(item.totalCount)]);
     customMap[item.date] = {};
-    customMap[item.date].blockCount = item.blockCount;
-    customMap[item.date].missedBlockCount = item.missedBlockCount;
+    customMap[item.date].dailyIncreaseContract = item.count;
   });
 
   return {
@@ -36,7 +35,7 @@ const getOption = (list: any[]): Highcharts.Options => {
       selected: 3,
       buttonPosition: {
         align: 'left',
-        x: -22,
+        x: -25,
       },
       buttons: [
         {
@@ -80,7 +79,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     yAxis: {
       title: {
-        text: 'Block Production Rate',
+        text: 'aelf Cumulative Contracts Chart',
       },
     },
     credits: {
@@ -94,18 +93,17 @@ const getOption = (list: any[]): Highcharts.Options => {
         const point = that.points[0] as any;
         const date = point.x;
         const value = point.y;
-        const blockCount = customMap[date].blockCount;
-        const missedBlockCount = customMap[date].missedBlockCount;
+        const newContracts = customMap[date].dailyIncreaseContract;
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Block Production Rate</b>: <b>${thousandsNumber(value)}%</b><br/>Block Count: <b>${thousandsNumber(blockCount)}</b><br/>Missed Block Count: <b>${thousandsNumber(missedBlockCount)}</b><br/>
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(value)}</b><br/>Daily Increase: <b>${thousandsNumber(newContracts)}</b><br/>
         `;
       },
     },
     series: [
       {
-        name: 'Active Addresses',
-        data: allData,
+        name: 'Tokyo',
         type: 'line',
+        data: allData,
       },
     ],
     exporting: {
@@ -120,12 +118,12 @@ const getOption = (list: any[]): Highcharts.Options => {
 };
 export default function Page() {
   const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IBlockProductionRateData>();
+  const [data, setData] = useState<IDeployedContractsData>();
   const [loading, setLoading] = useState<boolean>(false);
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchBlockProduceRate({ chainId: chain });
+      const res = await fetchDailyDeployContract({ chainId: chain });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -143,6 +141,7 @@ export default function Page() {
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
+
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     return data
       ? [
@@ -150,29 +149,10 @@ export default function Page() {
             key: 'Highest',
             text: (
               <span>
-                Highest block production rate of
-                <span className="px-1 font-bold">
-                  {thousandsNumber(data.highestBlockProductionRate.blockProductionRate)}%
-                </span>
-                was on
-                <span className="pl-1">
-                  {Highcharts.dateFormat('%A, %B %e, %Y', data.highestBlockProductionRate.date)}
-                </span>
-              </span>
-            ),
-          },
-          {
-            key: 'Lowest',
-            text: (
-              <span>
-                Highest number of missed blocks of
-                <span className="px-1 font-bold">
-                  {thousandsNumber(data.lowestBlockProductionRate.missedBlockCount)}
-                </span>
-                was on
-                <span className="pl-1">
-                  {Highcharts.dateFormat('%A, %B %e, %Y', data.lowestBlockProductionRate.date)}
-                </span>
+                Highest increase of
+                <span className="px-1 font-bold">{thousandsNumber(data.highest?.count)}</span>
+                new contracts was recorded on
+                <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highest?.date)}</span>
               </span>
             ),
           },
@@ -184,7 +164,7 @@ export default function Page() {
   ) : (
     <BaseHightCharts
       title={title}
-      aboutTitle="The aelf Block Production Rate Chart shows the daily block production rate of the aelf network"
+      aboutTitle="The aelf Deployed Contracts Chart shows  total number of contracts deployed on the aelf network."
       highlightData={highlightData}
       options={options}
       download={download}

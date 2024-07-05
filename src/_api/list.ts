@@ -73,6 +73,11 @@ const CHART_API_LIST = {
   getDailyTransactions: `${BASE_API}/app/statistics/dailyTransactions`,
   getDailyActiveAddresses: `${BASE_API}/app/statistics/dailyActiveAddresses`,
   getNodeBlockProduce: `${BASE_API}/app/statistics/nodeBlockProduce`,
+  getDailyElfPrice: `${BASE_API}/app/statistics/dailyElfPrice`,
+  getDailyAvgTransactionFee: `${BASE_API}/app/statistics/dailyAvgTransactionFee`,
+  getDailyBlockReward: `${BASE_API}/app/statistics/dailyBlockReward`,
+  getDailyTotalBurnt: `${BASE_API}/app/statistics/dailyTotalBurnt`,
+  getDailyDeployContract: `${BASE_API}/app/statistics/dailyDeployContract`,
 };
 
 const CMS_API_List = {

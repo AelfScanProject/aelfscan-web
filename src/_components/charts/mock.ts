@@ -180,3 +180,164 @@ export const AelfAVGBlockDurationData = {
     },
   ],
 };
+
+export const AvgTxFee = {
+  chainId: 'aelf',
+  highest: {
+    date: 1714492800000,
+    avgFeeUsdt: '1.2222',
+    avgFeeElf: '0.22',
+  },
+  lowest: {
+    date: 1714492800000,
+    avgFeeUsdt: '1.2222',
+    avgFeeElf: '0.22',
+  },
+  list: [
+    {
+      date: 1714492800000,
+      avgFeeUsdt: '1.122',
+      avgFeeElf: '0.12',
+    },
+    {
+      date: 1717171200000,
+      avgFeeUsdt: '1.42',
+      avgFeeElf: '0.32',
+    },
+    {
+      date: 1719763200000,
+      avgFeeUsdt: '1.92',
+      avgFeeElf: '0.42',
+    },
+  ],
+};
+
+export const AvgBlocksizeData = {
+  chainId: 'aelf',
+  highest: {
+    date: 1714492800000,
+    avgSize: '47257',
+  },
+  lowest: {
+    date: 1714492800000,
+    avgSize: '47257',
+  },
+  list: [
+    {
+      date: 1714492800000,
+      avgSize: '47257',
+    },
+    {
+      date: 1717171200000,
+      avgSize: '472522',
+    },
+    {
+      date: 1719763200000,
+      avgSize: '427257',
+    },
+  ],
+};
+
+export const DailyBlockRewardsData = {
+  chainId: 'aelf',
+  highest: {
+    date: 1714492800000,
+    blockReward: '2.331',
+    totalBlockCount: 12233,
+  },
+  lowest: {
+    date: 1714492800000,
+    blockReward: '2.331',
+    totalBlockCount: 12233,
+  },
+  list: [
+    {
+      date: 1714492800000,
+      blockReward: '1.31',
+      totalBlockCount: 233,
+    },
+    {
+      date: 1717171200000,
+      blockReward: '2.331',
+      totalBlockCount: 243,
+    },
+    {
+      date: 1719763200000,
+      blockReward: '3.331',
+      totalBlockCount: 645,
+    },
+  ],
+};
+
+export const DailyPriceData = {
+  chainId: 'aelf',
+  list: [
+    {
+      date: 1714492800000,
+      price: '1.22',
+    },
+    {
+      date: 1717171200000,
+      price: '1.24',
+    },
+    {
+      date: 1719763200000,
+      price: '1.82',
+    },
+  ],
+};
+
+export const DailyBurntData = {
+  chainId: 'aelf',
+  highestBurnt: {
+    date: 1714492800000,
+    burnt: '555.0123',
+  },
+  lowestBurnt: {
+    date: 1714492800000,
+    burnt: '555.0123',
+  },
+  list: [
+    {
+      date: 1714492800000,
+      burnt: '555.1',
+    },
+    {
+      date: 1717171200000,
+      burnt: '535.01',
+    },
+    {
+      date: 1719763200000,
+      burnt: '655.01',
+    },
+  ],
+};
+
+export const DeployedContractsData = {
+  chainId: 'aelf',
+  highestDailyIncreaseContract: {
+    date: 1714492800000,
+    dailyIncreaseContract: 2,
+  },
+  lowestDailyIncreaseContract: {
+    date: 1714492800000,
+    dailyIncreaseContract: 2,
+  },
+  list: [
+    {
+      date: 1714492800000,
+      totalDeployedContracts: 20,
+      dailyIncreaseContract: 2,
+    },
+    {
+      date: 1717171200000,
+      totalDeployedContracts: 14,
+      dailyIncreaseContract: 2,
+    },
+    {
+      date: 1719763200000,
+      totalDeployedContracts: 13,
+      dailyIncreaseContract: 2,
+    },
+  ],
+};

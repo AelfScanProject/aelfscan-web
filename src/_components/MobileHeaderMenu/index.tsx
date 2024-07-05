@@ -52,7 +52,7 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
 
   const jump = (url) => {
     if (isURL(url)) {
-      window.open(url);
+      window.open(`${url}?chainId=${defaultChain}`);
     } else {
       window.history.pushState(null, '', url);
       window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
