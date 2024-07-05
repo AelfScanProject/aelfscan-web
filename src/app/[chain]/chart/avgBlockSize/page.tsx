@@ -1,26 +1,22 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
-import { useCallback, useMemo, useState } from 'react';
-import { ChartColors, IBlockProductionRateData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
-const title = 'aelf Block Production Rate Chart';
+import { useCallback, useMemo, useState } from 'react';
+import { ChartColors, IAvgBlockSizeData, IHIGHLIGHTDataItem } from '../type';
+const title = 'Average Block Size Chart';
 import dayjs from 'dayjs';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useEffectOnce } from 'react-use';
-import { fetchBlockProduceRate } from '@_api/fetchChart';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
+import { fetchDailyActiveAddresses } from '@_api/fetchChart';
+import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-
+import { AvgBlocksizeData } from '@_components/charts/mock';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
-  const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.blockProductionRate)]);
-    customMap[item.date] = {};
-    customMap[item.date].blockCount = item.blockCount;
-    customMap[item.date].missedBlockCount = item.missedBlockCount;
+    allData.push([item.date, Number(item.avgSize)]);
   });
 
   return {
@@ -36,7 +32,7 @@ const getOption = (list: any[]): Highcharts.Options => {
       selected: 3,
       buttonPosition: {
         align: 'left',
-        x: -22,
+        x: -25,
       },
       buttons: [
         {
@@ -80,7 +76,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     yAxis: {
       title: {
-        text: 'Block Production Rate',
+        text: title,
       },
     },
     credits: {
@@ -94,18 +90,16 @@ const getOption = (list: any[]): Highcharts.Options => {
         const point = that.points[0] as any;
         const date = point.x;
         const value = point.y;
-        const blockCount = customMap[date].blockCount;
-        const missedBlockCount = customMap[date].missedBlockCount;
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Block Production Rate</b>: <b>${thousandsNumber(value)}%</b><br/>Block Count: <b>${thousandsNumber(blockCount)}</b><br/>Missed Block Count: <b>${thousandsNumber(missedBlockCount)}</b><br/>
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Block Size(Bytes)</b>: <b>${thousandsNumber(value)}</b><br/>
         `;
       },
     },
     series: [
       {
-        name: 'Active Addresses',
-        data: allData,
+        name: title,
         type: 'line',
+        data: allData,
       },
     ],
     exporting: {
@@ -120,13 +114,13 @@ const getOption = (list: any[]): Highcharts.Options => {
 };
 export default function Page() {
   const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IBlockProductionRateData>();
+  const [data, setData] = useState<IAvgBlockSizeData>();
   const [loading, setLoading] = useState<boolean>(false);
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchBlockProduceRate({ chainId: chain });
-      setData(res);
+      // const res = await fetchDailyActiveAddresses({ chainId: chain });
+      setData(AvgBlocksizeData);
     } catch (error) {
       message.error(JSON.stringify(error));
     } finally {
@@ -139,52 +133,16 @@ export default function Page() {
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
-
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
-  const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
-    return data
-      ? [
-          {
-            key: 'Highest',
-            text: (
-              <span>
-                Highest block production rate of
-                <span className="px-1 font-bold">
-                  {thousandsNumber(data.highestBlockProductionRate.blockProductionRate)}%
-                </span>
-                was on
-                <span className="pl-1">
-                  {Highcharts.dateFormat('%A, %B %e, %Y', data.highestBlockProductionRate.date)}
-                </span>
-              </span>
-            ),
-          },
-          {
-            key: 'Lowest',
-            text: (
-              <span>
-                Highest number of missed blocks of
-                <span className="px-1 font-bold">
-                  {thousandsNumber(data.lowestBlockProductionRate.missedBlockCount)}
-                </span>
-                was on
-                <span className="pl-1">
-                  {Highcharts.dateFormat('%A, %B %e, %Y', data.lowestBlockProductionRate.date)}
-                </span>
-              </span>
-            ),
-          },
-        ]
-      : [];
-  }, [data]);
+  const highlightData = [];
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
     <BaseHightCharts
       title={title}
-      aboutTitle="The aelf Block Production Rate Chart shows the daily block production rate of the aelf network"
+      aboutTitle="The aelf Average Block Size Chart indicates the historical average block size in bytes of the aelf network."
       highlightData={highlightData}
       options={options}
       download={download}

@@ -13,17 +13,17 @@ import { useMemo } from 'react';
 const getChartData = (network, chain) => {
   const chainPath = chain !== 'AELF' ? `side/` : '';
   return [
-    // {
-    //   id: 'section-market-data',
-    //   title: 'Market Data',
-    //   charts: [
-    //     {
-    //       title: 'AelfDaily Transactions Chart',
-    //       path: '/chart/DailyTransactions',
-    //       imgUrl: ChartSVG,
-    //     },
-    //   ],
-    // },
+    {
+      id: 'section-market-data',
+      title: 'Market Data',
+      charts: [
+        {
+          title: 'ELF Daily Price (USD) Chart',
+          path: '/chart/DailyPrice',
+          imgUrl: ChartSVG,
+        },
+      ],
+    },
     {
       id: 'section-blockchain-data',
       title: 'Blockchain Data',
@@ -42,6 +42,26 @@ const getChartData = (network, chain) => {
           title: 'Active aelf Addresses Chart',
           path: '/chart/dailyActiveAddress',
           imgUrl: `/image/${network}/${chainPath}ActiveAelfAddressesChart.png?v0.0.1`,
+        },
+        {
+          title: 'Daily ELF Burnt Chart',
+          path: '/chart/DailyBurnt',
+          imgUrl: ChartSVG,
+        },
+        {
+          title: 'Average Transaction Fee',
+          path: '/chart/avgTxFee',
+          imgUrl: ChartSVG,
+        },
+        // {
+        //   title: 'Average Block Size Chart',
+        //   path: '/chart/avgBlockSize',
+        //   imgUrl: ChartSVG,
+        // },
+        {
+          title: 'aelf Daily Block Rewards Chart',
+          path: '/chart/DailyBlockRewards',
+          imgUrl: ChartSVG,
         },
       ],
     },
@@ -71,26 +91,26 @@ const getChartData = (network, chain) => {
         },
       ],
     },
-    // {
-    //   id: 'section-contracts-data',
-    //   title: 'Contracts Data',
-    //   charts: [
-    //     {
-    //       title: 'AelfDaily Transactions Chart',
-    //       path: '/chart/DailyTransactions',
-    //       imgUrl: ChartSVG,
-    //     },
-    //   ],
-    // },
+    {
+      id: 'section-contracts-data',
+      title: 'Contracts Data',
+      charts: [
+        {
+          title: 'aelf Deployed Contracts Chart',
+          path: '/chart/DeployedContracts',
+          imgUrl: ChartSVG,
+        },
+      ],
+    },
   ];
 };
 
 const items = [
-  // {
-  //   key: '1',
-  //   href: '#section-market-data',
-  //   title: 'Market Data',
-  // },
+  {
+    key: '1',
+    href: '#section-market-data',
+    title: 'Market Data',
+  },
   {
     key: '2',
     href: '#section-blockchain-data',
@@ -101,11 +121,11 @@ const items = [
     href: '#section-network-data',
     title: 'Network Data',
   },
-  // {
-  //   key: '4',
-  //   href: '#section-contracts-data',
-  //   title: 'Contracts Data',
-  // },
+  {
+    key: '4',
+    href: '#section-contracts-data',
+    title: 'Contracts Data',
+  },
 ];
 
 export default function Page() {

@@ -129,3 +129,102 @@ export interface INodeBlockProduceData {
 export interface INodeBlockProduceDataItem {
   list: Array<INodeBlockProduceData>;
 }
+
+export interface IAvgTxFeeData {
+  chainId: string;
+  highest: {
+    date: number;
+    avgFeeUsdt: string;
+    avgFeeElf: string;
+  };
+  lowest: {
+    date: number;
+    avgFeeUsdt: string;
+    avgFeeElf: string;
+  };
+  list: Array<{
+    date: number;
+    avgFeeUsdt: string;
+    avgFeeElf: string;
+  }>;
+}
+
+export interface IAvgBlockSizeData {
+  chainId: string;
+  highest: {
+    date: number;
+    avgSize: string;
+  };
+  lowest: {
+    date: number;
+    avgSize: string;
+  };
+  list: Array<{
+    date: number;
+    avgSize: string;
+  }>;
+}
+
+export interface IDailyBlockRewardsData {
+  chainId: string;
+  highest: {
+    date: number;
+    blockReward: string;
+    totalBlockCount: number;
+  };
+  lowest: {
+    date: number;
+    blockReward: string;
+    totalBlockCount: number;
+  };
+  list: Array<{
+    date: number;
+    blockReward: string;
+    totalBlockCount: number;
+  }>;
+}
+
+export interface IDailyPriceDData {
+  chainId: string;
+  list: Array<{
+    date: number;
+    price: string;
+  }>;
+}
+
+export interface IDailyBurntData {
+  chainId: string;
+  highest: {
+    date: number;
+    burnt: string;
+  };
+  lowest: {
+    date: number;
+    burnt: string;
+  };
+  list: Array<{
+    date: number;
+    burnt: string;
+  }>;
+}
+
+export interface IDeployedContractsData {
+  chainId: string;
+  highest: {
+    date: number;
+    count: string;
+    totalCount: string;
+  };
+  lowest: {
+    date: number;
+    count: string;
+    totalCount: string;
+  };
+  list: Array<{
+    date: number;
+    totalCount: number;
+    count: number;
+  }>;
+}
+
+export const ChartColors = ['#266CD3'];

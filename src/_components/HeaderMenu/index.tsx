@@ -25,7 +25,7 @@ export default function HeaderMenu({ networkList, selectedKey, setCurrent, heade
   const jump = useMemoizedFn((url) => {
     // microApp.setData('governance', { path: url });
     if (isURL(url)) {
-      window.open(url);
+      window.open(`${url}?chainId=${defaultChain}`);
     } else {
       router.replace(url === '/' ? `${url}?chainId=${defaultChain}` : `/${defaultChain}${url}`);
     }

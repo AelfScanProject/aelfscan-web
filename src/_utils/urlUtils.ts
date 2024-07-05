@@ -2,6 +2,7 @@ import { store } from '@_store';
 import { Chain } from 'global';
 import { SYMBOL } from './contant';
 import Papa from 'papaparse';
+import dayjs from 'dayjs';
 import { saveAs } from 'file-saver';
 
 export function getPathnameFirstSlash(pathname: string) {
@@ -42,7 +43,12 @@ export function updateQueryParams(params: { [K in string]: any }) {
   window.history.replaceState(null, '', url.toString());
 }
 
-export const exportToCSV = (title, columns, rows) => {
+export const exportToCSV = (list: Array<any>, title: string) => {
+  const metrics = Object.keys(list[0] || {}).filter((item) => item !== 'date' && item !== 'dateStr');
+  const columns = ['Date(UTC)', 'UnixTimeStamp'].concat(metrics);
+  const rows = list.map((item) => {
+    return [dayjs(item.date).format('M/D/YYYY'), `'${String(item.date)}`, ...metrics.map((me) => item[me])];
+  });
   const csv = Papa.unparse({ fields: columns, data: rows });
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   saveAs(blob, title);
