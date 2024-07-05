@@ -1,6 +1,6 @@
 'use client';
 
-import { Anchor, Card, Divider } from 'antd';
+import { Anchor, Card } from 'antd';
 import Image from 'next/image';
 import './index.css';
 import ChartSVG from 'public/image/chart.svg';
@@ -31,17 +31,17 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Daily Transactions Chart',
           path: '/chart/DailyTransactions',
-          imgUrl: `/image/${network}/${chainPath}aelfDailyTransactionChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}aelfDailyTransactionChart.png?v0.0.2`,
         },
         {
           title: 'aelf Unique Addresses Chart',
           path: '/chart/dailyAddAddress',
-          imgUrl: `/image/${network}/${chainPath}AelfUniqueAddressesChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}AelfUniqueAddressesChart.png?v0.0.2`,
         },
         {
           title: 'Active aelf Addresses Chart',
           path: '/chart/dailyActiveAddress',
-          imgUrl: `/image/${network}/${chainPath}ActiveAelfAddressesChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}ActiveAelfAddressesChart.png?v0.0.2`,
         },
         {
           title: 'Daily ELF Burnt Chart',
@@ -53,11 +53,11 @@ const getChartData = (network, chain) => {
           path: '/chart/avgTxFee',
           imgUrl: ChartSVG,
         },
-        // {
-        //   title: 'Average Block Size Chart',
-        //   path: '/chart/avgBlockSize',
-        //   imgUrl: ChartSVG,
-        // },
+        {
+          title: 'Average Block Size Chart',
+          path: '/chart/avgBlockSize',
+          imgUrl: ChartSVG,
+        },
         {
           title: 'aelf Daily Block Rewards Chart',
           path: '/chart/DailyBlockRewards',
@@ -72,22 +72,22 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Block Production Rate Chart',
           path: '/chart/BlockProductionRate',
-          imgUrl: `/image/${network}/${chainPath}aelfBlockProductionRateChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}aelfBlockProductionRateChart.png?v0.0.2`,
         },
         {
           title: 'aelf Daily Cycle Count Chart',
           path: '/chart/AelfDailyCycleCount',
-          imgUrl: `/image/${network}/${chainPath}aelfDailyCycleCountChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}aelfDailyCycleCountChart.png?v0.0.2`,
         },
         {
           title: 'aelf AVG Block Duration Chart',
           path: '/chart/AelfAVGBlockDuration',
-          imgUrl: `/image/${network}/${chainPath}aelfAvgBlockDurationChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}aelfAvgBlockDurationChart.png?v0.0.2`,
         },
         {
           title: 'aelf Block Producers',
           path: '/chart/nodeBlockProduce',
-          imgUrl: '/image/table-preview.png?v0.0.1',
+          imgUrl: '/image/table-preview.png?v0.0.2',
         },
       ],
     },

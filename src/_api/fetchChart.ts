@@ -2,6 +2,7 @@ import request from '@_api';
 import {
   IAelfAVGBlockDurationData,
   IAelfDailyCycleCountData,
+  IAvgBlockSizeData,
   IAvgTxFeeData,
   IBlockProductionRateData,
   IDailyActiveAddressData,
@@ -103,6 +104,14 @@ export async function fetchDailyTotalBurnt(params: { chainId: string }): Promise
 
 export async function fetchDailyDeployContract(params: { chainId: string }): Promise<IDeployedContractsData> {
   const result = await request.chart.getDailyDeployContract({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyAvgBlockSize(params: { chainId: string }): Promise<IAvgBlockSizeData> {
+  const result = await request.chart.getDailyAvgBlockSize({
     params: params,
   });
   const data = result?.data;

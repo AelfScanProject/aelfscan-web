@@ -153,15 +153,15 @@ export interface IAvgBlockSizeData {
   chainId: string;
   highest: {
     date: number;
-    avgSize: string;
+    avgBlockSize: string;
   };
   lowest: {
     date: number;
-    avgSize: string;
+    avgBlockSize: string;
   };
   list: Array<{
     date: number;
-    avgSize: string;
+    avgBlockSize: string;
   }>;
 }
 
