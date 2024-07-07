@@ -3,10 +3,9 @@ import Highcharts from 'highcharts/highstock';
 import '../index.css';
 import { thousandsNumber } from '@_utils/formatter';
 import { useCallback, useMemo, useState } from 'react';
-import { IDailyTransactionsData, IHIGHLIGHTDataItem } from '../type';
+import { ChartColors, IDailyTransactionsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 import { exportToCSV } from '@_utils/urlUtils';
-import dayjs from 'dayjs';
 import { fetchDailyTransactions } from '@_api/fetchChart';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
@@ -26,7 +25,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     legend: {
       enabled: false,
     },
-    colors: ['#5c28a9', '#266CD3'],
+    colors: ChartColors,
     chart: {
       type: 'line',
     },
@@ -139,16 +138,7 @@ export default function Page() {
   }, [data]);
 
   const download = () => {
-    const columns = ['Date(UTC)', 'UnixTimeStamp'].concat(
-      Object.keys(data?.list[0] || {}).filter((item) => item !== 'date'),
-    );
-    const rows = data?.list.map((item) => {
-      return [
-        dayjs(item.date).format('M/D/YYYY'),
-        ...Object.values(item).map((item, index) => (index === 0 ? `'${String(item)}` : item)),
-      ];
-    });
-    exportToCSV(title, columns, rows);
+    exportToCSV(data?.list || [], title);
   };
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Anchor, Card, Divider } from 'antd';
+import { Anchor, Card } from 'antd';
 import Image from 'next/image';
 import './index.css';
 import ChartSVG from 'public/image/chart.svg';
@@ -13,17 +13,17 @@ import { useMemo } from 'react';
 const getChartData = (network, chain) => {
   const chainPath = chain !== 'AELF' ? `side/` : '';
   return [
-    // {
-    //   id: 'section-market-data',
-    //   title: 'Market Data',
-    //   charts: [
-    //     {
-    //       title: 'AelfDaily Transactions Chart',
-    //       path: '/chart/DailyTransactions',
-    //       imgUrl: ChartSVG,
-    //     },
-    //   ],
-    // },
+    {
+      id: 'section-market-data',
+      title: 'Market Data',
+      charts: [
+        {
+          title: 'ELF Daily Price (USD) Chart',
+          path: '/chart/DailyPrice',
+          imgUrl: `/image/${network}/${chainPath}dayilPriceChart.png?v0.0.2`,
+        },
+      ],
+    },
     {
       id: 'section-blockchain-data',
       title: 'Blockchain Data',
@@ -31,17 +31,37 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Daily Transactions Chart',
           path: '/chart/DailyTransactions',
-          imgUrl: `/image/${network}/${chainPath}aelfDailyTransactionChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}aelfDailyTransactionChart.png?v0.0.2`,
         },
         {
           title: 'aelf Unique Addresses Chart',
           path: '/chart/dailyAddAddress',
-          imgUrl: `/image/${network}/${chainPath}AelfUniqueAddressesChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}AelfUniqueAddressesChart.png?v0.0.2`,
         },
         {
           title: 'Active aelf Addresses Chart',
           path: '/chart/dailyActiveAddress',
-          imgUrl: `/image/${network}/${chainPath}ActiveAelfAddressesChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}ActiveAelfAddressesChart.png?v0.0.2`,
+        },
+        {
+          title: 'Daily ELF Burnt Chart',
+          path: '/chart/DailyBurnt',
+          imgUrl: `/image/${network}/${chainPath}dailyELFBurnt.png?v0.0.2`,
+        },
+        {
+          title: 'Average Transaction Fee',
+          path: '/chart/avgTxFee',
+          imgUrl: `/image/${network}/${chainPath}avgTransactionFee.png?v0.0.2`,
+        },
+        {
+          title: 'Average Block Size Chart',
+          path: '/chart/avgBlockSize',
+          imgUrl: `/image/${network}/${chainPath}avgBlockSizeChart.png?v0.0.2`,
+        },
+        {
+          title: 'aelf Daily Block Rewards Chart',
+          path: '/chart/DailyBlockRewards',
+          imgUrl: `/image/${network}/${chainPath}dailyBlockRewards.png?v0.0.2`,
         },
       ],
     },
@@ -52,45 +72,45 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Block Production Rate Chart',
           path: '/chart/BlockProductionRate',
-          imgUrl: `/image/${network}/${chainPath}aelfBlockProductionRateChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}aelfBlockProductionRateChart.png?v0.0.2`,
         },
         {
           title: 'aelf Daily Cycle Count Chart',
           path: '/chart/AelfDailyCycleCount',
-          imgUrl: `/image/${network}/${chainPath}aelfDailyCycleCountChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}aelfDailyCycleCountChart.png?v0.0.2`,
         },
         {
           title: 'aelf AVG Block Duration Chart',
           path: '/chart/AelfAVGBlockDuration',
-          imgUrl: `/image/${network}/${chainPath}aelfAvgBlockDurationChart.png?v0.0.1`,
+          imgUrl: `/image/${network}/${chainPath}aelfAvgBlockDurationChart.png?v0.0.2`,
         },
         {
           title: 'aelf Block Producers',
           path: '/chart/nodeBlockProduce',
-          imgUrl: '/image/table-preview.png?v0.0.1',
+          imgUrl: '/image/table-preview.png?v0.0.2',
         },
       ],
     },
-    // {
-    //   id: 'section-contracts-data',
-    //   title: 'Contracts Data',
-    //   charts: [
-    //     {
-    //       title: 'AelfDaily Transactions Chart',
-    //       path: '/chart/DailyTransactions',
-    //       imgUrl: ChartSVG,
-    //     },
-    //   ],
-    // },
+    {
+      id: 'section-contracts-data',
+      title: 'Contracts Data',
+      charts: [
+        {
+          title: 'aelf Deployed Contracts Chart',
+          path: '/chart/DeployedContracts',
+          imgUrl: `/image/${network}/${chainPath}deployedContractsChart.png?v0.0.2`,
+        },
+      ],
+    },
   ];
 };
 
 const items = [
-  // {
-  //   key: '1',
-  //   href: '#section-market-data',
-  //   title: 'Market Data',
-  // },
+  {
+    key: '1',
+    href: '#section-market-data',
+    title: 'Market Data',
+  },
   {
     key: '2',
     href: '#section-blockchain-data',
@@ -101,11 +121,11 @@ const items = [
     href: '#section-network-data',
     title: 'Network Data',
   },
-  // {
-  //   key: '4',
-  //   href: '#section-contracts-data',
-  //   title: 'Contracts Data',
-  // },
+  {
+    key: '4',
+    href: '#section-contracts-data',
+    title: 'Contracts Data',
+  },
 ];
 
 export default function Page() {
