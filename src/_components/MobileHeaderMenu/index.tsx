@@ -54,9 +54,7 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
     if (isURL(url)) {
       window.open(`${url}?chainId=${defaultChain}`);
     } else {
-      window.history.pushState(null, '', url);
-      window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
-      router.replace(url === '/' ? `?chainId=${defaultChain}` : `/${defaultChain}${url}`);
+      router.push(url === '/' ? `?chainId=${defaultChain}` : `/${defaultChain}${url}`);
     }
   };
   const convertMenuItems = (list) => {
