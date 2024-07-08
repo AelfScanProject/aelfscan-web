@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import HeaderTop from '@_components/HeaderTop';
 import HeaderMenu from '@_components/HeaderMenu';
 import './index.css';
@@ -9,7 +9,6 @@ import { useAppDispatch } from '@_store';
 import { setChainArr } from '@_store/features/chainIdSlice';
 import { usePathname } from 'next/navigation';
 import { getPathnameFirstSlash } from '@_utils/urlUtils';
-import { useEffectOnce } from 'react-use';
 
 const clsPrefix = 'header-container';
 export default function Header({ chainList, networkList, headerMenuList }) {
@@ -25,19 +24,26 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   const [current, setCurrent] = useState(
     secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5)),
   );
-  const headerList = headerMenuList.map((ele) => ele.headerMenu_id);
-  const menus = headerList.reduce((pre, cur) => {
-    if (cur.children.length) {
-      pre.push(...cur.children);
-    } else {
-      pre.push(cur);
-    }
-    return pre;
-  }, []);
+  const headerList = useMemo(() => {
+    return headerMenuList.map((ele) => ele.headerMenu_id);
+  }, [headerMenuList]);
+  const menus = useMemo(() => {
+    return headerList.reduce((pre, cur) => {
+      if (cur.children.length) {
+        pre.push(...cur.children);
+      } else {
+        pre.push(cur);
+      }
+      return pre;
+    }, []);
+  }, [headerList]);
 
-  useEffectOnce(() => {
+  useEffect(() => {
+    // console.log('current', current, pathname, menus);
+    const secondSlashIndex = pathname.slice(6).indexOf('/');
+    const current = secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5));
     if (menus.find((item) => item.path === current)) {
-      return;
+      setCurrent(current);
     } else if (pathname.includes('/nft')) {
       setCurrent('/nfts');
     } else if (current.startsWith('/token')) {
@@ -47,7 +53,7 @@ export default function Header({ chainList, networkList, headerMenuList }) {
     } else {
       setCurrent('blockchain');
     }
-  });
+  }, [menus, pathname]);
 
   const networkArr = networkList.map((ele) => ele.network_id);
   return (

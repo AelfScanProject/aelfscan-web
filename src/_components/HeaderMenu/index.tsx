@@ -27,7 +27,7 @@ export default function HeaderMenu({ networkList, selectedKey, setCurrent, heade
     if (isURL(url)) {
       window.open(`${url}?chainId=${defaultChain}`);
     } else {
-      router.replace(url === '/' ? `${url}?chainId=${defaultChain}` : `/${defaultChain}${url}`);
+      router.push(url === '/' ? `${url}?chainId=${defaultChain}` : `/${defaultChain}${url}`);
     }
     // window.history?.pushState(null, '', url);
     // window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
