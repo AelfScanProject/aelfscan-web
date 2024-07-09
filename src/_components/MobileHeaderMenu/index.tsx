@@ -49,21 +49,22 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
       type,
     } as AntdMenuItem;
   }
-
-  const jump = (url) => {
-    if (isURL(url)) {
-      window.open(`${url}?chainId=${defaultChain}`);
-    } else {
-      router.push(url === '/' ? `?chainId=${defaultChain}` : `/${defaultChain}${url}`);
-    }
-  };
   const convertMenuItems = (list) => {
     return list?.map((ele) => {
       const { children, path, label } = ele;
       if (!children?.length) {
         const secondSlashIndex = path.slice(1).indexOf('/');
         const key = secondSlashIndex === -1 ? path : getPathnameFirstSlash(path);
-        return getItem(<a onClick={() => jump(path)}>{label}</a>, key);
+        return getItem(
+          isURL(path) ? (
+            <a target="_blank" rel="noreferrer" href={`${path}?chainId=${defaultChain}`}>
+              {label}
+            </a>
+          ) : (
+            <Link href={path === '/' ? `/?chainId=${defaultChain}` : `/${defaultChain}${path}`}>{label}</Link>
+          ),
+          key,
+        );
       }
       return getItem(label, path, convertMenuItems(children));
     });
