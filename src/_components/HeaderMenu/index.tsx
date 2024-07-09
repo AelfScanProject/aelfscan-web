@@ -5,12 +5,11 @@ import { useMemo } from 'react';
 import clsx from 'clsx';
 import './index.css';
 import IconFont from '@_components/IconFont';
-import { useRouter } from 'next/navigation';
 import ChainSelect from '@_components/ChainSelect';
 import { MenuItem, NetworkItem } from '@_types';
 import { getPathnameFirstSlash, isURL } from '@_utils/urlUtils';
-import { useMemoizedFn } from 'ahooks';
 import { useAppSelector } from '@_store';
+import Link from 'next/link';
 interface IProps {
   networkList: NetworkItem[];
   headerMenuList: MenuItem[];
@@ -19,27 +18,23 @@ interface IProps {
 }
 
 const clsPrefix = 'header-menu-container';
-export default function HeaderMenu({ networkList, selectedKey, setCurrent, headerMenuList }: IProps) {
+export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: IProps) {
   const { defaultChain } = useAppSelector((state) => state.getChainId);
-  const router = useRouter();
-  const jump = useMemoizedFn((url) => {
-    // microApp.setData('governance', { path: url });
-    if (isURL(url)) {
-      window.open(`${url}?chainId=${defaultChain}`);
-    } else {
-      router.push(url === '/' ? `${url}?chainId=${defaultChain}` : `/${defaultChain}${url}`);
-    }
-    // window.history?.pushState(null, '', url);
-    // window.dispatchEvent(new PopStateEvent('popstate', { state: history.state }));
-  });
 
   // TODO: use cms
   const items: MenuProps['items'] = useMemo(() => {
     return headerMenuList?.map((ele) => {
       if (!ele.children?.length) {
         // one layer
+        const path = ele.path;
         return {
-          label: <a onClick={() => jump(ele.path)}>{ele.label}</a>,
+          label: isURL(path) ? (
+            <a target="_blank" rel="noreferrer" href={`${path}?chainId=${defaultChain}`}>
+              {ele.label}
+            </a>
+          ) : (
+            <Link href={path === '/' ? `/?chainId=${defaultChain}` : `/${defaultChain}${path}`}>{ele.label}</Link>
+          ),
           key: ele.path,
         };
       } else {
@@ -59,14 +54,20 @@ export default function HeaderMenu({ networkList, selectedKey, setCurrent, heade
           const { label, path } = element;
           const secondSlashIndex = path.slice(1).indexOf('/');
           item.children?.push({
-            label: <a onClick={() => jump(path)}>{label}</a>,
+            label: isURL(path) ? (
+              <a target="_blank" rel="noreferrer" href={`${path}?chainId=${defaultChain}`}>
+                {label}
+              </a>
+            ) : (
+              <Link href={path === '/' ? `/?chainId=${defaultChain}` : `/${defaultChain}${path}`}>{label}</Link>
+            ),
             key: secondSlashIndex === -1 || isURL(path) ? path : getPathnameFirstSlash(path),
           });
         });
         return item;
       }
     });
-  }, [headerMenuList, jump]);
+  }, [defaultChain, headerMenuList]);
 
   const onClick: MenuProps['onClick'] = (e) => {
     if (!e.key.startsWith('http')) {
