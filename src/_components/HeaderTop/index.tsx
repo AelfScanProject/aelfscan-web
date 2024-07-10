@@ -63,7 +63,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   return (
     <div className={clsx(clsPrefix, isMainNet && `${clsPrefix}-main`, isMobile && `${clsPrefix}-mobile`)}>
       {!isHideSearch && isMobile && (
-        <div className={clsx(`${clsPrefix}-search`)}>
+        <div className={clsx(!isMainNet && `${clsPrefix}-search-test`, `${clsPrefix}-search`)}>
           <Search
             searchIcon={true}
             searchButton={false}

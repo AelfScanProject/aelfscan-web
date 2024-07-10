@@ -22,6 +22,10 @@
     box-shadow: 0 -1px 0 0 #3a4668 inset;
   }
 
+  &-search-test {
+    box-shadow: 0 -1px 0 0 #E6E6E6 inset;
+  }
+
   &-explorer-change {
     @apply hidden lg:flex cursor-pointer w-10 h-10 items-center justify-center rounded border border-[#BFBFBF] ml-2;
     .explorer-change-icon {
