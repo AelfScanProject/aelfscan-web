@@ -61,7 +61,10 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
               {label}
             </a>
           ) : (
-            <Link href={path === '/' ? `/?chainId=${defaultChain}` : `/${defaultChain}${path}`}>{label}</Link>
+            <Link
+              href={path === '/' ? (defaultChain === 'AELF' ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`}>
+              {label}
+            </Link>
           ),
           key,
         );
@@ -72,7 +75,11 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   const dispatch = useAppDispatch();
   const onSelectHandler = (value: string) => {
     dispatch(setDefaultChain(value));
-    router.push(`/?chainId=${value}`);
+    if (value === 'AELF') {
+      router.push('/');
+    } else {
+      router.push(`/${value}`);
+    }
     setCurrent('/');
   };
 

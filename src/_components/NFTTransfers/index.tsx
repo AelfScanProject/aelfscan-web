@@ -17,7 +17,7 @@ export interface IResponseData {
   total: number;
   data: TokenTransfersItemType[];
 }
-const TAB_NAME = 'nftTransfers';
+const TAB_NAME = 'nfttransfers';
 export default function List({ showHeader = true }) {
   const isMobile = useMobileAll();
   const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(

@@ -19,8 +19,13 @@ const getChartData = (network, chain) => {
       charts: [
         {
           title: 'ELF Daily Price (USD) Chart',
-          path: '/chart/DailyPrice',
+          path: '/chart/price',
           imgUrl: `/image/${network}/${chainPath}dayilPriceChart.png?v0.0.2`,
+        },
+        {
+          title: 'ELF Supply Growth Chart',
+          path: '/chart/supply-growth',
+          imgUrl: ChartSVG,
         },
       ],
     },
@@ -30,37 +35,42 @@ const getChartData = (network, chain) => {
       charts: [
         {
           title: 'aelf Daily Transactions Chart',
-          path: '/chart/DailyTransactions',
+          path: '/chart/transactions',
           imgUrl: `/image/${network}/${chainPath}aelfDailyTransactionChart.png?v0.0.2`,
         },
         {
           title: 'aelf Unique Addresses Chart',
-          path: '/chart/dailyAddAddress',
+          path: '/chart/address',
           imgUrl: `/image/${network}/${chainPath}AelfUniqueAddressesChart.png?v0.0.2`,
         },
         {
           title: 'Active aelf Addresses Chart',
-          path: '/chart/dailyActiveAddress',
+          path: '/chart/active-address',
           imgUrl: `/image/${network}/${chainPath}ActiveAelfAddressesChart.png?v0.0.2`,
         },
         {
           title: 'Daily ELF Burnt Chart',
-          path: '/chart/DailyBurnt',
+          path: '/chart/burnt',
           imgUrl: `/image/${network}/${chainPath}dailyELFBurnt.png?v0.0.2`,
         },
         {
           title: 'Average Transaction Fee',
-          path: '/chart/avgTxFee',
+          path: '/chart/avg-txfee',
           imgUrl: `/image/${network}/${chainPath}avgTransactionFee.png?v0.0.2`,
         },
         {
+          title: 'aelf Daily Tx fee Chart',
+          path: '/chart/txfee',
+          imgUrl: ChartSVG,
+        },
+        {
           title: 'Average Block Size Chart',
-          path: '/chart/avgBlockSize',
+          path: '/chart/blocksize',
           imgUrl: `/image/${network}/${chainPath}avgBlockSizeChart.png?v0.0.2`,
         },
         {
           title: 'aelf Daily Block Rewards Chart',
-          path: '/chart/DailyBlockRewards',
+          path: '/chart/rewards',
           imgUrl: `/image/${network}/${chainPath}dailyBlockRewards.png?v0.0.2`,
         },
       ],
@@ -71,22 +81,22 @@ const getChartData = (network, chain) => {
       charts: [
         {
           title: 'aelf Block Production Rate Chart',
-          path: '/chart/BlockProductionRate',
+          path: '/chart/production-rate',
           imgUrl: `/image/${network}/${chainPath}aelfBlockProductionRateChart.png?v0.0.2`,
         },
         {
           title: 'aelf Daily Cycle Count Chart',
-          path: '/chart/AelfDailyCycleCount',
+          path: '/chart/cycle-count',
           imgUrl: `/image/${network}/${chainPath}aelfDailyCycleCountChart.png?v0.0.2`,
         },
         {
           title: 'aelf AVG Block Duration Chart',
-          path: '/chart/AelfAVGBlockDuration',
+          path: '/chart/avg-duration',
           imgUrl: `/image/${network}/${chainPath}aelfAvgBlockDurationChart.png?v0.0.2`,
         },
         {
           title: 'aelf Block Producers',
-          path: '/chart/nodeBlockProduce',
+          path: '/chart/produce',
           imgUrl: '/image/table-preview.png?v0.0.2',
         },
       ],
@@ -97,8 +107,13 @@ const getChartData = (network, chain) => {
       charts: [
         {
           title: 'aelf Deployed Contracts Chart',
-          path: '/chart/DeployedContracts',
+          path: '/chart/deployed-contracts',
           imgUrl: `/image/${network}/${chainPath}deployedContractsChart.png?v0.0.2`,
+        },
+        {
+          title: 'Contract Calls Chart',
+          path: '/chart/contract-calls',
+          imgUrl: ChartSVG,
         },
       ],
     },

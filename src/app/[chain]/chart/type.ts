@@ -227,4 +227,89 @@ export interface IDeployedContractsData {
   }>;
 }
 
+export interface ISupplyGrowthData {
+  chainId: string;
+  list: Array<{
+    date: number;
+    totalSupply: string;
+    reward: string;
+    burnt: string;
+  }>;
+}
+export interface IStakedData {
+  chainId: string;
+  list: Array<{
+    date: number;
+    totalStaked: string;
+    bpStaked: string;
+    voteStaked: string;
+    stakingRate: string;
+  }>;
+}
+export interface IDailyTxFeeData {
+  chainId: string;
+  highest: {
+    date: number;
+    totalFeeElf: string;
+  };
+  lowest: {
+    date: number;
+    totalFeeElf: string;
+  };
+  list: Array<{
+    date: number;
+    totalFeeElf: string;
+  }>;
+}
+
+export interface IHoldersAccountData {
+  chainId: string;
+  highest: {
+    date: number;
+    holders: number;
+  };
+  lowest: {
+    date: number;
+    holders: number;
+  };
+  list: Array<{
+    date: number;
+    holders: number;
+  }>;
+}
+
+export interface IContractCalls {
+  chainId: string;
+  highest: {
+    date: number;
+    callAddressCount: number;
+    callCount: number;
+  };
+  lowest: {
+    date: number;
+    callAddressCount: number;
+    callCount: number;
+  };
+  list: Array<{
+    date: number;
+    callAddressCount: number;
+    callCount: number;
+  }>;
+}
+
+export interface IContractCallItem {
+  contractAddress: string;
+  contractName: string;
+  callCount: string;
+  callRate: string;
+  callAddressCount: number;
+}
+
+export interface ITopContractCalls {
+  chainId: string;
+  highest: IContractCallItem;
+  lowest: IContractCallItem;
+  list: Array<IContractCallItem>;
+}
+
 export const ChartColors = ['#266CD3'];

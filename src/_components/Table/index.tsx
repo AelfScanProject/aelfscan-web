@@ -32,6 +32,7 @@ export interface ICommonTableProps<T> extends ITableProps<T> {
   pageSize?: number;
   isMobile?: boolean;
   showTopSearch?: boolean;
+  hiddenPagination?: boolean;
   hiddenTitle?: boolean;
   headerTitle?: IHeaderTitleProps | ReactNode;
   defaultCurrent?: number;
@@ -96,6 +97,7 @@ export default function TableApp({
   options,
   headerTitle,
   hiddenTitle,
+  hiddenPagination,
   showLast = true,
   emptyText,
   headerLeftNode,
@@ -120,56 +122,60 @@ export default function TableApp({
           {!hiddenTitle && <div>{isReactNode(headerTitle) ? headerTitle : <HeaderTitle {...headerTitle} />}</div>}
           {headerLeftNode}
         </div>
-        <div className="header-pagination">
-          {showTopSearch ? (
-            <EPTooltip
-              title={disabledTooltip ? '' : topSearchProps?.placeholder}
-              placement="topLeft"
-              trigger={['focus']}
-              pointAtCenter={false}
-              mode="dark">
-              <EPSearch
-                {...searchProps}
-                onPressEnter={({ currentTarget }) => {
-                  onSearchChange?.(currentTarget.value);
-                  topSearchProps?.onPressEnter?.(currentTarget.value);
-                }}
-                onClear={() => {
-                  topSearchProps?.onSearchChange('');
-                  topSearchProps?.onClear?.();
-                }}
+        {!hiddenPagination && (
+          <div className="header-pagination">
+            {showTopSearch ? (
+              <EPTooltip
+                title={disabledTooltip ? '' : topSearchProps?.placeholder}
+                placement="topLeft"
+                trigger={['focus']}
+                pointAtCenter={false}
+                mode="dark">
+                <EPSearch
+                  {...searchProps}
+                  onPressEnter={({ currentTarget }) => {
+                    onSearchChange?.(currentTarget.value);
+                    topSearchProps?.onPressEnter?.(currentTarget.value);
+                  }}
+                  onClear={() => {
+                    topSearchProps?.onSearchChange('');
+                    topSearchProps?.onClear?.();
+                  }}
+                />
+              </EPTooltip>
+            ) : (
+              <Pagination
+                current={pageNum}
+                total={total}
+                options={options}
+                pageSize={pageSize}
+                defaultPageSize={pageSize}
+                defaultCurrent={defaultCurrent}
+                showSizeChanger={false}
+                showLast={showLast}
+                pageChange={pageChange}
+                pageSizeChange={pageSizeChange}
               />
-            </EPTooltip>
-          ) : (
-            <Pagination
-              current={pageNum}
-              total={total}
-              options={options}
-              pageSize={pageSize}
-              defaultPageSize={pageSize}
-              defaultCurrent={defaultCurrent}
-              showSizeChanger={false}
-              showLast={showLast}
-              pageChange={pageChange}
-              pageSizeChange={pageSizeChange}
-            />
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
       <MemoTable scroll={scroll} locale={locale} {...params} />
-      <div className="p-4">
-        <Pagination
-          current={pageNum}
-          options={options}
-          defaultPageSize={pageSize}
-          total={total}
-          pageSize={pageSize}
-          showLast={showLast}
-          defaultCurrent={defaultCurrent}
-          pageChange={pageChange}
-          pageSizeChange={pageSizeChange}
-        />
-      </div>
+      {!hiddenPagination && (
+        <div className="p-4">
+          <Pagination
+            current={pageNum}
+            options={options}
+            defaultPageSize={pageSize}
+            total={total}
+            pageSize={pageSize}
+            showLast={showLast}
+            defaultCurrent={defaultCurrent}
+            pageChange={pageChange}
+            pageSizeChange={pageSizeChange}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -13,7 +13,7 @@ import { PageTypeEnum } from '@_types';
 // import { updateQueryParams } from '@_utils/urlUtils';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-const TAB_NAME = 'tokenTransfer';
+const TAB_NAME = 'tokentransfers';
 export default function List() {
   const isMobile = useMobileAll();
   const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(

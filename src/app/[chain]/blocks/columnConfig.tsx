@@ -46,7 +46,9 @@ export default function getColumns({ timeFormat, handleTimeChange, chianId }): C
       key: 'transactionCount',
       dataIndex: 'transactionCount',
       render: (text, record) => (
-        <Link className="block text-sm leading-[22px] text-link" href={`/${chianId}/block/${record.blockHeight}#txns`}>
+        <Link
+          className="block text-sm leading-[22px] text-link"
+          href={`/${chianId}/block/${record.blockHeight}?tab=txns`}>
           {text}
         </Link>
       ),
