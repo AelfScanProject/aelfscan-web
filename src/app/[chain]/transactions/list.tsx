@@ -12,7 +12,7 @@ import { fetchTransactionList } from '@_api/fetchTransactions';
 import { getAddress, getPageNumber } from '@_utils/formatter';
 import { useEffectOnce } from 'react-use';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-const TAB_NAME = 'txns';
+const TAB_NAME = 'transactions';
 export default function List({ SSRData, showHeader = true, defaultPage, defaultPageSize }) {
   console.log(SSRData, 'transactionSSRData');
   const isMobile = useMobileAll();

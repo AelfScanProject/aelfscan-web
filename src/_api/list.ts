@@ -83,6 +83,8 @@ const CHART_API_LIST = {
   getTopContractCall: `${BASE_API}/app/statistics/topContractCall`,
   getDailyTxFee: `${BASE_API}/app/statistics/dailyTxFee`,
   getDailySupplyGrowth: `${BASE_API}/app/statistics/dailySupplyGrowth`,
+  getDailyMarketCap: `${BASE_API}/app/statistics/dailyMarketCap`,
+  getDailyStaked: `${BASE_API}/app/statistics/dailyStaked`,
 };
 
 const CMS_API_List = {

@@ -14,7 +14,9 @@ import {
   IDailyTransactionsData,
   IDailyTxFeeData,
   IDeployedContractsData,
+  IMarkerCap,
   INodeBlockProduceDataItem,
+  IStakedData,
   ISupplyGrowthData,
   ITopContractCalls,
 } from '@app/[chain]/chart/type';
@@ -151,6 +153,22 @@ export async function fetchDailyTxFee(params: { chainId: string }): Promise<IDai
 
 export async function fetchDailySupplyGrowth(params: { chainId: string }): Promise<ISupplyGrowthData> {
   const result = await request.chart.getDailySupplyGrowth({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyMarketCap(params: { chainId: string }): Promise<IMarkerCap> {
+  const result = await request.chart.getDailyMarketCap({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyStaked(params: { chainId: string }): Promise<IStakedData> {
+  const result = await request.chart.getDailyStaked({
     params: params,
   });
   const data = result?.data;

@@ -29,6 +29,13 @@ const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChan
 
   useEffect(() => {
     if (selectKey) {
+      if (selectKey) {
+        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter'], {
+          tab: selectKey,
+        });
+      } else {
+        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter']);
+      }
       setActiveKey(selectKey as string);
     }
   }, [selectKey]);

@@ -84,7 +84,7 @@ export default function Detail({ SSRData }) {
       ),
     },
     {
-      key: 'txns',
+      key: 'transactions',
       label: 'Transactions',
       children: (
         <Table

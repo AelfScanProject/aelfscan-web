@@ -78,7 +78,7 @@ export default function BaseInfo({ data, tabChange }) {
             <span
               className=" cursor-pointer text-link"
               onClick={() => {
-                tabChange('txns');
+                tabChange('transactions');
               }}>
               {data.total} transactions
             </span>

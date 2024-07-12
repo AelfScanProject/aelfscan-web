@@ -243,7 +243,7 @@ export interface IStakedData {
     totalStaked: string;
     bpStaked: string;
     voteStaked: string;
-    stakingRate: string;
+    rate: string;
   }>;
 }
 export interface IDailyTxFeeData {
@@ -310,6 +310,21 @@ export interface ITopContractCalls {
   highest: IContractCallItem;
   lowest: IContractCallItem;
   list: Array<IContractCallItem>;
+}
+
+export interface IMarkerCapItem {
+  date: number;
+  fdv: string;
+  price: string;
+  incrMarketCap: string;
+  totalMarketCap: string;
+}
+
+export interface IMarkerCap {
+  chainId: string;
+  highest: IMarkerCapItem;
+  lowest: IMarkerCapItem;
+  list: Array<IMarkerCapItem>;
 }
 
 export const ChartColors = ['#266CD3'];
