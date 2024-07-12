@@ -75,7 +75,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
                       </EPTooltip>
                     </span>
                     <span className="txns">
-                      <Link href={`/${defaultChain}/block/${ele.blockHeight}?tab=txns`}>
+                      <Link href={`/${defaultChain}/block/${ele.blockHeight}?tab=transactions`}>
                         {ele.transactionCount} txns
                       </Link>
                       <span className="time">in {formatDate(ele.timestamp, 'Age')}</span>

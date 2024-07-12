@@ -20,11 +20,21 @@ const getChartData = (network, chain) => {
         {
           title: 'ELF Daily Price (USD) Chart',
           path: '/chart/price',
-          imgUrl: `/image/${network}/${chainPath}dayilPriceChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}price.png?v0.0.2`,
+        },
+        {
+          title: 'aelf Market Cap Chart',
+          path: '/chart/marketcap',
+          imgUrl: ChartSVG,
         },
         {
           title: 'ELF Supply Growth Chart',
           path: '/chart/supply-growth',
+          imgUrl: ChartSVG,
+        },
+        {
+          title: 'ELF Staked Chart',
+          path: '/chart/staked',
           imgUrl: ChartSVG,
         },
       ],
@@ -36,27 +46,27 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Daily Transactions Chart',
           path: '/chart/transactions',
-          imgUrl: `/image/${network}/${chainPath}aelfDailyTransactionChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}transactions.png?v0.0.2`,
         },
         {
           title: 'aelf Unique Addresses Chart',
           path: '/chart/address',
-          imgUrl: `/image/${network}/${chainPath}AelfUniqueAddressesChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}address.png?v0.0.2`,
         },
         {
           title: 'Active aelf Addresses Chart',
           path: '/chart/active-address',
-          imgUrl: `/image/${network}/${chainPath}ActiveAelfAddressesChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}active-address.png?v0.0.2`,
         },
         {
           title: 'Daily ELF Burnt Chart',
           path: '/chart/burnt',
-          imgUrl: `/image/${network}/${chainPath}dailyELFBurnt.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}burnt.png?v0.0.2`,
         },
         {
           title: 'Average Transaction Fee',
           path: '/chart/avg-txfee',
-          imgUrl: `/image/${network}/${chainPath}avgTransactionFee.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}avg-txfee.png?v0.0.2`,
         },
         {
           title: 'aelf Daily Tx fee Chart',
@@ -66,12 +76,12 @@ const getChartData = (network, chain) => {
         {
           title: 'Average Block Size Chart',
           path: '/chart/blocksize',
-          imgUrl: `/image/${network}/${chainPath}avgBlockSizeChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}blocksize.png?v0.0.2`,
         },
         {
           title: 'aelf Daily Block Rewards Chart',
           path: '/chart/rewards',
-          imgUrl: `/image/${network}/${chainPath}dailyBlockRewards.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}rewards.png?v0.0.2`,
         },
       ],
     },
@@ -82,17 +92,17 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Block Production Rate Chart',
           path: '/chart/production-rate',
-          imgUrl: `/image/${network}/${chainPath}aelfBlockProductionRateChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}production-rate.png?v0.0.2`,
         },
         {
           title: 'aelf Daily Cycle Count Chart',
           path: '/chart/cycle-count',
-          imgUrl: `/image/${network}/${chainPath}aelfDailyCycleCountChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}cycle-count.png?v0.0.2`,
         },
         {
           title: 'aelf AVG Block Duration Chart',
           path: '/chart/avg-duration',
-          imgUrl: `/image/${network}/${chainPath}aelfAvgBlockDurationChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}avg-duration.png?v0.0.2`,
         },
         {
           title: 'aelf Block Producers',
@@ -108,7 +118,7 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Deployed Contracts Chart',
           path: '/chart/deployed-contracts',
-          imgUrl: `/image/${network}/${chainPath}deployedContractsChart.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}deployed-contracts.png?v0.0.2`,
         },
         {
           title: 'Contract Calls Chart',

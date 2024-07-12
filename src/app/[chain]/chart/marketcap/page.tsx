@@ -1,25 +1,24 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { thousandsNumber, unitConverter } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useMemo, useState } from 'react';
-import { ChartColors, IStakedData } from '../type';
+import { ChartColors, IMarkerCap } from '../type';
 import { exportToCSV } from '@_utils/urlUtils';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
-import { fetchDailyStaked } from '@_api/fetchChart';
+import { fetchDailyMarketCap } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-const title = 'ELF Staked Chart';
+const title = 'aelf Market Cap Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.totalStaked)]);
+    allData.push([item.date, Number(item.totalMarketCap)]);
     customMap[item.date] = {};
-    customMap[item.date].bpStaked = item.bpStaked;
-    customMap[item.date].voteStaked = item.voteStaked;
-    customMap[item.date].stakingRate = item.rate;
+    customMap[item.date].fdv = item.fdv;
+    customMap[item.date].price = item.price;
   });
 
   return {
@@ -79,7 +78,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     yAxis: {
       title: {
-        text: 'ELF Staked Amount',
+        text: 'ELF Market Cap (USD)',
       },
       labels: {
         formatter: function () {
@@ -108,11 +107,10 @@ const getOption = (list: any[]): Highcharts.Options => {
         const point = that.points[0] as any;
         const date = point.x;
         const value = point.y;
-        const bpStaked = customMap[date].bpStaked;
-        const voteStaked = customMap[date].voteStaked;
-        const stakingRate = customMap[date].stakingRate;
+        const fdv = customMap[date].fdv;
+        const price = customMap[date].price;
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total ELF Staked</b>: <b>${thousandsNumber(value)}</b><br/>BP Staked: <b>${thousandsNumber(bpStaked)}</b><br/>Vote Staked: <b>${thousandsNumber(voteStaked)}</b><br/>Staking Rate: <b>${stakingRate}%</b><br/>
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Market Cap</b>: <b>${unitConverter(value)}</b><br/>FDV: <b>${unitConverter(fdv)}</b><br/>ELF Price(USD): <b>${thousandsNumber(price)}</b><br/>
         `;
       },
     },
@@ -135,12 +133,12 @@ const getOption = (list: any[]): Highcharts.Options => {
 };
 export default function Page() {
   const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IStakedData>();
+  const [data, setData] = useState<IMarkerCap>();
   const [loading, setLoading] = useState<boolean>(false);
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyStaked({ chainId: chain });
+      const res = await fetchDailyMarketCap({ chainId: chain });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -163,7 +161,7 @@ export default function Page() {
   ) : (
     <BaseHightCharts
       title={title}
-      aboutTitle="The ELF Staked chart shows the historical staked amount of ELF. A higher staked amount can make the PoS-based blockchain network more secure."
+      aboutTitle="The Ether Market Capitalization chart shows the historical breakdown of Ether daily market capitalization and average price "
       highlightData={highlightData}
       options={options}
       download={download}

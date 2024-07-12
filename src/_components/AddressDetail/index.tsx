@@ -169,7 +169,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       ),
     },
     {
-      key: 'txns',
+      key: 'transactions',
       label: 'Transactions',
       children: (
         <TransctionList
