@@ -266,15 +266,15 @@ export interface IHoldersAccountData {
   chainId: string;
   highest: {
     date: number;
-    holders: number;
+    count: number;
   };
   lowest: {
     date: number;
-    holders: number;
+    count: number;
   };
   list: Array<{
     date: number;
-    holders: number;
+    count: number;
   }>;
 }
 

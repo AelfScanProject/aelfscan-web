@@ -2,7 +2,7 @@
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IContractCalls, IHIGHLIGHTDataItem } from '../type';
 import { exportToCSV } from '@_utils/urlUtils';
 import { useParams } from 'next/navigation';
@@ -11,6 +11,7 @@ import { fetchDailyContractCall } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import TopContract from './topContract';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 const title = 'Contract Calls Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
@@ -20,6 +21,8 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date] = {};
     customMap[item.date].callAddressCount = item.callAddressCount;
   });
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
@@ -75,6 +78,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -151,6 +158,18 @@ export default function Page() {
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
+
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
@@ -176,6 +195,7 @@ export default function Page() {
   ) : (
     <div>
       <BaseHightCharts
+        ref={chartRef}
         title={title}
         aboutTitle="The Contract Calls chart shows the number of daily contract calls on aelf."
         highlightData={highlightData}

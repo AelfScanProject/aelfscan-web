@@ -2,7 +2,7 @@
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IAelfDailyCycleCountData, IHIGHLIGHTDataItem } from '../type';
 const title = 'aelf Daily Cycle Count Chart';
 import dayjs from 'dayjs';
@@ -12,6 +12,7 @@ import { useEffectOnce } from 'react-use';
 import { fetchCycleCount } from '@_api/fetchChart';
 import { message } from 'antd';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
@@ -22,7 +23,8 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date].missedBlockCount = item.missedBlockCount;
     customMap[item.date].missedCycle = item.missedCycle;
   });
-  console.log(customMap, 'customMap');
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
@@ -78,6 +80,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -140,6 +146,18 @@ export default function Page() {
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
+
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
@@ -164,6 +182,7 @@ export default function Page() {
     <PageLoadingSkeleton />
   ) : (
     <BaseHightCharts
+      ref={chartRef}
       title={title}
       aboutTitle="The aelf daily cycle count chart shows the daily cycle count and missed cycle of the aelf network. The aelf network has one cycle every 8 seconds"
       highlightData={highlightData}

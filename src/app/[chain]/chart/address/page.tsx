@@ -1,16 +1,16 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IDailyAddAddressData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 import { exportToCSV } from '@_utils/urlUtils';
-import dayjs from 'dayjs';
 import { useParams } from 'next/navigation';
 import { fetchUniqueAddresses } from '@_api/fetchChart';
 import { message } from 'antd';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 
 const title = 'aelf Unique Addresses Chart';
 const getOption = (list: any[]): Highcharts.Options => {
@@ -21,6 +21,8 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date] = {};
     customMap[item.date].addressCount = item.addressCount;
   });
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
@@ -76,6 +78,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -137,6 +143,19 @@ export default function Page() {
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
+
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [data]);
+
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
@@ -173,6 +192,7 @@ export default function Page() {
     <PageLoadingSkeleton />
   ) : (
     <BaseHightCharts
+      ref={chartRef}
       title={title}
       aboutTitle="The chart shows the total distinct numbers of address on the aelf blockchain and the increase in the number of address daily"
       highlightData={highlightData}
