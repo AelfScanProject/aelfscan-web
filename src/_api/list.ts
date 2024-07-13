@@ -85,6 +85,7 @@ const CHART_API_LIST = {
   getDailySupplyGrowth: `${BASE_API}/app/statistics/dailySupplyGrowth`,
   getDailyMarketCap: `${BASE_API}/app/statistics/dailyMarketCap`,
   getDailyStaked: `${BASE_API}/app/statistics/dailyStaked`,
+  getDailyHolder: `${BASE_API}/app/statistics/dailyHolder`,
 };
 
 const CMS_API_List = {

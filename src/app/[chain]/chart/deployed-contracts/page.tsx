@@ -2,7 +2,7 @@
 import Highcharts from 'highcharts/highstock';
 import '../index.css';
 import { thousandsNumber } from '@_utils/formatter';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IDeployedContractsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 import { exportToCSV } from '@_utils/urlUtils';
@@ -11,17 +11,21 @@ import { useParams } from 'next/navigation';
 import { message } from 'antd';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
+import dayjs from 'dayjs';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 
 const title = 'aelf Deployed Contracts Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
+
   list.forEach((item) => {
-    allData.push([item.date, Number(item.totalCount)]);
+    allData.push([dayjs(item.date).valueOf(), Number(item.totalCount)]);
     customMap[item.date] = {};
     customMap[item.date].dailyIncreaseContract = item.count;
   });
-
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
   return {
     legend: {
       enabled: false,
@@ -76,6 +80,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -134,8 +142,21 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+
   const options = useMemo(() => {
     return getOption(data?.list || []);
+  }, [data]);
+
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
   }, [data]);
 
   const download = () => {
@@ -163,6 +184,7 @@ export default function Page() {
     <PageLoadingSkeleton />
   ) : (
     <BaseHightCharts
+      ref={chartRef}
       title={title}
       aboutTitle="The aelf Deployed Contracts Chart shows  total number of contracts deployed on the aelf network."
       highlightData={highlightData}

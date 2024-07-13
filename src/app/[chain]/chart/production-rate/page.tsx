@@ -1,7 +1,7 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IBlockProductionRateData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 const title = 'aelf Block Production Rate Chart';
@@ -12,6 +12,7 @@ import { fetchBlockProduceRate } from '@_api/fetchChart';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
@@ -22,6 +23,9 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date].blockCount = item.blockCount;
     customMap[item.date].missedBlockCount = item.missedBlockCount;
   });
+
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
@@ -77,6 +81,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -140,6 +148,18 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data]);
 
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [data]);
+
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
@@ -183,6 +203,7 @@ export default function Page() {
     <PageLoadingSkeleton />
   ) : (
     <BaseHightCharts
+      ref={chartRef}
       title={title}
       aboutTitle="The aelf Block Production Rate Chart shows the daily block production rate of the aelf network"
       highlightData={highlightData}

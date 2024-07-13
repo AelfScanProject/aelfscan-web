@@ -2,7 +2,7 @@
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IAvgTxFeeData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Average Transaction Fee';
 import dayjs from 'dayjs';
@@ -12,6 +12,7 @@ import { message } from 'antd';
 import { fetchDailyAvgTransactionFee } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
@@ -20,6 +21,8 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date] = {};
     customMap[item.date].avgFeeElf = item.avgFeeElf;
   });
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
@@ -75,6 +78,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -136,6 +143,18 @@ export default function Page() {
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
+
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
@@ -171,6 +190,7 @@ export default function Page() {
   ) : (
     <BaseHightCharts
       title={title}
+      ref={chartRef}
       aboutTitle="The chart shows the daily average amount in USD spent per transaction on the aelf network."
       highlightData={highlightData}
       options={options}

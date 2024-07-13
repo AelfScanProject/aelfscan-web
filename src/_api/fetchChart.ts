@@ -14,6 +14,7 @@ import {
   IDailyTransactionsData,
   IDailyTxFeeData,
   IDeployedContractsData,
+  IHoldersAccountData,
   IMarkerCap,
   INodeBlockProduceDataItem,
   IStakedData,
@@ -169,6 +170,14 @@ export async function fetchDailyMarketCap(params: { chainId: string }): Promise<
 
 export async function fetchDailyStaked(params: { chainId: string }): Promise<IStakedData> {
   const result = await request.chart.getDailyStaked({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyHolder(params: { chainId: string }): Promise<IHoldersAccountData> {
+  const result = await request.chart.getDailyHolder({
     params: params,
   });
   const data = result?.data;

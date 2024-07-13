@@ -2,7 +2,7 @@
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IAvgBlockSizeData } from '../type';
 const title = 'Average Block Size Chart';
 import { exportToCSV } from '@_utils/urlUtils';
@@ -11,11 +11,15 @@ import { message } from 'antd';
 import { fetchDailyAvgBlockSize } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   list.forEach((item) => {
     allData.push([item.date, Number(item.avgBlockSize)]);
   });
+
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
@@ -71,6 +75,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -131,6 +139,18 @@ export default function Page() {
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
+
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
@@ -140,6 +160,7 @@ export default function Page() {
   ) : (
     <BaseHightCharts
       title={title}
+      ref={chartRef}
       aboutTitle="The aelf Average Block Size Chart indicates the historical average block size in bytes of the aelf network."
       highlightData={highlightData}
       options={options}

@@ -2,7 +2,7 @@
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IStakedData } from '../type';
 import { exportToCSV } from '@_utils/urlUtils';
 import { useParams } from 'next/navigation';
@@ -10,6 +10,7 @@ import { message } from 'antd';
 import { fetchDailyStaked } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 const title = 'ELF Staked Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
@@ -21,6 +22,9 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date].voteStaked = item.voteStaked;
     customMap[item.date].stakingRate = item.rate;
   });
+
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
@@ -76,6 +80,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -154,6 +162,18 @@ export default function Page() {
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
+
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
@@ -162,6 +182,7 @@ export default function Page() {
     <PageLoadingSkeleton />
   ) : (
     <BaseHightCharts
+      ref={chartRef}
       title={title}
       aboutTitle="The ELF Staked chart shows the historical staked amount of ELF. A higher staked amount can make the PoS-based blockchain network more secure."
       highlightData={highlightData}

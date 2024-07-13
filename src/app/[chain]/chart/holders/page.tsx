@@ -2,21 +2,24 @@
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IHIGHLIGHTDataItem, IHoldersAccountData } from '../type';
 import { exportToCSV } from '@_utils/urlUtils';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
-import { fetchDailyAvgTransactionFee } from '@_api/fetchChart';
+import { fetchDailyHolder } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HoldersAccountData } from '@_components/charts/mock';
+import { HighchartsReactRefObject } from 'highcharts-react-official';
 const title = 'ELF Holders Account';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   list.forEach((item) => {
-    allData.push([item.date, item.holders]);
+    allData.push([item.date, item.count]);
   });
+
+  const minDate = allData[0] && allData[0][0];
+  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
@@ -72,6 +75,10 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     xAxis: {
       type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
     },
     yAxis: {
       title: {
@@ -105,7 +112,7 @@ const getOption = (list: any[]): Highcharts.Options => {
         const date = point.x;
         const value = point.y;
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Holder</b>: <b>${thousandsNumber(value)} ELF</b><br/>
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Holders</b>: <b>${thousandsNumber(value)}</b><br/>
         `;
       },
     },
@@ -133,8 +140,8 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      // const res = await fetchDailyAvgTransactionFee({ chainId: chain });
-      setData(HoldersAccountData);
+      const res = await fetchDailyHolder({ chainId: chain });
+      setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
     } finally {
@@ -147,6 +154,18 @@ export default function Page() {
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
+
+  const chartRef = useRef<HighchartsReactRefObject>(null);
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
@@ -158,7 +177,7 @@ export default function Page() {
             text: (
               <span>
                 Highest holders of
-                <span className="px-1 font-bold">{thousandsNumber(data.highest.holders)}</span>
+                <span className="px-1 font-bold">{thousandsNumber(data.highest.count)}</span>
                 account were recorded on
                 <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highest.date)}</span>
               </span>
@@ -171,6 +190,7 @@ export default function Page() {
     <PageLoadingSkeleton />
   ) : (
     <BaseHightCharts
+      ref={chartRef}
       title={title}
       aboutTitle="The ELF Holders chart shows the trend of total accounts holding ELF on aelf."
       highlightData={highlightData}

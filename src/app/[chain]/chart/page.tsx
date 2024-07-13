@@ -59,6 +59,11 @@ const getChartData = (network, chain) => {
           imgUrl: `/image/${network}/${chainPath}active-address.png?v0.0.2`,
         },
         {
+          title: 'ELF Holders Account',
+          path: '/chart/holders',
+          imgUrl: ChartSVG,
+        },
+        {
           title: 'Daily ELF Burnt Chart',
           path: '/chart/burnt',
           imgUrl: `/image/${network}/${chainPath}burnt.png?v0.0.2`,
