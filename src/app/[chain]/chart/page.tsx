@@ -25,17 +25,17 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Market Cap Chart',
           path: '/chart/marketcap',
-          imgUrl: ChartSVG,
+          imgUrl: `/image/${network}/${chainPath}marketcap.png?v0.0.2`,
         },
         {
           title: 'ELF Supply Growth Chart',
           path: '/chart/supply-growth',
-          imgUrl: ChartSVG,
+          imgUrl: `/image/${network}/${chainPath}supply-growth.png?v0.0.2`,
         },
         {
           title: 'ELF Staked Chart',
           path: '/chart/staked',
-          imgUrl: ChartSVG,
+          imgUrl: `/image/${network}/${chainPath}staked.png?v0.0.2`,
         },
       ],
     },
@@ -61,7 +61,7 @@ const getChartData = (network, chain) => {
         {
           title: 'ELF Holders Account',
           path: '/chart/holders',
-          imgUrl: ChartSVG,
+          imgUrl: `/image/${network}/${chainPath}holders.png?v0.0.2`,
         },
         {
           title: 'Daily ELF Burnt Chart',
@@ -76,7 +76,7 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Daily Tx fee Chart',
           path: '/chart/txfee',
-          imgUrl: ChartSVG,
+          imgUrl: `/image/${network}/${chainPath}txfee.png?v0.0.2`,
         },
         {
           title: 'Average Block Size Chart',
@@ -128,7 +128,7 @@ const getChartData = (network, chain) => {
         {
           title: 'Contract Calls Chart',
           path: '/chart/contract-calls',
-          imgUrl: ChartSVG,
+          imgUrl: '/image/table-preview.png?v0.0.2',
         },
       ],
     },
