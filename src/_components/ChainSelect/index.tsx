@@ -1,6 +1,5 @@
 'use client';
 import { Select } from 'antd';
-import microApp from '@micro-zoe/micro-app';
 import { useAppDispatch, useAppSelector } from '@_store';
 import { setDefaultChain } from '@_store/features/chainIdSlice';
 import { useParams, useRouter } from 'next/navigation';
@@ -20,9 +19,12 @@ export default function ChainSelect({ setCurrent }) {
   }, [chain, defaultChain]);
 
   const onChangeHandler = (value: string) => {
-    // microApp.setData('governance', { type: 'logoutSilently' });
     dispatch(setDefaultChain(value));
-    router.push(`/?chainId=${value}`);
+    if (value === 'AELF') {
+      router.push('/');
+    } else {
+      router.push(`/${value}`);
+    }
     setCurrent('/');
   };
 

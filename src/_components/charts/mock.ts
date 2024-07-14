@@ -341,3 +341,106 @@ export const DeployedContractsData = {
     },
   ],
 };
+
+export const SupplyGrowthData = {
+  chainId: 'AELF',
+  list: [
+    {
+      date: 1714492800000,
+      totalSupply: '121117.2717',
+      reward: '122.11',
+      burnt: '1.22',
+    },
+    {
+      date: 1717171200000,
+      totalSupply: '124717.2717',
+      reward: '122.11',
+      burnt: '1.22',
+    },
+    {
+      date: 1719763200000,
+      totalSupply: '129717.2717',
+      reward: '122.11',
+      burnt: '1.22',
+    },
+  ],
+};
+
+export const StakedData = {
+  chainId: 'AELF',
+  list: [
+    {
+      date: 1714492800000,
+      totalStaked: '12112717.2717',
+      bpStaked: '122.11',
+      voteStaked: '1.22',
+      stakingRate: '50.1',
+    },
+    {
+      date: 1717171200000,
+      totalStaked: '12112717.2717',
+      bpStaked: '122.11',
+      voteStaked: '1.22',
+      stakingRate: '50.1',
+    },
+    {
+      date: 1719763200000,
+      totalStaked: '12112717.2717',
+      bpStaked: '122.11',
+      voteStaked: '1.22',
+      stakingRate: '50.1',
+    },
+  ],
+};
+
+export const DailyTxFeeData = {
+  chainId: 'AELF',
+  highest: {
+    date: 1714492800000,
+    totalFee: '121.2717',
+  },
+  lowest: {
+    date: 1714492800000,
+    totalFee: '121.2717',
+  },
+  list: [
+    {
+      date: 1714492800000,
+      totalFee: '121.2717',
+    },
+    {
+      date: 1717171200000,
+      totalFee: '121.2717',
+    },
+    {
+      date: 1719763200000,
+      totalFee: '121.2717',
+    },
+  ],
+};
+
+export const HoldersAccountData = {
+  chainId: 'AELF',
+  highest: {
+    date: 1714492800000,
+    holders: 10,
+  },
+  lowest: {
+    date: 1714492800000,
+    holders: 10000,
+  },
+  list: [
+    {
+      date: 1714492800000,
+      holders: 10002,
+    },
+    {
+      date: 1717171200000,
+      holders: 12000,
+    },
+    {
+      date: 1719763200000,
+      holders: 12990,
+    },
+  ],
+};

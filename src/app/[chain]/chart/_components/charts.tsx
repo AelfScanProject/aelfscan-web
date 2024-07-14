@@ -4,13 +4,13 @@ import Title from './title';
 import Highcharts from 'highcharts/highstock';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsFullscreen from 'highcharts/modules/full-screen';
-import HighchartsReact from 'highcharts-react-official';
+import HighchartsReact, { HighchartsReactRefObject } from 'highcharts-react-official';
 import '../index.css';
 import Highlight from '../_components/highlight';
 import { IHIGHLIGHTDataItem } from '../type';
 import Download from './download';
 
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, forwardRef } from 'react';
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts);
@@ -25,7 +25,7 @@ export interface IHightChartsOption {
   highlightData: IHIGHLIGHTDataItem[];
 }
 
-export default function BaseHightCharts(props: IHightChartsOption) {
+function BaseHightCharts(props: IHightChartsOption, ref) {
   const { title, aboutTitle, options, highlightData, download } = props;
 
   return (
@@ -37,6 +37,7 @@ export default function BaseHightCharts(props: IHightChartsOption) {
         <div className="col-12 mb-lg-0 col-lg-8 col-xl-9 mb-10">
           <Card>
             <HighchartsReact
+              ref={ref}
               containerProps={{ className: 'h-[550px] min-w-[310px]' }}
               highcharts={Highcharts}
               options={options}
@@ -49,3 +50,5 @@ export default function BaseHightCharts(props: IHightChartsOption) {
     </div>
   );
 }
+
+export default forwardRef<HighchartsReactRefObject, IHightChartsOption>(BaseHightCharts);

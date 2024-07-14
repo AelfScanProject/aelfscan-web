@@ -11,7 +11,7 @@ export default function Highlight({ highlightData, title }: { highlightData: IHI
       <div className="text-sm leading-[22px] text-base-100">{title}</div>
       {highlightData.map((item) => {
         return (
-          <>
+          <div key={item.key}>
             <Divider className="my-4" />
             {!item.hiddenTitle && (
               <div className="mb-1 flex items-center text-sm leading-[22px] text-base-200">
@@ -19,7 +19,7 @@ export default function Highlight({ highlightData, title }: { highlightData: IHI
               </div>
             )}
             <div className="text-sm leading-[22px] text-base-100">{item.text}</div>
-          </>
+          </div>
         );
       })}
     </div>

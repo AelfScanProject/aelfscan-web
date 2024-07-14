@@ -33,7 +33,10 @@ export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: 
               {ele.label}
             </a>
           ) : (
-            <Link href={path === '/' ? `/?chainId=${defaultChain}` : `/${defaultChain}${path}`}>{ele.label}</Link>
+            <Link
+              href={path === '/' ? (defaultChain === 'AELF' ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`}>
+              {ele.label}
+            </Link>
           ),
           key: ele.path,
         };
@@ -59,7 +62,10 @@ export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: 
                 {label}
               </a>
             ) : (
-              <Link href={path === '/' ? `/?chainId=${defaultChain}` : `/${defaultChain}${path}`}>{label}</Link>
+              <Link
+                href={path === '/' ? (defaultChain === 'AELF' ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`}>
+                {label}
+              </Link>
             ),
             key: secondSlashIndex === -1 || isURL(path) ? path : getPathnameFirstSlash(path),
           });

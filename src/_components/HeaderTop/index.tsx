@@ -16,6 +16,8 @@ import { TChainID } from '@_api/type';
 import { Dropdown } from 'aelf-design';
 import { useMemo } from 'react';
 import { MenuProps } from 'antd';
+import useHomeSocket from '@_hooks/useHomeSocket';
+import useSearchFilter from '@_hooks/useSearchFilters';
 
 // at public file
 const TopIconMain = '/image/aelf-header-top.svg';
@@ -56,6 +58,8 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   const { chain } = useParams();
   const router = useRouter();
   const { BlockchainOverview, overviewLoading } = useBlockchainOverview(defaultChain as TChainID);
+  useHomeSocket(defaultChain as TChainID);
+  useSearchFilter();
 
   const { tokenPriceRate24h = 0, tokenPriceInUsd = 0 } = BlockchainOverview || {};
 
@@ -63,7 +67,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   return (
     <div className={clsx(clsPrefix, isMainNet && `${clsPrefix}-main`, isMobile && `${clsPrefix}-mobile`)}>
       {!isHideSearch && isMobile && (
-        <div className={clsx(`${clsPrefix}-search`)}>
+        <div className={clsx(!isMainNet && `${clsPrefix}-search-test`, `${clsPrefix}-search`)}>
           <Search
             searchIcon={true}
             searchButton={false}
@@ -89,7 +93,8 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
           width="96"
           height="32"
           onClick={() => {
-            router.push(`/?chainId=${chain || defaultChain}`);
+            const chainId = chain || defaultChain;
+            router.push(chainId === 'AELF' ? '/' : `/${chainId}`);
             setCurrent('/');
           }}
         />

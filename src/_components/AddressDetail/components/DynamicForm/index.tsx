@@ -23,11 +23,13 @@ export default function DynamicForm({
   address,
   contract,
   chain,
+  activeKey,
 }: {
   methods: IMethod[];
   address: string;
   contract: any;
   chain: string;
+  activeKey: string;
 }) {
   const { connectWallet, walletInfo, isConnected } = useConnectWallet();
   const isMd = useMD();
@@ -123,7 +125,7 @@ export default function DynamicForm({
                           <IconFont
                             type="link"
                             onClick={() => {
-                              handleCopy(window.location.href + '#' + item.name);
+                              handleCopy(window.location.href + `&type=${activeKey}` + '#' + item.name);
                             }}
                           />
                         </EPTooltip>

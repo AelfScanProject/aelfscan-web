@@ -11,13 +11,14 @@ import { divDecimals, formatDate } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
 import ContractToken from '@_components/ContractToken';
 import { useMD } from '@_hooks/useResponsive';
+import { memo } from 'react';
 
 interface IProps {
   isBlocks: boolean;
   iconType: string;
   data: IBlocksResponseItem[] | ITransactionsResponseItem[];
 }
-export default function Latest({ isBlocks, data, iconType }: IProps) {
+function Latest({ isBlocks, data, iconType }: IProps) {
   const isMD = useMD();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const RewrdInfo = (ele) => {
@@ -74,7 +75,9 @@ export default function Latest({ isBlocks, data, iconType }: IProps) {
                       </EPTooltip>
                     </span>
                     <span className="txns">
-                      <Link href={`/${defaultChain}/block/${ele.blockHeight}#txns`}>{ele.transactionCount} txns</Link>
+                      <Link href={`/${defaultChain}/block/${ele.blockHeight}?tab=transactions`}>
+                        {ele.transactionCount} txns
+                      </Link>
                       <span className="time">in {formatDate(ele.timestamp, 'Age')}</span>
                       {isMD && RewrdInfo(ele)}
                     </span>
@@ -119,3 +122,5 @@ export default function Latest({ isBlocks, data, iconType }: IProps) {
     </div>
   );
 }
+
+export default memo(Latest);

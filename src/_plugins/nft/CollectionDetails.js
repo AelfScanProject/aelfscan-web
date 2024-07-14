@@ -27,14 +27,14 @@ function updateUrlParams(obj) {
   window.history.replaceState({}, '', "".concat(window.location.pathname, "?").concat(params).concat(hash));
 }
 var TabKey = /*#__PURE__*/function (TabKey) {
-  TabKey["balances"] = "balances";
+  TabKey["holders"] = "holders";
   TabKey["empty"] = "";
   TabKey["inventory"] = "inventory";
   return TabKey;
 }(TabKey || {});
-var tabMap = _defineProperty(_defineProperty(_defineProperty({}, TabKey.balances, 'Holders'), TabKey.empty, 'Transfers'), TabKey.inventory, 'Inventory');
+var tabMap = _defineProperty(_defineProperty(_defineProperty({}, TabKey.holders, 'Holders'), TabKey.empty, 'Transfers'), TabKey.inventory, 'Inventory');
 var unSearchItem = {
-  key: TabKey.balances
+  key: TabKey.holders
 };
 var tabItems = [{
   key: TabKey.empty
@@ -76,9 +76,9 @@ export default function NFTDetails(props) {
     setTabList(tabItems);
     setSearchVal('');
   };
-  var handleTabChange = function handleTabChange(key) {
-    window.location.hash = key;
-  };
+  // var handleTabChange = function handleTabChange(key) {
+  //   window.location.hash = key;
+  // };
   var onChange = function onChange(_ref) {
     var currentTarget = _ref.currentTarget;
     setSearchText(currentTarget.value);
@@ -97,19 +97,19 @@ export default function NFTDetails(props) {
   };
 
   // init tab active key, from url hash
-  useEffect(function () {
-    var _window$location$hash;
-    var hash = (_window$location$hash = window.location.hash.replace('#', '').trim()) !== null && _window$location$hash !== void 0 ? _window$location$hash : '';
-    if (hash) {
-      var tabItem = tabItems.find(function (item) {
-        return item.key === hash;
-      });
-      if (tabItem) {
-        var _tabRef$current;
-        (_tabRef$current = tabRef.current) === null || _tabRef$current === void 0 || _tabRef$current.setActiveKey(tabItem.key);
-      }
-    }
-  }, []);
+  // useEffect(function () {
+  //   var _window$location$hash;
+  //   var hash = (_window$location$hash = window.location.hash.replace('#', '').trim()) !== null && _window$location$hash !== void 0 ? _window$location$hash : '';
+  //   if (hash) {
+  //     var tabItem = tabItems.find(function (item) {
+  //       return item.key === hash;
+  //     });
+  //     if (tabItem) {
+  //       var _tabRef$current;
+  //       (_tabRef$current = tabRef.current) === null || _tabRef$current === void 0 || _tabRef$current.setActiveKey(tabItem.key);
+  //     }
+  //   }
+  // }, []);
   // init search value from url query
   useEffect(function () {
     var query = new URLSearchParams(window.location.search).get(URL_QUERY_KEY);
@@ -146,7 +146,6 @@ export default function NFTDetails(props) {
     className: "collection-tab-wrap"
   }, /*#__PURE__*/React.createElement(EPTabs, {
     items: list,
-    ref: tabRef,
-    onTabChange: handleTabChange
+    ref: tabRef
   })));
 }

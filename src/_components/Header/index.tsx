@@ -39,7 +39,6 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   }, [headerList]);
 
   useEffect(() => {
-    // console.log('current', current, pathname, menus);
     const secondSlashIndex = pathname.slice(6).indexOf('/');
     const current = secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5));
     if (menus.find((item) => item.path === current)) {
@@ -48,6 +47,10 @@ export default function Header({ chainList, networkList, headerMenuList }) {
       setCurrent('/nfts');
     } else if (current.startsWith('/token')) {
       setCurrent('/tokens');
+    } else if (current.startsWith('/block')) {
+      setCurrent('/blocks');
+    } else if (current.startsWith('/tx')) {
+      setCurrent('/transactions');
     } else if (!current || current === '/') {
       setCurrent('/');
     } else {

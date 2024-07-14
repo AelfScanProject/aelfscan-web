@@ -70,7 +70,6 @@ export default function Detail({ tokenDetail }: IDetailProps) {
         />
       ),
     };
-    console.log(searchType, 'searchType');
     if (searchType !== SearchType.other) {
       return [transfersItem];
     }

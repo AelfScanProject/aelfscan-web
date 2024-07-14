@@ -5,14 +5,21 @@ import {
   IAvgBlockSizeData,
   IAvgTxFeeData,
   IBlockProductionRateData,
+  IContractCalls,
   IDailyActiveAddressData,
   IDailyAddAddressData,
   IDailyBlockRewardsData,
   IDailyBurntData,
   IDailyPriceDData,
   IDailyTransactionsData,
+  IDailyTxFeeData,
   IDeployedContractsData,
+  IHoldersAccountData,
+  IMarkerCap,
   INodeBlockProduceDataItem,
+  IStakedData,
+  ISupplyGrowthData,
+  ITopContractCalls,
 } from '@app/[chain]/chart/type';
 
 export async function fetchBlockProduceRate(params: { chainId: string }): Promise<IBlockProductionRateData> {
@@ -112,6 +119,65 @@ export async function fetchDailyDeployContract(params: { chainId: string }): Pro
 
 export async function fetchDailyAvgBlockSize(params: { chainId: string }): Promise<IAvgBlockSizeData> {
   const result = await request.chart.getDailyAvgBlockSize({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyContractCall(params: { chainId: string }): Promise<IContractCalls> {
+  const result = await request.chart.getDailyContractCall({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchTopContractCall(params: {
+  chainId: string;
+  dateInterval: number;
+}): Promise<ITopContractCalls> {
+  const result = await request.chart.getTopContractCall({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyTxFee(params: { chainId: string }): Promise<IDailyTxFeeData> {
+  const result = await request.chart.getDailyTxFee({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailySupplyGrowth(params: { chainId: string }): Promise<ISupplyGrowthData> {
+  const result = await request.chart.getDailySupplyGrowth({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyMarketCap(params: { chainId: string }): Promise<IMarkerCap> {
+  const result = await request.chart.getDailyMarketCap({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyStaked(params: { chainId: string }): Promise<IStakedData> {
+  const result = await request.chart.getDailyStaked({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyHolder(params: { chainId: string }): Promise<IHoldersAccountData> {
+  const result = await request.chart.getDailyHolder({
     params: params,
   });
   const data = result?.data;

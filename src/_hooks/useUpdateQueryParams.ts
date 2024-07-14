@@ -12,7 +12,7 @@ export const useUpdateQueryParams = () => {
     });
 
     // Construct the new URL with updated query params and hash
-    const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}${currentUrl.hash}`;
+    const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}`;
 
     // Use Next.js router to replace the state
     if (newUrl !== window.location.href) {
@@ -24,18 +24,26 @@ export const useUpdateQueryParams = () => {
 };
 export const useDeleteQueryParam = () => {
   const router = useRouter();
-  const deleteQueryParam = (params: string[]) => {
+  const deleteQueryParam = (params: string[], updateData?: any) => {
     const currentUrl = new URL(window.location.href);
     const newSearchParams = new URLSearchParams(currentUrl.search);
-
+    console.log(newSearchParams, 'newSearchParams');
     params.forEach((item) => {
+      console.log(newSearchParams.get(item), 'newSearchParams.get(item)');
       if (newSearchParams.get(item)) {
         newSearchParams.delete(item);
       }
     });
+    if (updateData) {
+      Object.keys(updateData).forEach((key) => {
+        newSearchParams.set(key, updateData[key]);
+      });
+    }
+
+    console.log(`${currentUrl.pathname}?${newSearchParams.toString()}`, 'newSearchParams.toString()');
 
     // Construct the new URL with updated query params and hash
-    const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}${currentUrl.hash}`;
+    const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}`;
 
     // Use Next.js router to replace the state
     if (newUrl !== window.location.href) {

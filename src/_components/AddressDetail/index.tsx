@@ -6,12 +6,12 @@ import IconFont from '../IconFont/index';
 import QrCode from '@_components/QrCode';
 import Overview from './components/overview';
 import { formatDate, numberFormatter, thousandsNumber } from '@_utils/formatter';
-import EPTabs from '../EPTabs/index';
+import EPTabs, { EPTabsRef } from '../EPTabs/index';
 import TransctionList from '@app/[chain]/transactions/list';
 import TokenTransfers from '@_components/TokenTransfers';
 import NFTTransfers from '@_components/NFTTransfers';
 import History from './components/History';
-import { useMemo, useState } from 'react';
+import { Ref, useMemo, useRef, useState } from 'react';
 import Events from './components/Events';
 import Contract from './components/Contract';
 import Tokens from './components/Tokens';
@@ -147,10 +147,10 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     ];
   }, [author, chain, contractName, contractTransactionHash]);
 
-  const [selectKey, setSelectKey] = useState<string>('');
+  const tabRef = useRef<EPTabsRef>(null);
 
   const onTabClick = (key) => {
-    setSelectKey(key);
+    tabRef.current?.setActiveKey(key);
   };
   const items = [
     {
@@ -169,7 +169,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       ),
     },
     {
-      key: 'Txns',
+      key: 'transactions',
       label: 'Transactions',
       children: (
         <TransctionList
@@ -181,7 +181,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       ),
     },
     {
-      key: 'tokentxns',
+      key: 'tokentransfers',
       label: 'Token Transfers',
       children: <TokenTransfers />,
     },
@@ -194,15 +194,15 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
   if (!isAddress) {
     items.push(
       {
-        key: 'Code',
+        key: 'contract',
         label: 'Contract',
         children: <Contract />,
       },
-      {
-        key: 'events',
-        label: 'Events',
-        children: <Events SSRData={{ total: 0, list: [] }} />,
-      },
+      // {
+      //   key: 'events',
+      //   label: 'Events',
+      //   children: <Events SSRData={{ total: 0, list: [] }} />,
+      // },
       {
         key: 'history',
         label: 'History',
@@ -237,7 +237,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         <Overview title="MoreInfo" className="flex-1" items={isAddress ? addressMoreInfo : contractInfo} />
       </div>
       <div className="address-main mt-4">
-        <EPTabs selectKey={selectKey} items={items} />
+        <EPTabs ref={tabRef} items={items} />
       </div>
     </div>
   );

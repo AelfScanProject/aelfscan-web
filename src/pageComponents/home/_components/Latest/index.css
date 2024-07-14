@@ -90,7 +90,7 @@
           @apply ml-2;
         }
         .anticon {
-          @apply hidden;
+          @apply !hidden;
         }
         .text {
           @apply flex flex-row;

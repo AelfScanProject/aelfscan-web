@@ -61,7 +61,10 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
               {label}
             </a>
           ) : (
-            <Link href={path === '/' ? `/?chainId=${defaultChain}` : `/${defaultChain}${path}`}>{label}</Link>
+            <Link
+              href={path === '/' ? (defaultChain === 'AELF' ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`}>
+              {label}
+            </Link>
           ),
           key,
         );
@@ -72,7 +75,11 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   const dispatch = useAppDispatch();
   const onSelectHandler = (value: string) => {
     dispatch(setDefaultChain(value));
-    router.push(`/?chainId=${value}`);
+    if (value === 'AELF') {
+      router.push('/');
+    } else {
+      router.push(`/${value}`);
+    }
     setCurrent('/');
   };
 
@@ -110,9 +117,14 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
     <div className={`header-navbar-mobile-more ${isMainNet ? 'header-navbar-main-mobile-more' : ''}`}>
       {/* <IconFont type={isMainNet ? 'moremainnet' : 'moretestnet'} onClick={() => toggleMenu()} /> */}
       <div
-        className="item-center border-1 flex size-8 justify-center rounded border border-[#444F70] bg-[#222F55]"
+        className={`item-center border-1 flex size-8 justify-center rounded border ${isMainNet && 'border-[#444F70]'} ${isMainNet && 'bg-[#222F55]'}`}
         onClick={() => toggleMenu()}>
-        <MenuOutlined color="#fff" hoverColor="#fff" activeColor="#fff" style={{ fontSize: '20px' }} />
+        <MenuOutlined
+          color={isMainNet ? '#fff' : '#266CD3'}
+          hoverColor={isMainNet ? '#fff' : '#266CD3'}
+          activeColor={isMainNet ? '#fff' : '#266CD3'}
+          style={{ fontSize: '20px' }}
+        />
       </div>
       {showMobileMenu && (
         <Drawer

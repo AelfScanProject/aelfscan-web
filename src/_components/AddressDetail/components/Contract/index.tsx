@@ -2,7 +2,7 @@ import SourceCode, { IContractSourceCode } from './sourceCode';
 import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { fetchContractCode } from '@_api/fetchContact';
 import { TChainID } from '@_api/type';
 import { getAddress, getFirstHashValue, getSecondHashValue } from '@_utils/formatter';
@@ -95,17 +95,19 @@ export default function Contract() {
     }
   }, [address, chain]);
 
-  const [activeKey, setActiveKey] = useState<string>('Code');
+  const searchParams = useSearchParams();
+  const defaultKey = searchParams.get('type');
+
+  const [activeKey, setActiveKey] = useState<string>((defaultKey as string) || 'code');
 
   const tabChange = (key) => {
     setActiveKey(key);
-    window.location.hash = key;
   };
 
   const items = useMemo(() => {
     return [
       {
-        key: 'Code',
+        key: 'code',
         label: 'Code',
         children: (
           <div className="contract-container">
@@ -126,25 +128,39 @@ export default function Contract() {
         ),
       },
       {
-        key: 'ReadContract',
+        key: 'readcontract',
         label: 'Read Contract',
-        children: <DynamicForm methods={readMethods} contract={contract} chain={chain} address={address} />,
+        children: (
+          <DynamicForm
+            activeKey={activeKey}
+            methods={readMethods}
+            contract={contract}
+            chain={chain}
+            address={address}
+          />
+        ),
       },
       {
-        key: 'WriteContract',
+        key: 'writecontract',
         label: 'Write Contract',
-        children: <DynamicForm methods={writeMethods} contract={contract} chain={chain} address={address} />,
+        children: (
+          <DynamicForm
+            activeKey={activeKey}
+            methods={writeMethods}
+            contract={contract}
+            chain={chain}
+            address={address}
+          />
+        ),
       },
     ];
-  }, [address, chain, contract, contractInfo, isMobile, readMethods, writeMethods]);
+  }, [address, chain, contract, contractInfo, isMobile, readMethods, writeMethods, activeKey]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   useEffectOnce(() => {
-    const hash = getFirstHashValue(window.location.href);
-    setActiveKey(hash);
     getMethod();
   });
 
