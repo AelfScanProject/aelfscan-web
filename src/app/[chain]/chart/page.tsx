@@ -102,7 +102,7 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Daily Cycle Count Chart',
           path: '/chart/cycle-count',
-          imgUrl: `/image/${network}/${chainPath}cycle-count.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}cycle-count.png?v0.0.3`,
         },
         {
           title: 'aelf AVG Block Duration Chart',
@@ -123,12 +123,12 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Deployed Contracts Chart',
           path: '/chart/deployed-contracts',
-          imgUrl: `/image/${network}/${chainPath}deployed-contracts.png?v0.0.2`,
+          imgUrl: `/image/${network}/${chainPath}deployed-contracts.png?v0.0.3`,
         },
         {
           title: 'Contract Calls Chart',
           path: '/chart/contract-calls',
-          imgUrl: '/image/table-preview.png?v0.0.2',
+          imgUrl: '/image/chart-table.png?v0.0.3',
         },
       ],
     },
