@@ -327,4 +327,19 @@ export interface IMarkerCap {
   list: Array<IMarkerCapItem>;
 }
 
-export const ChartColors = ['#266CD3'];
+export interface ITVLDataItem {
+  date: number;
+  tvl: string;
+  bpLocked: string;
+  voteLocked: string;
+  awakenLocked: string;
+}
+
+export interface ITVLData {
+  chainId: string;
+  highest: ITVLDataItem;
+  lowest: ITVLDataItem;
+  list: Array<ITVLDataItem>;
+}
+
+export const ChartColors = ['#266CD3', '#92c5cb', '#70a668', '#ebc463'];

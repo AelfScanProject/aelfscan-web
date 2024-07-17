@@ -24,6 +24,7 @@ import { useRouter } from 'next/navigation';
 import addressFormat from '@_utils/urlUtils';
 import { AddressType } from '@_types/common';
 import { getAddress } from '@_utils/formatter';
+import { Spin } from 'antd';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -58,7 +59,7 @@ const Search = ({
   const hasClearButton = !!query && deleteIcon;
   const hasEnterButton = !!query && enterIcon;
 
-  useUpdateDataByQuery();
+  const { loading } = useUpdateDataByQuery();
   useSelected(selectedItem, queryInput);
   // useHighlight(highLight, queryInput);
 
@@ -120,6 +121,7 @@ const Search = ({
     }
     return (
       <Button
+        loading={loading}
         className="search-button"
         type="primary"
         icon={<IconFont className="size-4" type="search" />}
@@ -153,7 +155,7 @@ const Search = ({
             dispatch(setQuery(e.target.value));
           }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !loading) {
               onSearchHandler();
             }
           }}

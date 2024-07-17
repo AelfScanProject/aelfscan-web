@@ -444,3 +444,44 @@ export const HoldersAccountData = {
     },
   ],
 };
+
+export const TVLData = {
+  chainId: 'AELF',
+  highest: {
+    date: 1714492800000,
+    tvl: '12112717.2717',
+    bpStaked: '18212.11',
+    voteStaked: '21271.22',
+    awaken: '271671.1',
+  },
+  lowest: {
+    date: 1714492800000,
+    tvl: '12112717.2717',
+    bpStaked: '18212.11',
+    voteStaked: '21271.22',
+    awaken: '271671.1',
+  },
+  list: [
+    {
+      date: 1714492800000,
+      tvl: '12112717.2717',
+      bpStaked: '18212.11',
+      voteStaked: '21271.22',
+      awaken: '271671.1',
+    },
+    {
+      date: 1717171200000,
+      tvl: '12112717.2717',
+      bpStaked: '19212.11',
+      voteStaked: '22271.22',
+      awaken: '281671.1',
+    },
+    {
+      date: 1719763200000,
+      tvl: '12112717.2717',
+      bpStaked: '19212.11',
+      voteStaked: '22271.22',
+      awaken: '281671.1',
+    },
+  ],
+};
