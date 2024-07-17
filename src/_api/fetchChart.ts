@@ -19,6 +19,7 @@ import {
   INodeBlockProduceDataItem,
   IStakedData,
   ISupplyGrowthData,
+  ITVLData,
   ITopContractCalls,
 } from '@app/[chain]/chart/type';
 
@@ -178,6 +179,14 @@ export async function fetchDailyStaked(params: { chainId: string }): Promise<ISt
 
 export async function fetchDailyHolder(params: { chainId: string }): Promise<IHoldersAccountData> {
   const result = await request.chart.getDailyHolder({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchDailyTvl(params: { chainId: string }): Promise<ITVLData> {
+  const result = await request.chart.getDailyTvl({
     params: params,
   });
   const data = result?.data;

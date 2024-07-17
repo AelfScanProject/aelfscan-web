@@ -8,7 +8,7 @@
 import { useSearchContext } from '@_components/Search/SearchProvider';
 import { setQueryResult, highlightPrev, highlightNext, setClear } from '@_components/Search/action';
 import { TSingle, TSearchList } from '@_components/Search/type';
-import { RefObject, useEffect } from 'react';
+import { RefObject, useEffect, useMemo, useState } from 'react';
 import animateScrollTo from 'animated-scroll-to';
 import { useDebounce } from 'react-use';
 import { fetchSearchData } from '@_api/fetchSearch';
@@ -18,6 +18,7 @@ import { getAddress } from '@_utils/formatter';
 export const useUpdateDataByQuery = () => {
   const { state, dispatch } = useSearchContext();
   const { query, filterType } = state;
+  const [loading, setLoading] = useState<boolean>(false);
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   useDebounce(
     () => {
@@ -48,6 +49,7 @@ export const useUpdateDataByQuery = () => {
       };
 
       const fetchData = async () => {
+        setLoading(true);
         const params = {
           filterType: filterType?.filterType,
           chainId: defaultChain as TChainID,
@@ -55,7 +57,9 @@ export const useUpdateDataByQuery = () => {
           searchType: 0,
         };
         const res = await fetchSearchData(params);
-        dispatch(setQueryResult(formatData(res)));
+        const result = formatData(res);
+        setLoading(false);
+        dispatch(setQueryResult(result));
       };
       if (typeof filterType === 'object' && filterType !== null) {
         const { limitNumber } = filterType;
@@ -69,6 +73,12 @@ export const useUpdateDataByQuery = () => {
     300,
     [dispatch, query, filterType],
   );
+
+  return useMemo(() => {
+    return {
+      loading,
+    };
+  }, [loading]);
 };
 
 export const useSelected = (selectedItem: Partial<TSingle>, inputRef: RefObject<HTMLInputElement>) => {

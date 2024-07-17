@@ -6,6 +6,11 @@
  * @Description: next config
  */
 /** @type {import('next').NextConfig} */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withPlugins = require('next-compose-plugins');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pluginConfig = require('./build.config/plugin');
+
 const nextConfig = {
   compiler: {
     // to solve the problem: https://github.com/vercel/next.js/discussions/60150
@@ -87,4 +92,5 @@ const nextConfig = {
   output: 'standalone',
 };
 
-module.exports = nextConfig;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+module.exports = withPlugins(pluginConfig, nextConfig);
