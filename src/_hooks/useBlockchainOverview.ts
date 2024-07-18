@@ -42,11 +42,10 @@ const useBlockchainOverview = (chain: TChainID) => {
 
     return () => {
       console.log('signalR----destroy');
+      socket?.sendEvent('UnsubscribeBlockchainOverview', { chainId: chain });
       socket?.destroy();
-      // socket?.sendEvent('UnSubscribeLatestTransactions');
-      // socket?.sendEvent('UnSubscribeLatestBlocks');
     };
-  }, [chain, dispatch, socket]);
+  }, [chain, socket]);
 
   return data;
 };

@@ -4,6 +4,7 @@ import { Anchor, Card } from 'antd';
 import Image from 'next/image';
 import './index.css';
 import ChartSVG from 'public/image/chart.svg';
+import ProduceImg from 'public/image/produce.png';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEnvContext } from 'next-runtime-env';
@@ -117,7 +118,7 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Block Producers',
           path: '/chart/produce',
-          imgUrl: '/image/table-preview.png?v0.0.2',
+          imgUrl: ProduceImg,
         },
       ],
     },

@@ -81,9 +81,10 @@ const useHomeSocket = (chain: TChainID) => {
 
     return () => {
       console.log('signalR----destroy');
+      socket?.sendEvent('UnsubscribeTransactionDataChart', { chainId: chain });
+      socket?.sendEvent('UnsubscribeRequestLatestBlocks', { chainId: chain });
+      socket?.sendEvent('UnsubscribeLatestTransactions', { chainId: chain });
       socket?.destroy();
-      // socket?.sendEvent('UnSubscribeLatestTransactions');
-      // socket?.sendEvent('UnSubscribeLatestBlocks');
     };
   }, [chain, socket]);
 
