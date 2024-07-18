@@ -19,21 +19,55 @@ import { ColumnsType } from 'antd/es/table';
 import MoreContainer from '@_components/MoreContainer';
 import EPTabs from '@_components/EPTabs';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { IBlocksDetailData, ITransactionsResponseItem } from '@_api/type';
+import { IBlocksDetailData, TChainID } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
 import { useParams } from 'next/navigation';
+import { JumpTypes } from '@_components/JumpButton';
+import { fetchBlocksDetail } from '@_api/fetchBlocks';
+import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 
 export default function Detail({ SSRData }) {
   const isMobile = useMobileAll();
-  const [detailData] = useState<IBlocksDetailData>(SSRData);
+  const [detailData, setDetailData] = useState<IBlocksDetailData>(SSRData);
   const [showMore, setShowMore] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(25);
   const [total] = useState<number>(SSRData?.transactions?.length);
   const [timeFormat, setTimeFormat] = useState<string>('Age');
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const { chain } = useParams();
-  const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
+  const { chain, hash } = useParams();
+  const jump = useCallback(
+    async (type: JumpTypes) => {
+      let blockHeight;
+      switch (type) {
+        case JumpTypes.Prev:
+          blockHeight = detailData.preBlockHeight;
+          history.pushState(null, '', `/${detailData.chainId}/block/${detailData.preBlockHeight}`);
+          break;
+        case JumpTypes.Next:
+          history.pushState(null, '', `/${detailData.chainId}/block/${detailData.nextBlockHeight}`);
+          blockHeight = detailData.nextBlockHeight;
+      }
+
+      setLoading(true);
+      setShowMore(false);
+      setCurrentPage(1);
+      try {
+        const res = await fetchBlocksDetail({
+          blockHeight: blockHeight,
+          chainId: chain as TChainID,
+        });
+        setDetailData(res);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [chain, detailData],
+  );
+
+  console.log(hash, 'hash');
+  const columns = useMemo<ColumnsType>(() => {
     return getColumns({
       timeFormat,
       handleTimeChange: () => {
@@ -71,13 +105,18 @@ export default function Detail({ SSRData }) {
   const moreChange = useCallback(() => {
     setShowMore(!showMore);
   }, [showMore]);
+
   const items: ITabsProps['items'] = [
     {
       key: '',
       label: 'Overview',
-      children: (
+      children: loading ? (
+        <div className="px-2">
+          <PageLoadingSkeleton />
+        </div>
+      ) : (
         <div className="overview-container pb-4">
-          <BaseInfo data={detailData} tabChange={tabChange} />
+          <BaseInfo data={detailData} tabChange={tabChange} jump={jump} />
           {showMore && <ExtensionInfo data={detailData} />}
           <MoreContainer showMore={showMore} onChange={moreChange} />
         </div>
@@ -100,6 +139,7 @@ export default function Detail({ SSRData }) {
           options={pageSizeOption}
           rowKey="transactionId"
           total={total}
+          loading={loading}
           pageSize={pageSize}
           pageNum={currentPage}
           pageChange={pageChange}
