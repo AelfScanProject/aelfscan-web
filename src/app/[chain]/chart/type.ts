@@ -234,6 +234,9 @@ export interface ISupplyGrowthData {
     totalSupply: string;
     reward: string;
     burnt: string;
+    organizationUnlock: string;
+    mainChainBurnt: string;
+    sideChainBurnt: string;
   }>;
 }
 export interface IStakedData {
