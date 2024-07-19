@@ -124,7 +124,7 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
           return (
             <div key={searchType + pIdx} className="search-result-ul-wrap">
               <p className="search-result-ul-title">{searchType}</p>
-              {searchData.map((item: Partial, index: number) => (
+              {searchData.map((item: Partial<TSingle>, index: number) => (
                 <Item
                   key={`item${index}`}
                   searchType={searchType as TType}

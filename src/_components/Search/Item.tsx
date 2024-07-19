@@ -12,7 +12,7 @@ import { AddressType } from '@_types/common';
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
-const Item = ({ index, item, searchType }: { index: number; searchType: TType; item: Partial }) => {
+const Item = ({ index, item, searchType }: { index: number; searchType: TType; item: Partial<TSingle> }) => {
   const { state, dispatch } = useSearchContext();
   const { highLight } = state;
   const isHighlighted = highLight && index === highLight.idx;
