@@ -12,7 +12,7 @@ import { AddressType } from '@_types/common';
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
-const Item = ({ index, item, searchType }: { index: number; searchType: TType; item: Partial<TSingle> }) => {
+const Item = ({ index, item, searchType }: { index: number; searchType: TType; item: Partial }) => {
   const { state, dispatch } = useSearchContext();
   const { highLight } = state;
   const isHighlighted = highLight && index === highLight.idx;
@@ -36,12 +36,11 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     } else if (searchType === 'contracts') {
       return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}/${AddressType.Contract}`;
     } else if (searchType === 'accounts') {
-      `/${defaultChain}/address/${addressFormat((item as string) || '', defaultChain)}/${AddressType.address}`;
+      return `/${defaultChain}/address/${addressFormat((item as string) || '', defaultChain)}/${AddressType.address}`;
     }
 
     return '';
   }, [item, defaultChain, searchType]);
-
   function itemMouseDownHandler() {
     dispatch(selectItem(item));
     router.push(url);

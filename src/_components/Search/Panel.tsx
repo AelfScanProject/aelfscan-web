@@ -69,7 +69,7 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
     };
   }, [scrollHandler, allList]);
 
-  function tabMouseDownHandler(e: MouseEvent<HTMLElement>, idx: number) {
+  function tabMouseDownHandler(e: MouseEvent, idx: number) {
     e.preventDefault();
     panelRef.current?.removeEventListener('scroll', scrollHandler);
     setActiveTabIdx(idx);
@@ -124,7 +124,7 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
           return (
             <div key={searchType + pIdx} className="search-result-ul-wrap">
               <p className="search-result-ul-title">{searchType}</p>
-              {searchData.map((item: Partial<TSingle>, index: number) => (
+              {searchData.map((item: Partial, index: number) => (
                 <Item
                   key={`item${index}`}
                   searchType={searchType as TType}
