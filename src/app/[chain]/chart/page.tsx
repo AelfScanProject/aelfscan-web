@@ -10,6 +10,8 @@ import { useParams } from 'next/navigation';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
 import { useMemo } from 'react';
+import { AdTracker } from '@_utils/ad';
+import { Button } from 'aelf-design';
 
 const getChartData = (network, chain) => {
   const chainPath = chain !== 'AELF' ? `side/` : '';
@@ -171,17 +173,27 @@ export default function Page() {
   const chartData = useMemo(() => {
     return getChartData(isMainNet ? 'main' : 'testnet', chain);
   }, [chain, isMainNet]);
+
   return (
     <div className="mb-[-40px]">
       <div className="mb-6 border-b border-solid border-color-divider py-6 text-[20px] font-medium leading-[28px] text-base-100">
         aelf Charts & Statistics
       </div>
+      <Button
+        onClick={() => {
+          AdTracker.trackEvent('test-tracker', {
+            page: 'chart',
+          });
+        }}>
+        tracker test
+      </Button>
       <div className="charts-container flex">
         <div className="col-xl-2 col-lg-3 d-lg-block box-border hidden border-r border-solid border-color-divider pr-8">
           <div className="sticky top-[120px]">
             <Anchor targetOffset={200} items={items} />
           </div>
         </div>
+
         <div className="w-full min-[993px]:pl-8">
           {chartData.map((chartItem) => {
             return (
