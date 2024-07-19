@@ -67,7 +67,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
                       <EPTooltip title={ele.producerName} mode="dark" pointAtCenter={false}>
                         <Link
                           className="truncate"
-                          href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
+                          href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}/0`}>
                           {ele.producerName
                             ? ele.producerName
                             : `${addressFormat(hiddenAddress(ele.producerAddress || '', 4, 4), defaultChain)}`}
