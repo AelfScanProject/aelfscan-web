@@ -41,7 +41,7 @@ const getChartData = (network, chain) => {
         {
           title: 'TVL Chart',
           path: '/chart/tvl',
-          imgUrl: ChartSVG,
+          imgUrl: `/image/${network}/${chainPath}tvl.png?v0.0.3`,
         },
       ],
     },
