@@ -4,6 +4,7 @@ import { Anchor, Card } from 'antd';
 import Image from 'next/image';
 import './index.css';
 import ChartSVG from 'public/image/chart.svg';
+import ProduceImg from 'public/image/produce.png';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEnvContext } from 'next-runtime-env';
@@ -36,6 +37,11 @@ const getChartData = (network, chain) => {
           title: 'ELF Staked Chart',
           path: '/chart/staked',
           imgUrl: `/image/${network}/${chainPath}staked.png?v0.0.2`,
+        },
+        {
+          title: 'TVL Chart',
+          path: '/chart/tvl',
+          imgUrl: `/image/${network}/${chainPath}tvl.png?v0.0.3`,
         },
       ],
     },
@@ -112,7 +118,7 @@ const getChartData = (network, chain) => {
         {
           title: 'aelf Block Producers',
           path: '/chart/produce',
-          imgUrl: '/image/table-preview.png?v0.0.2',
+          imgUrl: ProduceImg,
         },
       ],
     },

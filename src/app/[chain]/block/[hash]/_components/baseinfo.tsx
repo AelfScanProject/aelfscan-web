@@ -7,36 +7,23 @@
  */
 
 import DetailContainer from '@_components/DetailContainer';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import ConfirmStatus from '@_components/ConfirmedStatus';
 import IconFont from '@_components/IconFont';
 import { addSymbol, divDecimals, formatDate } from '@_utils/formatter';
 import dayjs from 'dayjs';
 import Copy from '@_components/Copy';
-import { useRouter } from 'next/navigation';
-import JumpButton, { JumpTypes } from '@_components/JumpButton';
+import JumpButton from '@_components/JumpButton';
 import SizeBytes from '@_components/SizeBytes';
 import DollarCurrency from '@_components/DollarCurrency';
 import addressFormat from '@_utils/urlUtils';
 import { StatusEnum } from '@_types/status';
 import { useParams } from 'next/navigation';
-export default function BaseInfo({ data, tabChange }) {
-  const router = useRouter();
+export default function BaseInfo({ data, tabChange, jump }) {
   const { chain } = useParams();
   const isFirst = data?.preBlockHeight === 0;
   const isLast = data?.nextBlockHeight === 0;
-  const jump = useCallback(
-    (type: JumpTypes) => {
-      switch (type) {
-        case JumpTypes.Prev:
-          router.push(`/${data.chainId}/block/${data.preBlockHeight}`);
-          break;
-        case JumpTypes.Next:
-          router.push(`/${data.chainId}/block/${data.nextBlockHeight}`);
-      }
-    },
-    [data, router],
-  );
+
   const renderInfo = useMemo(() => {
     return [
       {

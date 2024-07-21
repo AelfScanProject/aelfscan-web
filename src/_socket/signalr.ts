@@ -14,6 +14,7 @@ const messageType: Array<string> = [
   'ReceiveBlockchainOverview',
   'ReceiveLatestBlocks',
   'ReceiveTransactionDataChart',
+  'ReceiveBpProduce',
 ];
 
 export default class SignalR {

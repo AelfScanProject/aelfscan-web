@@ -134,7 +134,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       },
       {
         label: 'AUTHOR',
-        value: (
+        value: author ? (
           <div className="flex items-center text-sm leading-[22px]">
             <ContractToken address={author} type={AddressType.address} showCopy={false} chainId={chain} />
             <span className="mx-1">at txn</span>
@@ -142,6 +142,8 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
               {contractTransactionHash && contractTransactionHash.slice(0, 15) + '....'}
             </span>
           </div>
+        ) : (
+          '-'
         ),
       },
     ];

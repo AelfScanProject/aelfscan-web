@@ -69,7 +69,7 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
     };
   }, [scrollHandler, allList]);
 
-  function tabMouseDownHandler(e: MouseEvent<HTMLElement>, idx: number) {
+  function tabMouseDownHandler(e: MouseEvent, idx: number) {
     e.preventDefault();
     panelRef.current?.removeEventListener('scroll', scrollHandler);
     setActiveTabIdx(idx);

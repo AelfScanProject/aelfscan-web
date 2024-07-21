@@ -1,13 +1,6 @@
-import { store } from '@_store';
 import AElf from 'aelf-sdk';
 
 const CONTRACT_PROTOS = {};
-
-export enum SupportedELFChainId {
-  MAIN_NET = 'AELF',
-  TDVV_NET = 'tDVV',
-  TDVW_NET = 'tDVW',
-}
 
 export function getAElf(rpcUrl: string) {
   return new AElf(new AElf.providers.HttpProvider(rpcUrl, 60000));
@@ -32,6 +25,7 @@ function decodeBase64(str) {
   util.base64.decode(str, buffer, 0);
   return buffer;
 }
+
 export async function deserializeLog(log, rpc) {
   const { Indexed = [], NonIndexed, Name, Address } = log;
   const proto = await getProto(Address, rpc);
@@ -82,3 +76,9 @@ export const getContractInstance = async (tokenContractAddress: string, rpcUrl: 
   const contract = await aelf.chain.contractAt(tokenContractAddress, wallet);
   return contract;
 };
+
+export enum SupportedELFChainId {
+  MAIN_NET = 'AELF',
+  TDVV_NET = 'tDVV',
+  TDVW_NET = 'tDVW',
+}

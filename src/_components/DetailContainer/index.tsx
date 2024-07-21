@@ -34,7 +34,7 @@ export default function DetailContainer({
             <div
               key={item.label}
               className={clsx(isMobile && !item.row ? 'flex flex-col' : 'row flex flex-wrap items-start', 'py-3')}>
-              <div className={clsx('label mr-4 flex max-w-[312px] items-center', isMobile && 'mb-2')}>
+              <div className={clsx('label mr-4 flex !max-w-[312px] items-center', isMobile && 'mb-2')}>
                 {item.tip && (
                   <Tooltip title={item.tip}>
                     <IconFont className="text-sm" style={{ marginRight: '4px' }} type="question-circle-blod" />

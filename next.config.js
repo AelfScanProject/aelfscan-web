@@ -6,6 +6,11 @@
  * @Description: next config
  */
 /** @type {import('next').NextConfig} */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withPlugins = require('next-compose-plugins');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pluginConfig = require('./build.config/plugin');
+
 const nextConfig = {
   compiler: {
     // to solve the problem: https://github.com/vercel/next.js/discussions/60150
@@ -27,18 +32,18 @@ const nextConfig = {
             destination: '/',
             // permanent: false,
           },
-          // {
-          //   source: '/api/:path*',
-          //   destination: 'https://aelfscan.io/api/:path*',
-          //   // permanent: false,
-          //   // basePath: false,
-          // },
           {
             source: '/api/:path*',
-            destination: 'https://testnet.aelfscan.io/api/:path*',
+            destination: 'https://aelfscan.io/api/:path*',
             // permanent: false,
             // basePath: false,
           },
+          // {
+          //   source: '/api/:path*',
+          //   destination: 'https://testnet.aelfscan.io/api/:path*',
+          //   // permanent: false,
+          //   // basePath: false,
+          // },
           {
             source: '/chain/:path*',
             destination: 'http://localhost:3001/chain/:path*',
@@ -87,4 +92,5 @@ const nextConfig = {
   output: 'standalone',
 };
 
-module.exports = nextConfig;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+module.exports = withPlugins(pluginConfig, nextConfig);

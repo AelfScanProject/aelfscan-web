@@ -5,6 +5,7 @@ import Highcharts from 'highcharts/highstock';
 import HighchartsExporting from 'highcharts/modules/exporting';
 import HighchartsFullscreen from 'highcharts/modules/full-screen';
 import HighchartsReact, { HighchartsReactRefObject } from 'highcharts-react-official';
+import HighchartsMore from 'highcharts/highcharts-more';
 import '../index.css';
 import Highlight from '../_components/highlight';
 import { IHIGHLIGHTDataItem } from '../type';
@@ -15,18 +16,20 @@ import { MouseEventHandler, forwardRef } from 'react';
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts);
   HighchartsFullscreen(Highcharts);
+  HighchartsMore(Highcharts);
 }
 
 export interface IHightChartsOption {
   title: string;
   aboutTitle: string;
+  hiddenDownload?: boolean;
   options: Highcharts.Options;
-  download: MouseEventHandler<HTMLSpanElement>;
+  download: MouseEventHandler;
   highlightData: IHIGHLIGHTDataItem[];
 }
 
 function BaseHightCharts(props: IHightChartsOption, ref) {
-  const { title, aboutTitle, options, highlightData, download } = props;
+  const { title, aboutTitle, options, highlightData, download, hiddenDownload } = props;
 
   return (
     <div>
@@ -43,7 +46,7 @@ function BaseHightCharts(props: IHightChartsOption, ref) {
               options={options}
             />
           </Card>
-          <Download download={download} />
+          {!hiddenDownload && <Download download={download} />}
         </div>
         <Highlight title={aboutTitle} highlightData={highlightData} />
       </div>
