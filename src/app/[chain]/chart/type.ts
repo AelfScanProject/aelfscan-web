@@ -345,4 +345,4 @@ export interface ITVLData {
   list: Array<ITVLDataItem>;
 }
 
-export const ChartColors = ['#266CD3', '#92c5cb', '#70a668', '#ebc463'];
+export const ChartColors = ['#266CD3', '#954CF1', '#EEB420', '#0EAF58'];
