@@ -38,6 +38,12 @@ const nextConfig = {
             // permanent: false,
             // basePath: false,
           },
+          {
+            source: '/v1/traces/:path*',
+            destination: 'http://localhost:4316/v1/traces',
+            // permanent: false,
+            // basePath: false,
+          },
           // {
           //   source: '/api/:path*',
           //   destination: 'https://testnet.aelfscan.io/api/:path*',
