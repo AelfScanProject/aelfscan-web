@@ -55,6 +55,7 @@
     "next-headers": "^0.0.5",
     "next-redux-wrapper": "^8.1.0",
     "next-runtime-env": "^2.0.1",
+    "opentelemetry-launcher": "^0.0.3",
     "papaparse": "^5.4.1",
     "qrcode.react": "^3.1.0",
     "rc-menu": "^9.11.1",

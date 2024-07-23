@@ -19,6 +19,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import useResponsive from '@_hooks/useResponsive';
 import WebLoginProvider from './webLoginProvider';
 import dynamic from 'next/dynamic';
+import { OpentelemetryProvider } from './opentelemetryProvider';
 
 const MobileContext = createContext<any>({});
 
@@ -54,7 +55,9 @@ function RootProvider({ children, isMobileSSR, config }) {
         <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config }}>
           <ReduxProvider store={storeRef.current}>
             <WebLoginProvider config={config}>
-              <div className="flex min-h-screen flex-col justify-between">{children}</div>
+              <OpentelemetryProvider config={config}>
+                <div className="flex min-h-screen flex-col justify-between">{children}</div>
+              </OpentelemetryProvider>
             </WebLoginProvider>
           </ReduxProvider>
         </MobileContext.Provider>
