@@ -116,7 +116,7 @@ export default function List({ showHeader = true }) {
 
   return (
     <div>
-      {showHeader && <HeadTitle content="Transactions"></HeadTitle>}
+      {showHeader && <HeadTitle content="Transactions" adPage="nfttransfers"></HeadTitle>}
       <Table
         headerTitle={{
           single: {

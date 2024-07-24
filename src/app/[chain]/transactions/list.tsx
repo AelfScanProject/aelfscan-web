@@ -94,7 +94,7 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
 
   return (
     <div>
-      {showHeader && <HeadTitle content="Transactions"></HeadTitle>}
+      {showHeader && <HeadTitle content="Transactions" adPage="transactions"></HeadTitle>}
       <Table
         headerTitle={{
           multi: {

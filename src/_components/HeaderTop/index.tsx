@@ -36,7 +36,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   const isMobile = usePad();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const pathname = usePathname();
-  const isHideSearch = pathname === '/' || pathname.includes('search-');
+  const isHideSearch = ['/', '/tDVW', 'tDVV'].includes(pathname) || pathname.includes('search-');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const items: MenuProps['items'] = useMemo(() => {
     return networkList.map((item) => {
@@ -67,7 +67,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   return (
     <div className={clsx(clsPrefix, isMainNet && `${clsPrefix}-main`, isMobile && `${clsPrefix}-mobile`)}>
       {!isHideSearch && isMobile && (
-        <div className={clsx(!isMainNet && `${clsPrefix}-search-test`, `${clsPrefix}-search`)}>
+        <div className={clsx(!isMainNet && `${clsPrefix}-search-test`, `${clsPrefix}-search`, 'flex justify-center')}>
           <Search
             searchIcon={true}
             searchButton={false}
@@ -75,7 +75,6 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
             searchWrapClassNames={clsx(
               'px-3',
               'py-2',
-              'max-w-[509px]',
               'rounded',
               isMainNet ? 'border-[#3A4668] bg-transparent' : 'rounded border-D0 bg-F7',
             )}
@@ -109,18 +108,37 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
             </div>
           )}
 
-          <Dropdown trigger={['click']} overlayClassName="network-drop w-[180px]" menu={{ items }}>
-            <div className={clsx(`${clsPrefix}-right`)}>
-              <div className={clsx(`${clsPrefix}-explorer-change`)}>
-                <Image
-                  className={`${clsPrefix}-change-icon`}
-                  width="16"
-                  height="16"
-                  src={`${isMainNet ? ChangeIconMain : ChangeIcoTest}`}
-                  alt={'explorer-change-icon'}></Image>
+          <div className="flex items-center">
+            {!isHideSearch && !isMobile && (
+              <Search
+                searchIcon={true}
+                searchButton={false}
+                enterIcon={true}
+                searchWrapClassNames={clsx(
+                  'px-3',
+                  'py-2',
+                  '!w-[500px]',
+                  'rounded',
+                  isMainNet ? 'border-[#3A4668] bg-transparent' : 'rounded border-D0 bg-F7',
+                )}
+                searchInputClassNames={clsx('!pl-0', isMainNet && '!text-white placeholder:!text-white')}
+                placeholder={'Search by Address / Txn Hash / Block'}
+                lightMode={!isMainNet}
+              />
+            )}
+            <Dropdown trigger={['click']} overlayClassName="network-drop w-[180px]" menu={{ items }}>
+              <div className={clsx(`${clsPrefix}-right`)}>
+                <div className={clsx(`${clsPrefix}-explorer-change`)}>
+                  <Image
+                    className={`${clsPrefix}-change-icon`}
+                    width="16"
+                    height="16"
+                    src={`${isMainNet ? ChangeIconMain : ChangeIcoTest}`}
+                    alt={'explorer-change-icon'}></Image>
+                </div>
               </div>
-            </div>
-          </Dropdown>
+            </Dropdown>
+          </div>
         </>
         {isMobile && (
           <MobileHeaderMenu

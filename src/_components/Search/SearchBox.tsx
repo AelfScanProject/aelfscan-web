@@ -25,6 +25,7 @@ import addressFormat from '@_utils/urlUtils';
 import { AddressType } from '@_types/common';
 import { getAddress } from '@_utils/formatter';
 import { Spin } from 'antd';
+import { AdTracker } from '@_utils/ad';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -149,6 +150,7 @@ const Search = ({
             setHasFocus(true);
           }}
           onBlur={() => {
+            AdTracker.trackEvent('search-blur');
             setHasFocus(false);
           }}
           onChange={(e) => {

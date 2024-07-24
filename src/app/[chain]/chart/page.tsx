@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import { AdTracker } from '@_utils/ad';
 import { Button } from 'aelf-design';
 import { useMobileContext } from '@app/pageProvider';
+import PageAd from '@_components/PageAd';
 
 const ChartData = [
   {
@@ -171,6 +172,7 @@ export default function Page() {
       <div className="mb-6 border-b border-solid border-color-divider py-6 text-[20px] font-medium leading-[28px] text-base-100">
         aelf Charts & Statistics
       </div>
+      <PageAd hiddenBorder adPage="chart" />
       {/* <Button
         onClick={() => {
           AdTracker.trackEvent('test-tracker', {

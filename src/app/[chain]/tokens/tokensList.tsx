@@ -81,7 +81,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
 
   return (
     <div>
-      <HeadTitle content="Tokens" />
+      <HeadTitle content="Tokens" adPage="tokens" />
       <Table
         headerTitle={{
           single: {
