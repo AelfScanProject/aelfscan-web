@@ -32,24 +32,18 @@ const nextConfig = {
             destination: '/',
             // permanent: false,
           },
-          {
-            source: '/api/:path*',
-            destination: 'https://aelfscan.io/api/:path*',
-            // permanent: false,
-            // basePath: false,
-          },
-          {
-            source: '/v1/traces/:path*',
-            destination: 'http://localhost:4316/v1/traces',
-            // permanent: false,
-            // basePath: false,
-          },
           // {
           //   source: '/api/:path*',
-          //   destination: 'https://testnet.aelfscan.io/api/:path*',
+          //   destination: 'https://aelfscan.io/api/:path*',
           //   // permanent: false,
           //   // basePath: false,
           // },
+          {
+            source: '/api/:path*',
+            destination: 'https://testnet.aelfscan.io/api/:path*',
+            // permanent: false,
+            // basePath: false,
+          },
           {
             source: '/chain/:path*',
             destination: 'http://localhost:3001/chain/:path*',

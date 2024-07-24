@@ -123,7 +123,7 @@ export default function NFTDetails(props) {
         topSearchProps: topSearchProps,
         search: searchVal
       });
-    } else if (key === TabKey.balances) {
+    } else if (key === TabKey.holders) {
       children = /*#__PURE__*/React.createElement(HoldersTable, {
         topSearchProps: topSearchProps,
         search: searchVal
