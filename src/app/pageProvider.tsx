@@ -28,7 +28,7 @@ const useMobileContext = () => {
 };
 export { useMobileContext };
 
-function RootProvider({ children, isMobileSSR, config }) {
+function RootProvider({ children, isMobileSSR, config, chartImg }) {
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = makeStore();
@@ -52,7 +52,7 @@ function RootProvider({ children, isMobileSSR, config }) {
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
       <ConfigProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
-        <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config }}>
+        <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config, chartImg }}>
           <ReduxProvider store={storeRef.current}>
             <WebLoginProvider config={config}>
               <OpentelemetryProvider config={config}>
