@@ -1,12 +1,10 @@
 'use client';
 
-import { Anchor, Card } from 'antd';
-import Image from 'next/image';
+import { Anchor, Card, Skeleton } from 'antd';
+import { Image } from 'antd';
 import './index.css';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEnvContext } from 'next-runtime-env';
-import { checkMainNet } from '@_utils/isMainNet';
 import { useMemo } from 'react';
 import { AdTracker } from '@_utils/ad';
 import { Button } from 'aelf-design';
@@ -161,19 +159,12 @@ const items = [
     title: 'Contracts Data',
   },
 ];
-
 export default function Page() {
-  const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
-  const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
-
   const { chartImg } = useMobileContext();
   const { chain } = useParams();
   const chainType = useMemo(() => {
     return chain === 'AELF' ? 'mainChain' : 'sideChain';
   }, [chain]);
-  const net = useMemo(() => {
-    return isMainNet ? 'mainnet' : 'testnet';
-  }, [isMainNet]);
 
   return (
     <div className="mb-[-40px]">
@@ -207,12 +198,12 @@ export default function Page() {
                         <Link href={`/${chain}${chart.path}`}>
                           <Card className="h-full">
                             <div className="mb-4 text-sm leading-[22px] text-base-100">{chart.title}</div>
-                            <Image
+                            <img
                               width={316}
                               height={106}
                               className="mx-auto block h-auto max-w-full"
-                              src={chartImg[net][chainType][chart.key]}
-                              alt="charts"></Image>
+                              src={chartImg[chainType][chart.key]}
+                              alt="charts"></img>
                           </Card>
                         </Link>
                       </li>
