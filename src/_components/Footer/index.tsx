@@ -40,7 +40,7 @@ export default function Footer({ footerMenuList }: IProps) {
     });
     return (
       <div className={item.key} key={item.key}>
-        <span className="title" onClick={() => window.open(item.path, '_blank')} key={item.label}>
+        <span className="title" onClick={() => window.open(item.path, '_blank')}>
           {item.label}
         </span>
         {subItem}

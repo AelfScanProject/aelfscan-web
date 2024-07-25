@@ -66,7 +66,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
 
   return (
     <div>
-      <HeadTitle content="Contracts"></HeadTitle>
+      <HeadTitle content="Contracts" adPage="contracts"></HeadTitle>
       <Table
         headerTitle={{
           multi: {

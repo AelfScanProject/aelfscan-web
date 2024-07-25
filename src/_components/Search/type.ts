@@ -1,3 +1,5 @@
+import { ReactNode, PropsWithChildren } from 'react';
+
 /*
  * @Author: aelf-lxy
  * @Date: 2023-08-09 11:15:16
@@ -77,7 +79,9 @@ export type TSearchValidator = Array<TValidator>;
 
 export type TSearchPanelProps = {
   id: string;
+  loading: boolean;
   searchHandler: () => void;
+  children?: ReactNode;
 };
 
 export type TSearchState = {
@@ -111,6 +115,7 @@ export interface ISearchProps {
   onSearchButtonClickHandler?: (query: string) => void;
   searchButton?: boolean;
   enterIcon?: boolean;
+  label: string;
   deleteIcon?: boolean;
   searchWrapClassNames?: string;
   searchInputClassNames?: string;

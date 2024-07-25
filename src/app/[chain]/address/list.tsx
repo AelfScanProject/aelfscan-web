@@ -75,7 +75,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
 
   return (
     <div>
-      <HeadTitle content="Top Accounts by ELF Balance"></HeadTitle>
+      <HeadTitle content="Top Accounts by ELF Balance" adPage="topaccount"></HeadTitle>
       <Table
         headerTitle={{
           multi: {
