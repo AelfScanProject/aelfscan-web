@@ -519,3 +519,13 @@ export interface ItemSymbolDetailOverview {
   properties: PropertyItem[];
   description: string;
 }
+
+export interface IPageAdsDetail {
+  adsId: string;
+  head: string;
+  logo: string;
+  adsText: string;
+  clickText: string;
+  clickLink: string;
+  label: string;
+}

@@ -7,7 +7,7 @@
  */
 'use client';
 // import request from '@_api';
-import { useState, useRef, MouseEvent, memo, isValidElement, useMemo } from 'react';
+import { useState, useRef, MouseEvent, memo, isValidElement, useMemo, useEffect, useCallback } from 'react';
 import clsx from 'clsx';
 import Panel from './Panel';
 import SearchSelect from './Select';
@@ -18,14 +18,16 @@ import { setQuery, setClear } from './action';
 import { Button } from 'aelf-design';
 import IconFont from '@_components/IconFont';
 import { useAppSelector } from '@_store';
-import { TChainID } from '@_api/type';
-import { fetchSearchData } from '@_api/fetchSearch';
+import { IPageAdsDetail, TChainID } from '@_api/type';
+import { fetchAdsDetail, fetchSearchData } from '@_api/fetchSearch';
 import { useRouter } from 'next/navigation';
 import addressFormat from '@_utils/urlUtils';
 import { AddressType } from '@_types/common';
 import { getAddress } from '@_utils/formatter';
 import { Spin } from 'antd';
 import { AdTracker } from '@_utils/ad';
+import dayjs from 'dayjs';
+import Image from 'next/image';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -39,6 +41,7 @@ const Search = ({
   searchIcon,
   enterIcon,
   deleteIcon,
+  label,
   searchWrapClassNames,
   searchInputClassNames,
 }: ISearchProps) => {
@@ -52,10 +55,31 @@ const Search = ({
   // DOM references
   const queryInput = useRef<HTMLInputElement>(null);
   const { dataWithOrderIdx } = queryResultData;
+
+  const [adsDetail, setAdsDetail] = useState<IPageAdsDetail>();
   // Calculated states
   const isExpanded = useMemo(() => {
-    return hasFocus && canShowListBox && dataWithOrderIdx && !dataWithOrderIdx?.transaction && !dataWithOrderIdx?.block;
-  }, [canShowListBox, dataWithOrderIdx, hasFocus]);
+    if (adsDetail) {
+      return hasFocus;
+    } else {
+      return (
+        hasFocus &&
+        query &&
+        canShowListBox &&
+        dataWithOrderIdx &&
+        !dataWithOrderIdx?.transaction &&
+        !dataWithOrderIdx?.block
+      );
+    }
+  }, [adsDetail, canShowListBox, dataWithOrderIdx, hasFocus, query]);
+
+  console.log(isExpanded, 'isExpanded');
+
+  useEffect(() => {
+    fetchAdsDetail({ label: label }).then((res) => {
+      setAdsDetail(res);
+    });
+  }, [label]);
 
   const hasClearButton = !!query && deleteIcon;
   const hasEnterButton = !!query && enterIcon;
@@ -109,8 +133,6 @@ const Search = ({
         router.push(`/${defaultChain}/search/${query.trim()}`);
       }
     }
-
-    // onSearchButtonClickHandler && onSearchButtonClickHandler(queryInput.current!.value);
   };
 
   function renderButton() {
@@ -130,6 +152,29 @@ const Search = ({
       />
     );
   }
+
+  const handleJump = useCallback(
+    (e: MouseEvent<HTMLElement>) => {
+      console.log('link');
+      AdTracker.trackEvent('ads-click', {
+        date: dayjs(new Date()).format('YYYY-MM-DD'),
+        pageName: label,
+        adsId: adsDetail?.adsId,
+        adsName: adsDetail?.adsText,
+      });
+      AdTracker.trackEvent('ads-exposure', {
+        date: dayjs(new Date()).format('YYYY-MM-DD'),
+        pageName: label,
+        adsId: adsDetail?.adsId,
+        adsName: adsDetail?.adsText,
+      });
+      window.open(adsDetail?.clickLink);
+      e.preventDefault();
+      e.stopPropagation();
+    },
+
+    [adsDetail, label],
+  );
 
   return (
     <div
@@ -174,7 +219,34 @@ const Search = ({
         )}
       </div>
       {renderButton()}
-      {isExpanded && <Panel id={randomId()} searchHandler={onSearchHandler} />}
+      {isExpanded && (
+        <Panel id={randomId()} loading={loading} searchHandler={onSearchHandler}>
+          {adsDetail?.adsId && (
+            <div className={`flex border-b border-solid border-color-divider p-4`}>
+              <div className="text-sm font-medium leading-[22px] text-base-100">
+                <Image
+                  src={adsDetail.logo}
+                  width={24}
+                  height={24}
+                  className="mr-2 inline-block size-6 rounded-full"
+                  alt=""
+                />
+                <a
+                  className="mr-2 text-sm font-medium leading-[22px] !text-base-100"
+                  href={adsDetail.clickLink}
+                  target="_blank"
+                  onMouseDown={handleJump}
+                  rel="noreferrer">
+                  {adsDetail.adsText}
+                </a>
+                <span className="inline-block rounded bg-ECEEF2 px-2 text-xs  font-medium leading-5 text-base-100">
+                  Sponsored
+                </span>
+              </div>
+            </div>
+          )}
+        </Panel>
+      )}
     </div>
   );
 };

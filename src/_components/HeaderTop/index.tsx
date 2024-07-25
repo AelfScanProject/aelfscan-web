@@ -72,6 +72,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
             searchIcon={true}
             searchButton={false}
             enterIcon={true}
+            label="otherSearch"
             searchWrapClassNames={clsx(
               'px-3',
               'py-2',
@@ -114,10 +115,11 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
                 searchIcon={true}
                 searchButton={false}
                 enterIcon={true}
+                label="otherSearch"
                 searchWrapClassNames={clsx(
                   'px-3',
                   'py-2',
-                  '!w-[500px]',
+                  '!w-[550px]',
                   'rounded',
                   isMainNet ? 'border-[#3A4668] bg-transparent' : 'rounded border-D0 bg-F7',
                 )}
