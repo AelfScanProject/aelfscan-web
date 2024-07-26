@@ -183,13 +183,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The aelf Deployed Contracts Chart shows  total number of contracts deployed on the aelf network."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The aelf Deployed Contracts Chart shows  total number of contracts deployed on the aelf network."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

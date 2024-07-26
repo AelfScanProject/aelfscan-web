@@ -202,13 +202,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The aelf Block Production Rate Chart shows the daily block production rate of the aelf network"
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The aelf Block Production Rate Chart shows the daily block production rate of the aelf network"
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

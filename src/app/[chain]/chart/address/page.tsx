@@ -191,13 +191,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The chart shows the total distinct numbers of address on the aelf blockchain and the increase in the number of address daily"
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The chart shows the total distinct numbers of address on the aelf blockchain and the increase in the number of address daily"
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

@@ -159,13 +159,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The ELF Daily Price (USD) chart shows the daily historical price for ELF in USD."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The ELF Daily Price (USD) chart shows the daily historical price for ELF in USD."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

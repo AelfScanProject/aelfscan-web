@@ -211,13 +211,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The TVL chart shows the total value of crypto assets locked in various protocols on aelf, including the aelf protocol itself and DeFi protocols on aelf."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The TVL chart shows the total value of crypto assets locked in various protocols on aelf, including the aelf protocol itself and DeFi protocols on aelf."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

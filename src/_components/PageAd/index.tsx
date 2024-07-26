@@ -2,14 +2,15 @@ import Image from 'next/image';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { AdTracker } from '@_utils/ad';
 import dayjs from 'dayjs';
-import { useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { fetchAdsDetail } from '@_api/fetchSearch';
 import { IPageAdsDetail } from '@_api/type';
 export interface IAdProps {
   adPage: string;
   hiddenBorder?: boolean;
 }
-export default function PageAd(props: IAdProps) {
+
+function PageAd(props: IAdProps) {
   const { adPage } = props;
   const isMobile = useMobileAll();
   const [adsDetail, setAdsDetail] = useState<IPageAdsDetail>();
@@ -36,7 +37,7 @@ export default function PageAd(props: IAdProps) {
   return (
     adsDetail?.adsId && (
       <div
-        className={`${props.hiddenBorder && '!border-none pt-0'} ${isMobile && '!pb-4'} flex border-t border-solid border-color-divider pb-6 pt-4`}>
+        className={`${props.hiddenBorder && '!border-none !pt-0'} ${isMobile && '!pb-4'} flex border-t border-solid border-color-divider pb-6 pt-4`}>
         <div className="text-sm font-medium leading-[22px] text-base-200">
           <span className="text-sm font-medium leading-[22px] text-base-200">Sponsored:</span>
           <Image src={adsDetail.logo} width={24} height={24} className="mx-2 inline-block size-6 rounded-full" alt="" />
@@ -54,3 +55,5 @@ export default function PageAd(props: IAdProps) {
     )
   );
 }
+
+export default memo(PageAd);
