@@ -193,14 +193,16 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The chart highlights the total number of transactions on the aelf blockchain with daily individual breakdown
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The chart highlights the total number of transactions on the aelf blockchain with daily individual breakdown
     for total block"
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

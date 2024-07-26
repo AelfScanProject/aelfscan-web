@@ -272,15 +272,17 @@ export default function Page() {
     <PageLoadingSkeleton />
   ) : (
     <div>
-      <BaseHightCharts
-        ref={chartRef}
-        title={title}
-        hiddenDownload
-        aboutTitle="The Block Production chart shows the block distribution of BP, who are obliged to verify transactions and produce blocks. BPs are elected every 7 days."
-        highlightData={highlightData}
-        options={options}
-        download={download}
-      />
+      {produces && (
+        <BaseHightCharts
+          ref={chartRef}
+          title={title}
+          hiddenDownload
+          aboutTitle="The Block Production chart shows the block distribution of BP, who are obliged to verify transactions and produce blocks. BPs are elected every 7 days."
+          highlightData={highlightData}
+          options={options}
+          download={download}
+        />
+      )}
       <div>
         <List />
       </div>

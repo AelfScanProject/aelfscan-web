@@ -188,13 +188,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      title={title}
-      ref={chartRef}
-      aboutTitle="The chart shows the daily average amount in USD spent per transaction on the aelf network."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        title={title}
+        ref={chartRef}
+        aboutTitle="The chart shows the daily average amount in USD spent per transaction on the aelf network."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

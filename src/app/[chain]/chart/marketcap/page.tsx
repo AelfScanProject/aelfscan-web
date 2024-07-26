@@ -178,13 +178,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The Ether Market Capitalization chart shows the historical breakdown of Ether daily market capitalization and average price "
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The Ether Market Capitalization chart shows the historical breakdown of Ether daily market capitalization and average price "
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

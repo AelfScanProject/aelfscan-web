@@ -163,13 +163,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The aelf Block Count and Rewards Chart shows the historical number of blocks produced daily on the aelf network and the total block reward."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The aelf Block Count and Rewards Chart shows the historical number of blocks produced daily on the aelf network and the total block reward."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

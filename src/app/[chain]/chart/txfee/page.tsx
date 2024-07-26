@@ -189,13 +189,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The aelf Daily Tx fee Chart shows the historical total daily ELF Tx fee of the aelf network."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The aelf Daily Tx fee Chart shows the historical total daily ELF Tx fee of the aelf network."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

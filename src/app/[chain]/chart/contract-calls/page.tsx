@@ -194,14 +194,16 @@ export default function Page() {
     <PageLoadingSkeleton />
   ) : (
     <div>
-      <BaseHightCharts
-        ref={chartRef}
-        title={title}
-        aboutTitle="The Contract Calls chart shows the number of daily contract calls on aelf."
-        highlightData={highlightData}
-        options={options}
-        download={download}
-      />
+      {data && (
+        <BaseHightCharts
+          ref={chartRef}
+          title={title}
+          aboutTitle="The Contract Calls chart shows the number of daily contract calls on aelf."
+          highlightData={highlightData}
+          options={options}
+          download={download}
+        />
+      )}
       <TopContract />
     </div>
   );

@@ -183,13 +183,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The ELF Supply Growth Chart shows a breakdown of daily block reward and burnt fees to arrive at the total daily ELF supply."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The ELF Supply Growth Chart shows a breakdown of daily block reward and burnt fees to arrive at the total daily ELF supply."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }
