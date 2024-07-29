@@ -9,6 +9,7 @@ export default function SearchComp({ isMobile }: { isMobile: boolean }) {
     <Search
       searchIcon={false}
       searchButton={true}
+      label="homeSearch"
       searchValidator={isMobile ? undefined : homeFilters}
       placeholder={'Search by Address / Txn Hash / Block'}
       isMobile={isMobile}

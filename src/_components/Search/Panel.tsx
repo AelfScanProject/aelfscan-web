@@ -9,7 +9,8 @@ import { TSearchPanelProps, TSingle, TType } from './type';
 import { useKeyEvent } from '@_hooks/useSearch';
 import { useThrottleFn } from 'ahooks';
 import IconFont from '@_components/IconFont';
-function Panel({ id, searchHandler }: TSearchPanelProps) {
+import { Spin } from 'antd';
+function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
   // Global state from context
   const { state } = useSearchContext();
   const { query, queryResultData } = state;
@@ -87,82 +88,90 @@ function Panel({ id, searchHandler }: TSearchPanelProps) {
     return Object.entries(dataWithOrderIdx).filter(([filterType, list]) => list && Array.isArray(list));
   }, [dataWithOrderIdx]);
 
-  if (!query) {
-    return null;
-  }
+  // if (!query) {
+  //   return null;
+  // }
 
-  if (allList.length === 0) {
+  if (allList.length === 0 && !loading) {
     return (
       <div className="search-result-panel">
-        <div className="search-result-empty">
-          <IconFont type="result-empty" className="mr-1 size-3" />
-          <span>Sorry, search not found.</span>
-        </div>
+        <div>{children}</div>
+        {query && (
+          <div className="search-result-empty">
+            <IconFont type="result-empty" className="mr-1 size-3" />
+            <span>Sorry, search not found.</span>
+          </div>
+        )}
       </div>
     );
   }
 
   return (
     <div id={id} className="search-result-panel">
-      <div className="border-b border-color-divider">
-        <div className="flex gap-2 p-4">
-          {previewData.map(([searchType, list], idx) => {
-            return (
-              <div
-                className={clsx('search-result-panel-anchor', activeTabIdx === idx && 'selected')}
-                key={searchType + idx}
-                onMouseDown={(e) => tabMouseDownHandler(e, idx)}>
-                <span>{searchType}</span>
-                <span>{`(${list?.length})`}</span>
+      <div>{children}</div>
+      {query && (
+        <Spin spinning={loading}>
+          <div className="border-b border-color-divider">
+            <div className="flex gap-2 p-4">
+              {previewData.map(([searchType, list], idx) => {
+                return (
+                  <div
+                    className={clsx('search-result-panel-anchor', activeTabIdx === idx && 'selected')}
+                    key={searchType + idx}
+                    onMouseDown={(e) => tabMouseDownHandler(e, idx)}>
+                    <span>{searchType}</span>
+                    <span>{`(${list?.length})`}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <ul className="search-result-ul" ref={panelRef}>
+            {previewData.map(([searchType, searchData]: [string, any], pIdx: number) => {
+              return (
+                <div key={searchType + pIdx} className="search-result-ul-wrap">
+                  <p className="search-result-ul-title">{searchType}</p>
+                  {searchData.map((item: Partial<TSingle>, index: number) => (
+                    <Item
+                      key={`item${index}`}
+                      searchType={searchType as TType}
+                      index={item.sortIdx as number}
+                      item={item}
+                    />
+                  ))}
+                </div>
+              );
+            })}
+          </ul>
+          <div className="search-result-bottom">
+            <div className="flex gap-4">
+              <div className="search-result-bottom-button-wrap">
+                <div className="search-result-bottom-button">
+                  <IconFont className="size-3" type="Down" />
+                </div>
+                <div className="search-result-bottom-button">
+                  <IconFont className="size-3" type="Up" />
+                </div>
+                <span>Navigator</span>
               </div>
-            );
-          })}
-        </div>
-      </div>
-      <ul className="search-result-ul" ref={panelRef}>
-        {previewData.map(([searchType, searchData]: [string, any], pIdx: number) => {
-          return (
-            <div key={searchType + pIdx} className="search-result-ul-wrap">
-              <p className="search-result-ul-title">{searchType}</p>
-              {searchData.map((item: Partial<TSingle>, index: number) => (
-                <Item
-                  key={`item${index}`}
-                  searchType={searchType as TType}
-                  index={item.sortIdx as number}
-                  item={item}
-                />
-              ))}
+              <div className="search-result-bottom-button-wrap">
+                <div className="search-result-bottom-button !w-9">
+                  <span>Esc</span>
+                </div>
+                <span>Close</span>
+              </div>
             </div>
-          );
-        })}
-      </ul>
-      <div className="search-result-bottom">
-        <div className="flex gap-4">
-          <div className="search-result-bottom-button-wrap">
-            <div className="search-result-bottom-button">
-              <IconFont className="size-3" type="Down" />
+            <div>
+              <div className="search-result-bottom-button-wrap">
+                <div className="search-result-bottom-button !w-9">
+                  <IconFont className="size-3" type="Union" />
+                </div>
+                <span>Enter</span>
+              </div>
             </div>
-            <div className="search-result-bottom-button">
-              <IconFont className="size-3" type="Up" />
-            </div>
-            <span>Navigator</span>
           </div>
-          <div className="search-result-bottom-button-wrap">
-            <div className="search-result-bottom-button !w-9">
-              <span>Esc</span>
-            </div>
-            <span>Close</span>
-          </div>
-        </div>
-        <div>
-          <div className="search-result-bottom-button-wrap">
-            <div className="search-result-bottom-button !w-9">
-              <IconFont className="size-3" type="Union" />
-            </div>
-            <span>Enter</span>
-          </div>
-        </div>
-      </div>
+        </Spin>
+      )}
     </div>
   );
 }

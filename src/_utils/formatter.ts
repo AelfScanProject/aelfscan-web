@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { SYMBOL } from '@_utils/contant';
+import { v4 as uuidv4 } from 'uuid';
 import { PageTypeEnum } from '@_types';
 dayjs.extend(utc);
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss Z') => {
@@ -145,4 +146,13 @@ export function getSecondHashValue(url) {
   const hash = urlObj.hash.slice(1);
   const hashParts = hash.split('#');
   return hashParts[1];
+}
+
+export function getOrCreateUserId() {
+  let userId = localStorage.getItem('userId') || '';
+  if (!userId) {
+    userId = uuidv4();
+    localStorage.setItem('userId', userId);
+  }
+  return userId;
 }

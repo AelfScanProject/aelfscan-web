@@ -189,13 +189,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The ELF Holders chart shows the trend of total accounts holding ELF on aelf."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The ELF Holders chart shows the trend of total accounts holding ELF on aelf."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

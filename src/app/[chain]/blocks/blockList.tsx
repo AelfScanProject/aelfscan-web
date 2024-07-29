@@ -105,7 +105,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
 
   return (
     <div>
-      <HeadTitle content="Blocks"></HeadTitle>
+      <HeadTitle content="Blocks" adPage="blocks"></HeadTitle>
       <Spin spinning={loading}>
         <Table
           headerTitle={{

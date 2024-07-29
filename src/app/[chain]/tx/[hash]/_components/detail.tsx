@@ -68,7 +68,9 @@ export default function Detail({ SSRData }: { SSRData: ITransactionDetailData })
 
   return (
     <div className="tx-detail-container">
-      <HeadTitle content="Transactions">{/* <JumpButton isFirst={isFirst} isLast={isLast} jump={jump} /> */}</HeadTitle>
+      <HeadTitle content="Transactions" adPage="txndetail">
+        {/* <JumpButton isFirst={isFirst} isLast={isLast} jump={jump} /> */}
+      </HeadTitle>
       <div className="detail-table">
         <EPTabs items={items} />
       </div>

@@ -43,7 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // const { price, previousPrice } = data;
   const headersList = headers();
   const isMobile = isMobileOnServer(headersList);
-  const { headerMenuList, footerMenuList, chainList, networkList, config } = await fetchCMS();
+  const { headerMenuList, footerMenuList, chainList, networkList, config, chartImg } = await fetchCMS();
   return (
     <html lang="en">
       <Script
@@ -69,7 +69,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="relative box-border min-h-screen bg-global-grey">
           <PublicEnvProvider>
             <StyleRegistry>
-              <RootProvider isMobileSSR={isMobile} config={config}>
+              <RootProvider isMobileSSR={isMobile} config={config} chartImg={chartImg}>
                 <Suspense>
                   <Header chainList={chainList} networkList={networkList} headerMenuList={headerMenuList} />
                 </Suspense>

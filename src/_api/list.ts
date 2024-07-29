@@ -63,6 +63,7 @@ const ADDRESS_API_LIST = {
 const Common_API_List = {
   getPrice: '',
   getSearchFilter: `${BASE_API}/app/blockchain/filters`,
+  getAdsDetail: `${BASE_API}/app/ads/detail`,
 };
 
 const CHART_API_LIST = {

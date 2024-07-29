@@ -81,7 +81,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
 
   return (
     <div>
-      <HeadTitle content="NFTs" />
+      <HeadTitle content="NFTs" adPage="nfts" />
       <Table
         headerTitle={{
           single: {

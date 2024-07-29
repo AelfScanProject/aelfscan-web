@@ -79,7 +79,7 @@ export default function Detail({ tokenDetail }: IDetailProps) {
 
   return (
     <div className="token-detail">
-      <HeadTitle content={`Token ${tokenDetail?.token?.name || '--'}`}>
+      <HeadTitle content={`Token ${tokenDetail?.token?.name || '--'}`} adPage="tokendetail">
         <Title
           level={6}
           fontWeight={FontWeightEnum.Bold}

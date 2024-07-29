@@ -150,7 +150,7 @@ export default function Detail({ SSRData }) {
 
   return (
     <div className={clsx('token-detail-container')}>
-      <HeadTitle content="Blocks">
+      <HeadTitle content="Blocks" adPage="blockdetail">
         <span className="ml-2 block text-sm leading-[22px] text-base-200">#{detailData?.blockHeight}</span>
       </HeadTitle>
 

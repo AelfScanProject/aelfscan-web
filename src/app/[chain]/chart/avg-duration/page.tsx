@@ -186,13 +186,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      ref={chartRef}
-      title={title}
-      aboutTitle="The AVG block duration Chart shows the daily block duration of the aelf network. Shows the stability of the network"
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        ref={chartRef}
+        title={title}
+        aboutTitle="The AVG block duration Chart shows the daily block duration of the aelf network. Shows the stability of the network"
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }

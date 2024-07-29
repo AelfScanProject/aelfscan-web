@@ -11,7 +11,8 @@ import Highlight from '../_components/highlight';
 import { IHIGHLIGHTDataItem } from '../type';
 import Download from './download';
 
-import { MouseEventHandler, forwardRef } from 'react';
+import { MouseEventHandler, forwardRef, memo } from 'react';
+import PageAd from '@_components/PageAd';
 
 if (typeof Highcharts === 'object') {
   HighchartsExporting(Highcharts);
@@ -30,11 +31,12 @@ export interface IHightChartsOption {
 
 function BaseHightCharts(props: IHightChartsOption, ref) {
   const { title, aboutTitle, options, highlightData, download, hiddenDownload } = props;
-
+  console.log('chart');
   return (
     <div>
       <div>
         <Title title={title}></Title>
+        <PageAd hiddenBorder adPage="chartdetail" />
       </div>
       <div className="row">
         <div className="col-12 mb-lg-0 col-lg-8 col-xl-9 mb-10">
@@ -54,4 +56,4 @@ function BaseHightCharts(props: IHightChartsOption, ref) {
   );
 }
 
-export default forwardRef<HighchartsReactRefObject, IHightChartsOption>(BaseHightCharts);
+export default memo(forwardRef<HighchartsReactRefObject, IHightChartsOption>(BaseHightCharts));

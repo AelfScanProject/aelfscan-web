@@ -158,13 +158,15 @@ export default function Page() {
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
-    <BaseHightCharts
-      title={title}
-      ref={chartRef}
-      aboutTitle="The aelf Average Block Size Chart indicates the historical average block size in bytes of the aelf network."
-      highlightData={highlightData}
-      options={options}
-      download={download}
-    />
+    data && (
+      <BaseHightCharts
+        title={title}
+        ref={chartRef}
+        aboutTitle="The aelf Average Block Size Chart indicates the historical average block size in bytes of the aelf network."
+        highlightData={highlightData}
+        options={options}
+        download={download}
+      />
+    )
   );
 }
