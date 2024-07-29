@@ -20,7 +20,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     allData.push([item.date, item.addressCount]);
     customMap[item.date] = {};
     customMap[item.date].sendAddressCount = item.sendAddressCount;
-    customMap[item.date].receiveAddressCount = item.sendAddressCount;
+    customMap[item.date].receiveAddressCount = item.receiveAddressCount;
   });
   const minDate = allData[0] && allData[0][0];
   console.log(allData[0], 'allData[0][0]');
