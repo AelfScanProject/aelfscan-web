@@ -200,11 +200,11 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         label: 'Contract',
         children: <Contract />,
       },
-      // {
-      //   key: 'events',
-      //   label: 'Events',
-      //   children: <Events SSRData={{ total: 0, list: [] }} />,
-      // },
+      {
+        key: 'events',
+        label: 'Events',
+        children: <Events />,
+      },
       {
         key: 'history',
         label: 'History',
