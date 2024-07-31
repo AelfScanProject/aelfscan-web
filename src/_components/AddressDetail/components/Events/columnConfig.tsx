@@ -5,25 +5,32 @@ import Link from 'next/link';
 import { IEvents } from './type';
 import { ColumnsType } from 'antd/es/table';
 import LogItems from '@_components/LogsContainer/logItems';
+import EPTooltip from '@_components/EPToolTip';
+import Copy from '@_components/Copy';
 
-export default function getColumns({ timeFormat, handleTimeChange }): ColumnsType<IEvents> {
+export default function getColumns({ timeFormat, handleTimeChange, chainId }): ColumnsType<IEvents> {
   return [
     {
-      dataIndex: 'txnHash',
+      dataIndex: 'transactionId',
       width: 208,
-      key: 'txnHash',
+      key: 'transactionId',
       title: (
         <div className="flex items-center font-medium">
           <span>Txn Hash</span>
           <IconFont className="ml-1 text-xs" type="question-circle" />
         </div>
       ),
-      render: (text) => {
+      render: (text, records) => {
         return (
           <div className="flex items-center">
-            <Link className="block w-[120px] truncate text-xs leading-5 text-link" href={`tx/${text}`}>
-              {text}
-            </Link>
+            <EPTooltip title={text} mode="dark">
+              <Link
+                className="block w-[120px] truncate text-link"
+                href={`/${chainId}/tx/${text}?blockHeight=${records.blockHeight}`}>
+                {text}
+              </Link>
+            </EPTooltip>
+            <Copy value={text}></Copy>
           </div>
         );
       },
@@ -34,7 +41,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       dataIndex: 'blockHeight',
       key: 'blockHeight',
       render: (text) => (
-        <Link className="block text-xs leading-5 text-link" href={`block/${text}`}>
+        <Link className="block  text-link" href={`/${chainId}/block/${text}`}>
           {text}
         </Link>
       ),
@@ -50,31 +57,46 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
         </div>
       ),
       width: 208,
-      dataIndex: 'timestamp',
-      key: 'timestamp',
+      dataIndex: 'timeStamp',
+      key: 'timeStamp',
       render: (text) => {
-        return <div className="text-xs leading-5">{formatDate(text, timeFormat)}</div>;
+        return <div className="">{formatDate(Math.floor(text / 1000), timeFormat)}</div>;
       },
     },
     {
       title: 'Method',
       width: 128,
-      dataIndex: 'method',
-      key: 'method',
+      dataIndex: 'methodName',
+      key: 'methodName',
       render: (text) => <Method text={text} tip={text} />,
     },
     {
       title: (
         <div>
-          <IconFont className="mr-1 text-xs leading-5" type="log" />
+          <IconFont className="mr-1 " type="log" />
           <span>Logs</span>
         </div>
       ),
       width: 672,
       dataIndex: 'logs',
       key: 'logs',
-      // render: (text) => <LogItems data={text} />,
-      render: (text) => <div>code</div>,
+      render: (text, record) => (
+        <LogItems
+          data={{
+            address: record.contractAddress,
+            eventName: record.eventName,
+            contractInfo: {
+              name: record.eventName,
+              address: record.contractAddress,
+              addressType: 1,
+              isManager: true,
+              isProducer: true,
+            },
+            indexed: record.indexed,
+            nonIndexed: record.nonIndexed,
+          }}
+        />
+      ),
     },
   ];
 }
