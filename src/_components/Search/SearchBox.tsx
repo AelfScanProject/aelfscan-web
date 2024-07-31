@@ -37,7 +37,6 @@ const Search = ({
   searchValidator,
   placeholder,
   searchButton,
-  onSearchButtonClickHandler,
   searchIcon,
   enterIcon,
   deleteIcon,
@@ -94,7 +93,7 @@ const Search = ({
 
   const router = useRouter();
 
-  const onSearchHandler = async () => {
+  const onSearchHandler = useCallback(async () => {
     if (dataWithOrderIdx?.transaction) {
       const { transactionId, blockHeight } = dataWithOrderIdx.transaction;
       router.push(`/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`);
@@ -131,7 +130,7 @@ const Search = ({
         router.push(`/${defaultChain}/search/${query.trim()}`);
       }
     }
-  };
+  }, [dataWithOrderIdx, defaultChain, filterType, query, router]);
 
   function renderButton() {
     if (!searchButton) {
