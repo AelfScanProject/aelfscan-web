@@ -59,7 +59,7 @@ const Search = ({
   const [adsDetail, setAdsDetail] = useState<IPageAdsDetail>();
   // Calculated states
   const isExpanded = useMemo(() => {
-    if (adsDetail) {
+    if (adsDetail?.adsId) {
       return hasFocus;
     } else {
       return (
@@ -72,8 +72,6 @@ const Search = ({
       );
     }
   }, [adsDetail, canShowListBox, dataWithOrderIdx, hasFocus, query]);
-
-  console.log(isExpanded, 'isExpanded');
 
   useEffect(() => {
     fetchAdsDetail({ label: label }).then((res) => {
@@ -97,10 +95,10 @@ const Search = ({
   const router = useRouter();
 
   const onSearchHandler = async () => {
-    if (dataWithOrderIdx.transaction) {
+    if (dataWithOrderIdx?.transaction) {
       const { transactionId, blockHeight } = dataWithOrderIdx.transaction;
       router.push(`/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`);
-    } else if (dataWithOrderIdx.block) {
+    } else if (dataWithOrderIdx?.block) {
       const { blockHeight } = dataWithOrderIdx.block;
       router.push(`/${defaultChain}/block/${blockHeight}`);
     } else {

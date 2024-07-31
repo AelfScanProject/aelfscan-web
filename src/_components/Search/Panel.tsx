@@ -96,12 +96,14 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
     return (
       <div className="search-result-panel">
         <div>{children}</div>
-        {query && (
-          <div className="search-result-empty">
-            <IconFont type="result-empty" className="mr-1 size-3" />
-            <span>Sorry, search not found.</span>
-          </div>
-        )}
+        {query &&
+          !dataWithOrderIdx?.transaction &&
+          !dataWithOrderIdx?.block(
+            <div className="search-result-empty">
+              <IconFont type="result-empty" className="mr-1 size-3" />
+              <span>Sorry, search not found.</span>
+            </div>,
+          )}
       </div>
     );
   }
