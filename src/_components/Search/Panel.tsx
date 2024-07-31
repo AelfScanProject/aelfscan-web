@@ -93,18 +93,11 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
   // if (!query) {
   //   return null;
   // }
-
-  if (allList.length === 0 && !loading) {
+  if ((dataWithOrderIdx?.transaction || dataWithOrderIdx?.block) && query) {
     return (
       <div className="search-result-panel">
         <div>{children}</div>
-        {query && !dataWithOrderIdx?.transaction && !dataWithOrderIdx?.block && (
-          <div className="search-result-empty">
-            <IconFont type="result-empty" className="mr-1 size-3" />
-            <span>Sorry, search not found.</span>
-          </div>
-        )}
-        {(dataWithOrderIdx?.transaction || dataWithOrderIdx?.block) && (
+        <Spin spinning={loading}>
           <ul className="search-result-ul">
             <div className="search-result-ul-wrap">
               <p className="search-result-ul-title">{dataWithOrderIdx?.transaction ? 'transaction' : 'block'}</p>
@@ -116,6 +109,20 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
               />
             </div>
           </ul>
+        </Spin>
+      </div>
+    );
+  }
+
+  if (allList.length === 0 && !loading) {
+    return (
+      <div className="search-result-panel">
+        <div>{children}</div>
+        {query && !dataWithOrderIdx?.transaction && !dataWithOrderIdx?.block && (
+          <div className="search-result-empty">
+            <IconFont type="result-empty" className="mr-1 size-3" />
+            <span>Sorry, search not found.</span>
+          </div>
         )}
       </div>
     );
