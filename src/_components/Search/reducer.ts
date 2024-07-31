@@ -66,6 +66,10 @@ function reducer(state: TSearchState, { type, payload }: { type: SearchActions; 
           idx: -1,
           txt: '',
         },
+        queryResultData: {
+          dataWithOrderIdx: undefined,
+          allList: [],
+        },
       };
       return { ...state, ...newState };
     }

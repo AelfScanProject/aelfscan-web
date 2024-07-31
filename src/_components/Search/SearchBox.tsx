@@ -94,6 +94,7 @@ const Search = ({
   const router = useRouter();
 
   const onSearchHandler = useCallback(async () => {
+    if (!dataWithOrderIdx) return;
     if (dataWithOrderIdx?.transaction) {
       const { transactionId, blockHeight } = dataWithOrderIdx.transaction;
       router.push(`/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`);
@@ -131,6 +132,15 @@ const Search = ({
       }
     }
   }, [dataWithOrderIdx, defaultChain, filterType, query, router]);
+
+  const keyDown = useCallback(
+    (e) => {
+      if (e.key === 'Enter' && !loading) {
+        onSearchHandler();
+      }
+    },
+    [loading, onSearchHandler],
+  );
 
   function renderButton() {
     if (!searchButton) {
@@ -196,13 +206,10 @@ const Search = ({
             setHasFocus(false);
           }}
           onChange={(e) => {
+            console.log(e, ' eenter');
             dispatch(setQuery(e.target.value));
           }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !loading) {
-              onSearchHandler();
-            }
-          }}
+          onKeyDown={keyDown}
         />
         {hasClearButton && (
           <div className="search-input-clear" onMouseDown={cancelBtnHandler}>
