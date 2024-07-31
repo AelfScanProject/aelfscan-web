@@ -19,6 +19,7 @@ import DollarCurrency from '@_components/DollarCurrency';
 import addressFormat from '@_utils/urlUtils';
 import { StatusEnum } from '@_types/status';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 export default function BaseInfo({ data, tabChange, jump }) {
   const { chain } = useParams();
   const isFirst = data?.preBlockHeight === 0;
@@ -87,9 +88,11 @@ export default function BaseInfo({ data, tabChange, jump }) {
         tip: 'The producer of the block.',
         value: (
           <div>
-            <span className="text-link">
+            <Link
+              className="text-link"
+              href={`/${chain}/address/${addressFormat(data.producer?.address, chain as string)}/0`}>
               {data.producer?.name ? data.producer?.name : addressFormat(data.producer?.address, chain as string)}
-            </span>
+            </Link>
             <Copy value={addressFormat(data.producer?.address, chain as string)} />
             <span className="ml-1">in 0.5 secs</span>
           </div>
