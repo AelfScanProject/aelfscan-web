@@ -17,7 +17,6 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       title: (
         <div className="flex items-center font-medium">
           <span>Txn Hash</span>
-          <IconFont className="ml-1 text-xs" type="question-circle" />
         </div>
       ),
       render: (text, records) => {
