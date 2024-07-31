@@ -28,6 +28,7 @@ import { Spin } from 'antd';
 import { AdTracker } from '@_utils/ad';
 import dayjs from 'dayjs';
 import Image from 'next/image';
+import { useDebounceFn } from 'ahooks';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -142,6 +143,8 @@ const Search = ({
     [loading, onSearchHandler],
   );
 
+  const { run: keyDownDebounce } = useDebounceFn(keyDown, { wait: 300 });
+
   function renderButton() {
     if (!searchButton) {
       return null;
@@ -209,7 +212,7 @@ const Search = ({
             console.log(e, ' eenter');
             dispatch(setQuery(e.target.value));
           }}
-          onKeyDown={keyDown}
+          onKeyDown={keyDownDebounce}
         />
         {hasClearButton && (
           <div className="search-input-clear" onMouseDown={cancelBtnHandler}>
