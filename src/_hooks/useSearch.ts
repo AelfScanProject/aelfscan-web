@@ -90,7 +90,10 @@ export const useSelected = (selectedItem: Partial<TSingle>, inputRef: RefObject<
     if (!selectedItem || Object.keys(selectedItem).length === 0) {
       inputRef.current.value = '';
     } else {
-      inputRef.current.value = (selectedItem.address || selectedItem.name) as string;
+      inputRef.current.value = (selectedItem.address ||
+        selectedItem.name ||
+        selectedItem.transactionId ||
+        selectedItem.blockHeight) as string;
     }
   }, [inputRef, selectedItem]);
 };
