@@ -88,8 +88,6 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
     return Object.entries(dataWithOrderIdx).filter(([filterType, list]) => list && Array.isArray(list));
   }, [dataWithOrderIdx]);
 
-  console.log(dataWithOrderIdx, 'dataWithOrderIdx');
-
   // if (!query) {
   //   return null;
   // }
