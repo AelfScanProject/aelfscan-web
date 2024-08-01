@@ -35,7 +35,7 @@ export interface ITransfersRef {
   setSearchStr: (val: string) => void;
 }
 
-const TAB_NAME = 'transfers';
+const TAB_NAME = '';
 
 const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInputChange }: ITransfersProps, ref) => {
   const isMobile = useMobileAll();

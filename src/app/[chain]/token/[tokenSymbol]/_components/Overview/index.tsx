@@ -49,7 +49,7 @@ const TokenDetail = (chain): IOverviewItem[] => {
     {
       key: 'token',
       label: 'DECIMAL',
-      render: (token) => (token.decimals && token.decimals !== 0 ? token.decimals : '--'),
+      render: (token) => (token.decimals || token.decimals === 0 ? token.decimals : '--'),
     },
   ];
 };
