@@ -63,12 +63,9 @@ const Search = ({
       return hasFocus;
     } else {
       return (
-        hasFocus &&
-        query &&
-        canShowListBox &&
-        dataWithOrderIdx &&
-        !dataWithOrderIdx?.transaction &&
-        !dataWithOrderIdx?.block
+        hasFocus && query && canShowListBox && dataWithOrderIdx
+        // !dataWithOrderIdx?.transaction &&
+        // !dataWithOrderIdx?.block
       );
     }
   }, [adsDetail, canShowListBox, dataWithOrderIdx, hasFocus, query]);
