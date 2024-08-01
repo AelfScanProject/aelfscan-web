@@ -130,7 +130,7 @@ export default function FormItem({
         <>
           <Divider dashed />
           <div>Response Body</div>
-          <div>
+          <div className="overflow-x-auto">
             <ReactJson src={res} />
           </div>
         </>

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   title: 'AELF Block Explorer',
   description: 'AELF explorer',
   icons: {
-    icon: '/favicon.ico',
+    icon: process.env?.NEXT_PUBLIC_NETWORK_TYPE === 'TESTNET' ? '/favicon.test.ico' : '/favicon.ico',
   },
 };
 // async function fetchData() {

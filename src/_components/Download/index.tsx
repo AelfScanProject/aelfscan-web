@@ -14,6 +14,7 @@ export default function Download({ files, fileName, fileType = '.zip', ...parmas
 
       saveAs(blob, `${fileName}${fileType}`);
     } catch (e) {
+      console.log(e, 'eee');
       message.error('Download failed');
     } finally {
       setIsLoading(false);

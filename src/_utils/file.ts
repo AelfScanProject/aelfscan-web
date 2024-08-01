@@ -6,7 +6,7 @@ function addFileOrFolder(zip, files) {
     if (Array.isArray(file.files) && file.files.length > 0) {
       addFileOrFolder(zip.folder(name), file.files);
     } else {
-      const content = window.atob(file.content);
+      const content = window.atob(file.content || '');
       zip.file(name, content);
     }
   });

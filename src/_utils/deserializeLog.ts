@@ -1,4 +1,5 @@
 import AElf from 'aelf-sdk';
+import Root from 'src/protobuf/virtual_transaction.proto';
 
 const CONTRACT_PROTOS = {};
 
@@ -36,7 +37,22 @@ export async function deserializeLog(log, rpc) {
   if (NonIndexed) {
     serializedData.push(NonIndexed);
   }
-  const dataType = proto.lookupType(Name);
+  let dataType;
+
+  if (Name === 'VirtualTransactionCreated') {
+    // VirtualTransactionCreated is system-default
+    try {
+      const root = Root as any;
+      dataType = root.VirtualTransactionCreated;
+      console.log(Root, dataType, 'Root');
+    } catch (e) {
+      // if normal contract has a method called VirtualTransactionCreated
+      dataType = proto.lookupType(Name);
+    }
+  } else {
+    dataType = proto.lookupType(Name);
+  }
+
   let deserializeLogResult = serializedData.reduce((acc, v) => {
     let deserialize = dataType.decode(decodeBase64(v));
     deserialize = dataType.toObject(deserialize, {
