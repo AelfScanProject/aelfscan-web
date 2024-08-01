@@ -89,6 +89,14 @@ const nextConfig = {
       },
     ],
   },
+  webpack(config, options) {
+    config.module.rules.push({
+      test: /\.proto$/,
+      use: 'protobufjs-loader',
+    });
+
+    return config;
+  },
   output: 'standalone',
 };
 
