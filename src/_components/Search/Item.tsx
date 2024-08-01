@@ -24,7 +24,13 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
   }
 
   const url = useMemo(() => {
-    if (searchType === 'nfts') {
+    if (searchType === 'transaction') {
+      const { transactionId, blockHeight } = item;
+      return `/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`;
+    } else if (searchType === 'block') {
+      const { blockHeight } = item;
+      return `/${defaultChain}/block/${blockHeight}`;
+    } else if (searchType === 'nfts') {
       if (item.type === 2) {
         // collection
         return `/nft/?chainId=${defaultChain}&&collectionSymbol=${item.symbol}`;
@@ -40,7 +46,7 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     }
 
     return '';
-  }, [item, defaultChain, searchType]);
+  }, [searchType, item, defaultChain]);
   function itemMouseDownHandler() {
     dispatch(selectItem(item));
     router.push(url);
@@ -83,8 +89,10 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
             </div>
           </div>
         ) : (
-          <div className="text-sm leading-[22px] text-base-100">
-            {addressFormat((item as string) || '', defaultChain)}
+          <div className="w-full break-words text-sm leading-[22px] text-base-100">
+            {searchType === 'transaction' || searchType === 'block'
+              ? item?.transactionId || item?.blockHeight
+              : addressFormat((item as string) || '', defaultChain)}
           </div>
         )}
       </li>

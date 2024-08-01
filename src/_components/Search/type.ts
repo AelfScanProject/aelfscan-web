@@ -14,7 +14,9 @@ export type TSingle = {
   price: number;
   unit: string;
   address: string;
+  transactionId: string;
   sortIdx: number;
+  blockHeight: number;
   type?: number;
 };
 
@@ -31,7 +33,7 @@ export enum FilterTypeEnum {
   Nfts,
 }
 
-export type TType = 'tokens' | 'nfts' | 'accounts' | 'contracts';
+export type TType = 'tokens' | 'nfts' | 'accounts' | 'contracts' | 'transaction' | 'block';
 
 interface ITokens {
   image: string;

@@ -28,6 +28,7 @@ import { Spin } from 'antd';
 import { AdTracker } from '@_utils/ad';
 import dayjs from 'dayjs';
 import Image from 'next/image';
+import { useDebounceFn } from 'ahooks';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -37,7 +38,6 @@ const Search = ({
   searchValidator,
   placeholder,
   searchButton,
-  onSearchButtonClickHandler,
   searchIcon,
   enterIcon,
   deleteIcon,
@@ -59,7 +59,7 @@ const Search = ({
   const [adsDetail, setAdsDetail] = useState<IPageAdsDetail>();
   // Calculated states
   const isExpanded = useMemo(() => {
-    if (adsDetail) {
+    if (adsDetail?.adsId) {
       return hasFocus;
     } else {
       return (
@@ -72,8 +72,6 @@ const Search = ({
       );
     }
   }, [adsDetail, canShowListBox, dataWithOrderIdx, hasFocus, query]);
-
-  console.log(isExpanded, 'isExpanded');
 
   useEffect(() => {
     fetchAdsDetail({ label: label }).then((res) => {
@@ -96,11 +94,12 @@ const Search = ({
 
   const router = useRouter();
 
-  const onSearchHandler = async () => {
-    if (dataWithOrderIdx.transaction) {
+  const onSearchHandler = useCallback(async () => {
+    if (!dataWithOrderIdx) return;
+    if (dataWithOrderIdx?.transaction) {
       const { transactionId, blockHeight } = dataWithOrderIdx.transaction;
       router.push(`/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`);
-    } else if (dataWithOrderIdx.block) {
+    } else if (dataWithOrderIdx?.block) {
       const { blockHeight } = dataWithOrderIdx.block;
       router.push(`/${defaultChain}/block/${blockHeight}`);
     } else {
@@ -133,7 +132,18 @@ const Search = ({
         router.push(`/${defaultChain}/search/${query.trim()}`);
       }
     }
-  };
+  }, [dataWithOrderIdx, defaultChain, filterType, query, router]);
+
+  const keyDown = useCallback(
+    (e) => {
+      if (e.key === 'Enter' && !loading) {
+        onSearchHandler();
+      }
+    },
+    [loading, onSearchHandler],
+  );
+
+  const { run: keyDownDebounce } = useDebounceFn(keyDown, { wait: 300 });
 
   function renderButton() {
     if (!searchButton) {
@@ -199,13 +209,10 @@ const Search = ({
             setHasFocus(false);
           }}
           onChange={(e) => {
+            console.log(e, ' eenter');
             dispatch(setQuery(e.target.value));
           }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !loading) {
-              onSearchHandler();
-            }
-          }}
+          onKeyDown={keyDownDebounce}
         />
         {hasClearButton && (
           <div className="search-input-clear" onMouseDown={cancelBtnHandler}>

@@ -71,7 +71,7 @@ export const useUpdateDataByQuery = () => {
       }
     },
     300,
-    [dispatch, query, filterType],
+    [query, filterType],
   );
 
   return useMemo(() => {
@@ -90,7 +90,10 @@ export const useSelected = (selectedItem: Partial<TSingle>, inputRef: RefObject<
     if (!selectedItem || Object.keys(selectedItem).length === 0) {
       inputRef.current.value = '';
     } else {
-      inputRef.current.value = (selectedItem.address || selectedItem.name) as string;
+      inputRef.current.value = (selectedItem.address ||
+        selectedItem.name ||
+        selectedItem.transactionId ||
+        selectedItem.blockHeight) as string;
     }
   }, [inputRef, selectedItem]);
 };
@@ -139,7 +142,7 @@ export const useKeyEvent = (
         dispatch(highlightNext());
       } else if (e.key === 'Enter') {
         // dispatch(selectItem(allList[highLightIdx]));
-        searchHandler();
+        // searchHandler();
       } else if (e.key === 'Escape') {
         setActiveTabIdx(0);
         dispatch(setClear());

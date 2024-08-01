@@ -91,12 +91,32 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
   // if (!query) {
   //   return null;
   // }
+  if ((dataWithOrderIdx?.transaction || dataWithOrderIdx?.block) && query) {
+    return (
+      <div className="search-result-panel">
+        <div>{children}</div>
+        <Spin spinning={loading}>
+          <ul className="search-result-ul">
+            <div className="search-result-ul-wrap">
+              <p className="search-result-ul-title">{dataWithOrderIdx?.transaction ? 'transaction' : 'block'}</p>
+              <Item
+                key={`item${dataWithOrderIdx?.transaction ? 'transaction' : 'block'}`}
+                searchType={dataWithOrderIdx?.transaction ? ('transaction' as TType) : ('block' as TType)}
+                index={1}
+                item={dataWithOrderIdx?.transaction || dataWithOrderIdx?.block}
+              />
+            </div>
+          </ul>
+        </Spin>
+      </div>
+    );
+  }
 
   if (allList.length === 0 && !loading) {
     return (
       <div className="search-result-panel">
         <div>{children}</div>
-        {query && (
+        {query && !dataWithOrderIdx?.transaction && !dataWithOrderIdx?.block && (
           <div className="search-result-empty">
             <IconFont type="result-empty" className="mr-1 size-3" />
             <span>Sorry, search not found.</span>

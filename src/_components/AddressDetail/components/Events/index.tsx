@@ -1,80 +1,153 @@
 import Table from '@_components/Table';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { IEvents } from './type';
 import { ColumnsType } from 'antd/es/table';
-import fetchData from './mock';
+import { Descriptions, DescriptionsProps } from 'antd';
+
 import getColumns from './columnConfig';
 import './index.css';
 import { useDebounce, useEffectOnce } from 'react-use';
-import EPSearch from '@_components/EPSearch';
-import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
+import { fetchContractEvents } from '@_api/fetchContact';
+import { getAddress, getPageNumber } from '@_utils/formatter';
+import { useParams } from 'next/navigation';
+import { TChainID } from '@_api/type';
+import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+import Link from 'next/link';
+const labelStyle: React.CSSProperties = {
+  color: '#858585',
+  fontSize: '14px',
+  lineHeight: '22px',
+};
 
-export default function Events({ SSRData = { total: 0, list: [] } }) {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(25);
-  const [total, setTotal] = useState<number>(SSRData.total);
+const contentStyle: React.CSSProperties = {
+  color: '#252525',
+  fontSize: '14px',
+  lineHeight: '22px',
+};
+
+export default function Events() {
+  const { defaultPage, defaultPageSize } = useSearchAfterParams(10, 'events');
+  const [currentPage, setCurrentPage] = useState<number>(defaultPage);
+  const [pageSize, setPageSize] = useState<number>(defaultPageSize);
+  const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<IEvents[]>(SSRData.list);
+  const [data, setData] = useState<IEvents[]>();
   const [timeFormat, setTimeFormat] = useState<string>('Date Time (UTC)');
-  const [searchText, setSearchText] = useState<string>('');
-  useEffectOnce(() => {
-    async function getData() {
+  const [searchText, setSearchText] = useState<string>();
+  const { chain, address } = useParams();
+  const mountRef = useRef(false);
+  const updateQueryParams = useUpdateQueryParams();
+
+  const [searchType, setSearchType] = useState<string>('');
+
+  const getData = useCallback(
+    async (page: number, pageSize: number, search) => {
+      const params = {
+        chainId: chain as TChainID,
+        skipCount: getPageNumber(page, pageSize),
+        maxResultCount: pageSize,
+        blockHeight: search || null,
+        contractAddress: address && getAddress(address as string),
+      };
       setLoading(true);
-      const data = await fetchData({ page: currentPage, pageSize: pageSize });
-      setData(data.list);
-      setTotal(data.total);
-      setLoading(false);
-    }
-    getData();
+      try {
+        if (mountRef.current) {
+          updateQueryParams({
+            p: page,
+            ps: pageSize,
+            tab: 'events',
+          });
+        }
+      } catch (error) {
+        console.log(error, 'error.rr');
+      }
+      try {
+        const data = await fetchContractEvents(params);
+        setData(data.list);
+        setTotal(data.total);
+      } finally {
+        mountRef.current = true;
+        setLoading(false);
+      }
+    },
+    [address, chain],
+  );
+
+  useEffectOnce(() => {
+    getData(currentPage, pageSize, searchText);
   });
+
   const columns = useMemo<ColumnsType<IEvents>>(() => {
     return getColumns({
       timeFormat,
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
+      chainId: chain,
     });
-  }, [timeFormat]);
+  }, [chain, timeFormat]);
 
   const pageChange = async (page: number) => {
     setLoading(true);
     setCurrentPage(page);
-    const data = await fetchData({ page, pageSize: pageSize });
-    setData(data.list);
-    setTotal(data.total);
-    setLoading(false);
+    getData(page, pageSize, searchText);
   };
 
   const pageSizeChange = async (size) => {
     setLoading(true);
     setPageSize(size);
     setCurrentPage(1);
-    const data = await fetchData({ page: 1, pageSize: size });
-    setData(data.list);
-    setTotal(data.total);
-    setLoading(false);
+    getData(1, size, searchText);
   };
-  const searchChange = async () => {
+  const searchChange = async (value) => {
+    if (value) {
+      setSearchType('block');
+    } else {
+      setSearchType('');
+    }
     setLoading(true);
     setCurrentPage(1);
-    const data = await fetchData({ page: 1, pageSize: pageSize });
-    setData(data.list);
-    setTotal(data.total);
-    setLoading(false);
+    getData(1, pageSize, value);
   };
-  useDebounce(
-    () => {
-      searchChange();
-    },
-    300,
-    [searchText],
-  );
 
   const isMobile = useMobileAll();
 
+  const searchByBlock = useMemo(() => {
+    const spanWith2col = isMobile ? 4 : 2;
+    return [
+      {
+        key: 'desc',
+        label: 'Filtered by BlockNo',
+        labelStyle: {
+          color: '#252525',
+          fontWeight: 500,
+        },
+        children: (
+          <Link className="block w-[400px] truncate text-link" href={`/${chain}/block/${searchText}`}>
+            {searchText}
+          </Link>
+        ),
+        span: spanWith2col,
+      },
+    ];
+  }, [chain, isMobile, searchText]);
+
   return (
     <div className="event-container">
+      {searchType === 'block' && data?.length !== 0 && searchText && !loading && (
+        <div className="mx-4 mb-2 border-b border-b-[#e6e6e6] pb-4">
+          <Descriptions
+            contentStyle={contentStyle}
+            labelStyle={labelStyle}
+            colon={false}
+            layout="vertical"
+            column={4}
+            items={searchByBlock}
+          />
+        </div>
+      )}
       <Table
         loading={loading}
         headerTitle={
@@ -88,18 +161,25 @@ export default function Events({ SSRData = { total: 0, list: [] } }) {
         }
         topSearchProps={{
           value: searchText,
-          placeholder: 'Search Token Name  Token Symbol',
+          placeholder: 'Search blockNo',
           onChange: ({ currentTarget }) => {
             setSearchText(currentTarget.value);
           },
           onSearchChange: () => {
-            searchChange();
+            // searchChange();
+          },
+          onPressEnter: (value) => {
+            searchChange(value);
+          },
+          onClear: () => {
+            searchChange(null);
           },
         }}
         showTopSearch
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
+        options={[10, 25]}
         rowKey="id"
         total={total}
         pageSize={pageSize}

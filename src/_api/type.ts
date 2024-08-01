@@ -316,7 +316,8 @@ export interface IAccountDetailRequestParams extends RequestInit {
 
 export interface IAccountTokensRequestParams extends RequestInit {
   chainId: TChainID;
-  address: string;
+  address?: string;
+  contractAddress?: string;
   skipCount?: number;
   maxResultCount: number;
   sort?: SortEnum;
@@ -329,6 +330,8 @@ export interface IAccountTokensRequestParams extends RequestInit {
 export interface IContractHistoryRequestParams extends RequestInit {
   chainId: TChainID;
   address: string;
+  skipCount?: number;
+  maxResultCount?: number;
 }
 
 export interface IAccountTransfersRequestParams extends RequestInit {

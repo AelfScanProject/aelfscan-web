@@ -55,6 +55,7 @@ const ADDRESS_API_LIST = {
   getAccountsDetailTokens: `${BASE_API}/app/address/tokens`,
   getAccountsDetailNFTAssets: `${BASE_API}/app/address/nft-assets`,
   getContractHistory: `${BASE_API}/app/address/contract/history`,
+  getContractEvents: `${BASE_API}/app/address/contract/events`,
   getContractCode: `${BASE_API}/app/address/contract/file`,
   getServerTopAccounts: `${SERVER_BASE_API}/app/address/accounts`,
   getServerAccountDetail: `${SERVER_BASE_API}/app/address/detail`,

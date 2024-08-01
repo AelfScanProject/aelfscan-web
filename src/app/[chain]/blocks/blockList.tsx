@@ -9,7 +9,7 @@
 import HeadTitle from '@_components/HeaderTitle';
 import Table from '@_components/Table';
 import getColumns from './columnConfig';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { IBlocksResponse, IBlocksResponseItem, TChainID } from '@_api/type';
@@ -17,7 +17,6 @@ import { pageSizeOption } from '@_utils/contant';
 import { fetchBlocks } from '@_api/fetchBlocks';
 import { useParams } from 'next/navigation';
 import { Spin } from 'antd';
-import { reloadBlockListData } from '@/app/actions';
 import { getPageNumber } from '@_utils/formatter';
 import { updateQueryParams } from '@_utils/urlUtils';
 
@@ -39,7 +38,6 @@ function isLastPage(totalItems, itemsPerPage, currentPage) {
 }
 
 export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
-  console.log(SSRData, ' SSRData');
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
@@ -79,9 +77,6 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
       chianId: chain,
     });
   }, [chain, timeFormat]);
-  useEffect(() => {
-    reloadBlockListData();
-  }, []);
 
   const pageMaxBlock = data[0]?.blockHeight;
   const pageMinBlock = data[data.length - 1]?.blockHeight;
