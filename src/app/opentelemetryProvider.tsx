@@ -20,7 +20,7 @@ export const OpentelemetryProvider = ({ children, config }: Props) => {
         serviceVersion: 'v1.0',
         collectorEndpoint: config.collectorEndpoint,
         tracerName: 'aelfscan-web-tracer',
-        ignoreUrls: null,
+        ignoreUrls: [/\/sockjs-node/, /\/monitoring/, /\/__nextjs_original-stack-frame/],
         propagateTraceHeaderCorsUrls: ['https://httpbin.org'],
       },
     };
