@@ -72,7 +72,7 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
               />
             </span>
             <EPTooltip mode="dark" title={item.name}>
-              <span>{item.name?.slice(0, 10)}</span>
+              <span>{item.name && item.name?.length > 10 ? item.name?.slice(0, 10) + '...' : item.name}</span>
             </EPTooltip>
             <span className="search-result-ul-item-gray">({item.symbol})</span>
             <span className="search-result-ul-item-button">

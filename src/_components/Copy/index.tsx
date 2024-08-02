@@ -11,6 +11,7 @@ import { message } from 'antd';
 import clsx from 'clsx';
 export default function Copy({ value, className }: { value: string; className?: string }) {
   const handleCopy = () => {
+    message.destroy();
     try {
       copy(value);
       message.success('Copied Successfully');

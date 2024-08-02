@@ -67,17 +67,33 @@ export default function Footer({ footerMenuList }: IProps) {
           <div className="right">{rightLinkCom}</div>
         </div>
         <BackToTopButton isDark={isMainNet}></BackToTopButton>
-        <div className={`${clsPrefix}-link`}>
-          <IconFont type="telegram" onClick={() => window.open('https://t.me/aelfblockchain', '_blank')}></IconFont>
-          <IconFont type="medium" onClick={() => window.open('https://medium.com/aelfblockchain', '_blank')}></IconFont>
-          <IconFont
-            type="twitter"
-            onClick={() => window.open('https://twitter.com/aelfblockchain', '_blank')}></IconFont>
-          <IconFont
-            type="youtube"
-            onClick={() => window.open('http://www.youtube.com/c/aelfblockchain', '_blank')}></IconFont>
-          <IconFont type="discord" onClick={() => window.open('https://discord.gg/bgysa9xjvD', '_blank')}></IconFont>
-        </div>
+        {isMainNet ? (
+          <div className={`${clsPrefix}-link`}>
+            <a href="https://x.com/aelfblockchain" target="_blank" rel="noopener noreferrer">
+              <Image width={32} height={32} src="/image/twitter.svg" alt="twitter"></Image>
+            </a>
+            <IconFont type="telegram" onClick={() => window.open('https://t.me/aelfblockchain', '_blank')}></IconFont>
+            <IconFont
+              type="youtube"
+              onClick={() => window.open('http://www.youtube.com/c/aelfblockchain', '_blank')}></IconFont>
+            <IconFont type="discord" onClick={() => window.open('https://discord.gg/bgysa9xjvD', '_blank')}></IconFont>
+          </div>
+        ) : (
+          <div className={`${clsPrefix}-link`}>
+            <a href="https://x.com/aelfblockchain" target="_blank" rel="noopener noreferrer">
+              <Image width={32} height={32} src="/image/twitter.test.svg" alt="twitter"></Image>
+            </a>
+            <a href="https://t.me/aelfblockchain" target="_blank" rel="noopener noreferrer">
+              <Image width={32} height={32} src="/image/telegram.test.svg" alt="telegram"></Image>
+            </a>
+            <a href="http://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
+              <Image width={32} height={32} src="/image/youtube.test.svg" alt="youtube"></Image>
+            </a>
+            <a href="https://discord.gg/bgysa9xjvD" target="_blank" rel="noopener noreferrer">
+              <Image width={32} height={32} src="/image/discord.test.svg" alt="discord"></Image>
+            </a>
+          </div>
+        )}
       </div>
       <div className="copywrite">AELF © {new Date().getFullYear()}</div>
     </div>
