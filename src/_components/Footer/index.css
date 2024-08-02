@@ -48,12 +48,19 @@
     @apply absolute bottom-6 w-full text-center text-[#858585] text-[12px] font-[400];
   }
   .footer-container-link {
-    @apply absolute left-5 top-6 cursor-pointer;
+    @apply absolute flex items-center left-5 top-6 cursor-pointer;
     .anticon {
       svg {
         @apply w-8 h-8 mr-2;
       }
     }
+    a {
+      @apply w-8 h-8 mr-2;
+      img {
+        @apply  w-full h-full;
+      }
+    }
+
   }
 }
 .footer-container-mobile {

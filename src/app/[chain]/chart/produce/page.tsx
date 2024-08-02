@@ -168,9 +168,6 @@ const getOption = (list: any[]): Highcharts.Options => {
     title: {
       align: 'left',
       text: title,
-      style: {
-        color: '#FFF',
-      },
     },
     pane: {
       size: '90%',

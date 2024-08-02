@@ -47,10 +47,14 @@ function Latest({ isBlocks, data, iconType }: IProps) {
                 <div className="text">
                   <span className="height">
                     {isBlocks ? (
-                      <Link href={`/${defaultChain}/block/${ele.blockHeight}`}>{ele.blockHeight}</Link>
+                      <Link prefetch={false} href={`/${defaultChain}/block/${ele.blockHeight}`}>
+                        {ele.blockHeight}
+                      </Link>
                     ) : (
                       <EPTooltip title={ele.transactionId} mode="dark" pointAtCenter={false}>
-                        <Link href={`/${defaultChain}/tx/${ele.transactionId}?blockHeight=${ele.blockHeight}`}>
+                        <Link
+                          prefetch={false}
+                          href={`/${defaultChain}/tx/${ele.transactionId}?blockHeight=${ele.blockHeight}`}>
                           {ele.transactionId}
                         </Link>
                       </EPTooltip>
@@ -66,6 +70,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
                       <span className="mr-1">Producer</span>
                       <EPTooltip title={ele.producerName} mode="dark" pointAtCenter={false}>
                         <Link
+                          prefetch={false}
                           className="truncate"
                           href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}/0`}>
                           {ele.producerName
@@ -75,7 +80,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
                       </EPTooltip>
                     </span>
                     <span className="txns">
-                      <Link href={`/${defaultChain}/block/${ele.blockHeight}?tab=transactions`}>
+                      <Link prefetch={false} href={`/${defaultChain}/block/${ele.blockHeight}?tab=transactions`}>
                         {ele.transactionCount} txns
                       </Link>
                       <span className="time">in {formatDate(ele.timestamp, 'Age')}</span>

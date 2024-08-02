@@ -206,7 +206,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                         'nft-transferred mb-4 flex items-center',
                       )}>
                       <NFTImage
-                        className={clsx('rounded-lg bg-slate-200')}
+                        className={clsx('mr-1 rounded-lg bg-slate-200')}
                         src={nftsTransfer.imageUrl}
                         alt=""
                         width={40}

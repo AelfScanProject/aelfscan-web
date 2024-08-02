@@ -44,6 +44,7 @@ export default function DynamicForm({
     }
   };
   const handleCopy = (value) => {
+    message.destroy();
     try {
       copy(value);
       message.success('Copied Successfully');

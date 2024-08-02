@@ -31,7 +31,10 @@ export default function ContractToken({
           </EPTooltip>
         )}
         <EPTooltip pointAtCenter={false} title={addressFormat(address || '', chainId)} mode="dark">
-          <Link className="text-link" href={`/${chainId}/address/${addressFormat(address || '', chainId)}/${type}`}>
+          <Link
+            prefetch={false}
+            className="text-link"
+            href={`/${chainId}/address/${addressFormat(address || '', chainId)}/${type}`}>
             {addressFormat(hiddenAddress(address || '', count, count), chainId)}
           </Link>
         </EPTooltip>
@@ -55,7 +58,7 @@ export default function ContractToken({
         }
         mode="dark"
         pointAtCenter={false}>
-        <Link className="" href={`/${chainId}/address/${addressFormat(address, chainId)}/${type}`}>
+        <Link prefetch={false} className="" href={`/${chainId}/address/${addressFormat(address, chainId)}/${type}`}>
           {name}
         </Link>
       </EPTooltip>

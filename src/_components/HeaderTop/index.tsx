@@ -36,7 +36,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   const isMobile = usePad();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const pathname = usePathname();
-  const isHideSearch = ['/', '/tDVW', 'tDVV'].includes(pathname) || pathname.includes('search-');
+  const isHideSearch = ['/', '/tDVW', '/tDVV'].includes(pathname) || pathname.includes('search-');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const items: MenuProps['items'] = useMemo(() => {
     return networkList.map((item) => {

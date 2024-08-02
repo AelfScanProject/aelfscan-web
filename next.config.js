@@ -32,18 +32,18 @@ const nextConfig = {
             destination: '/',
             // permanent: false,
           },
-          // {
-          //   source: '/api/:path*',
-          //   destination: 'https://aelfscan.io/api/:path*',
-          //   // permanent: false,
-          //   // basePath: false,
-          // },
           {
             source: '/api/:path*',
-            destination: 'https://testnet.aelfscan.io/api/:path*',
+            destination: 'https://aelfscan.io/api/:path*',
             // permanent: false,
             // basePath: false,
           },
+          // {
+          //   source: '/api/:path*',
+          //   destination: 'https://testnet.aelfscan.io/api/:path*',
+          //   // permanent: false,
+          //   // basePath: false,
+          // },
           {
             source: '/chain/:path*',
             destination: 'http://localhost:3001/chain/:path*',
@@ -88,6 +88,14 @@ const nextConfig = {
         hostname: '**.amazonaws.com',
       },
     ],
+  },
+  webpack(config, options) {
+    config.module.rules.push({
+      test: /\.proto$/,
+      use: 'protobufjs-loader',
+    });
+
+    return config;
   },
   output: 'standalone',
 };

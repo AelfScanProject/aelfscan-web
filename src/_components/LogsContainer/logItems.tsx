@@ -28,6 +28,7 @@ function LogItems({ data }: { data: ILogsProps }) {
   function decodeData() {
     deserializeLog(originData, config['rpcUrl' + chain])
       .then((res) => {
+        console.log(res, 'res');
         if (Object.keys(res).length === 0) {
           throw new Error('Decode failed');
         }
@@ -35,7 +36,8 @@ function LogItems({ data }: { data: ILogsProps }) {
         setLoading(false);
         setHasDecoded(true);
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(e, 'errrrrr');
         message.error('Decode failed');
         setLoading(false);
       });

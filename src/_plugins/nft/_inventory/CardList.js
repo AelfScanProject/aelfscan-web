@@ -46,7 +46,7 @@ function NftCardList(props) {
       className: "text-base-100"
     }, "N/A") : /*#__PURE__*/React.createElement(EPTooltip, {
       mode: "dark",
-      title: "Click to see transaction with last sale price of $".concat(itemObj.lastSalePriceInUsd, " (").concat(itemObj.lastSalePrice, " ").concat(itemObj.lastSaleAmountSymbol, ")")
+      title: "Click to see transaction with last sale price of $".concat(itemObj.lastSalePriceInUsd, " (").concat(itemObj.lastSalePrice, " ").concat(itemObj.lastSaleAmountSymbol || '', ")")
     }, /*#__PURE__*/React.createElement(Link, {
       className: "inline-block truncate",
       href: "/".concat(chain, "/tx/").concat(itemObj.lastTransactionId, "?blockHeight=").concat(itemObj.blockHeight)

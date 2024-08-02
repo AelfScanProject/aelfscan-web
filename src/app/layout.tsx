@@ -25,22 +25,11 @@ export const metadata: Metadata = {
   title: 'AELF Block Explorer',
   description: 'AELF explorer',
   icons: {
-    icon: '/favicon.ico',
+    icon: process.env?.NEXT_PUBLIC_NETWORK_TYPE === 'TESTNET' ? '/favicon.test.ico' : '/favicon.ico',
   },
 };
-// async function fetchData() {
-//   await new Promise((resolve) => setTimeout(resolve, 1000));
-//   const res = {
-//     price: { USD: 1 },
-//     previousPrice: { usd: 2 },
-//   };
-//   // const res = await request.common.getPrice({ cache: 'no-store' } as Request);
-//   return res;
-// }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // const data = await fetchData();
-  // const { price, previousPrice } = data;
   const headersList = headers();
   const isMobile = isMobileOnServer(headersList);
   const { headerMenuList, footerMenuList, chainList, networkList, config, chartImg } = await fetchCMS();

@@ -19,7 +19,7 @@
     }
   }
   .not-found-btn{
-    @apply mt-3 bg-link rounded text-xs text-white w-[104px] h-8 text-center leading-8 cursor-pointer;
+    @apply mt-3 bg-link rounded text-xs !text-white w-[104px] h-8 text-center leading-8 cursor-pointer;
     &:hover{
       @apply bg-32;
     }
