@@ -17,9 +17,12 @@ import 'aelf-design/css';
 import { ConfigProvider } from 'antd';
 import { Provider as ReduxProvider } from 'react-redux';
 import useResponsive from '@_hooks/useResponsive';
-import WebLoginProvider from './webLoginProvider';
 import dynamic from 'next/dynamic';
-import { OpentelemetryProvider } from './opentelemetryProvider';
+// import { OpentelemetryProvider } from './opentelemetryProvider';
+const OpentelemetryProvider = dynamic(
+  () => import('./opentelemetryProvider').then((mod) => mod.OpentelemetryProvider),
+  { ssr: false },
+);
 
 const MobileContext = createContext<any>({});
 
