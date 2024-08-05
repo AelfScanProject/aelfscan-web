@@ -21,7 +21,7 @@ export const OpentelemetryProvider = ({ children, config }: Props) => {
   const APP_SETTINGS = useMemo(() => {
     return {
       openTelemetry: {
-        serviceName: 'aelfscan-web-' + 'prefix',
+        serviceName: 'aelfscan-web-' + prefix,
         serviceVersion: 'v1.0',
         collectorEndpoint: config.collectorEndpoint,
         tracerName: `aelfscan-web-${prefix}-tracer`,
