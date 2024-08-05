@@ -44,15 +44,37 @@ function NftCardList(props) {
       className: "w-[58px] text-base-200"
     }, "Last Sale:"), itemObj.lastSalePrice === -1 ? /*#__PURE__*/React.createElement("span", {
       className: "text-base-100"
-    }, "N/A") : /*#__PURE__*/React.createElement(EPTooltip, {
+    }, "N/A") :  itemObj.lastTransactionId ? /*#__PURE__*/React.createElement(EPTooltip, {
       mode: "dark",
       title: "Click to see transaction with last sale price of $".concat(itemObj.lastSalePriceInUsd, " (").concat(itemObj.lastSalePrice, " ").concat(itemObj.lastSaleAmountSymbol || '', ")")
     }, /*#__PURE__*/React.createElement(Link, {
       className: "inline-block truncate",
-      href: "/".concat(chain, "/tx/").concat(itemObj.lastTransactionId, "?blockHeight=").concat(itemObj.blockHeight)
+      href:   "/".concat(chain, "/tx/").concat(itemObj.lastTransactionId, "?blockHeight=").concat(itemObj.blockHeight)
     }, /*#__PURE__*/React.createElement("span", {
       className: "mx-1"
-    }, "$", itemObj.lastSalePriceInUsd), /*#__PURE__*/React.createElement("span", null, "(", itemObj.lastSalePrice, " ", itemObj.lastSaleAmountSymbol, ")")))))));
+    }, "$", itemObj.lastSalePriceInUsd), /*#__PURE__*/React.createElement("span", null, "(", itemObj.lastSalePrice, " ", itemObj.lastSaleAmountSymbol, ")"))) : /*#__PURE__*/ React.createElement(
+      'span',
+      {
+        className: 'inline-block truncate',
+      },
+      /*#__PURE__*/ React.createElement(
+        'span',
+        {
+          className: 'mx-1',
+        },
+        '$',
+        itemObj.lastSalePriceInUsd,
+      ),
+      /*#__PURE__*/ React.createElement(
+        'span',
+        null,
+        '(',
+        itemObj.lastSalePrice,
+        ' ',
+        itemObj.lastSaleAmountSymbol,
+        ')',
+      ),
+    ),))));
   }));
 }
 var MemoNftCardList = /*#__PURE__*/React.memo(NftCardList);
