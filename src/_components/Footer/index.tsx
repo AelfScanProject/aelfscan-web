@@ -11,11 +11,10 @@ import './index.css';
 import IconFont from '@_components/IconFont';
 import BackToTopButton from '@_components/BackToTopBtn';
 import Image from 'next/image';
-import useResponsive, { usePad } from '@_hooks/useResponsive';
+import { usePad } from '@_hooks/useResponsive';
 import { MenuItem } from '@_types';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
-import { useMobileContext } from '@app/pageProvider';
 const FoorterBgTets = '/image/footer-bg.png';
 const clsPrefix = 'footer-container';
 interface IProps {
@@ -48,52 +47,36 @@ export default function Footer({ footerMenuList }: IProps) {
     );
   });
   return (
-    <div className={clsx(clsPrefix, isMainNet && `${clsPrefix}-main`, isPad && `${clsPrefix}-mobile`)}>
-      {!isMainNet && (
-        <Image src={`${FoorterBgTets}`} alt={''} width="1400" height="330" className={`${clsPrefix}-bg`}></Image>
-      )}
+    <div className={clsx(clsPrefix, isPad && `${clsPrefix}-mobile`)}>
       <div className={clsx(`${clsPrefix}-wrapper`)}>
         <div className={`${clsPrefix}-content`}>
           <div className="left">
             <div className="title">
-              <IconFont type={isMainNet ? 'aelf-header-top-change' : 'aelf-header-top-test-change'}></IconFont>
-              <span className="text">Powered by AELF</span>
+              <IconFont type="aelf-header-top-test-change"></IconFont>
+              <span className="text">Powered by AELF Scan Team</span>
             </div>
             <div className="description">
-              AELF Explorer is a Block Explorer and Analytics Platform for AELF, a decentralized cloud computing
-              blockchain explorer.
+              AELF Scan is a Block Explorer and Analytics Platform for AELF, a decentralized cloud computing blockchain
+              explorer.
             </div>
           </div>
           <div className="right">{rightLinkCom}</div>
         </div>
-        <BackToTopButton isDark={isMainNet}></BackToTopButton>
-        {isMainNet ? (
-          <div className={`${clsPrefix}-link`}>
-            <a href="https://x.com/aelfblockchain" target="_blank" rel="noopener noreferrer">
-              <Image width={32} height={32} src="/image/twitter.svg" alt="twitter"></Image>
-            </a>
-            <IconFont type="telegram" onClick={() => window.open('https://t.me/aelfblockchain', '_blank')}></IconFont>
-            <IconFont
-              type="youtube"
-              onClick={() => window.open('http://www.youtube.com/c/aelfblockchain', '_blank')}></IconFont>
-            <IconFont type="discord" onClick={() => window.open('https://discord.gg/bgysa9xjvD', '_blank')}></IconFont>
-          </div>
-        ) : (
-          <div className={`${clsPrefix}-link`}>
-            <a href="https://x.com/aelfblockchain" target="_blank" rel="noopener noreferrer">
-              <Image width={32} height={32} src="/image/twitter.test.svg" alt="twitter"></Image>
-            </a>
-            <a href="https://t.me/aelfblockchain" target="_blank" rel="noopener noreferrer">
-              <Image width={32} height={32} src="/image/telegram.test.svg" alt="telegram"></Image>
-            </a>
-            <a href="http://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
-              <Image width={32} height={32} src="/image/youtube.test.svg" alt="youtube"></Image>
-            </a>
-            <a href="https://discord.gg/bgysa9xjvD" target="_blank" rel="noopener noreferrer">
-              <Image width={32} height={32} src="/image/discord.test.svg" alt="discord"></Image>
-            </a>
-          </div>
-        )}
+        <BackToTopButton isDark={true}></BackToTopButton>
+        <div className={`${clsPrefix}-link`}>
+          <a href="https://x.com/aelfblockchain" target="_blank" rel="noopener noreferrer">
+            <Image width={32} height={32} src="/image/twitter.svg" alt="twitter"></Image>
+          </a>
+          <a href="https://t.me/aelfblockchain" target="_blank" rel="noopener noreferrer">
+            <Image width={32} height={32} src="/image/telegram.svg" alt="telegram"></Image>
+          </a>
+          <a href="http://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
+            <Image width={32} height={32} src="/image/youtube.svg" alt="youtube"></Image>
+          </a>
+          <a href="https://discord.gg/bgysa9xjvD" target="_blank" rel="noopener noreferrer">
+            <Image width={32} height={32} src="/image/discord.svg" alt="discord"></Image>
+          </a>
+        </div>
       </div>
       <div className="copywrite">AELF © {new Date().getFullYear()}</div>
     </div>

@@ -12,6 +12,7 @@ export default function SearchComp({ isMobile }: { isMobile: boolean }) {
       label="homeSearch"
       searchValidator={isMobile ? undefined : homeFilters}
       placeholder={'Search by Address / Txn Hash / Block'}
+      searchWrapClassNames="border-D0"
       isMobile={isMobile}
     />
   ) : (

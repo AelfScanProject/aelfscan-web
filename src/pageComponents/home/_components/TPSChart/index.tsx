@@ -168,9 +168,11 @@ function TPSChart({ isMobile, data }: IProps) {
     return getOption(data, defaultChain);
   }, [data, defaultChain]);
   return (
-    <div className={clsx(clsPrefix, isMobile && `${clsPrefix}-mobile`)}>
-      <h3>Transactions Per Minute</h3>
-      <ReactEchartComponent className="chart" option={option}></ReactEchartComponent>
+    <div className="mx-auto box-border w-full max-w-[1440px] px-4 min-[769px]:px-6 min-[993px]:min-w-[200px] min-[993px]:px-10">
+      <div className={clsx(clsPrefix, isMobile && `${clsPrefix}-mobile`)}>
+        <h3>Transactions Per Minute</h3>
+        <ReactEchartComponent className="chart" option={option}></ReactEchartComponent>
+      </div>
     </div>
   );
 }
