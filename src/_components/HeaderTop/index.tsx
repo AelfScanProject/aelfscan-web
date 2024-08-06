@@ -22,7 +22,6 @@ import useSearchFilter from '@_hooks/useSearchFilters';
 // at public file
 const TopIconMain = '/image/aelf-header-top.svg';
 const TopIcoTest = '/image/aelf-header-top-test.svg';
-const ChangeIconMain = '/image/aelf-header-top-change.svg';
 const ChangeIcoTest = '/image/aelf-header-top-test-change.svg';
 
 const clsPrefix = 'header-top-container';
@@ -65,23 +64,18 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
 
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
   return (
-    <div className={clsx(clsPrefix, isMainNet && `${clsPrefix}-main`, isMobile && `${clsPrefix}-mobile`)}>
+    <div className={clsx(clsPrefix, isMobile && `${clsPrefix}-mobile`)}>
       {!isHideSearch && isMobile && (
-        <div className={clsx(!isMainNet && `${clsPrefix}-search-test`, `${clsPrefix}-search`, 'flex justify-center')}>
+        <div className={clsx(`${clsPrefix}-search-test`, `${clsPrefix}-search`, 'flex justify-center')}>
           <Search
             searchIcon={true}
             searchButton={false}
             enterIcon={true}
             label="otherSearch"
-            searchWrapClassNames={clsx(
-              'px-3',
-              'py-2',
-              'rounded',
-              isMainNet ? 'border-[#3A4668] bg-transparent' : 'rounded border-D0 bg-F7',
-            )}
-            searchInputClassNames={clsx('!pl-0', isMainNet && '!text-white placeholder:!text-white')}
+            searchWrapClassNames={clsx('px-3', 'py-2', 'rounded', 'border-D0 bg-F7')}
+            searchInputClassNames={clsx('!pl-0')}
             placeholder={'Search by Address / Txn Hash / Block'}
-            lightMode={!isMainNet}
+            lightMode={true}
           />
         </div>
       )}
@@ -101,7 +95,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
         <>
           {isMainNet && !isMobile && !overviewLoading && tokenPriceInUsd && (
             <div className={clsx(`${clsPrefix}-price`)}>
-              <span className="title">ELF Price</span>
+              <span className="title">ELF Price:</span>
               <span className="price">${tokenPriceInUsd}</span>
               <span className={clsx(`${tokenPriceRate24h < 0 ? 'text-rise-red' : 'text-fall-green'}`, 'range')}>
                 {tokenPriceRate24h <= 0 ? tokenPriceRate24h : `+${tokenPriceRate24h}`}%
@@ -116,16 +110,10 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
                 searchButton={false}
                 enterIcon={true}
                 label="otherSearch"
-                searchWrapClassNames={clsx(
-                  'px-3',
-                  'py-2',
-                  '!w-[550px]',
-                  'rounded',
-                  isMainNet ? 'border-[#3A4668] bg-transparent' : 'rounded border-D0 bg-F7',
-                )}
-                searchInputClassNames={clsx('!pl-0', isMainNet && '!text-white placeholder:!text-white')}
+                searchWrapClassNames={clsx('px-3', 'py-2', '!w-[550px]', 'rounded border-D0 bg-F7')}
+                searchInputClassNames={clsx('!pl-0')}
                 placeholder={'Search by Address / Txn Hash / Block'}
-                lightMode={!isMainNet}
+                lightMode={true}
               />
             )}
             <Dropdown trigger={['click']} overlayClassName="network-drop w-[180px]" menu={{ items }}>
@@ -135,7 +123,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
                     className={`${clsPrefix}-change-icon`}
                     width="16"
                     height="16"
-                    src={`${isMainNet ? ChangeIconMain : ChangeIcoTest}`}
+                    src={`${ChangeIcoTest}`}
                     alt={'explorer-change-icon'}></Image>
                 </div>
               </div>

@@ -15,6 +15,7 @@ const messageType: Array<string> = [
   'ReceiveLatestBlocks',
   'ReceiveTransactionDataChart',
   'ReceiveBpProduce',
+  'ReceiveMergeBlockInfo',
 ];
 
 export default class SignalR {
@@ -23,6 +24,7 @@ export default class SignalR {
   private handlerMap: Map<string, Array<HandlerFn>>;
   private maxRetryCount: number;
   private retryCount: number;
+  private heartBeatInterval: NodeJS.Timeout | null = null;
 
   constructor({ url }: SignalRParams, maxRetryCount: number = 3) {
     this.url = url;
@@ -49,6 +51,15 @@ export default class SignalR {
         console.log('Max retry attempts reached.');
       }
     });
+
+    this.connection?.onreconnecting((err) => {
+      console.log('signalR---onreconnecting', err);
+    });
+
+    this.connection?.onreconnected(() => {
+      console.log('signalR---onreconnected');
+      this.retryCount = 0;
+    });
     console.log('signalR---initAndStart');
     this.listen();
 
@@ -57,6 +68,7 @@ export default class SignalR {
         ?.start()
         .then(() => {
           this.retryCount = 0; // Reset retry count on successful connection
+          this.startHeartBeat();
           resolve(this.connection);
         })
         .catch((e) => {
@@ -139,7 +151,25 @@ export default class SignalR {
     }
   };
 
+  startHeartBeat = () => {
+    this.heartBeatInterval = setInterval(() => {
+      if (this.connection?.state === 'Connected') {
+        this.connection.send('Ping').catch((err) => {
+          console.error('Heartbeat failed:', err);
+        });
+      }
+    }, 30000); // Send a heartbeat every 30 seconds
+  };
+
+  stopHeartBeat = () => {
+    if (this.heartBeatInterval) {
+      clearInterval(this.heartBeatInterval);
+      this.heartBeatInterval = null;
+    }
+  };
+
   destroy(): void {
+    this.stopHeartBeat(); // Stop heartbeat when destroying
     // this.connection?.stop();
     this.handlerMap.clear();
   }

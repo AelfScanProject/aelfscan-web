@@ -42,26 +42,28 @@ const useHomeSocket = (chain: TChainID) => {
         return;
       }
 
-      socket.registerHandler('ReceiveLatestBlocks', (data) => {
-        setBlocks(data?.blocks || []);
+      socket.registerHandler('ReceiveMergeBlockInfo', (data) => {
+        const { latestBlocks, latestTransactions } = data;
+        const blocks = latestBlocks?.blocks || [];
+        const transactions = latestTransactions?.transactions || [];
+        setBlocks(blocks);
         dispatch(
           setHomeBlocks({
             loading: false,
-            data: data?.blocks || [],
+            data: blocks,
           }),
         );
         setBlocksLoading(false);
-      });
-      socket.registerHandler('ReceiveLatestTransactions', (data) => {
-        setTransactions(data.transactions || []);
+        setTransactions(transactions);
         dispatch(
           setHomeTransactions({
             loading: false,
-            data: data?.transactions || [],
+            data: transactions,
           }),
         );
         setTransactionsLoading(false);
       });
+
       socket.registerHandler('ReceiveTransactionDataChart', (data) => {
         setTpsData(data);
         dispatch(
@@ -72,9 +74,8 @@ const useHomeSocket = (chain: TChainID) => {
         );
         setTpsLoading(false);
       });
-      socket.sendEvent('RequestLatestTransactions', { chainId: chain });
-      socket.sendEvent('RequestLatestBlocks', { chainId: chain });
       socket.sendEvent('RequestTransactionDataChart', { chainId: chain });
+      socket.sendEvent('RequestMergeBlockInfo', { chainId: chain });
     }
 
     fetchAndReceiveWs();
@@ -82,8 +83,7 @@ const useHomeSocket = (chain: TChainID) => {
     return () => {
       console.log('signalR----destroy');
       socket?.sendEvent('UnsubscribeTransactionDataChart', { chainId: chain });
-      socket?.sendEvent('UnsubscribeRequestLatestBlocks', { chainId: chain });
-      socket?.sendEvent('UnsubscribeLatestTransactions', { chainId: chain });
+      socket?.sendEvent('UnsubscribeMergeBlockInfo', { chainId: chain });
       socket?.destroy();
     };
   }, [chain, socket]);

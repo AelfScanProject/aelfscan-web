@@ -54,7 +54,6 @@
   }
 }
 .header-top-container-main {
-  @apply bg-main-blue;
   .header-top-container-content {
     @apply mx-auto flex h-full items-center justify-between px-5;
   }
@@ -67,11 +66,11 @@
     @apply py-1 pl-1 pr-2 mr-auto;
     .title,
     .price {
-      @apply text-[14px] leading-[22px] text-white mr-2;
+      @apply text-[14px] leading-[22px] mr-2;
     }
   }
   .header-top-container-explorer-change {
-    @apply border-[#3A4668];
+    @apply border-color-divider;
   }
 }
 .header-top-container-mobile {

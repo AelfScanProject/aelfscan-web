@@ -1,13 +1,13 @@
 .home-container {
   @apply w-full flex align-middle flex-col m-auto;
   .banner-section {
-    @apply w-full h-[184px] items-center flex justify-between gap-6 px-0 py-10 flex-col;
+    @apply w-full h-[224px] items-start flex justify-start gap-4 px-0 py-10 flex-col min-[993px]:min-w-[200px] max-w-[1440px] box-border ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
     h2 {
-      @apply text-center text-[24px];
+      @apply text-left text-[24px] font-bold leading-8 text-white;
     }
   }
   .latest-all {
-    @apply w-full flex min-[993px]:flex-row mt-4 gap-4 box-border flex-col flex-wrap;
+    @apply w-full flex min-[993px]:flex-row mt-4 gap-4 box-border flex-col flex-wrap min-[993px]:min-w-[200px] max-w-[1440px] ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
     > .home-latest {
       @apply min-[993px]:w-[50%] flex-1 w-full;
     }
@@ -18,17 +18,19 @@
     }
   }
   .search-section {
-    @apply flex items-center justify-center w-full;
+    @apply flex items-center justify-start w-full;
   }
 }
 
-.banner-img-warp {
-  position: absolute;
-  width: 100%;
-  gap: 24px;
-  top: 0;
-  height: 184px;
-  background: url('/image/banner_pc.png') no-repeat 50%;
-  background-position-y: top;
-  @apply top-[56px] min-[993px]:top-[104px] min-[993px]:bg-[length:953px] min-[769px]:bg-[length:721px] bg-[length:560px];
+.banner-section-container {
+  background-image: url('/image/home-bg-main.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+
+.banner-section-container-test {
+  background-image: url('/image/home-bg-test.png');
+  background-color: rgb(248 249 250);
 }

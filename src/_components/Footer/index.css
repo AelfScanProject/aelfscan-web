@@ -1,5 +1,5 @@
 .footer-container {
-  @apply bg-white bottom-0 w-full h-[330px] relative;
+  @apply bg-F7 bottom-0 w-full h-[330px] relative border-t border-solid border-color-divider;
   &-bg {
     @apply absolute top-0 left-0;
   }
@@ -81,28 +81,5 @@
         @apply w-[169.5px] flex-none;
       }
     }
-  }
-}
-.footer-container-main {
-  @apply bg-main-blue;
-  .footer-container-content {
-    @apply text-white border-[#3A4668];
-    .left {
-      .description {
-        @apply text-white;
-      }
-    }
-    .right {
-      .ecosystem,
-      .community,
-      .developer {
-        .text {
-          @apply text-white;
-        }
-      }
-    }
-  }
-  .copywrite {
-    @apply text-white;
   }
 }

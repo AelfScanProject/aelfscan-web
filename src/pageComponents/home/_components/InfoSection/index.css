@@ -1,5 +1,5 @@
 .home-info-section {
-  @apply rounded-lg w-full flex py-5 px-4 shadow-[0_8px_16px_0_rgba(0,0,0,0.04)] bg-white  flex-wrap;
+  @apply rounded-lg w-full flex py-5 px-4 shadow-[0_8px_16px_0_rgba(0,0,0,0.04)] flex-wrap box-border min-[993px]:-mt-12 -mt-[72px] relative z-10 bg-white;
   &-col-item {
     @apply flex-[1_1_auto] border-r-[1px] px-5 overflow-hidden;
     &:first-child {

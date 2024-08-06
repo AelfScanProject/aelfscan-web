@@ -55,7 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 width="0"
                 style="display:none;visibility:hidden"></iframe>`,
           }}></noscript>
-        <div className="relative box-border min-h-screen bg-global-grey">
+        <div className="relative box-border min-h-screen bg-[#FBFBFB]">
           <PublicEnvProvider>
             <StyleRegistry>
               <RootProvider isMobileSSR={isMobile} config={config} chartImg={chartImg}>
