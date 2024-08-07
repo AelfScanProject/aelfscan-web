@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { fetchContractCode } from '@_api/fetchContact';
 import { TChainID } from '@_api/type';
-import { getAddress, getFirstHashValue, getSecondHashValue } from '@_utils/formatter';
+import { getAddress } from '@_utils/formatter';
 import { Skeleton } from 'antd';
 import { useMobileContext } from '@app/pageProvider';
 import { getAElf, getContractInstance } from '@_utils/deserializeLog';
@@ -44,35 +44,49 @@ export default function Contract() {
   const [readMethods, setReadMethods] = useState<IMethod[]>([]);
   const [contract, setContract] = useState<any>();
 
-  const transferMethods = async (methodsObj: any) => {
-    const viewMethod: string[] = await aelfInstance?.chain.getContractViewMethodList(getAddress(address));
-    const res: IMethod[] = [];
-    const readRes: IMethod[] = [];
-    const keysArr = Object.keys(methodsObj);
-    for (let i = 0; i < keysArr.length; i++) {
-      const temp: any = {};
-      temp.name = keysArr[i];
-      const fields = methodsObj[keysArr[i]].fields;
-      temp.input = Object.keys(fields).map((item) => {
-        return {
-          name: item,
-          type: fields[item].type,
-        };
-      });
-      const isRead = viewMethod.includes(temp.name);
-      temp.type = !isRead ? 'write' : 'read';
-      temp.fn = methodsObj[keysArr[i]];
-      if (isRead) {
-        readRes.push(temp);
-      } else {
-        res.push(temp);
+  const transferMethods = useCallback(
+    async (methodsObj: any) => {
+      let viewMethod: string[] = [];
+      try {
+        const response = await fetch(`${RPC_URL}/api/contract/ContractViewMethodList?address=${getAddress(address)}`);
+        if (response.ok) {
+          viewMethod = await response.json();
+        } else {
+          console.log('fetch fail');
+        }
+      } catch (error) {
+        console.log(error, 'error');
       }
-    }
-    return {
-      readMethods: readRes,
-      writeMethods: res,
-    };
-  };
+
+      const res: IMethod[] = [];
+      const readRes: IMethod[] = [];
+      const keysArr = Object.keys(methodsObj);
+      for (let i = 0; i < keysArr.length; i++) {
+        const temp: any = {};
+        temp.name = keysArr[i];
+        const fields = methodsObj[keysArr[i]].fields;
+        temp.input = Object.keys(fields).map((item) => {
+          return {
+            name: item,
+            type: fields[item].type,
+          };
+        });
+        const isRead = viewMethod.includes(temp.name);
+        temp.type = !isRead ? 'write' : 'read';
+        temp.fn = methodsObj[keysArr[i]];
+        if (isRead) {
+          readRes.push(temp);
+        } else {
+          res.push(temp);
+        }
+      }
+      return {
+        readMethods: readRes,
+        writeMethods: res,
+      };
+    },
+    [RPC_URL, address],
+  );
   const getMethod = useCallback(async () => {
     const methods = await getContractMethods(aelfInstance, address);
     const contract = await getContractInstance(getAddress(address), RPC_URL);
@@ -81,7 +95,7 @@ export default function Contract() {
     setWriteMethods(writeMethods);
     setReadMethods(readMethods);
     console.log(methods, 'methods', readMethods, writeMethods);
-  }, [RPC_URL, address, aelfInstance]);
+  }, [RPC_URL, address, aelfInstance, transferMethods]);
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
