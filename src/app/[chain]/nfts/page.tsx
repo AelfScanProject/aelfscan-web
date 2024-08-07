@@ -22,7 +22,7 @@ export default async function Nfts({ params, searchParams }) {
     sort: SortEnum.desc,
     cache: 'no-store',
   });
-  return <List SSRData={data} defaultPage={p} defaultPageSize={ps} />;
+  return <List SSRData={data} defaultPage={Number(p)} defaultPageSize={Number(ps)} />;
 }
 
 export const revalidate = 1;

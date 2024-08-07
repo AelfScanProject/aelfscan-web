@@ -15,11 +15,12 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { IAccountResponseData, IAccountsItem, TChainID } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
 import { useParams } from 'next/navigation';
-import { getPageNumber, thousandsNumber } from '@_utils/formatter';
+import { getAccountSearchAfter, getSort, thousandsNumber } from '@_utils/formatter';
 import { fetchTopAccounts } from '@_api/fetchContact';
-import { updateQueryParams } from '@_utils/urlUtils';
+import { PageTypeEnum } from '@_types';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 
-export default function List({ SSRData, defaultPage, defaultPageSize }) {
+export default function List({ SSRData, defaultPage, defaultPageSize, defaultPageType }) {
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
@@ -27,14 +28,23 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<IAccountsItem[]>(SSRData.list);
   const [totalBalance, setTotalBalance] = useState<number>(SSRData.totalBalance);
-  console.log(SSRData, 'SSRData');
+  const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
+
+  const updateQueryParams = useUpdateQueryParams();
   const { chain } = useParams<{ chain: TChainID }>();
   const fetchData = useCallback(
-    async (page, size) => {
+    async (page, size, data, pageType) => {
+      const sort = getSort(pageType, page);
+      const searchAfter = getAccountSearchAfter(page, data, pageType);
+      updateQueryParams({ p: page, ps: size, pageType, searchAfter: JSON.stringify(searchAfter) });
       const params = {
         chainId: chain || 'AELF',
-        skipCount: getPageNumber(page, size),
         maxResultCount: size,
+        orderInfos: [
+          { orderBy: 'FormatAmount', sort },
+          { orderBy: 'Address', sort },
+        ],
+        searchAfter,
       };
       setLoading(true);
       try {
@@ -47,7 +57,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
       }
       setLoading(false);
     },
-    [chain],
+    [chain, updateQueryParams],
   );
   const multiTitle = useMemo(() => {
     return `A total of ${thousandsNumber(total)} accounts found (${totalBalance} ELF)`;
@@ -61,16 +71,23 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
   }, [currentPage, pageSize, chain]);
 
   const pageChange = (page: number) => {
+    let pageType;
+    if (page > currentPage) {
+      pageType = PageTypeEnum.NEXT;
+      setPageType(PageTypeEnum.NEXT);
+    } else {
+      pageType = PageTypeEnum.PREV;
+      setPageType(PageTypeEnum.PREV);
+    }
     setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize });
-    fetchData(page, pageSize);
+    fetchData(page, pageSize, data, pageType);
   };
 
   const pageSizeChange = (page: number, pageSize: number) => {
     setPageSize(pageSize);
     setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize });
-    fetchData(page, pageSize);
+    setPageType(PageTypeEnum.NEXT);
+    fetchData(page, pageSize, data, PageTypeEnum.NEXT);
   };
 
   return (
@@ -89,6 +106,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
         isMobile={isMobile}
         rowKey="address"
         total={total}
+        showLast={false}
         options={pageSizeOption}
         pageSize={pageSize}
         pageNum={currentPage}
