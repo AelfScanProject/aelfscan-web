@@ -1,7 +1,5 @@
 'use client';
 import HeadTitle from '@_components/HeaderTitle';
-import JumpButton, { JumpTypes } from '@_components/JumpButton';
-import { useRouter } from 'next/navigation';
 import './detail.css';
 import { useCallback, useState } from 'react';
 import { TabsProps } from 'antd';
@@ -13,22 +11,11 @@ import EPTabs from '@_components/EPTabs';
 import { ITransactionDetailData } from '@_api/type';
 import EPTooltip from '@_components/EPToolTip';
 import IconFont from '@_components/IconFont';
+import CommonEmpty from '@_components/Table/empty';
 
 export default function Detail({ SSRData }: { SSRData: ITransactionDetailData }) {
   console.log(SSRData, 'SSRData');
-  // const router = useRouter();
   const [detailData] = useState(SSRData);
-  // const isFirst = detailData.transactionId === '';
-  // const isLast = detailData.transactionId === '';
-  // const jump = (type: JumpTypes) => {
-  //   switch (type) {
-  //     case JumpTypes.Prev:
-  //       router.push(`/tx/${detailData.transactionId}`);
-  //       break;
-  //     case JumpTypes.Next:
-  //       router.push(`/tx/${detailData.transactionId}`);
-  //   }
-  // };
   const [showMore, setShowMore] = useState<boolean>(false);
   const moreChange = useCallback(() => {
     setShowMore(!showMore);
@@ -60,7 +47,13 @@ export default function Detail({ SSRData }: { SSRData: ITransactionDetailData })
             </EPTooltip>
             Transaction Receipt Event Logs
           </div>
-          <LogsContainer Logs={detailData.logEvents} />
+          {detailData.logEvents?.length ? (
+            <LogsContainer Logs={detailData.logEvents} />
+          ) : (
+            <div className="pb-4">
+              <CommonEmpty type="nodata" />
+            </div>
+          )}
         </div>
       ),
     },
