@@ -17,8 +17,8 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
   console.log(SSRData, 'transactionSSRData');
   const isMobile = useMobileAll();
 
-  const [currentPage, setCurrentPage] = useState<number>(defaultPage);
-  const [pageSize, setPageSize] = useState<number>(defaultPageSize);
+  const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
+  const [pageSize, setPageSize] = useState<number>(Number(defaultPageSize));
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<ITransactionsResponseItem[]>(SSRData.transactions);
