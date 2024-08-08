@@ -7,13 +7,14 @@ import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { pageSizeOption } from '@_utils/contant';
 import { ITransactionsResponseItem, TChainID } from '@_api/type';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { fetchTransactionList } from '@_api/fetchTransactions';
-import { getAddress, getPageNumber } from '@_utils/formatter';
+import { getAddress, getAddressSearchAfter, getPageNumber, getSort } from '@_utils/formatter';
 import { useEffectOnce } from 'react-use';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+import { PageTypeEnum } from '@_types';
 const TAB_NAME = 'transactions';
-export default function List({ SSRData, showHeader = true, defaultPage, defaultPageSize }) {
+export default function List({ SSRData, showHeader = true, defaultPage, defaultPageSize, defaultPageType }) {
   console.log(SSRData, 'transactionSSRData');
   const isMobile = useMobileAll();
 
@@ -23,25 +24,47 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<ITransactionsResponseItem[]>(SSRData.transactions);
   const [timeFormat, setTimeFormat] = useState<string>('Age');
+  const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
   const { chain, address } = useParams();
   const mountRef = useRef(false);
+  const searchParams = useSearchParams();
+  const defaultSearchAfter = searchParams.get('searchAfter');
+  const activeTab = (searchParams.get('tab') as string) === TAB_NAME;
   const updateQueryParams = useUpdateQueryParams();
   const fetchData = useCallback(
-    async (page, pageSize) => {
+    async (page, pageSize, data, pageType) => {
+      const sort = getSort(pageType, page);
+      const searchAfter = getAddressSearchAfter(page, data, pageType);
       setLoading(true);
       const params = {
         chainId: chain as TChainID,
-        skipCount: getPageNumber(page, pageSize),
         maxResultCount: pageSize,
+        orderInfos: [
+          { orderBy: 'BlockHeight', sort },
+          { orderBy: 'TransactionId', sort },
+        ],
         address: address && getAddress(address as string),
+        searchAfter:
+          !mountRef.current && defaultSearchAfter && activeTab ? JSON.parse(defaultSearchAfter) : searchAfter,
       };
       try {
         if (mountRef.current) {
-          updateQueryParams({
-            p: page,
-            ps: pageSize,
-            tab: TAB_NAME,
-          });
+          if (showHeader) {
+            updateQueryParams({
+              p: page,
+              ps: pageSize,
+              pageType,
+              searchAfter: JSON.stringify(searchAfter),
+            });
+          } else {
+            updateQueryParams({
+              p: page,
+              ps: pageSize,
+              tab: TAB_NAME,
+              pageType,
+              searchAfter: JSON.stringify(searchAfter),
+            });
+          }
         }
       } catch (error) {
         console.log(error, 'error.rr');
@@ -55,12 +78,12 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
         mountRef.current = true;
       }
     },
-    [address, chain],
+    [activeTab, address, chain, defaultSearchAfter, showHeader, updateQueryParams],
   );
 
   useEffectOnce(() => {
     if (showHeader) return;
-    fetchData(currentPage, pageSize);
+    fetchData(currentPage, pageSize, data, pageType);
   });
   const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
     return getColumns({
@@ -82,14 +105,23 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
   }, []);
 
   const pageChange = (page: number) => {
+    let pageType;
+    if (page > currentPage) {
+      pageType = PageTypeEnum.NEXT;
+      setPageType(PageTypeEnum.NEXT);
+    } else {
+      pageType = PageTypeEnum.PREV;
+      setPageType(PageTypeEnum.PREV);
+    }
     setCurrentPage(page);
-    fetchData(page, pageSize);
+    fetchData(page, pageSize, data, pageType);
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
-    fetchData(page, size);
+    setPageType(PageTypeEnum.NEXT);
+    fetchData(page, size, data, PageTypeEnum.NEXT);
   };
 
   return (
@@ -104,6 +136,7 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
         }}
         loading={loading}
         dataSource={data}
+        showLast={false}
         columns={columns}
         isMobile={isMobile}
         rowKey="transactionId"
