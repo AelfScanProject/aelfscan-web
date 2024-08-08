@@ -18,9 +18,14 @@ import { useMobileAll } from '@_hooks/useResponsive';
 const clsPrefix = 'home-container';
 import { Skeleton, Spin } from 'antd';
 import { useAppSelector } from '@_store';
+import { useEnvContext } from 'next-runtime-env';
+import { checkMainNet } from '@_utils/isMainNet';
 function Home() {
   const { blocks, transactions, tpsData } = useAppSelector((state) => state.getChainId);
   console.log(blocks, transactions, tpsData, '0000');
+
+  const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
+  const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
 
   const isMobile = useMobileAll();
 
@@ -50,30 +55,28 @@ function Home() {
   }, [mobile, blocks, transactions]);
 
   return (
-    <main className={clsx(`${clsPrefix}`, mobile && `${clsPrefix}-mobile`)}>
-      <div className="banner-section">
-        <div className={clsx('banner-img-warp')}></div>
-        {/* <Image src={BannerPc} layout="fill" objectFit="contain" priority alt="Picture of the banner"></Image> */}
-        <h2>AELF Explorer</h2>
-        <div className="search-section">
-          <SearchComp isMobile={mobile} />
+    <main className={clsx(`${clsPrefix}`, mobile && `${clsPrefix}-mobile`, 'relative')}>
+      <div className={`banner-section-container z-8 relative w-full ${!isMainNet && 'banner-section-container-test'}`}>
+        <div className="banner-section z-8 relative flex justify-start">
+          {/* <Image src={BannerPc} layout="fill" objectFit="contain" priority alt="Picture of the banner"></Image> */}
+          <h2 className={`${!isMainNet && '!text-base-100'}`}>AELF Explorer</h2>
+          <div className="search-section">
+            <SearchComp isMobile={mobile} />
+          </div>
         </div>
       </div>
-      {OverView}
+
+      <div className="mx-auto box-border w-full max-w-[1440px] px-4 min-[769px]:px-6 min-[993px]:min-w-[200px] min-[993px]:px-10">
+        {OverView}
+      </div>
       {LatestAll}
-      {!tpsData.loading && tpsData.data ? (
-        <TPSChart isMobile={mobile} data={tpsData.data}></TPSChart>
-      ) : (
-        <Skeleton active />
-      )}
-      {/* <Link
-        className="px-4 py-1 text-sm font-semibold text-purple-600 border border-purple-200 rounded-full hover:text-white hover:bg-base-100 hover:border-transparent "
-        href="/address">
-        Address
-      </Link>
-      <Link className="btn-primary" href="/blocks">
-        blocks
-      </Link> */}
+      <div className="mx-auto box-border w-full max-w-[1440px] px-4 min-[769px]:px-6 min-[993px]:min-w-[200px] min-[993px]:px-10">
+        {!tpsData.loading && tpsData.data ? (
+          <TPSChart isMobile={mobile} data={tpsData.data}></TPSChart>
+        ) : (
+          <Skeleton className="w-full" active />
+        )}
+      </div>
     </main>
   );
 }

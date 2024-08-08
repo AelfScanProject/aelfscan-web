@@ -35,12 +35,13 @@ export default function ChainSelect({ setCurrent }) {
   });
 
   return (
-    <div className="chain-select-container">
+    <div className="chain-select-container" id="chain-select-container">
       <Select
         className="chain-select common-select-wrapper"
         popupClassName="chain-select-options"
         value={selectChain}
         popupMatchSelectWidth={false}
+        getPopupContainer={() => document.getElementById('chain-select-container')!}
         onChange={onChangeHandler}>
         {chainArr?.map((item) => {
           return (

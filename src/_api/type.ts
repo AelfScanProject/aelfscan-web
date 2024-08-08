@@ -236,6 +236,8 @@ export interface TTransactionsListRequestParams extends RequestInit {
   skipCount?: number;
   maxResultCount: number;
   address?: string;
+  orderInfos?: ISortInfo[];
+  searchAfter?: any[];
 }
 
 // collection
@@ -271,8 +273,10 @@ export interface ICollectionItemHoldersRequestParams extends RequestInit {
 // Contract
 export interface IContractRequestParams extends RequestInit {
   chainId: TChainID;
-  skipCount: number;
+  skipCount?: number;
   maxResultCount: number;
+  orderInfos?: ISortInfo[];
+  searchAfter?: any[];
 }
 export interface IContractDataItem {
   address: string;

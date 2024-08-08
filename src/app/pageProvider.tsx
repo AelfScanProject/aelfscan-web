@@ -58,7 +58,9 @@ function RootProvider({ children, isMobileSSR, config, chartImg }) {
           <ReduxProvider store={storeRef.current}>
             <WebLoginProvider config={config}>
               {/* <OpentelemetryProvider config={config}> */}
-              <div className="flex min-h-screen flex-col justify-between">{children}</div>
+              <div id="scroll-content" className="flex min-h-screen flex-col justify-between">
+                {children}
+              </div>
               {/* </OpentelemetryProvider> */}
             </WebLoginProvider>
           </ReduxProvider>

@@ -73,6 +73,12 @@ const Search = ({
   useEffect(() => {
     fetchAdsDetail({ label: label }).then((res) => {
       setAdsDetail(res);
+      AdTracker.trackEvent('ads-exposure', {
+        date: dayjs(new Date()).format('YYYY-MM-DD'),
+        pageName: label,
+        adsId: res?.adsId,
+        adsName: res?.adsText,
+      });
     });
   }, [label]);
 
@@ -164,12 +170,6 @@ const Search = ({
     (e: MouseEvent<HTMLElement>) => {
       console.log('link');
       AdTracker.trackEvent('ads-click', {
-        date: dayjs(new Date()).format('YYYY-MM-DD'),
-        pageName: label,
-        adsId: adsDetail?.adsId,
-        adsName: adsDetail?.adsText,
-      });
-      AdTracker.trackEvent('ads-exposure', {
         date: dayjs(new Date()).format('YYYY-MM-DD'),
         pageName: label,
         adsId: adsDetail?.adsId,

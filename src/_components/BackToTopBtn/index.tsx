@@ -14,12 +14,8 @@ const BackToTopButton = ({ isDark }: IProps) => {
 
   const { run: checkScrollHeight } = useThrottleFn(
     () => {
-      const node = document?.querySelector('#scroll-content') as Element;
-      if (!node) {
-        return;
-      }
-
-      if (node.scrollTop > BACK_TO_TOP_HEIGHT) {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > BACK_TO_TOP_HEIGHT) {
         setShowButton(true);
       } else {
         setShowButton(false);
@@ -32,19 +28,17 @@ const BackToTopButton = ({ isDark }: IProps) => {
     },
   );
   useEffect(() => {
-    const node = document?.querySelector('#scroll-content') as Element;
-    node?.addEventListener('scroll', checkScrollHeight);
+    window.addEventListener('scroll', checkScrollHeight);
     return () => {
-      node?.removeEventListener('scroll', checkScrollHeight);
+      window.removeEventListener('scroll', checkScrollHeight);
     };
   }, [checkScrollHeight]);
 
   const scrollToTop = () => {
     try {
-      const node = document?.querySelector('#scroll-content') as Element;
-      animateScrollTo(0, { speed: 100, elementToScroll: node });
+      animateScrollTo(0, { speed: 100, elementToScroll: document.documentElement });
     } catch (e) {
-      throw new Error('dom not found');
+      console.error('Error scrolling to top:', e);
     }
   };
 
@@ -53,7 +47,7 @@ const BackToTopButton = ({ isDark }: IProps) => {
   }
 
   return (
-    <div onClick={scrollToTop} className={clsx('back-to-top-container', isDark && 'back-to-top-main')}>
+    <div onClick={scrollToTop} className={clsx('back-to-top-container')}>
       <IconFont type="Backtotop" />
       <span className="text">Back to Top</span>
     </div>

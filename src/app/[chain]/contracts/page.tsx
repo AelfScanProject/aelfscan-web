@@ -18,7 +18,7 @@ export default async function BlocksPage({ params, searchParams }) {
     skipCount: getPageNumber(Number(p), ps),
     cache: 'no-store',
   });
-  return <ContractsList SSRData={data} defaultPage={p} defaultPageSize={ps} />;
+  return <ContractsList SSRData={data} defaultPage={Number(p)} defaultPageSize={Number(ps)} />;
 }
 
 export const revalidate = 1;
