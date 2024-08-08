@@ -134,6 +134,15 @@ export const getAccountSearchAfter = (currentPage, data, pageType) => {
     : ([] as any[]);
 };
 
+export const getAddressSearchAfter = (currentPage, data, pageType) => {
+  return currentPage !== 1 && data && data.length
+    ? [
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockHeight : data[0].blockHeight,
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
+      ]
+    : ([] as any[]);
+};
+
 export const getHoldersSearchAfter = (currentPage, data, pageType) => {
   return currentPage !== 1 && data && data.length
     ? [

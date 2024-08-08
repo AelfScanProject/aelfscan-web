@@ -236,6 +236,8 @@ export interface TTransactionsListRequestParams extends RequestInit {
   skipCount?: number;
   maxResultCount: number;
   address?: string;
+  orderInfos?: ISortInfo[];
+  searchAfter?: any[];
 }
 
 // collection

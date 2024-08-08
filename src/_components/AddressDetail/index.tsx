@@ -51,7 +51,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     contractTransactionHash,
   } = SSRData;
 
-  const { defaultPage, defaultPageSize } = useSearchAfterParams(TablePageSize.mini, 'transactions');
+  const { defaultPage, defaultPageSize, defaultPageType } = useSearchAfterParams(TablePageSize.mini, 'transactions');
   const OverviewInfo = useMemo(() => {
     return [
       {
@@ -179,6 +179,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           SSRData={{ total: 0, data: [] }}
           defaultPage={defaultPage}
           defaultPageSize={defaultPageSize}
+          defaultPageType={defaultPageType}
         />
       ),
     },
