@@ -34,6 +34,7 @@ interface IProps {
 export default function HeaderTop({ setCurrent, selectedKey, networkList, headerMenuList }: IProps) {
   const isMobile = usePad();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
+  const origin = typeof window !== 'undefined' && window.location.origin;
   const pathname = usePathname();
   const isHideSearch = ['/', '/tDVW', '/tDVV'].includes(pathname) || pathname.includes('search-');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
@@ -44,7 +45,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
         label: (
           <a
             target="_blank"
-            className={`text-sm leading-[22px] ${window.location.origin === item.network_id?.path ? '!text-link' : '!text-base-100'}`}
+            className={`text-sm leading-[22px] ${origin === item.network_id?.path ? '!text-link' : '!text-base-100'}`}
             href={item.network_id?.path}
             rel="noopener noreferrer">
             {item.network_id?.label}
@@ -52,7 +53,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
         ),
       };
     });
-  }, [networkList]);
+  }, [networkList, origin]);
 
   const { chain } = useParams();
   const router = useRouter();

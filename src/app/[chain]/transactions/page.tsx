@@ -31,5 +31,5 @@ export default async function BlocksPage({ params, searchParams }) {
   return <TransactionsList SSRData={data} defaultPage={p} defaultPageSize={ps} defaultPageType={defaultPageType} />;
 }
 
-export const revalidate = 1;
+export const revalidate = 0;
 export const dynamic = 'force-dynamic';

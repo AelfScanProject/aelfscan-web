@@ -21,5 +21,5 @@ export default async function BlocksPage({ params, searchParams }) {
   return <ContractsList SSRData={data} defaultPage={Number(p)} defaultPageSize={Number(ps)} />;
 }
 
-export const revalidate = 1;
+export const revalidate = 0;
 export const dynamic = 'force-dynamic';
