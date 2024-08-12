@@ -155,7 +155,7 @@ export default function Holder(props) {
         title: "A total of ".concat(total, " holders found")
       }
     },
-    showTopSearch: true,
+    showTopSearch: false,
     topSearchProps: _objectSpread(_objectSpread({}, topSearchProps), {}, {
       onSearchChange: onSearchChange
     }),

@@ -21,8 +21,6 @@ export default function Inventory(props) {
   var searchParams = useSearchParams();
   var chain = searchParams.get('chainId');
   var collectionSymbol = searchParams.get('collectionSymbol') || '';
-  var topSearchProps = props.topSearchProps,
-    search = props.search;
   var _useSearchAfterParams = useSearchAfterParams(50, TAB_NAME),
     defaultPage = _useSearchAfterParams.defaultPage,
     defaultPageSize = _useSearchAfterParams.defaultPageSize;
@@ -48,6 +46,39 @@ export default function Inventory(props) {
     setData = _useState10[1];
   var mountRef = useRef(false);
   var updateQueryParams = useUpdateQueryParams();
+  var _useState11 = useState(''),
+    _useState12 = _slicedToArray(_useState11, 2),
+    text = _useState12[0],
+    setSearchText = _useState12[1];
+  var _useState13 = useState(props.search || ''),
+    _useState14 = _slicedToArray(_useState13, 2),
+    searchVal = _useState14[0],
+    setSearchVal = _useState14[1];
+
+  // only trigger when onPress / onClear
+  var handleSearchChange = function handleSearchChange(val) {
+    setCurrentPage(1);
+    setSearchVal(val);
+  };
+  var handleClear = function handleClear() {
+    setCurrentPage(1);
+    setSearchVal('');
+  };
+  var onChange = function onChange(_ref) {
+    var currentTarget = _ref.currentTarget;
+    setSearchText(currentTarget.value);
+    if (!currentTarget.value.trim()) {
+      handleClear();
+    }
+  };
+  var topSearchProps = {
+    value: text,
+    onChange: onChange,
+    disabledTooltip: false,
+    onSearchChange: handleSearchChange,
+    onClear: handleClear,
+    placeholder: 'Filter Token Symbol'
+  };
   var fetchInventoryListWrap = useCallback( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
     var res;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -71,7 +102,7 @@ export default function Inventory(props) {
             chainId: chain,
             skipCount: (currentPage - 1) * pageSize,
             maxResultCount: pageSize,
-            search: getAddress(search !== null && search !== void 0 ? search : ''),
+            search: getAddress(searchVal !== null && searchVal !== void 0 ? searchVal : ''),
             collectionSymbol: collectionSymbol
           });
         case 5:
@@ -94,9 +125,9 @@ export default function Inventory(props) {
           return _context.stop();
       }
     }, _callee, null, [[1, 11, 14, 17]]);
-  })), [chain, currentPage, pageSize, search, collectionSymbol]);
+  })), [chain, currentPage, pageSize, searchVal, collectionSymbol]);
   var pageChange = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(page) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(page) {
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
@@ -108,11 +139,11 @@ export default function Inventory(props) {
       }, _callee2);
     }));
     return function pageChange(_x) {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
   var pageSizeChange = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(page, size) {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(page, size) {
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
@@ -125,7 +156,7 @@ export default function Inventory(props) {
       }, _callee3);
     }));
     return function pageSizeChange(_x2, _x3) {
-      return _ref3.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
   useEffect(function () {

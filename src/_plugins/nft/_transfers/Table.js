@@ -31,8 +31,6 @@ export default function ItemActivityTable(props) {
   var searchParams = useSearchParams();
   var chain = searchParams.get('chainId');
   var collectionSymbol = searchParams.get('collectionSymbol') || '';
-  var topSearchProps = props.topSearchProps,
-    search = props.search;
   var isMobile = useMobileAll();
   var _useSearchAfterParams = useSearchAfterParams(50, TAB_NAME),
     activeTab = _useSearchAfterParams.activeTab,
@@ -66,6 +64,41 @@ export default function ItemActivityTable(props) {
     setPageType = _useState12[1];
   var mountRef = useRef(false);
   var updateQueryParams = useUpdateQueryParams();
+  var _useState13 = useState(''),
+    _useState14 = _slicedToArray(_useState13, 2),
+    text = _useState14[0],
+    setSearchText = _useState14[1];
+  var _useState15 = useState(props.search || ''),
+    _useState16 = _slicedToArray(_useState15, 2),
+    searchVal = _useState16[0],
+    setSearchVal = _useState16[1];
+
+  // only trigger when onPress / onClear
+  var handleSearchChange = function handleSearchChange(val) {
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+    setSearchVal(val);
+  };
+  var handleClear = function handleClear() {
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+    setSearchVal('');
+  };
+  var onChange = function onChange(_ref) {
+    var currentTarget = _ref.currentTarget;
+    setSearchText(currentTarget.value);
+    if (!currentTarget.value.trim()) {
+      handleClear();
+    }
+  };
+  var topSearchProps = {
+    value: text,
+    onChange: onChange,
+    disabledTooltip: false,
+    onSearchChange: handleSearchChange,
+    onClear: handleClear,
+    placeholder: 'Filter Address / Txn Hash' // Token Symbol
+  };
   var fetchTableData = useCallback( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
     var sort, searchAfter, res;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -91,7 +124,7 @@ export default function ItemActivityTable(props) {
           _context.next = 7;
           return fetchNFTTransfers({
             maxResultCount: pageSize,
-            search: getAddress(search !== null && search !== void 0 ? search : ''),
+            search: getAddress(searchVal !== null && searchVal !== void 0 ? searchVal : ''),
             collectionSymbol: collectionSymbol,
             chainId: chain,
             orderInfos: [{
@@ -119,11 +152,11 @@ export default function ItemActivityTable(props) {
           return _context.stop();
       }
     }, _callee, null, [[1,, 12, 16]]);
-  })), [pageSize, currentPage, search, collectionSymbol, chain, pageType]);
-  var _useState13 = useState('Age'),
-    _useState14 = _slicedToArray(_useState13, 2),
-    timeFormat = _useState14[0],
-    setTimeFormat = _useState14[1];
+  })), [pageType, currentPage, pageSize, searchVal, collectionSymbol, chain]);
+  var _useState17 = useState('Age'),
+    _useState18 = _slicedToArray(_useState17, 2),
+    timeFormat = _useState18[0],
+    setTimeFormat = _useState18[1];
   var columns = useMemo(function () {
     return getColumns({
       timeFormat: timeFormat,
@@ -146,11 +179,6 @@ export default function ItemActivityTable(props) {
     setCurrentPage(page);
     setPageType(PageTypeEnum.NEXT);
   };
-  var onSearchChange = function onSearchChange(value) {
-    setCurrentPage(1);
-    setPageType(PageTypeEnum.NEXT);
-    topSearchProps === null || topSearchProps === void 0 || topSearchProps.onSearchChange(value);
-  };
   useEffect(function () {
     fetchTableData();
   }, [fetchTableData]);
@@ -163,15 +191,12 @@ export default function ItemActivityTable(props) {
       }
     },
     showTopSearch: true,
-    topSearchProps: _objectSpread(_objectSpread({}, topSearchProps), {}, {
-      onSearchChange: onSearchChange
-    }),
+    topSearchProps: _objectSpread({}, topSearchProps),
     loading: loading,
     dataSource: data,
     columns: columns,
     isMobile: isMobile,
     showLast: false,
-    rowKey: "transactionId",
     total: total,
     pageSize: pageSize,
     pageNum: currentPage,
