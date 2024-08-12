@@ -61,7 +61,7 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
         </div>
         <div className="description-item">
           <span className="label">Transaction Hash: </span>
-          <Link className="break-words text-link" href={`/${chain}/tx/${transactionId}?blockHeight=${blockHeight}`}>
+          <Link className="break-words text-link" href={`/${chain}/tx/${transactionId}`}>
             {transactionId}
           </Link>
         </div>

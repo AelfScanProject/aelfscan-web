@@ -49,7 +49,7 @@ function NftCardList(props) {
       title: "Click to see transaction with last sale price of $".concat(itemObj.lastSalePriceInUsd, " (").concat(itemObj.lastSalePrice, " ").concat(itemObj.lastSaleAmountSymbol || '', ")")
     }, /*#__PURE__*/React.createElement(Link, {
       className: "inline-block truncate",
-      href:   "/".concat(chain, "/tx/").concat(itemObj.lastTransactionId, "?blockHeight=").concat(itemObj.blockHeight)
+      href:   "/".concat(chain, "/tx/").concat(itemObj.lastTransactionId)
     }, /*#__PURE__*/React.createElement("span", {
       className: "mx-1"
     }, "$", itemObj.lastSalePriceInUsd), /*#__PURE__*/React.createElement("span", null, "(", itemObj.lastSalePrice, " ", itemObj.lastSaleAmountSymbol, ")"))) : /*#__PURE__*/ React.createElement(

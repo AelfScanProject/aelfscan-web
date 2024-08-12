@@ -100,8 +100,8 @@ const Search = ({
   const onSearchHandler = useCallback(async () => {
     if (!dataWithOrderIdx) return;
     if (dataWithOrderIdx?.transaction) {
-      const { transactionId, blockHeight } = dataWithOrderIdx.transaction;
-      router.push(`/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`);
+      const { transactionId } = dataWithOrderIdx.transaction;
+      router.push(`/${defaultChain}/tx/${transactionId}`);
     } else if (dataWithOrderIdx?.block) {
       const { blockHeight } = dataWithOrderIdx.block;
       router.push(`/${defaultChain}/block/${blockHeight}`);

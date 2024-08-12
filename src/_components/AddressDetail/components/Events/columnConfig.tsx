@@ -23,9 +23,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
         return (
           <div className="flex items-center">
             <EPTooltip title={text} mode="dark">
-              <Link
-                className="block w-[120px] truncate text-link"
-                href={`/${chainId}/tx/${text}?blockHeight=${records.blockHeight}`}>
+              <Link className="block w-[120px] truncate text-link" href={`/${chainId}/tx/${text}`}>
                 {text}
               </Link>
             </EPTooltip>
