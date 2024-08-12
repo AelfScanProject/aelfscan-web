@@ -44,9 +44,7 @@ export default function getColumns({
           <div className="flex items-center">
             {records.status === TransactionStatus.Failed && <IconFont className="mr-1" type="question-circle-error" />}
             <EPTooltip title={text} mode="dark">
-              <Link
-                className="block w-[120px] truncate text-link"
-                href={`/${chainId}/tx/${text}?blockHeight=${records.blockHeight}`}>
+              <Link className="block w-[120px] truncate text-link" href={`/${chainId}/tx/${text}`}>
                 {text}
               </Link>
             </EPTooltip>

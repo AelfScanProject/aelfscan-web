@@ -60,9 +60,7 @@ export function getSearchByHashItems(
         fontWeight: 500,
       },
       children: (
-        <Link
-          className="block w-[400px] truncate text-link"
-          href={`/${chain}/tx/${address}?blockHeight=${blockHeight}`}>
+        <Link className="block w-[400px] truncate text-link" href={`/${chain}/tx/${address}`}>
           {address}
         </Link>
       ),

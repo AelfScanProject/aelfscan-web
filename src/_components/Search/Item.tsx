@@ -25,8 +25,8 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
 
   const url = useMemo(() => {
     if (searchType === 'transaction') {
-      const { transactionId, blockHeight } = item;
-      return `/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`;
+      const { transactionId } = item;
+      return `/${defaultChain}/tx/${transactionId}`;
     } else if (searchType === 'block') {
       const { blockHeight } = item;
       return `/${defaultChain}/block/${blockHeight}`;

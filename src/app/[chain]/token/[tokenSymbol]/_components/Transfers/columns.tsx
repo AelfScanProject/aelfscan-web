@@ -41,9 +41,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chain }): Col
         <div className="flex items-center">
           {record.status === TTransactionStatus.fail && <IconFont className="ml-1" type="question-circle-error" />}
           <EPTooltip title={text} mode="dark">
-            <Link
-              className="block w-[120px] truncate text-link"
-              href={`/${chain}/tx/${text}?blockHeight=${record.blockHeight}`}>
+            <Link className="block w-[120px] truncate text-link" href={`/${chain}/tx/${text}`}>
               {text}
             </Link>
           </EPTooltip>
