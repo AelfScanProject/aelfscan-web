@@ -22,6 +22,10 @@ const nextConfig = {
   reactStrictMode: false,
   experimental: {
     proxyTimeout: 300000,
+    staleTimes: {
+      dynamic: 1,
+      static: 1,
+    },
   },
   async rewrites() {
     return process.env.NODE_ENV === 'production'
@@ -80,6 +84,19 @@ const nextConfig = {
           //   // permanent: false,
           // },
         ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          },
+        ],
+      },
+    ];
   },
   images: {
     remotePatterns: [

@@ -25,5 +25,5 @@ export default async function Nfts({ params, searchParams }) {
   return <List SSRData={data} defaultPage={Number(p)} defaultPageSize={Number(ps)} />;
 }
 
-export const revalidate = 1;
+export const revalidate = 0;
 export const dynamic = 'force-dynamic';

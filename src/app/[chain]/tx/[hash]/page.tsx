@@ -29,5 +29,5 @@ export default async function TransactionDetails({
   return <Detail SSRData={transactionDetailData} />;
 }
 
-export const revalidate = 1;
+export const revalidate = 0;
 export const dynamic = 'force-dynamic';
