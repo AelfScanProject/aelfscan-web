@@ -1,27 +1,36 @@
-import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import SignalR from './signalr';
 
-export default function Socket() {
-  // const [error, setError] = useState<any>(null);
-  const [socket, setSocket] = useState<SignalR | null>(null);
-  const pathName = usePathname();
-  useEffect(() => {
-    const signalR = new SignalR({ url: '/api/app/blockchain/explore' });
-    console.log('signalR---', signalR);
-    // if (error !== false) {
-    signalR
-      .initAndStart()
-      .then(() => {
-        setSocket(signalR);
-        // setError(false);
-      })
-      .catch((e) => {
-        setSocket(signalR);
-        // setError(e);
-      });
-    // }
-  }, [pathName]);
+class SignalRManager {
+  private static instance: SignalRManager | null = null;
+  private socket: SignalR | null = null;
 
-  return socket;
+  private constructor() {}
+
+  public static getInstance(): SignalRManager {
+    if (SignalRManager.instance === null) {
+      SignalRManager.instance = new SignalRManager();
+    }
+    return SignalRManager.instance;
+  }
+
+  public async initSocket(): Promise<SignalR | null> {
+    if (!this.socket) {
+      const signalR = new SignalR({ url: '/api/app/blockchain/explore' });
+      try {
+        await signalR.initAndStart();
+        this.socket = signalR;
+        console.log('SignalR initialized successfully.');
+      } catch (e) {
+        console.error('Error initializing SignalR:', e);
+        this.socket = null; // Ensure that the socket remains null in case of failure
+      }
+    }
+    return this.socket;
+  }
+
+  public getSocket(): SignalR | null {
+    return this.socket;
+  }
 }
+
+export default SignalRManager;

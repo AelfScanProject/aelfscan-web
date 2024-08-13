@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import Socket from '@_socket';
 import { IBlockchainOverviewResponse, TChainID } from '@_api/type';
 import { useAppDispatch } from '@_store';
 import { setTokenInfo } from '@_store/features/chainIdSlice';
+import SignalR from '@_socket/signalr';
+import SignalRManager from '@_socket';
 interface IIntervalData {
   overviewLoading: boolean;
   BlockchainOverview: IBlockchainOverviewResponse | undefined;
@@ -12,7 +13,15 @@ const useBlockchainOverview = (chain: TChainID) => {
   const [overviewLoading, setOverviewLoading] = useState<boolean>(true);
 
   console.log('signalR----------refresh');
-  const socket = Socket();
+  const [socket, setSocket] = useState<SignalR | null>(null);
+
+  useEffect(() => {
+    SignalRManager.getInstance()
+      .initSocket()
+      .then((socketInstance) => {
+        setSocket(socketInstance);
+      });
+  }, []);
 
   const dispatch = useAppDispatch();
 
@@ -25,7 +34,7 @@ const useBlockchainOverview = (chain: TChainID) => {
 
   useEffect(() => {
     function fetchAndReceiveWs() {
-      if (!socket) {
+      if (!socket || !chain) {
         return;
       }
       socket.registerHandler('ReceiveBlockchainOverview', (data) => {

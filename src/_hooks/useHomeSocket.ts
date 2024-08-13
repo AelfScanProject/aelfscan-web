@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import Socket from '@_socket';
+import SignalRManager from '@_socket';
 import { IBlocksResponseItem, ITransactionsResponseItem, TChainID } from '@_api/type';
 import { ITPSData } from '@pageComponents/home/_components/TPSChart';
 import { useAppDispatch } from '@_store';
 import { setHomeBlocks, setHomeTransactions, setHomeTpsData } from '@_store/features/chainIdSlice';
+import SignalR from '@_socket/signalr';
 
 interface IIntervalData {
   blocks: Array<IBlocksResponseItem>;
@@ -21,7 +22,15 @@ const useHomeSocket = (chain: TChainID) => {
   const [tpsLoading, setTpsLoading] = useState<boolean>(true);
 
   console.log('signalR----------refresh');
-  const socket = Socket();
+  const [socket, setSocket] = useState<SignalR | null>(null);
+
+  useEffect(() => {
+    SignalRManager.getInstance()
+      .initSocket()
+      .then((socketInstance) => {
+        setSocket(socketInstance);
+      });
+  }, []);
 
   const dispatch = useAppDispatch();
 
@@ -38,7 +47,7 @@ const useHomeSocket = (chain: TChainID) => {
 
   useEffect(() => {
     function fetchAndReceiveWs() {
-      if (!socket) {
+      if (!socket || !chain) {
         return;
       }
 

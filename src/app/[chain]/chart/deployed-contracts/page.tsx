@@ -17,18 +17,27 @@ import { HighchartsReactRefObject } from 'highcharts-react-official';
 const title = 'aelf Deployed Contracts Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
+  const dailyIncreaseData: any[] = [];
   const customMap = {};
 
   list.forEach((item) => {
-    allData.push([dayjs(item.date).valueOf(), Number(item.totalCount)]);
+    const dateInMillis = dayjs(item.date).valueOf();
+    const totalCount = Number(item.totalCount);
+    const dailyIncreaseContract = Number(item.count);
+
+    allData.push([dateInMillis, totalCount]);
+    dailyIncreaseData.push([dateInMillis, dailyIncreaseContract]);
+
     customMap[item.date] = {};
-    customMap[item.date].dailyIncreaseContract = item.count;
+    customMap[item.date].dailyIncreaseContract = dailyIncreaseContract;
   });
+
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
+
   return {
     legend: {
-      enabled: false,
+      enabled: true,
     },
     colors: ChartColors,
     chart: {
@@ -46,7 +55,7 @@ const getOption = (list: any[]): Highcharts.Options => {
           type: 'month',
           count: 1,
           text: '1m',
-          title: 'View 1 months',
+          title: 'View 1 month',
         },
         {
           type: 'month',
@@ -85,11 +94,19 @@ const getOption = (list: any[]): Highcharts.Options => {
       startOnTick: false,
       endOnTick: false,
     },
-    yAxis: {
-      title: {
-        text: 'aelf Cumulative Contracts Chart',
+    yAxis: [
+      {
+        title: {
+          text: 'aelf Cumulative Contracts Chart',
+        },
       },
-    },
+      {
+        title: {
+          text: 'Daily Increase Contracts',
+        },
+        opposite: true,
+      },
+    ],
     credits: {
       enabled: false,
     },
@@ -109,9 +126,16 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     series: [
       {
-        name: 'Tokyo',
+        name: 'Cumulative Contracts',
         type: 'line',
         data: allData,
+        yAxis: 0,
+      },
+      {
+        name: 'Daily Increase Contracts',
+        type: 'line',
+        data: dailyIncreaseData,
+        yAxis: 1,
       },
     ],
     exporting: {
@@ -124,6 +148,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
   };
 };
+
 export default function Page() {
   const { chain } = useParams<{ chain: string }>();
   const [data, setData] = useState<IDeployedContractsData>();
