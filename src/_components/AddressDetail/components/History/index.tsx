@@ -44,8 +44,7 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
           <div
             className="break-all text-link"
             onClick={() => {
-              if (author !== address)
-                router.push(`/${chain}/address/${addressFormat(author, chain)}/${AddressType.address}?tab=contract`);
+              if (author !== address) router.push(`/${chain}/address/${addressFormat(author, chain)}?tab=contract`);
               onTabClick('contract');
             }}>
             {addressFormat(author)}

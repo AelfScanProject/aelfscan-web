@@ -11,7 +11,7 @@ import TransctionList from '@app/[chain]/transactions/list';
 import TokenTransfers from '@_components/TokenTransfers';
 import NFTTransfers from '@_components/NFTTransfers';
 import History from './components/History';
-import { Ref, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import Events from './components/Events';
 import Contract from './components/Contract';
 import Tokens from './components/Tokens';
@@ -28,13 +28,15 @@ import { AddressType, TablePageSize } from '../../_types/common';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
-  console.log(SSRData, 'SSRData');
-  const { chain, address, addressType } = useParams<{
+  const { chain, address } = useParams<{
     chain: TChainID;
     address: string;
-    addressType: string;
   }>();
-  const isAddress = addressType === '0';
+
+  const addressType = useMemo<number>(() => {
+    return SSRData.addressType;
+  }, [SSRData]);
+  const isAddress = addressType === 0;
   const title = isAddress ? 'Address' : 'Contract';
   const {
     author,
