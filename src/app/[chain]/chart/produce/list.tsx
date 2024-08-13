@@ -8,7 +8,7 @@ import { INodeBlockProduceData, INodeBlockProduceDataItem } from '../type';
 import { useParams } from 'next/navigation';
 import { fetchNodeBlockProduce } from '@_api/fetchChart';
 import { pageSizeOption } from '@_utils/contant';
-import { updateQueryParams } from '@_utils/urlUtils';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { Select, message } from 'antd';
 import dayjs from 'dayjs';
 
@@ -48,6 +48,7 @@ function Page() {
   const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
   const [date, setDate] = useState<string>('7d');
+  const updateQueryParams = useUpdateQueryParams();
 
   const { chain } = useParams();
 
