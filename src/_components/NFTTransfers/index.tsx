@@ -127,7 +127,9 @@ export default function List({ showHeader = true }) {
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
-        rowKey="transactionId"
+        rowKey={(record) => {
+          return record.transactionId + record.method;
+        }}
         total={total}
         showLast={false}
         pageSize={pageSize}

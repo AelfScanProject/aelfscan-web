@@ -34,7 +34,7 @@ export default function ContractToken({
           <Link
             prefetch={false}
             className="text-link"
-            href={`/${chainId}/address/${addressFormat(address || '', chainId)}/${type}`}>
+            href={`/${chainId}/address/${addressFormat(address || '', chainId)}`}>
             {addressFormat(hiddenAddress(address || '', count, count), chainId)}
           </Link>
         </EPTooltip>
@@ -58,7 +58,7 @@ export default function ContractToken({
         }
         mode="dark"
         pointAtCenter={false}>
-        <Link prefetch={false} className="" href={`/${chainId}/address/${addressFormat(address, chainId)}/${type}`}>
+        <Link prefetch={false} className="" href={`/${chainId}/address/${addressFormat(address, chainId)}`}>
           {name}
         </Link>
       </EPTooltip>

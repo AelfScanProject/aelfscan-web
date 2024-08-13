@@ -124,13 +124,9 @@ const Search = ({
           return `/nftItem?chainId=${defaultChain}&&itemSymbol=${nfts[0].symbol}`;
         }
       } else if (accounts.length) {
-        router.push(
-          `/${defaultChain}/address/${addressFormat((accounts[0] as string) || '', defaultChain)}/${AddressType.address}`,
-        );
+        router.push(`/${defaultChain}/address/${addressFormat((accounts[0] as string) || '', defaultChain)}`);
       } else if (contracts.length) {
-        router.push(
-          `/${defaultChain}/address/${addressFormat(contracts[0].address || '', defaultChain)}/${AddressType.Contract}`,
-        );
+        router.push(`/${defaultChain}/address/${addressFormat(contracts[0].address || '', defaultChain)}`);
       } else {
         router.push(`/${defaultChain}/search/${query.trim()}`);
       }

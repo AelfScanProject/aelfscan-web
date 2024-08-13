@@ -71,7 +71,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
                         <Link
                           prefetch={false}
                           className="truncate"
-                          href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}/0`}>
+                          href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
                           {ele.producerName
                             ? ele.producerName
                             : `${addressFormat(hiddenAddress(ele.producerAddress || '', 4, 4), defaultChain)}`}

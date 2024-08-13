@@ -63,7 +63,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chianId }): C
           <Link
             className="block text-sm leading-[22px] text-link"
             title={`${addressFormat(address, chianId)}`}
-            href={`/${chianId}/address/${addressFormat(address, chianId)}/0`}>
+            href={`/${chianId}/address/${addressFormat(address, chianId)}`}>
             {record.producerName ? record.producerName : `${addressFormat(hiddenAddress(address, 4, 4), chianId)}`}
           </Link>
           <Copy value={addressFormat(address, chianId)} />

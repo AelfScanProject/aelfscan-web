@@ -111,7 +111,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
                 searchButton={false}
                 enterIcon={true}
                 label="otherSearch"
-                searchWrapClassNames={clsx('px-3', 'py-2', '!w-[550px]', 'rounded border-D0 bg-F7')}
+                searchWrapClassNames={clsx('px-3', 'py-2', '!w-[590px]', 'rounded border-D0 bg-F7')}
                 searchInputClassNames={clsx('!pl-0')}
                 placeholder={'Search by Address / Txn Hash / Block'}
                 lightMode={true}
