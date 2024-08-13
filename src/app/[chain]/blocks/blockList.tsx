@@ -18,7 +18,7 @@ import { fetchBlocks } from '@_api/fetchBlocks';
 import { useParams } from 'next/navigation';
 import { Spin } from 'antd';
 import { getPageNumber } from '@_utils/formatter';
-import { updateQueryParams } from '@_utils/urlUtils';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 
 export enum pageType {
   first,
@@ -45,6 +45,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<IBlocksResponseItem[]>(SSRData.blocks);
   const { chain } = useParams<{ chain: TChainID }>();
+  const updateQueryParams = useUpdateQueryParams();
   const fetchData = useCallback(
     async (page, size) => {
       const isLast = isLastPage(total, size, page);

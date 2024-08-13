@@ -11,7 +11,7 @@ import { SortEnum } from '@_types/common';
 import { fetchNFTSList } from '@_api/fetchNFTS';
 import { pageSizeOption } from '@_utils/contant';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { updateQueryParams } from '@_utils/urlUtils';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 
 interface TokensListProps {
   SSRData: INFTsTableData;
@@ -28,6 +28,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<INFTsTableItem[]>(SSRData.list);
   const [sort, setSort] = useState<SortEnum>(SortEnum.desc);
+  const updateQueryParams = useUpdateQueryParams();
 
   const mountRef = useRef(true);
 

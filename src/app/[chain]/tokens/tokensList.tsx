@@ -11,7 +11,7 @@ import { TChainID } from '@_api/type';
 import { getPageNumber } from '@_utils/formatter';
 import { pageSizeOption } from '@_utils/contant';
 import { SortEnum } from '@_types/common';
-import { updateQueryParams } from '@_utils/urlUtils';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 
 interface TokensListProps {
   SSRData: ITokenList;
@@ -28,6 +28,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<ITokenListItem[]>(SSRData.list);
   const [sort, setSort] = useState<SortEnum>(SortEnum.desc);
+  const updateQueryParams = useUpdateQueryParams();
 
   const { chain } = useParams();
 
