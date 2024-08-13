@@ -37,7 +37,7 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: true,
+      enabled: false,
     },
     colors: ChartColors,
     chart: {
@@ -94,19 +94,11 @@ const getOption = (list: any[]): Highcharts.Options => {
       startOnTick: false,
       endOnTick: false,
     },
-    yAxis: [
-      {
-        title: {
-          text: 'aelf Cumulative Contracts Chart',
-        },
+    yAxis: {
+      title: {
+        text: 'aelf Cumulative Contracts Chart',
       },
-      {
-        title: {
-          text: 'Daily Increase Contracts',
-        },
-        opposite: true,
-      },
-    ],
+    },
     credits: {
       enabled: false,
     },
@@ -118,9 +110,9 @@ const getOption = (list: any[]): Highcharts.Options => {
         const point = that.points[0] as any;
         const date = point.x;
         const value = point.y;
-        const newContracts = customMap[date].dailyIncreaseContract;
+        // const newContracts = customMap[date].dailyIncreaseContract;
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(value)}</b><br/>Daily Increase: <b>${thousandsNumber(newContracts)}</b><br/>
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(value)}</b><br/>
         `;
       },
     },
@@ -129,13 +121,6 @@ const getOption = (list: any[]): Highcharts.Options => {
         name: 'Cumulative Contracts',
         type: 'line',
         data: allData,
-        yAxis: 0,
-      },
-      {
-        name: 'Daily Increase Contracts',
-        type: 'line',
-        data: dailyIncreaseData,
-        yAxis: 1,
       },
     ],
     exporting: {
