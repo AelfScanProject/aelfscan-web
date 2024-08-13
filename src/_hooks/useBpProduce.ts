@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import Socket from '@_socket';
 import { TChainID } from '@_api/type';
+import SignalRManager from '@_socket';
+import SignalR from '@_socket/signalr';
 
 export interface IProduces {
   blockCount: number;
@@ -20,7 +21,15 @@ const useBlockchainOverview = (chain: TChainID) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   console.log('signalR----------refresh');
-  const socket = Socket();
+  const [socket, setSocket] = useState<SignalR | null>(null);
+
+  useEffect(() => {
+    SignalRManager.getInstance()
+      .initSocket()
+      .then((socketInstance) => {
+        setSocket(socketInstance);
+      });
+  }, []);
 
   const data: IIntervalData = useMemo(() => {
     return {
@@ -31,7 +40,7 @@ const useBlockchainOverview = (chain: TChainID) => {
 
   useEffect(() => {
     function fetchAndReceiveWs() {
-      if (!socket) {
+      if (!socket || !chain) {
         return;
       }
       socket.registerHandler('ReceiveBpProduce', (data) => {

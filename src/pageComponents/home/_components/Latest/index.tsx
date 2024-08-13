@@ -35,6 +35,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
       </span>
     );
   };
+
   return (
     <div className={clsx(clsPrefix, isMD && `${clsPrefix}-mobile`)}>
       <div className="title">{`Latest ${isBlocks ? 'Blocks' : 'Transactions'}`}</div>
@@ -52,9 +53,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
                       </Link>
                     ) : (
                       <EPTooltip title={ele.transactionId} mode="dark" pointAtCenter={false}>
-                        <Link
-                          prefetch={false}
-                          href={`/${defaultChain}/tx/${ele.transactionId}?blockHeight=${ele.blockHeight}`}>
+                        <Link prefetch={false} href={`/${defaultChain}/tx/${ele.transactionId}`}>
                           {ele.transactionId}
                         </Link>
                       </EPTooltip>
@@ -72,7 +71,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
                         <Link
                           prefetch={false}
                           className="truncate"
-                          href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}/0`}>
+                          href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
                           {ele.producerName
                             ? ele.producerName
                             : `${addressFormat(hiddenAddress(ele.producerAddress || '', 4, 4), defaultChain)}`}
@@ -119,7 +118,7 @@ function Latest({ isBlocks, data, iconType }: IProps) {
         })}
       </div>
       <div className="link">
-        <Link href={isBlocks ? `/${defaultChain}/blocks` : `/${defaultChain}/transactions`}>
+        <Link href={isBlocks ? `/${defaultChain}/blocks` : `/${defaultChain}/transactions`} prefetch={false}>
           View All {isBlocks ? 'Blocks' : 'Transactions'}
           <IconFont type="right-arrow-2"></IconFont>
         </Link>

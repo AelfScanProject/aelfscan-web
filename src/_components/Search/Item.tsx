@@ -8,7 +8,6 @@ import { useAppSelector } from '@_store';
 import EPTooltip from '@_components/EPToolTip';
 import addressFormat from '@_utils/urlUtils';
 import Link from 'next/link';
-import { AddressType } from '@_types/common';
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -25,8 +24,8 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
 
   const url = useMemo(() => {
     if (searchType === 'transaction') {
-      const { transactionId, blockHeight } = item;
-      return `/${defaultChain}/tx/${transactionId}?blockHeight=${blockHeight}`;
+      const { transactionId } = item;
+      return `/${defaultChain}/tx/${transactionId}`;
     } else if (searchType === 'block') {
       const { blockHeight } = item;
       return `/${defaultChain}/block/${blockHeight}`;
@@ -40,9 +39,9 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     } else if (searchType === 'tokens') {
       return `/${defaultChain}/token/${item.symbol}`;
     } else if (searchType === 'contracts') {
-      return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}/${AddressType.Contract}`;
+      return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}`;
     } else if (searchType === 'accounts') {
-      return `/${defaultChain}/address/${addressFormat((item as string) || '', defaultChain)}/${AddressType.address}`;
+      return `/${defaultChain}/address/${addressFormat((item as string) || '', defaultChain)}`;
     }
 
     return '';

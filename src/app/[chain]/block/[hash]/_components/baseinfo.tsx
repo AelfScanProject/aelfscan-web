@@ -90,7 +90,7 @@ export default function BaseInfo({ data, tabChange, jump }) {
           <div>
             <Link
               className="text-link"
-              href={`/${chain}/address/${addressFormat(data.producer?.address, chain as string)}/0`}>
+              href={`/${chain}/address/${addressFormat(data.producer?.address, chain as string)}`}>
               {data.producer?.name ? data.producer?.name : addressFormat(data.producer?.address, chain as string)}
             </Link>
             <Copy value={addressFormat(data.producer?.address, chain as string)} />

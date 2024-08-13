@@ -59,7 +59,10 @@ async function service(url: string, options: RequestWithParams) {
   console.log(url, options, 'url-----------');
 
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url, {
+      ...options,
+      cache: 'no-store',
+    });
     if (response.ok) {
       return await response.json();
     } else {

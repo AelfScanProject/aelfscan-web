@@ -11,7 +11,7 @@ import TransctionList from '@app/[chain]/transactions/list';
 import TokenTransfers from '@_components/TokenTransfers';
 import NFTTransfers from '@_components/NFTTransfers';
 import History from './components/History';
-import { Ref, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import Events from './components/Events';
 import Contract from './components/Contract';
 import Tokens from './components/Tokens';
@@ -28,13 +28,15 @@ import { AddressType, TablePageSize } from '../../_types/common';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
-  console.log(SSRData, 'SSRData');
-  const { chain, address, addressType } = useParams<{
+  const { chain, address } = useParams<{
     chain: TChainID;
     address: string;
-    addressType: string;
   }>();
-  const isAddress = addressType === '0';
+
+  const addressType = useMemo<number>(() => {
+    return SSRData.addressType;
+  }, [SSRData]);
+  const isAddress = addressType === 0;
   const title = isAddress ? 'Address' : 'Contract';
   const {
     author,
@@ -91,9 +93,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         value: lastTransactionSend && (
           <div className="flex items-center">
             <EPTooltip mode="dark" title={lastTransactionSend?.transactionId}>
-              <Link
-                className="h-[22px]"
-                href={`/${chain}/tx/${lastTransactionSend?.transactionId}?blockHeight=${lastTransactionSend?.blockHeight}`}>
+              <Link className="h-[22px]" href={`/${chain}/tx/${lastTransactionSend?.transactionId}}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
                   {lastTransactionSend?.transactionId}
                 </span>
@@ -110,9 +110,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         value: firstTransactionSend && (
           <div className="flex items-center">
             <EPTooltip mode="dark" title={firstTransactionSend?.transactionId}>
-              <Link
-                className="h-[22px]"
-                href={`/${chain}/tx/${firstTransactionSend?.transactionId}?blockHeight=${firstTransactionSend?.blockHeight}`}>
+              <Link className="h-[22px]" href={`/${chain}/tx/${firstTransactionSend?.transactionId}}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
                   {firstTransactionSend?.transactionId}
                 </span>

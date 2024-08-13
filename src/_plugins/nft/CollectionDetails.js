@@ -16,16 +16,7 @@ import EPTabs from '@_components/EPTabs';
 import TransfersTable from "./_transfers/Table";
 import HoldersTable from "./_holders/HoldersTable";
 import Inventory from "./_inventory/Inventory";
-import { URL_QUERY_KEY } from "./type";
-import { useEffect, useRef, useState } from 'react';
-function updateUrlParams(obj) {
-  var params = new URLSearchParams(window.location.search);
-  var hash = window.location.hash;
-  Object.keys(obj).forEach(function (key) {
-    return params.set(key, obj[key]);
-  });
-  window.history.replaceState({}, '', "".concat(window.location.pathname, "?").concat(params).concat(hash));
-}
+import { useRef, useState } from 'react';
 var TabKey = /*#__PURE__*/function (TabKey) {
   TabKey["holders"] = "holders";
   TabKey["empty"] = "";
@@ -45,94 +36,21 @@ export default function NFTDetails(props) {
   var overview = props.overview;
   console.log(overview, 'collection detail');
   var tabRef = useRef(null);
-  var _useState = useState(''),
-    _useState2 = _slicedToArray(_useState, 2),
-    text = _useState2[0],
-    setSearchText = _useState2[1];
-  var _useState3 = useState(props.search || ''),
-    _useState4 = _slicedToArray(_useState3, 2),
-    searchVal = _useState4[0],
-    setSearchVal = _useState4[1];
+  var _useState = useState(tabItems),
+    _useState2 = _slicedToArray(_useState, 1),
+    tabList = _useState2[0];
 
-  // only trigger when onPress / onClear
-  var handleSearchChange = function handleSearchChange(val) {
-    setSearchVal(val);
-  };
-  var _useState5 = useState(tabItems),
-    _useState6 = _slicedToArray(_useState5, 2),
-    tabList = _useState6[0],
-    setTabList = _useState6[1];
-  var handlePressEnter = function handlePressEnter(val) {
-    if (val.trim()) {
-      updateUrlParams(_defineProperty({}, URL_QUERY_KEY, val.trim()));
-      var _list = tabItems.slice(0);
-      _list.splice(1, 1);
-      setTabList(_list);
-    }
-  };
-  var handleClear = function handleClear() {
-    // setTabItemsList(tabItems);
-    updateUrlParams(_defineProperty({}, URL_QUERY_KEY, ''));
-    setTabList(tabItems);
-    setSearchVal('');
-  };
-  // var handleTabChange = function handleTabChange(key) {
-  //   window.location.hash = key;
-  // };
-  var onChange = function onChange(_ref) {
-    var currentTarget = _ref.currentTarget;
-    setSearchText(currentTarget.value);
-    if (!currentTarget.value.trim()) {
-      handleClear();
-    }
-  };
-  var topSearchProps = {
-    value: text,
-    onChange: onChange,
-    disabledTooltip: false,
-    onSearchChange: handleSearchChange,
-    onClear: handleClear,
-    onPressEnter: handlePressEnter,
-    placeholder: 'Filter Address / Txn Hash / Token Symbol'
-  };
-
-  // init tab active key, from url hash
-  // useEffect(function () {
-  //   var _window$location$hash;
-  //   var hash = (_window$location$hash = window.location.hash.replace('#', '').trim()) !== null && _window$location$hash !== void 0 ? _window$location$hash : '';
-  //   if (hash) {
-  //     var tabItem = tabItems.find(function (item) {
-  //       return item.key === hash;
-  //     });
-  //     if (tabItem) {
-  //       var _tabRef$current;
-  //       (_tabRef$current = tabRef.current) === null || _tabRef$current === void 0 || _tabRef$current.setActiveKey(tabItem.key);
-  //     }
-  //   }
-  // }, []);
   // init search value from url query
-  useEffect(function () {
-    var query = new URLSearchParams(window.location.search).get(URL_QUERY_KEY);
-    setSearchVal(query !== null && query !== void 0 ? query : '');
-  }, []);
+
   var list = tabList.map(function (obj) {
     var key = obj.key;
     var children = /*#__PURE__*/React.createElement("div", null);
     if (key === TabKey.empty) {
-      children = /*#__PURE__*/React.createElement(TransfersTable, {
-        topSearchProps: topSearchProps,
-        search: searchVal
-      });
+      children = /*#__PURE__*/React.createElement(TransfersTable, null);
     } else if (key === TabKey.holders) {
-      children = /*#__PURE__*/React.createElement(HoldersTable, {
-        topSearchProps: topSearchProps,
-        search: searchVal
-      });
+      children = /*#__PURE__*/React.createElement(HoldersTable, null);
     } else {
-      children = /*#__PURE__*/React.createElement(Inventory, {
-        topSearchProps: topSearchProps,
-        search: searchVal
-      });
+      children = /*#__PURE__*/React.createElement(Inventory, null);
     }
     return {
       key: key,

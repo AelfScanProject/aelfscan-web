@@ -18,5 +18,5 @@ export default async function TokensPage({ params, searchParams }) {
   return <TokensList SSRData={data} defaultPage={p} defaultPageSize={ps} />;
 }
 
-export const revalidate = 1;
+export const revalidate = 0;
 export const dynamic = 'force-dynamic';

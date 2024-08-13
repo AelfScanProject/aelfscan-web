@@ -182,7 +182,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The Ether Market Capitalization chart shows the historical breakdown of Ether daily market capitalization and average price "
+        aboutTitle="The ELF Market Capitalization chart shows the historical breakdown of ELF daily market capitalization and average price"
         highlightData={highlightData}
         options={options}
         download={download}

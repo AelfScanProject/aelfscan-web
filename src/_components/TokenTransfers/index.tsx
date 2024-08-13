@@ -10,7 +10,6 @@ import { useParams } from 'next/navigation';
 import { fetchAccountTransfers } from '@_api/fetchContact';
 import { TChainID } from '@_api/type';
 import { PageTypeEnum } from '@_types';
-// import { updateQueryParams } from '@_utils/urlUtils';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 const TAB_NAME = 'tokentransfers';
@@ -124,7 +123,9 @@ export default function List() {
         options={[10, 25, 50]}
         isMobile={isMobile}
         showLast={false}
-        rowKey="transactionId"
+        rowKey={(record) => {
+          return record.transactionId + record.method;
+        }}
         total={total}
         pageSize={pageSize}
         pageNum={currentPage}

@@ -12,11 +12,10 @@ export default async function Block({ params }: { params: { hash: string; chain:
   const data = await fetchServerBlocksDetail({
     blockHeight: Number(params.hash),
     chainId: params.chain,
-    // cache: 'no-store',
+    cache: 'no-store',
   });
-  console.log(data, 'data');
   return <Detail SSRData={data} />;
 }
 
-// export const revalidate = 1;
-// export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';

@@ -18,6 +18,7 @@ import { ConfigProvider } from 'antd';
 import { Provider as ReduxProvider } from 'react-redux';
 import useResponsive from '@_hooks/useResponsive';
 import dynamic from 'next/dynamic';
+import WebLoginProvider from './webLoginProvider';
 // const OpentelemetryProvider = dynamic(
 //   () => import('./opentelemetryProvider').then((mod) => mod.OpentelemetryProvider),
 //   { ssr: false },
@@ -42,14 +43,14 @@ function RootProvider({ children, isMobileSSR, config, chartImg }) {
     setIsMobile(isMobileClient);
   }, [isMobileClient]);
 
-  const WebLoginProvider = useMemo(() => {
-    return dynamic(
-      async () => {
-        return import('./webLoginProvider');
-      },
-      { ssr: false },
-    );
-  }, []);
+  // const WebLoginProvider = useMemo(() => {
+  //   return dynamic(
+  //     async () => {
+  //       return import('./webLoginProvider');
+  //     },
+  //     { ssr: false },
+  //   );
+  // }, []);
 
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>

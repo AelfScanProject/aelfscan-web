@@ -46,7 +46,7 @@ export default function getColumns(_ref) {
         mode: "dark"
       }, /*#__PURE__*/React.createElement(Link, {
         className: "block w-[120px] truncate text-link",
-        href: "/".concat(chainId, "/tx/").concat(text, "?blockHeight=").concat(records.blockHeight)
+        href: "/".concat(chainId, "/tx/").concat(text)
       }, text)), /*#__PURE__*/React.createElement(Copy, {
         value: text
       }));

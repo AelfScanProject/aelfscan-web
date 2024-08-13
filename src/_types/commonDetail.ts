@@ -103,6 +103,7 @@ export interface IAddressResponse extends IAddressTokensDetail {
   contractName: string; // contract address
   author: string; // contract add
   tokenHoldings: number;
+  addressType: number;
   contractTransactionHash: string; // contract add
   lastTransactionSend: {
     transactionId: string;

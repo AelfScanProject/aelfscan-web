@@ -10,9 +10,9 @@ import { fetchContactList } from '@_api/fetchContact';
 import { getPageNumber } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
 import { pageSizeOption } from '@_utils/contant';
-import { updateQueryParams } from '@_utils/urlUtils';
+import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 export default function List({ SSRData, defaultPage, defaultPageSize }) {
-  console.log(SSRData, 'SSRData');
+  console.log(SSRData, defaultPage, defaultPageSize, 'SSRData');
   const isMobile = useMobileAll();
 
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
@@ -20,6 +20,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<IContractDataItem[]>(SSRData.list);
+  const updateQueryParams = useUpdateQueryParams();
 
   const { chain } = useParams<{ chain: TChainID }>();
 

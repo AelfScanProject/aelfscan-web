@@ -19,7 +19,7 @@ import { ColumnsType } from 'antd/es/table';
 import MoreContainer from '@_components/MoreContainer';
 import EPTabs from '@_components/EPTabs';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { IBlocksDetailData, TChainID } from '@_api/type';
+import { IBlocksDetailData, ITransactionsResponseItem, TChainID } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
 import { useParams } from 'next/navigation';
 import { JumpTypes } from '@_components/JumpButton';
@@ -67,7 +67,7 @@ export default function Detail({ SSRData }) {
   );
 
   console.log(hash, 'hash');
-  const columns = useMemo<ColumnsType>(() => {
+  const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
     return getColumns({
       timeFormat,
       handleTimeChange: () => {

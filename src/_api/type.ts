@@ -65,7 +65,7 @@ export interface ITransactionsResponse {
 export interface ITransactionDetailRequestParams extends RequestInit {
   chainId: TChainID;
   transactionId: string;
-  blockHeight: number;
+  blockHeight?: number;
 }
 
 export interface IBlocksRequestParams extends RequestInit {

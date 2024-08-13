@@ -5,7 +5,6 @@ import { HashParams, TSearchParamsForTransactionDetail } from 'global';
 
 export default async function TransactionDetails({
   params,
-  searchParams,
 }: {
   params: HashParams;
   searchParams: TSearchParamsForTransactionDetail;
@@ -13,14 +12,11 @@ export default async function TransactionDetails({
   if (!params.hash || !params.chain) {
     return notFound();
   }
-  if (!searchParams.blockHeight) {
-    return notFound();
-  }
 
   const transactionDetailDataList = await fetchTransactionDetails({
     chainId: params.chain,
     transactionId: params.hash,
-    blockHeight: searchParams.blockHeight,
+    // blockHeight: searchParams.blockHeight,
     cache: 'no-store',
   });
 
@@ -29,5 +25,5 @@ export default async function TransactionDetails({
   return <Detail SSRData={transactionDetailData} />;
 }
 
-export const revalidate = 1;
+export const revalidate = 0;
 export const dynamic = 'force-dynamic';
