@@ -39,9 +39,7 @@ export default function Footer({ footerMenuList }: IProps) {
     });
     return (
       <div className={item.key} key={item.key}>
-        <span className="title" onClick={() => window.open(item.path, '_blank')}>
-          {item.label}
-        </span>
+        <span className="title">{item.label}</span>
         {subItem}
       </div>
     );
@@ -51,9 +49,9 @@ export default function Footer({ footerMenuList }: IProps) {
       <div className={clsx(`${clsPrefix}-wrapper`)}>
         <div className={`${clsPrefix}-content`}>
           <div className="left">
-            <div className="title">
+            <div className="title flex items-center">
               <IconFont type="aelf-header-top-test-change"></IconFont>
-              <span className="text">Powered by AELF Scan Team</span>
+              <span className="text">Powered by AELF</span>
             </div>
             <div className="description">
               AELF Scan is a Block Explorer and Analytics Platform for AELF, a decentralized cloud computing blockchain
