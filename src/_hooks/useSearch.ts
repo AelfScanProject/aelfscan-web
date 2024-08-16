@@ -83,17 +83,20 @@ export const useUpdateDataByQuery = () => {
 
 export const useSelected = (selectedItem: Partial<TSingle>, inputRef: RefObject<HTMLInputElement>) => {
   useEffect(() => {
-    console.log('inputRef.current', inputRef.current);
     if (!inputRef.current) {
       return;
     }
     if (!selectedItem || Object.keys(selectedItem).length === 0) {
       inputRef.current.value = '';
     } else {
-      inputRef.current.value = (selectedItem.address ||
-        selectedItem.name ||
-        selectedItem.transactionId ||
-        selectedItem.blockHeight) as string;
+      if (typeof selectedItem === 'string') {
+        inputRef.current.value = selectedItem;
+      } else {
+        inputRef.current.value = (selectedItem.address ||
+          selectedItem.name ||
+          selectedItem.transactionId ||
+          selectedItem.blockHeight) as string;
+      }
     }
   }, [inputRef, selectedItem]);
 };

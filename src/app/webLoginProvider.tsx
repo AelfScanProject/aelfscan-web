@@ -22,6 +22,7 @@ export default function ExWebLoginProvider({ children, config }) {
   const didConfig = {
     graphQLUrl: config.GRAPHQL_SERVER,
     connectUrl: config.CONNECT_SERVER,
+    serviceUrl: config.BASE_URL,
     requestDefaults: {
       baseURL: config.BASE_URL,
       timeout: 30000,
