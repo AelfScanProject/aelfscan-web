@@ -65,6 +65,8 @@ const Common_API_List = {
   getPrice: '',
   getSearchFilter: `${BASE_API}/app/blockchain/filters`,
   getAdsDetail: `${BASE_API}/app/ads/detail`,
+  getBannerAdsDetail: `${BASE_API}/app/ads/banner/detail`,
+  getServerBannerAdsDetail: `${SERVER_BASE_API}/app/ads/banner/detail`,
 };
 
 const CHART_API_LIST = {

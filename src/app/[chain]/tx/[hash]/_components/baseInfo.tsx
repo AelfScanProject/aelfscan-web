@@ -1,5 +1,5 @@
 import DetailContainer from '@_components/DetailContainer';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import TransactionsStatus from '@_components/TransactionsStatus';
 import ConfirmStatus from '@_components/ConfirmedStatus';
 import IconFont from '@_components/IconFont';
@@ -12,7 +12,7 @@ import Method from '@_components/Method';
 import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
 import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { ITransactionDetailData } from '@_api/type';
+import { IPageBannerAdsDetail, ITransactionDetailData } from '@_api/type';
 import { HashAddress, Tag } from 'aelf-design';
 import Image from 'next/image';
 import ContractToken from '@_components/ContractToken';
@@ -20,10 +20,24 @@ import { useParams } from 'next/navigation';
 import { StatusEnum } from '@_types/status';
 import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
 import NFTImage from '@_components/NFTImage';
+import { fetchBannerAdsDetail } from '@_api/fetchSearch';
+import { useEffectOnce } from 'react-use';
+import AdsImage from '@_components/AdsImage';
 
 export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
   const isMobile = useMobileAll();
   const { chain } = useParams();
+  const [adsData, setAdsData] = useState<IPageBannerAdsDetail>();
+
+  useEffectOnce(() => {
+    fetchBannerAdsDetail({ label: 'txndetail' })
+      .then((res) => {
+        setAdsData(res);
+      })
+      .catch(() => {
+        setAdsData(undefined);
+      });
+  });
   const renderInfo = useMemo(() => {
     return [
       {
@@ -81,6 +95,18 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         label: 'divider1',
         value: 'divider',
       },
+      {
+        label: 'Sponsored ',
+        tip: 'Sponsored banner ads',
+        hidden: !adsData || !adsData.adsBannerId,
+        value: adsData && <AdsImage adPage="txndetail" rootClassName="!justify-start" adsItem={adsData} />,
+      },
+      {
+        label: 'divider44',
+        hidden: !adsData || !adsData.adsBannerId,
+        value: 'divider',
+      },
+
       {
         label: 'From ',
         tip: 'The sending party of the transaction.',
@@ -267,6 +293,6 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
         ),
       },
     ];
-  }, [data, isMobile, chain]);
+  }, [data, isMobile, chain, adsData]);
   return <DetailContainer infoList={renderInfo} />;
 }

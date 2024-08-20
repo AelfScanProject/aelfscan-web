@@ -1,7 +1,7 @@
 .home-container {
   @apply w-full flex align-middle flex-col m-auto;
   .banner-section {
-    @apply w-full h-[224px] items-start flex justify-start gap-4 px-0 py-10 flex-col min-[993px]:min-w-[200px] max-w-[1440px] box-border ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
+    @apply w-full h-[224px] items-start flex justify-start gap-4 px-0 py-10 min-[993px]:min-w-[200px] max-w-[1440px] box-border ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
     h2 {
       @apply text-left text-[24px] font-bold leading-8 text-white;
     }
