@@ -252,7 +252,11 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         <Overview title="Overview" className={clsx(isMobile && '!mr-0 mb-4', 'mr-4 flex-1')} items={OverviewInfo} />
         <Overview title="MoreInfo" className="flex-1" items={isAddress ? addressMoreInfo : contractInfo} />
       </div>
-      <div className="mt-4">{adsData && <AdsImage adPage="Addressdetail" adsItem={adsData} />}</div>
+      {adsData && adsData.adsBannerId && (
+        <div className="mt-4">
+          <AdsImage adPage="Addressdetail" adsItem={adsData} />
+        </div>
+      )}
       <div className="address-main mt-4">
         <EPTabs ref={tabRef} items={items} />
       </div>

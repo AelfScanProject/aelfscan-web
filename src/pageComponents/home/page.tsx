@@ -80,7 +80,7 @@ function Home() {
             </div>
           </div>
           <div className="mx-auto hidden w-auto flex-00auto items-center justify-center min-[993px]:flex">
-            {adsData && <AdsImage adPage="home" onlyMobile adsItem={adsData} />}
+            {adsData && adsData.adsBannerId && <AdsImage adPage="home" onlyMobile adsItem={adsData} />}
           </div>
         </div>
       </div>
@@ -88,7 +88,11 @@ function Home() {
       <div className="mx-auto box-border w-full max-w-[1440px] px-4 min-[769px]:px-6 min-[993px]:min-w-[200px] min-[993px]:px-10">
         {OverView}
       </div>
-      <div className="mt-4 min-[993px]:hidden">{adsData && <AdsImage adPage="home" adsItem={adsData} />}</div>
+      {adsData && adsData.adsBannerId && (
+        <div className="mt-4 min-[993px]:hidden">
+          <AdsImage adPage="home" adsItem={adsData} />
+        </div>
+      )}
       {LatestAll}
       <div className="mx-auto box-border w-full max-w-[1440px] px-4 min-[769px]:px-6 min-[993px]:min-w-[200px] min-[993px]:px-10">
         {!tpsData.loading && tpsData.data ? (
