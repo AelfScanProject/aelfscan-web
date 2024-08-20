@@ -73,12 +73,6 @@ const Search = ({
   useEffect(() => {
     fetchAdsDetail({ label: label }).then((res) => {
       setAdsDetail(res);
-      AdTracker.trackEvent('ads-exposure', {
-        date: dayjs(new Date()).format('YYYY-MM-DD'),
-        pageName: label,
-        adsId: res?.adsId,
-        adsName: res?.adsText,
-      });
     });
   }, [label]);
 
