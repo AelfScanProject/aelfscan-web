@@ -11,7 +11,7 @@ import TransctionList from '@app/[chain]/transactions/list';
 import TokenTransfers from '@_components/TokenTransfers';
 import NFTTransfers from '@_components/NFTTransfers';
 import History from './components/History';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import Events from './components/Events';
 import Contract from './components/Contract';
 import Tokens from './components/Tokens';
@@ -20,12 +20,15 @@ import './index.css';
 import EPTooltip from '@_components/EPToolTip';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useParams } from 'next/navigation';
-import { TChainID } from '@_api/type';
+import { IPageBannerAdsDetail, TChainID } from '@_api/type';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import ContractToken from '@_components/ContractToken';
 import { AddressType, TablePageSize } from '../../_types/common';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+import AdsImage from '@_components/AdsImage';
+import { useEffectOnce } from 'react-use';
+import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -212,6 +215,18 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     );
   }
 
+  const [adsData, setAdsData] = useState<IPageBannerAdsDetail>();
+
+  useEffectOnce(() => {
+    fetchBannerAdsDetail({ label: 'Addressdetail' })
+      .then((res) => {
+        setAdsData(res);
+      })
+      .catch(() => {
+        setAdsData(undefined);
+      });
+  });
+
   const isMobile = useMobileAll();
   return (
     <div className="address-detail">
@@ -237,6 +252,11 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         <Overview title="Overview" className={clsx(isMobile && '!mr-0 mb-4', 'mr-4 flex-1')} items={OverviewInfo} />
         <Overview title="MoreInfo" className="flex-1" items={isAddress ? addressMoreInfo : contractInfo} />
       </div>
+      {adsData && adsData.adsBannerId && (
+        <div className="mt-4">
+          <AdsImage adPage="Addressdetail" adsItem={adsData} />
+        </div>
+      )}
       <div className="address-main mt-4">
         <EPTabs ref={tabRef} items={items} />
       </div>

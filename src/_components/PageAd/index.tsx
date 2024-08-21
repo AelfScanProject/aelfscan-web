@@ -18,12 +18,6 @@ function PageAd(props: IAdProps) {
   useEffect(() => {
     fetchAdsDetail({ label: adPage }).then((res) => {
       setAdsDetail(res);
-      AdTracker.trackEvent('ads-exposure', {
-        date: dayjs(new Date()).format('YYYY-MM-DD'),
-        pageName: adPage,
-        adsId: res?.adsId,
-        adsName: res?.adsText,
-      });
     });
   }, [adPage]);
   const handleJump = useCallback(() => {

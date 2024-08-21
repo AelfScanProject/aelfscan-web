@@ -58,3 +58,11 @@
     @apply !bg-F7;
   }
 }
+
+.logout-warpper {
+  &:hover {
+    svg {
+      @apply text-link ;
+    }
+  }
+}

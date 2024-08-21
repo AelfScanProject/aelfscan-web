@@ -31,7 +31,7 @@ export default function DynamicForm({
   chain: string;
   activeKey: string;
 }) {
-  const { connectWallet, walletInfo, isConnected } = useConnectWallet();
+  const { connectWallet, walletInfo, isConnected, disConnectWallet } = useConnectWallet();
   const isMd = useMD();
   const onConnectBtnClickHandler = async () => {
     if (isConnected) return;
@@ -65,7 +65,7 @@ export default function DynamicForm({
 
   return (
     <div className="contract-collapse-container pb-4">
-      <div className="flex pb-4">
+      <div className="flex flex-wrap items-center gap-2 pb-4">
         <div
           className="boder-color-divider flex w-auto cursor-pointer items-center gap-2 rounded-md border border-solid px-2 py-1"
           onClick={onConnectBtnClickHandler}>
@@ -87,6 +87,13 @@ export default function DynamicForm({
             <div className="text-xs leading-5 text-base-100">Connect to wallet</div>
           )}
         </div>
+        {isConnected && (
+          <div
+            className="logout-warpper boder-color-divider flex size-7 cursor-pointer items-center justify-center rounded-md border border-solid bg-F7"
+            onClick={disConnectWallet}>
+            <IconFont type="logout"></IconFont>
+          </div>
+        )}
       </div>
       <div className="flex flex-col gap-4">
         {methods.map((item, index) => {

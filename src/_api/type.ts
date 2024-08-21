@@ -536,3 +536,12 @@ export interface IPageAdsDetail {
   clickLink: string;
   label: string;
 }
+
+export interface IPageBannerAdsDetail {
+  adsBannerId: string;
+  image: string;
+  mobileImage: string;
+  clickLink: string;
+  text: string;
+  searchKey: string;
+}
