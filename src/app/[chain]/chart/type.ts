@@ -28,15 +28,18 @@ export interface IDailyAddAddressData {
   list: Array<{
     date: number;
     addressCount: number;
+    ownerUniqueAddressees: number;
     totalUniqueAddressees: number;
   }>;
   highestIncrease: {
     date: number;
     addressCount: number;
+    ownerUniqueAddressees: number;
   };
   lowestIncrease: {
     date: number;
     addressCount: number;
+    ownerUniqueAddressees: number;
   };
   chainId: string;
 }

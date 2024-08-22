@@ -53,7 +53,7 @@ const ChartData = [
         key: 'transactions',
       },
       {
-        title: 'aelf Unique Addresses Chart',
+        title: 'aelf Wallet Address Chart',
         path: '/chart/address',
         key: 'address',
       },
