@@ -12,21 +12,26 @@ import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
 
-const title = 'aelf Unique Addresses Chart';
-const getOption = (list: any[]): Highcharts.Options => {
+const title = 'aelf Wallet Address Chart';
+const getOption = (list: any[], chain): Highcharts.Options => {
   const allData: any[] = [];
+  const ownerData: any[] = [];
   const customMap = {};
+  const prefix = chain === 'AELF' ? 'MainChain' : 'SideChain';
   list.forEach((item) => {
     allData.push([item.date, item.totalUniqueAddressees]);
+    ownerData.push([item.date, item.ownerUniqueAddressees]);
     customMap[item.date] = {};
+    customMap[item.date].totalCount = item.totalUniqueAddressees;
     customMap[item.date].addressCount = item.addressCount;
+    customMap[item.date].ownerUniqueAddressees = item.ownerUniqueAddressees;
   });
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
-      enabled: false,
+      enabled: true,
     },
     colors: ChartColors,
     chart: {
@@ -69,7 +74,7 @@ const getOption = (list: any[]): Highcharts.Options => {
       enabled: false,
     },
     title: {
-      text: 'aelf Unique Addresses Chart',
+      text: title,
       align: 'left',
     },
     subtitle: {
@@ -98,18 +103,25 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const total = point.y;
+        const total = customMap[date].totalCount;
         const value = customMap[date].addressCount;
+        const ownerValue = customMap[date].ownerUniqueAddressees;
+
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Unique Addresses</b>: <b>${thousandsNumber(total)}</b><br/>Daily Increase: <b>${thousandsNumber(value)}</b><br/>
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(total)}</b><br/><b>${prefix} Wallet Addresses</b>: <b>${thousandsNumber(ownerValue)}</b><br/>Daily ${prefix} Increase: <b>${thousandsNumber(value)}</b><br/>
         `;
       },
     },
     series: [
       {
-        name: 'Daily Increase',
+        name: 'Total Wallet',
         type: 'line',
         data: allData,
+      },
+      {
+        name: prefix + ' Wallet',
+        type: 'line',
+        data: ownerData,
       },
     ],
     exporting: {
@@ -141,8 +153,8 @@ export default function Page() {
     fetData();
   });
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain);
+  }, [data, chain]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {

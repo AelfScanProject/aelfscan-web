@@ -127,9 +127,11 @@ export default function Contract() {
           <div className="contract-container">
             <div
               className={clsx(isMobile && 'flex-col', 'contract-header mx-4 flex border-b border-color-divider pb-4')}>
-              <div className="list-items mr-4 w-[197px] pr-4">
+              <div className="list-items mr-4 min-w-[197px] pr-4">
                 <div className="item-label font10px leading-[18px] text-base-200">CONTRACT NAME</div>
-                <div className="item-value text-sm leading-[22px] text-base-100">{contractInfo?.contractName}</div>
+                <div className="item-value text-wrap break-words text-sm leading-[22px] text-base-100">
+                  {contractInfo?.contractName}
+                </div>
               </div>
               <div className={clsx(isMobile && 'mt-4 !pl-0', 'list-items pl-4')}>
                 <div className="item-label font10px leading-[18px] text-base-200">CONTRACT VERSION</div>
