@@ -1,9 +1,7 @@
 export interface NetworkItem {
-  network_id: {
-    key: string;
-    label: string;
-    path: string;
-  };
+  key: string;
+  label: string;
+  path: string;
 }
 export interface ChainItem {
   label: string;

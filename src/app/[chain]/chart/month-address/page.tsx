@@ -3,26 +3,27 @@ import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChartColors, ISupplyGrowthData } from '../type';
+import { ChartColors, IHIGHLIGHTDataItem, IMonthActiveAddressData } from '../type';
+const title = 'Monthly Active aelf Addresses';
 import { exportToCSV } from '@_utils/urlUtils';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
-import { fetchDailySupplyGrowth } from '@_api/fetchChart';
+import { fetchMonthActiveAddresses } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-const title = 'ELF Supply Growth Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.totalSupply)]);
-    customMap[item.date] = {};
-    customMap[item.date].reward = item.reward;
-    customMap[item.date].burnt = item.mainChainBurnt;
-    customMap[item.date].sideChainBurnt = item.sideChainBurnt;
-    customMap[item.date].organizationUnlock = item.organizationUnlock;
-    customMap[item.date].totalUnReceived = item.totalUnReceived;
+    const date = dayjs.utc(item.dateMonth.toString(), 'YYYYMM').valueOf();
+    allData.push([date, item.addressCount]);
+    customMap[date] = {};
+    customMap[date].sendAddressCount = item.sendAddressCount;
+    customMap[date].receiveAddressCount = item.receiveAddressCount;
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -41,15 +42,9 @@ const getOption = (list: any[]): Highcharts.Options => {
       selected: 3,
       buttonPosition: {
         align: 'left',
-        x: -35,
+        x: -25,
       },
       buttons: [
-        {
-          type: 'month',
-          count: 1,
-          text: '1m',
-          title: 'View 1 months',
-        },
         {
           type: 'month',
           count: 6,
@@ -86,25 +81,14 @@ const getOption = (list: any[]): Highcharts.Options => {
       max: maxDate,
       startOnTick: false,
       endOnTick: false,
+      minRange: 30 * 24 * 3600 * 1000, // Minimum range is 1 month
+      dateTimeLabelFormats: {
+        month: '%B %Y', // Format x-axis labels as "Jan 2024"
+      },
     },
     yAxis: {
       title: {
-        text: 'ELF Total Supply',
-      },
-      labels: {
-        formatter: function () {
-          // eslint-disable-next-line @typescript-eslint/no-this-alias
-          const num = Number(this.value);
-          if (num >= 1e9) {
-            return (num / 1e9).toFixed(2) + 'B';
-          } else if (num >= 1e6) {
-            return (num / 1e6).toFixed(2) + 'M';
-          } else if (num >= 1e3) {
-            return (num / 1e3).toFixed(2) + 'K';
-          } else {
-            return num.toString();
-          }
-        },
+        text: 'Active Addresses',
       },
     },
     credits: {
@@ -118,19 +102,16 @@ const getOption = (list: any[]): Highcharts.Options => {
         const point = that.points[0] as any;
         const date = point.x;
         const value = point.y;
-        const reward = customMap[date].reward;
-        const burnt = customMap[date].burnt;
-        const sideChainBurnt = customMap[date].sideChainBurnt;
-        const organizationUnlock = customMap[date].organizationUnlock;
-        const totalUnReceived = customMap[date].totalUnReceived;
+        const sendAddressCount = customMap[date].sendAddressCount;
+        const receiveAddressCount = customMap[date].receiveAddressCount;
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total ELF Supply</b>: <b>${thousandsNumber(value)}</b><br/>+ Daily ELF rewards: <b>${thousandsNumber(reward)}</b><br/>+ Organization Unlock: <b>${thousandsNumber(organizationUnlock)}</b><br/>- MainChain burnt: <b>${thousandsNumber(burnt)}</b><br/>- SideChain burnt: <b>${thousandsNumber(sideChainBurnt)}</b><br/>- Unreceived: <b>${thousandsNumber(totalUnReceived)}</b><br/>
+          ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Active Addresses</b>: <b>${thousandsNumber(value)}</b><br/>Sender Address: <b>${thousandsNumber(sendAddressCount)}</b><br/>Receive Address: <b>${thousandsNumber(receiveAddressCount)}</b><br/>
         `;
       },
     },
     series: [
       {
-        name: 'Total Supply',
+        name: 'Active Addresses',
         type: 'line',
         data: allData,
       },
@@ -147,12 +128,13 @@ const getOption = (list: any[]): Highcharts.Options => {
 };
 export default function Page() {
   const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<ISupplyGrowthData>();
+  const [data, setData] = useState<IMonthActiveAddressData>();
   const [loading, setLoading] = useState<boolean>(false);
+
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailySupplyGrowth({ chainId: chain });
+      const res = await fetchMonthActiveAddresses({ chainId: chain });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -172,16 +154,52 @@ export default function Page() {
     if (data) {
       const chart = chartRef.current?.chart;
       if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
+        const minDate = dayjs.utc(data.list[0]?.dateMonth.toString(), 'YYYYMM').valueOf();
+        const maxDate = dayjs.utc(data.list[data.list.length - 1]?.dateMonth.toString(), 'YYYYMM').valueOf();
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
   }, [data]);
+
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
-  const highlightData = [];
+  const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
+    return data
+      ? [
+          {
+            key: 'Highest',
+            text: (
+              <span>
+                Highest number of
+                <span className="px-1 font-bold">{thousandsNumber(data.highestActiveCount.addressCount)}</span>
+                addresses in
+                <span className="pl-1">
+                  {Highcharts.dateFormat(
+                    '%B %Y',
+                    dayjs.utc(data.highestActiveCount.dateMonth.toString(), 'YYYYMM').valueOf(),
+                  )}
+                </span>
+              </span>
+            ),
+          },
+          {
+            key: 'Lowest',
+            text: (
+              <span>
+                Lowest number of
+                <span className="px-1 font-bold">{thousandsNumber(data.lowestActiveCount.addressCount)}</span>
+                addresses in{' '}
+                {Highcharts.dateFormat(
+                  '%B %Y',
+                  dayjs.utc(data.lowestActiveCount.dateMonth.toString(), 'YYYYMM').valueOf(),
+                )}
+              </span>
+            ),
+          },
+        ]
+      : [];
+  }, [data]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
@@ -189,7 +207,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The ELF Supply Growth Chart shows a breakdown of daily block reward and burnt fees to arrive at the total daily ELF supply."
+        aboutTitle="The Active aelf Address chart shows the daily number of unique addresses that were active on the network as a sender or receiver."
         highlightData={highlightData}
         options={options}
         download={download}

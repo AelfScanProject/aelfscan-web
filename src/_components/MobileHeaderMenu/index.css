@@ -1,6 +1,4 @@
 .header-navbar-mobile-more {
-  @apply w-8 h-8;
-
   /* .anticon {
     @apply w-8 h-8 leading-8;
     svg {
@@ -70,4 +68,15 @@
       @apply h-[56px];
     }
   }
+}
+
+
+.network-mobile-drop {
+  .explorer-dropdown-menu{
+    @apply !p-4;
+    .explorer-dropdown-menu-item {
+      @apply !p-0;
+    }
+  }
+  
 }

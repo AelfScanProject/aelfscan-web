@@ -31,7 +31,6 @@ export interface IHightChartsOption {
 
 function BaseHightCharts(props: IHightChartsOption, ref) {
   const { title, aboutTitle, options, highlightData, download, hiddenDownload } = props;
-  console.log('chart');
   return (
     <div>
       <div>

@@ -61,15 +61,8 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   const networkArr = networkList.map((ele) => ele.network_id);
   return (
     <div className={clsx(clsPrefix)}>
-      <HeaderTop selectedKey={current} setCurrent={setCurrent} networkList={networkList} headerMenuList={headerList} />
-      {!isPad && (
-        <HeaderMenu
-          headerMenuList={headerList}
-          selectedKey={current}
-          setCurrent={setCurrent}
-          networkList={networkArr}
-        />
-      )}
+      <HeaderTop selectedKey={current} networkList={networkArr} setCurrent={setCurrent} headerMenuList={headerList} />
+      {!isPad && <HeaderMenu headerMenuList={headerList} selectedKey={current} setCurrent={setCurrent} />}
     </div>
   );
 }
