@@ -103,7 +103,7 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
     ];
     const explorers = networkList.map((item) => {
       return {
-        key: item?.key,
+        key: item?.key + 'net',
         label: (
           <a
             target="_blank"
