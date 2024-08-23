@@ -78,5 +78,13 @@
       @apply !p-0;
     }
   }
+
+  .explorer-dropdown-menu .explorer-dropdown-menu-item:hover {
+    @apply !text-link !bg-none !bg-white;
+    a {
+      @apply !text-link;
+    }
+  }
   
 }
+

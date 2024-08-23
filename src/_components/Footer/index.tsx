@@ -15,6 +15,7 @@ import { usePad } from '@_hooks/useResponsive';
 import { MenuItem } from '@_types';
 import { useAppSelector } from '@_store';
 import Link from 'next/link';
+import Copy from '@_components/Copy';
 const clsPrefix = 'footer-container';
 const email = 'contact@aelfscan.io';
 interface IProps {
@@ -63,9 +64,12 @@ export default function Footer({ footerMenuList }: IProps) {
               <Link className="text" href={`/${defaultChain}/contactusadvertise`} key="advertise">
                 Advertise
               </Link>
-              <a className="text" href={`mailto:${email}`} target="_blank" key="Contact Us" rel="noreferrer">
-                Contact Us
-              </a>
+              <span className="mt-1 !flex items-center gap-1">
+                <a className="text !mt-0" href={`mailto:${email}`} target="_blank" key="Contact Us" rel="noreferrer">
+                  Contact Us
+                </a>
+                <Copy value="contact@aelfscan.io" />
+              </span>
             </div>
           </div>
         </div>
