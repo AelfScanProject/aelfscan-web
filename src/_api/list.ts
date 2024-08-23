@@ -75,6 +75,7 @@ const CHART_API_LIST = {
   getCycleCount: `${BASE_API}/app/statistics/cycleCount`,
   getUniqueAddresses: `${BASE_API}/app/statistics/uniqueAddresses`,
   getDailyTransactions: `${BASE_API}/app/statistics/dailyTransactions`,
+  getMonthActiveAddresses: `${BASE_API}/app/statistics/monthlyActiveAddresses`,
   getDailyActiveAddresses: `${BASE_API}/app/statistics/dailyActiveAddresses`,
   getNodeBlockProduce: `${BASE_API}/app/statistics/nodeBlockProduce`,
   getDailyElfPrice: `${BASE_API}/app/statistics/dailyElfPrice`,

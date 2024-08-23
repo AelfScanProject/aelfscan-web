@@ -44,10 +44,16 @@ export function updateQueryParams(params: { [K in string]: any }) {
 }
 
 export const exportToCSV = (list: Array<any>, title: string) => {
-  const metrics = Object.keys(list[0] || {}).filter((item) => item !== 'date' && item !== 'dateStr');
+  const metrics = Object.keys(list[0] || {}).filter(
+    (item) => item !== 'date' && item !== 'dateStr' && item !== 'dateMonth',
+  );
   const columns = ['Date(UTC)', 'UnixTimeStamp'].concat(metrics);
   const rows = list.map((item) => {
-    return [dayjs(item.date).format('M/D/YYYY'), `'${String(item.date)}`, ...metrics.map((me) => item[me])];
+    return [
+      item.dateMonth ? item.dateMonth : dayjs(item.date).format('M/D/YYYY'),
+      item.dateMonth ? item.dateMonth : `'${String(item.date)}`,
+      ...metrics.map((me) => item[me]),
+    ];
   });
   const csv = Papa.unparse({ fields: columns, data: rows });
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

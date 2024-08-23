@@ -65,6 +65,28 @@ export interface IDailyActiveAddressData {
   };
   chainId: string;
 }
+
+export interface IMonthActiveAddressData {
+  list: Array<{
+    dateMonth: number;
+    addressCount: number;
+    sendAddressCount: number;
+    receiveAddressCount: number;
+  }>;
+  highestActiveCount: {
+    dateMonth: number;
+    addressCount: number;
+    sendAddressCount: number;
+    receiveAddressCount: number;
+  };
+  lowestActiveCount: {
+    dateMonth: number;
+    addressCount: number;
+    sendAddressCount: number;
+    receiveAddressCount: number;
+  };
+  chainId: string;
+}
 export interface IBlockProductionRateData {
   list: Array<{
     date: number;

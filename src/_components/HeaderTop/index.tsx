@@ -41,14 +41,14 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   const items: MenuProps['items'] = useMemo(() => {
     return networkList.map((item) => {
       return {
-        key: item?.network_id?.key,
+        key: item?.key,
         label: (
           <a
             target="_blank"
-            className={`text-sm leading-[22px] ${origin === item.network_id?.path ? '!text-link' : '!text-base-100'}`}
-            href={item.network_id?.path}
+            className={`text-sm leading-[22px] ${origin === item?.path ? '!text-link' : '!text-base-100'}`}
+            href={item?.path}
             rel="noopener noreferrer">
-            {item.network_id?.label}
+            {item?.label}
           </a>
         ),
       };

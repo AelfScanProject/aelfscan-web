@@ -93,7 +93,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     return [
       {
         label: 'LAST TXN SENT',
-        value: lastTransactionSend && (
+        value: lastTransactionSend ? (
           <div className="flex items-center">
             <EPTooltip mode="dark" title={lastTransactionSend?.transactionId}>
               <Link className="h-[22px]" href={`/${chain}/tx/${lastTransactionSend?.transactionId}}`}>
@@ -106,11 +106,13 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
               from {formatDate(dayjs(lastTransactionSend.blockTime).unix().valueOf(), 'Age')}
             </span>
           </div>
+        ) : (
+          'N/A'
         ),
       },
       {
         label: 'FIRST TXN SENT',
-        value: firstTransactionSend && (
+        value: firstTransactionSend ? (
           <div className="flex items-center">
             <EPTooltip mode="dark" title={firstTransactionSend?.transactionId}>
               <Link className="h-[22px]" href={`/${chain}/tx/${firstTransactionSend?.transactionId}}`}>
@@ -123,6 +125,8 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
               from {formatDate(dayjs(firstTransactionSend.blockTime).unix().valueOf(), 'Age')}
             </span>
           </div>
+        ) : (
+          'N/A'
         ),
       },
     ];

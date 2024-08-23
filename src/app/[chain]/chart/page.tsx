@@ -1,13 +1,10 @@
 'use client';
 
-import { Anchor, Card, Skeleton } from 'antd';
-import { Image } from 'antd';
+import { Anchor, Card } from 'antd';
 import './index.css';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
-import { AdTracker } from '@_utils/ad';
-import { Button } from 'aelf-design';
 import { useMobileContext } from '@app/pageProvider';
 import PageAd from '@_components/PageAd';
 
@@ -56,6 +53,11 @@ const ChartData = [
         title: 'aelf Wallet Address Chart',
         path: '/chart/address',
         key: 'address',
+      },
+      {
+        title: 'Monthly Active aelf Addresses',
+        path: '/chart/month-address',
+        key: 'month-address',
       },
       {
         title: 'Active aelf Addresses Chart',

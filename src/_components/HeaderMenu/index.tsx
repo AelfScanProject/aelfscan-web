@@ -6,12 +6,11 @@ import clsx from 'clsx';
 import './index.css';
 import IconFont from '@_components/IconFont';
 import ChainSelect from '@_components/ChainSelect';
-import { MenuItem, NetworkItem } from '@_types';
+import { MenuItem } from '@_types';
 import { getPathnameFirstSlash, isURL } from '@_utils/urlUtils';
 import { useAppSelector } from '@_store';
 import Link from 'next/link';
 interface IProps {
-  networkList: NetworkItem[];
   headerMenuList: MenuItem[];
   setCurrent: (key: string) => void;
   selectedKey: string;
