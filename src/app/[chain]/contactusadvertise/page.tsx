@@ -72,9 +72,9 @@ export default function Advertise() {
           <div className="flex-1">
             <Image
               width={640}
-              height={240}
-              className="aspect-[640/240]"
-              src="/image/advertise-cover .png"
+              height={260}
+              className="aspect-[640/260]"
+              src="/image/banner-main.svg"
               alt="cover"></Image>
           </div>
         </div>
