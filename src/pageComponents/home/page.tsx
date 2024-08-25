@@ -25,7 +25,7 @@ import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 import AdsImage from '@_components/AdsImage';
 function Home() {
-  const { blocks, transactions, tpsData } = useAppSelector((state) => state.getChainId);
+  const { blocks, transactions, tpsData, defaultChain } = useAppSelector((state) => state.getChainId);
 
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
@@ -68,13 +68,23 @@ function Home() {
       </div>
     );
   }, [mobile, blocks, transactions]);
+  const title = useMemo(() => {
+    if (isMainNet) {
+      return defaultChain === 'AELF' ? 'AELF MainChain Explorer' : `AELF SideChain (${defaultChain}) Explorer `;
+    } else {
+      return defaultChain === 'AELF'
+        ? 'AELF MainChain Testnet Explorer'
+        : `AELF SideChain (${defaultChain}) Testnet Explorer `;
+    }
+    return; //
+  }, [isMainNet, defaultChain]);
 
   return (
     <main className={clsx(`${clsPrefix}`, mobile && `${clsPrefix}-mobile`, 'relative')}>
       <div className={`banner-section-container z-8 relative w-full ${!isMainNet && 'banner-section-container-test'}`}>
         <div className="banner-section z-8 relative flex justify-start">
           <div className="w-full flex-00auto md:w-[75%] min-[993px]:w-[58.333%]">
-            <h2 className={`${!isMainNet && '!text-base-100'}`}>AELF Explorer</h2>
+            <h2 className={`${!isMainNet && '!text-base-100'}`}>{title}</h2>
             <div className="search-section mt-4">
               <SearchComp isMobile={mobile} />
             </div>

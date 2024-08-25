@@ -28,15 +28,18 @@ export interface IDailyAddAddressData {
   list: Array<{
     date: number;
     addressCount: number;
+    ownerUniqueAddressees: number;
     totalUniqueAddressees: number;
   }>;
   highestIncrease: {
     date: number;
     addressCount: number;
+    ownerUniqueAddressees: number;
   };
   lowestIncrease: {
     date: number;
     addressCount: number;
+    ownerUniqueAddressees: number;
   };
   chainId: string;
 }
@@ -56,6 +59,28 @@ export interface IDailyActiveAddressData {
   };
   lowestActiveCount: {
     date: number;
+    addressCount: number;
+    sendAddressCount: number;
+    receiveAddressCount: number;
+  };
+  chainId: string;
+}
+
+export interface IMonthActiveAddressData {
+  list: Array<{
+    dateMonth: number;
+    addressCount: number;
+    sendAddressCount: number;
+    receiveAddressCount: number;
+  }>;
+  highestActiveCount: {
+    dateMonth: number;
+    addressCount: number;
+    sendAddressCount: number;
+    receiveAddressCount: number;
+  };
+  lowestActiveCount: {
+    dateMonth: number;
     addressCount: number;
     sendAddressCount: number;
     receiveAddressCount: number;

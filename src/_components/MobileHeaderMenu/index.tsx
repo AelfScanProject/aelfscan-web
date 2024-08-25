@@ -4,7 +4,7 @@ import { MenuItem, NetworkItem } from '@_types';
 import { Drawer, Menu, MenuProps } from 'antd';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import './index.css';
 import { useAppDispatch, useAppSelector } from '@_store';
 import { setDefaultChain } from '@_store/features/chainIdSlice';
@@ -13,6 +13,10 @@ import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
 import { useMobileAll } from '@_hooks/useResponsive';
 import clsx from 'clsx';
+import { Dropdown } from 'aelf-design';
+import Image from 'next/image';
+import { homePath } from '@_components/Main';
+const ChangeIcoTest = '/image/aelf-header-top-test-change.svg';
 
 interface IProps {
   headerMenuList: MenuItem[];
@@ -23,7 +27,6 @@ interface IProps {
 type AntdMenuItem = Required<MenuProps>['items'][number];
 
 export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedKey, networkList }: IProps) {
-  console.log(networkList, 'networkList');
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const isMobile = useMobileAll();
@@ -32,6 +35,8 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   const toggleMenu = () => {
     setShowMobileMenu(!showMobileMenu);
   };
+
+  console.log(chainArr, 'chainArr');
   const onClick: MenuProps['onClick'] = (e) => {
     if (!e.key.startsWith('http')) {
       setCurrent(e.key);
@@ -73,50 +78,94 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
     });
   };
   const dispatch = useAppDispatch();
-  const onSelectHandler = (value: string) => {
-    dispatch(setDefaultChain(value));
-    if (value === 'AELF') {
-      router.push('/');
-    } else {
-      router.push(`/${value}`);
-    }
-    setCurrent('/');
-  };
+  const onSelectHandler = useCallback(
+    (value: string) => {
+      dispatch(setDefaultChain(value));
+      if (value === 'AELF') {
+        router.push('/');
+      } else {
+        router.push(`/${value}`);
+      }
+      setCurrent('/');
+    },
+    [dispatch, router, setCurrent],
+  );
 
   const pathname = usePathname();
+  const origin = typeof window !== 'undefined' && window.location.origin;
 
-  const items: MenuProps['items'] = [
-    ...convertMenuItems(headerMenuList),
-    { type: 'divider' },
-    getItem(
-      'Explorers',
-      'explorers',
-      networkList.map((ele) => {
-        return getItem(
+  const networkItems: MenuProps['items'] = useMemo(() => {
+    const Explorers = [
+      {
+        key: 'explorers',
+        label: <span className="mb-2 inline-block text-xs leading-5 text-[#BBB]">Explorers</span>,
+      },
+    ];
+    const explorers = networkList.map((item) => {
+      return {
+        key: item?.key + 'net',
+        label: (
           <a
             target="_blank"
-            className={`text-sm leading-[22px] !text-base-100 ${window.location.origin === ele.network_id?.path && !'text-link'}`}
-            href={ele.network_id?.path}
+            className={`box-border flex items-center justify-between rounded-md px-3 py-[9px] text-sm leading-[22px]  ${origin === item?.path ? '!bg-F7 !text-link' : '!text-base-100'}`}
+            href={item?.path}
             rel="noopener noreferrer">
-            {ele.network_id?.label}
-          </a>,
-          ele.network_id?.key,
-        );
-      }),
-    ),
-    getItem(
-      'Networks',
-      'networks',
-      chainArr?.map((ele) => {
-        return getItem(<a onClick={() => onSelectHandler(ele.key)}>{ele.label}</a>, ele.label);
-      }),
-    ),
-  ];
+            <span>{item?.label}</span>
+            {origin === item?.path && <Image width={12} height={12} alt="correct" src="/image/correct.svg" />}
+          </a>
+        ),
+      };
+    });
+
+    const divider = [
+      {
+        key: 'divider',
+        label: <Image className="py-3" width="188" height={2} alt="divider" src="/image/divider.svg" />,
+      },
+    ];
+
+    const chainList = chainArr.map((item) => {
+      return {
+        key: item?.key,
+        label: (
+          <a
+            className={`box-border flex items-center justify-between rounded-md px-3 py-[9px] text-sm leading-[22px]  ${defaultChain === item?.key ? '!bg-F7 !text-link' : '!text-base-100'}`}
+            onClick={() => onSelectHandler(item.key)}>
+            <span>{item?.label}</span>
+            {defaultChain === item.key && <Image width={12} height={12} alt="correct" src="/image/correct.svg" />}
+          </a>
+        ),
+      };
+    });
+
+    return [
+      ...Explorers,
+      ...explorers,
+      ...divider,
+      {
+        key: 'Networks',
+        label: <span className="mb-2 inline-block text-xs leading-5 text-[#BBB]">Networks</span>,
+      },
+      ...chainList,
+    ];
+  }, [chainArr, defaultChain, networkList, onSelectHandler, origin]);
+
+  console.log(networkItems, 'networkItems');
+
+  const items: MenuProps['items'] = [...convertMenuItems(headerMenuList)];
 
   return (
-    <div className={`header-navbar-mobile-more ${isMainNet ? 'header-navbar-main-mobile-more' : ''}`}>
-      {/* <IconFont type={isMainNet ? 'moremainnet' : 'moretestnet'} onClick={() => toggleMenu()} /> */}
-      <div className={`item-center border-1 flex size-8 justify-center rounded border`} onClick={() => toggleMenu()}>
+    <div className={`header-navbar-mobile-more flex ${isMainNet ? 'header-navbar-main-mobile-more' : ''}`}>
+      <Dropdown trigger={['click']} overlayClassName="network-mobile-drop w-[220px]" menu={{ items: networkItems }}>
+        <div>
+          <div className="flex size-8 cursor-pointer items-center justify-center rounded-md border border-[#EAECEF]">
+            <Image width="20" height="20" src={`${ChangeIcoTest}`} alt={'explorer-change-icon'}></Image>
+          </div>
+        </div>
+      </Dropdown>
+      <div
+        className={`item-center border-1 ml-3 flex size-8 justify-center rounded border`}
+        onClick={() => toggleMenu()}>
         <MenuOutlined color="#252525" hoverColor="#252525" activeColor={'#266CD3'} style={{ fontSize: '20px' }} />
       </div>
       {showMobileMenu && (
@@ -129,8 +178,8 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
           className={clsx(
             'header-drawer-menu-wrapper',
             isMainNet ? 'header-main-drawer-menu-wrapper' : '',
-            pathname === '/' && 'home-header-drawer-menu-wrapper',
-            isMobile && pathname !== '/' ? '!mt-28' : '',
+            homePath.includes(pathname) && 'home-header-drawer-menu-wrapper',
+            isMobile && !homePath.includes(pathname) ? '!mt-28' : '',
           )}
           rootClassName={`header-drawer-menu-root-wrapper`}
           onClose={() => toggleMenu()}>

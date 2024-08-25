@@ -16,6 +16,7 @@ import {
   IDeployedContractsData,
   IHoldersAccountData,
   IMarkerCap,
+  IMonthActiveAddressData,
   INodeBlockProduceDataItem,
   IStakedData,
   ISupplyGrowthData,
@@ -53,6 +54,14 @@ export async function fetchUniqueAddresses(params: { chainId: string }): Promise
 }
 export async function fetchDailyActiveAddresses(params: { chainId: string }): Promise<IDailyActiveAddressData> {
   const result = await request.chart.getDailyActiveAddresses({
+    params: params,
+  });
+  const data = result?.data;
+  return data;
+}
+
+export async function fetchMonthActiveAddresses(params: { chainId: string }): Promise<IMonthActiveAddressData> {
+  const result = await request.chart.getMonthActiveAddresses({
     params: params,
   });
   const data = result?.data;

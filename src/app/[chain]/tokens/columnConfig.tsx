@@ -5,7 +5,7 @@ import { thousandsNumber } from '@_utils/formatter';
 import { ColumnsType } from 'antd/es/table';
 import clsx from 'clsx';
 import TokenImage from './_components/TokenImage';
-import { ITokenListItem } from '../token/[tokenSymbol]/type';
+import { ITokenListItem, TokenTypeEnum } from '../token/[tokenSymbol]/type';
 import Link from 'next/link';
 import { SortEnum } from '@_types/common';
 
@@ -32,8 +32,13 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, chain, 
       width: '432px',
       dataIndex: 'token',
       key: 'token',
-      render: (text) => (
-        <Link href={`/${chain}/token/${text.symbol}`}>
+      render: (text, record) => (
+        <Link
+          href={
+            record.type === TokenTypeEnum.nft
+              ? `/nftItem?chainId=${chain}&itemSymbol=${record.token.symbol}`
+              : `/${chain}/token/${text.symbol}`
+          }>
           <TokenTableCell token={text}>
             <TokenImage token={text} />
           </TokenTableCell>
@@ -57,7 +62,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, chain, 
     {
       title: (
         <div className="flex cursor-pointer" onClick={ChangeOrder}>
-          <IconFont className={`mr-1 text-xs ${sort === SortEnum.asc ? 'scale-y-[-1]' : ''}`} type="Rank" />
+          <IconFont className={`mr-1 text-xs ${sort === SortEnum.asc ? '-scale-y-100' : ''}`} type="Rank" />
           <EPTooltip mode="dark" title="Sorted in descending order Click for ascending order">
             <div className="text-link">Holder</div>
           </EPTooltip>
@@ -71,7 +76,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, chain, 
         return (
           <div>
             <div>{text}</div>
-            <div className={clsx(holderPercentChange24H >= 0 ? 'text-[#00A186]' : 'text-[#FF4D4F]')}>
+            <div className={clsx(holderPercentChange24H >= 0 ? 'text-[#00A186]' : 'text-rise-red')}>
               <EPTooltip title={getHolderPercentChange24h(record)} mode="dark">
                 <span className="text-xs leading-5">{holderPercentChange24H}%</span>
               </EPTooltip>

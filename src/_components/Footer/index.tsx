@@ -13,10 +13,11 @@ import BackToTopButton from '@_components/BackToTopBtn';
 import Image from 'next/image';
 import { usePad } from '@_hooks/useResponsive';
 import { MenuItem } from '@_types';
-import { useEnvContext } from 'next-runtime-env';
-import { checkMainNet } from '@_utils/isMainNet';
-const FoorterBgTets = '/image/footer-bg.png';
+import { useAppSelector } from '@_store';
+import Link from 'next/link';
+import Copy from '@_components/Copy';
 const clsPrefix = 'footer-container';
+const email = 'contact@aelfscan.io';
 interface IProps {
   isMobileSSR: boolean;
   footerMenuList: {
@@ -24,9 +25,7 @@ interface IProps {
   }[];
 }
 export default function Footer({ footerMenuList }: IProps) {
-  console.log(footerMenuList, 'footerMenuList');
-  const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
-  const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
+  const { defaultChain } = useAppSelector((state) => state.getChainId);
   const isPad = usePad();
   const rightLinkCom = footerMenuList.map((ele) => {
     const item = ele.footerMenu_id;
@@ -58,7 +57,21 @@ export default function Footer({ footerMenuList }: IProps) {
               explorer.
             </div>
           </div>
-          <div className="right">{rightLinkCom}</div>
+          <div className="right">
+            {rightLinkCom}
+            <div className="service" key="service">
+              <span className="title">Service</span>
+              <Link className="text" href={`/${defaultChain}/contactusadvertise`} key="advertise">
+                Advertise
+              </Link>
+              <span className="mt-1 !flex items-center gap-1">
+                <a className="text !mt-0" href={`mailto:${email}`} target="_blank" key="Contact Us" rel="noreferrer">
+                  Contact Us
+                </a>
+                <Copy value="contact@aelfscan.io" />
+              </span>
+            </div>
+          </div>
         </div>
         <BackToTopButton isDark={true}></BackToTopButton>
         <div className={`${clsPrefix}-link`}>
@@ -76,7 +89,7 @@ export default function Footer({ footerMenuList }: IProps) {
           </a>
         </div>
       </div>
-      <div className="copywrite">AELF © {new Date().getFullYear()}</div>
+      <div className="copywrite">aelfscan © {new Date().getFullYear()}</div>
     </div>
   );
 }

@@ -53,12 +53,18 @@ export interface ITokenDetail {
   decimals: number;
 }
 
+export enum TokenTypeEnum {
+  token,
+  nft,
+}
+
 export interface ITokenListItem {
   holders: number;
   totalSupply: number;
   circulatingSupply: number;
   holderPercentChange24H: number;
   token: IToken;
+  type: TokenTypeEnum;
 }
 
 export interface ITokenList {

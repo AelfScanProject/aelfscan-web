@@ -1,37 +1,37 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChartColors, IDailyAddAddressData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChartColors, IHIGHLIGHTDataItem, IMonthActiveAddressData } from '../type';
+const title = 'Monthly Active aelf Addresses';
 import { exportToCSV } from '@_utils/urlUtils';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 import { useParams } from 'next/navigation';
-import { fetchUniqueAddresses } from '@_api/fetchChart';
 import { message } from 'antd';
+import { fetchMonthActiveAddresses } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-
-const title = 'aelf Wallet Address Chart';
-const getOption = (list: any[], chain): Highcharts.Options => {
+const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
-  const ownerData: any[] = [];
   const customMap = {};
-  const prefix = chain === 'AELF' ? 'MainChain' : 'SideChain';
   list.forEach((item) => {
-    allData.push([item.date, item.totalUniqueAddressees]);
-    ownerData.push([item.date, item.ownerUniqueAddressees]);
-    customMap[item.date] = {};
-    customMap[item.date].totalCount = item.totalUniqueAddressees;
-    customMap[item.date].addressCount = item.addressCount;
-    customMap[item.date].ownerUniqueAddressees = item.ownerUniqueAddressees;
+    const date = dayjs.utc(item.dateMonth.toString(), 'YYYYMM').valueOf();
+    allData.push([date, item.addressCount]);
+    customMap[date] = {};
+    customMap[date].sendAddressCount = item.sendAddressCount;
+    customMap[date].receiveAddressCount = item.receiveAddressCount;
   });
+
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
-      enabled: true,
+      enabled: false,
     },
     colors: ChartColors,
     chart: {
@@ -45,12 +45,6 @@ const getOption = (list: any[], chain): Highcharts.Options => {
         x: -25,
       },
       buttons: [
-        {
-          type: 'month',
-          count: 1,
-          text: '1m',
-          title: 'View 1 months',
-        },
         {
           type: 'month',
           count: 6,
@@ -87,10 +81,14 @@ const getOption = (list: any[], chain): Highcharts.Options => {
       max: maxDate,
       startOnTick: false,
       endOnTick: false,
+      minRange: 30 * 24 * 3600 * 1000, // Minimum range is 1 month
+      dateTimeLabelFormats: {
+        month: '%B %Y', // Format x-axis labels as "Jan 2024"
+      },
     },
     yAxis: {
       title: {
-        text: 'aelf Cumulative Address Growth',
+        text: 'Active Addresses',
       },
     },
     credits: {
@@ -103,25 +101,19 @@ const getOption = (list: any[], chain): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const total = customMap[date].totalCount;
-        const value = customMap[date].addressCount;
-        const ownerValue = customMap[date].ownerUniqueAddressees;
-
+        const value = point.y;
+        const sendAddressCount = customMap[date].sendAddressCount;
+        const receiveAddressCount = customMap[date].receiveAddressCount;
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(total)}</b><br/><b>${prefix} Wallet Addresses</b>: <b>${thousandsNumber(ownerValue)}</b><br/>Daily ${prefix} Increase: <b>${thousandsNumber(value)}</b><br/>
+          ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Active Addresses</b>: <b>${thousandsNumber(value)}</b><br/>Sender Address: <b>${thousandsNumber(sendAddressCount)}</b><br/>Receive Address: <b>${thousandsNumber(receiveAddressCount)}</b><br/>
         `;
       },
     },
     series: [
       {
-        name: 'Total Wallet',
+        name: 'Active Addresses',
         type: 'line',
         data: allData,
-      },
-      {
-        name: prefix + ' Wallet',
-        type: 'line',
-        data: ownerData,
       },
     ],
     exporting: {
@@ -136,12 +128,13 @@ const getOption = (list: any[], chain): Highcharts.Options => {
 };
 export default function Page() {
   const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IDailyAddAddressData>();
+  const [data, setData] = useState<IMonthActiveAddressData>();
   const [loading, setLoading] = useState<boolean>(false);
+
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchUniqueAddresses({ chainId: chain });
+      const res = await fetchMonthActiveAddresses({ chainId: chain });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -153,16 +146,16 @@ export default function Page() {
     fetData();
   });
   const options = useMemo(() => {
-    return getOption(data?.list || [], chain);
-  }, [data, chain]);
+    return getOption(data?.list || []);
+  }, [data]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
       if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
+        const minDate = dayjs.utc(data.list[0]?.dateMonth.toString(), 'YYYYMM').valueOf();
+        const maxDate = dayjs.utc(data.list[data.list.length - 1]?.dateMonth.toString(), 'YYYYMM').valueOf();
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
@@ -176,13 +169,17 @@ export default function Page() {
       ? [
           {
             key: 'Highest',
-            hiddenTitle: true,
             text: (
               <span>
-                Highest increase of
-                <span className="px-1 font-bold">{thousandsNumber(data.highestIncrease.addressCount)}</span>
-                addresses was recorded on
-                <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highestIncrease.date)}</span>
+                Highest number of
+                <span className="px-1 font-bold">{thousandsNumber(data.highestActiveCount.addressCount)}</span>
+                addresses in
+                <span className="pl-1">
+                  {Highcharts.dateFormat(
+                    '%B %Y',
+                    dayjs.utc(data.highestActiveCount.dateMonth.toString(), 'YYYYMM').valueOf(),
+                  )}
+                </span>
               </span>
             ),
           },
@@ -190,10 +187,13 @@ export default function Page() {
             key: 'Lowest',
             text: (
               <span>
-                Lowest increase of
-                <span className="px-1 font-bold">{thousandsNumber(data.lowestIncrease.addressCount)}</span>
-                new addresses was recorded on{' '}
-                <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.lowestIncrease.date)}</span>
+                Lowest number of
+                <span className="px-1 font-bold">{thousandsNumber(data.lowestActiveCount.addressCount)}</span>
+                addresses in{' '}
+                {Highcharts.dateFormat(
+                  '%B %Y',
+                  dayjs.utc(data.lowestActiveCount.dateMonth.toString(), 'YYYYMM').valueOf(),
+                )}
               </span>
             ),
           },
@@ -207,7 +207,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The chart shows the total distinct numbers of address on the aelf blockchain and the increase in the number of address daily"
+        aboutTitle="The Active aelf Address chart shows the daily number of unique addresses that were active on the network as a sender or receiver."
         highlightData={highlightData}
         options={options}
         download={download}

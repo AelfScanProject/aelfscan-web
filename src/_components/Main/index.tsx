@@ -11,11 +11,16 @@ import './index.css';
 import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { usePathname } from 'next/navigation';
+const adsPath = ['/AELF/contactusadvertise', '/tDVV/contactusadvertise', '/tDVW/contactusadvertise'];
+export const homePath = ['/', '/AELF', '/tDVV', '/tDVW'];
 export default function MainContainer({ children }) {
   const path = usePathname();
   const isMobile = useMobileAll();
   const isHome = useMemo(() => {
-    return path === '/' || path === '/tDVV' || path === '/tDVW';
+    return homePath.includes(path);
+  }, [path]);
+  const isAds = useMemo(() => {
+    return adsPath.includes(path);
   }, [path]);
   return (
     <div
@@ -23,6 +28,7 @@ export default function MainContainer({ children }) {
         isMobile && 'main-container-mobile',
         'main-container w-full',
         isHome && '!w-full !max-w-full !px-0',
+        isAds && '!w-full !max-w-full !px-0 !pb-0',
         !isHome && isMobile && '!pt-28',
       )}>
       {children}

@@ -7,10 +7,10 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 import { SYMBOL } from '@_utils/contant';
 import { v4 as uuidv4 } from 'uuid';
 import { PageTypeEnum } from '@_types';
-dayjs.extend(utc);
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss Z') => {
   if (typeof date === 'number') {
     if (type === 'Date Time (UTC)') {

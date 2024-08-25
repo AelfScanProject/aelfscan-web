@@ -30,22 +30,23 @@
       @apply flex-row flex gap-4 w-full;
       .ecosystem,
       .community,
-      .developer {
+      .developer,
+      .service {
         @apply flex-col flex-1;
-        span {
+        span,a {
           @apply block;
         }
         .title {
           @apply font-[700] text-[14px] leading-[22px];
         }
         .text {
-          @apply mt-1 text-[12px] font-[400] leading-5 text-[#595959] hover:cursor-pointer;
+          @apply mt-1 text-[12px] font-[400] leading-5 !text-[#595959] hover:cursor-pointer;
         }
       }
     }
   }
   .copywrite {
-    @apply absolute bottom-6 w-full text-center text-[#858585] text-[12px] font-[400];
+    @apply absolute bottom-8 w-full text-center text-[#858585] text-[12px] font-[400];
   }
   .footer-container-link {
     @apply absolute flex items-center left-5 top-6 cursor-pointer;
@@ -64,7 +65,7 @@
   }
 }
 .footer-container-mobile {
-  @apply h-[540px] w-full;
+  @apply h-[560px] w-full;
   .footer-container-bg {
     @apply h-full object-cover;
   }
