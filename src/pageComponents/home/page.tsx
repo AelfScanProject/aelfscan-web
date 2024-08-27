@@ -85,7 +85,7 @@ function Home() {
         <div className="banner-section z-8 relative flex justify-start">
           <div className="w-full flex-00auto md:w-[75%] min-[993px]:w-[58.333%]">
             <h2 className={`${!isMainNet && '!text-base-100'}`}>{title}</h2>
-            <div className="search-section mt-4">
+            <div className="search-section my-4 min-[996px]:mb-10">
               <SearchComp isMobile={mobile} />
             </div>
           </div>

@@ -68,7 +68,6 @@ export default function Footer({ footerMenuList }: IProps) {
                 <a className="text !mt-0" href={`mailto:${email}`} target="_blank" key="Contact Us" rel="noreferrer">
                   Contact Us
                 </a>
-                <Copy value="contact@aelfscan.io" />
               </span>
             </div>
           </div>
