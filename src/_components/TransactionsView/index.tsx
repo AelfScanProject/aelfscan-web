@@ -7,7 +7,7 @@ import { addSymbol, divDecimals } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
 export default function TransactionsView({ record, custom = false }) {
   const { chain } = useParams();
-  const transactionFee = custom && record.transactionFeeList.length ? record.transactionFeeList[0] : {};
+  const transactionFee = custom && record.transactionFeeList?.length ? record.transactionFeeList[0] : {};
   const PreviewCard = () => {
     return (
       <div className="preview-view">
