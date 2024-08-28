@@ -6,6 +6,7 @@
     "dev": "NODE_ENV=test NEXT_PUBLIC_APP_ENV=test next dev",
     "build:test": "NODE_ENV=test NEXT_PUBLIC_APP_ENV=test next build",
     "build": "NODE_ENV=production NEXT_PUBLIC_APP_ENV=production next build",
+    "build:father": "NODE_ENV=production NEXT_PUBLIC_APP_ENV=production father build",
     "start": "next start",
     "lint": "next lint",
     "release": "release-it"
@@ -42,6 +43,7 @@
     "echarts": "^5.4.3",
     "echarts-for-react": "^3.0.2",
     "eslint-plugin-no-inline-styles": "^1.0.5",
+    "father": "^4.5.0",
     "file-saver": "^2.0.5",
     "graphql": "^16.8.1",
     "highcharts": "^11.4.3",

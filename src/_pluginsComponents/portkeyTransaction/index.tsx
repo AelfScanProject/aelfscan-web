@@ -1,5 +1,4 @@
 'use client';
-import HeadTitle from '@_components/HeaderTitle';
 import Table from '@_components/Table';
 import getColumns from './columnConfig';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -8,21 +7,22 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { pageSizeOption } from '@_utils/contant';
 import { ITransactionsResponseItem, TChainID } from '@_api/type';
 import { useParams, useSearchParams } from 'next/navigation';
-import { fetchTransactionList } from '@_api/fetchTransactions';
+import { fetchTransactionList } from './api';
 import { getAddress, getAddressSearchAfter, getSort } from '@_utils/formatter';
 import { useEffectOnce } from 'react-use';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { PageTypeEnum } from '@_types';
-const TAB_NAME = 'transactions';
-export default function List({ SSRData, showHeader = true, defaultPage, defaultPageSize, defaultPageType }) {
-  console.log(SSRData, 'transactionSSRData');
+import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+import { TablePageSize } from '@_types/common';
+const TAB_NAME = 'PortkeyTx';
+export default function List() {
   const isMobile = useMobileAll();
-
+  const { defaultPage, defaultPageSize, defaultPageType } = useSearchAfterParams(TablePageSize.mini, 'PortkeyTx');
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
   const [pageSize, setPageSize] = useState<number>(Number(defaultPageSize));
   const [loading, setLoading] = useState<boolean>(false);
-  const [total, setTotal] = useState<number>(SSRData.total);
-  const [data, setData] = useState<ITransactionsResponseItem[]>(SSRData.transactions);
+  const [total, setTotal] = useState<number>(0);
+  const [data, setData] = useState<ITransactionsResponseItem[]>();
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
   const { chain, address } = useParams();
@@ -49,22 +49,13 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
       };
       try {
         if (mountRef.current) {
-          if (showHeader) {
-            updateQueryParams({
-              p: page,
-              ps: pageSize,
-              pageType,
-              searchAfter: JSON.stringify(searchAfter),
-            });
-          } else {
-            updateQueryParams({
-              p: page,
-              ps: pageSize,
-              tab: TAB_NAME,
-              pageType,
-              searchAfter: JSON.stringify(searchAfter),
-            });
-          }
+          updateQueryParams({
+            p: page,
+            ps: pageSize,
+            tab: TAB_NAME,
+            pageType,
+            searchAfter: JSON.stringify(searchAfter),
+          });
         }
       } catch (error) {
         console.log(error, 'error.rr');
@@ -78,11 +69,10 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
         mountRef.current = true;
       }
     },
-    [activeTab, address, chain, defaultSearchAfter, showHeader, updateQueryParams],
+    [activeTab, address, chain, defaultSearchAfter, updateQueryParams],
   );
 
   useEffectOnce(() => {
-    if (showHeader) return;
     fetchData(currentPage, pageSize, data, pageType);
   });
   const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
@@ -126,7 +116,6 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
 
   return (
     <div>
-      {showHeader && <HeadTitle content="Transactions" adPage="transactions"></HeadTitle>}
       <Table
         headerTitle={{
           multi: {
