@@ -137,18 +137,8 @@ export default function getColumns(_ref) {
       });
     }
   }, {
-    title: 'Value',
-    width: 148,
-    key: 'transactionValue',
-    dataIndex: 'transactionValue',
-    render: function render(text) {
-      return /*#__PURE__*/React.createElement("span", {
-        className: "break-all text-base-100"
-      }, text != null ? addSymbol(divDecimals(text)) : '-');
-    }
-  }, {
     title: 'Txn Fee',
-    width: 158,
+    width: 180,
     key: 'transactionFee',
     dataIndex: 'transactionFee',
     render: function render(text) {
