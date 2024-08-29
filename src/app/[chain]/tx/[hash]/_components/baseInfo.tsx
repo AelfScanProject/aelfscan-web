@@ -23,11 +23,14 @@ import NFTImage from '@_components/NFTImage';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 import { useEffectOnce } from 'react-use';
 import AdsImage from '@_components/AdsImage';
+import { number } from 'echarts';
 
 export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
   const isMobile = useMobileAll();
   const { chain } = useParams();
   const [adsData, setAdsData] = useState<IPageBannerAdsDetail>();
+
+  console.log(data, 'dataF');
 
   useEffectOnce(() => {
     fetchBannerAdsDetail({ label: 'txndetail' })
@@ -285,7 +288,9 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                   className={clsx('flex items-center', idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider')}>
                   <span>{transactionValue.amountString}</span>
                   <span>{transactionValue.symbol}</span>
-                  <DollarCurrencyRate nowPrice={transactionValue.nowPrice} tradePrice={transactionValue.tradePrice} />
+                  {Number(transactionValue.nowPrice) && (
+                    <DollarCurrencyRate nowPrice={transactionValue.nowPrice} tradePrice={transactionValue.tradePrice} />
+                  )}
                 </div>
               );
             })}
