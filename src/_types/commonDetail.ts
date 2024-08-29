@@ -101,6 +101,7 @@ export interface IAddressTokensDetail {
 export interface IAddressResponse extends IAddressTokensDetail {
   symbol: string;
   contractName: string; // contract address
+  addressTypeList: ['PortKey'];
   author: string; // contract add
   tokenHoldings: number;
   addressType: number;

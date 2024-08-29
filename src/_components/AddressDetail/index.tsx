@@ -19,7 +19,7 @@ import clsx from 'clsx';
 import './index.css';
 import EPTooltip from '@_components/EPToolTip';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { IPageBannerAdsDetail, TChainID } from '@_api/type';
 import dayjs from 'dayjs';
 import Link from 'next/link';
@@ -29,6 +29,7 @@ import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import AdsImage from '@_components/AdsImage';
 import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
+import PortkeyActivity from '@_plugins/portkeyActivity';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -52,9 +53,12 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     elfBalance,
     elfPriceInUsd,
     lastTransactionSend,
+    addressTypeList,
     firstTransactionSend,
     contractTransactionHash,
   } = SSRData;
+
+  console.log(SSRData, 'AddressDetail');
 
   const { defaultPage, defaultPageSize, defaultPageType } = useSearchAfterParams(TablePageSize.mini, 'transactions');
   const OverviewInfo = useMemo(() => {
@@ -156,6 +160,10 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
 
   const tabRef = useRef<EPTabsRef>(null);
 
+  const Search = useSearchParams();
+
+  let defaultTab = (Search.get('tab') as string) || '';
+
   const onTabClick = (key) => {
     tabRef.current?.setActiveKey(key);
   };
@@ -199,7 +207,15 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       children: <NFTTransfers showHeader={false} />,
     },
   ];
+  if (addressTypeList.includes('PortKey')) {
+    items.splice(2, 0, {
+      key: 'portkeyactivity',
+      label: 'Portkey Activity',
+      children: <PortkeyActivity />,
+    });
+  }
   if (!isAddress) {
+    defaultTab = defaultTab || 'contract';
     items.push(
       {
         key: 'contract',
@@ -262,7 +278,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         </div>
       )}
       <div className="address-main mt-4">
-        <EPTabs ref={tabRef} items={items} />
+        <EPTabs ref={tabRef} selectKey={defaultTab} items={items} />
       </div>
     </div>
   );
