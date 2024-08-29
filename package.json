@@ -25,6 +25,7 @@
     "@microsoft/signalr": "^7.0.10",
     "@microsoft/signalr-protocol-msgpack": "^7.0.10",
     "@monaco-editor/react": "^4.5.1",
+    "@portkey/did-ui-react": "^2.9.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@sentry/nextjs": "^8.17.0",
     "@types/node": "20.4.5",

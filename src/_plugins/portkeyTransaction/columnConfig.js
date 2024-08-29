@@ -20,8 +20,7 @@ export default function getColumns(_ref) {
   var timeFormat = _ref.timeFormat,
     handleTimeChange = _ref.handleTimeChange,
     _ref$chainId = _ref.chainId,
-    chainId = _ref$chainId === void 0 ? 'AELF' : _ref$chainId,
-    type = _ref.type;
+    chainId = _ref$chainId === void 0 ? 'AELF' : _ref$chainId;
   return [{
     title: /*#__PURE__*/React.createElement(EPTooltip, {
       title: "See preview of the transaction details.",
@@ -82,7 +81,6 @@ export default function getColumns(_ref) {
     title: 'Block',
     width: 112,
     dataIndex: 'blockHeight',
-    hidden: type === 'block',
     key: 'blockHeight',
     render: function render(text) {
       return /*#__PURE__*/React.createElement(Link, {
@@ -146,7 +144,7 @@ export default function getColumns(_ref) {
     render: function render(text) {
       return /*#__PURE__*/React.createElement("span", {
         className: "break-all text-base-100"
-      }, addSymbol(divDecimals(text)));
+      }, text != null ? addSymbol(divDecimals(text)) : '-');
     }
   }, {
     title: 'Txn Fee',

@@ -143,9 +143,9 @@ export default function getColumns(_ref) {
         height: "40px",
         src: item.imageUrl
       })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-        className: "name h-[20px] w-[140px] truncate leading-[20px]"
+        className: "name h-[20px] w-[140px] truncate leading-20"
       }, item.name), /*#__PURE__*/React.createElement("div", {
-        className: "symbol h-[18px] w-[124px] truncate leading-[20px]"
+        className: "symbol h-[18px] w-[124px] truncate leading-20"
       }, item.symbol)));
     }
   }];

@@ -15,12 +15,11 @@ import TransactionsView from '@_components/TransactionsView';
 import { ITransactionsResponseItem, TransactionStatus } from '@_api/type';
 import EPTooltip from '@_components/EPToolTip';
 import Copy from '@_components/Copy';
-
+import React from 'react';
 export default function getColumns({
   timeFormat,
   handleTimeChange,
   chainId = 'AELF',
-  type,
 }): ColumnsType<ITransactionsResponseItem> {
   return [
     {
@@ -71,7 +70,6 @@ export default function getColumns({
       title: 'Block',
       width: 112,
       dataIndex: 'blockHeight',
-      hidden: type === 'block',
       key: 'blockHeight',
       render: (text) => (
         <Link className="block text-link" href={`/${chainId}/block/${text}`}>
@@ -125,7 +123,7 @@ export default function getColumns({
       key: 'transactionValue',
       dataIndex: 'transactionValue',
       render: (text) => {
-        return <span className="break-all text-base-100">{addSymbol(divDecimals(text))}</span>;
+        return <span className="break-all text-base-100">{text != null ? addSymbol(divDecimals(text)) : '-'}</span>;
       },
     },
     {

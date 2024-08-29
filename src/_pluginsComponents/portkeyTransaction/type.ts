@@ -1,12 +1,10 @@
-import { IFromInfo, ISortInfo, TChainID, TransactionStatus } from '@_api/type';
+import { IFromInfo, TChainID, TransactionStatus } from '@_api/type';
 
 export interface TTransactionsListRequestParams extends RequestInit {
   chainId: TChainID;
-  skipCount?: number;
+  skipCount: number;
   maxResultCount: number;
-  address?: string;
-  orderInfos?: ISortInfo[];
-  searchAfter?: any[];
+  caAddress: string[];
 }
 
 export interface ITransactionsResponseItem {

@@ -1,10 +1,21 @@
-import request from '@_api';
+import { extendRequest } from '@_api';
 import { ITransactionsResponse, TTransactionsListRequestParams } from './type';
 
-export async function fetchTransactionList(params: TTransactionsListRequestParams): Promise<ITransactionsResponse> {
-  const result = await request.tx.getTransactionList({
-    params: params,
+const APIS = {
+  portkey: {
+    getTransactionList: '/api/app/portkey/transactions',
+  },
+};
+
+const request = extendRequest(APIS);
+export async function fetchTransactionList(data: TTransactionsListRequestParams): Promise<ITransactionsResponse> {
+  const res = await request.portkey.getTransactionList({
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
-  const data = result?.data;
-  return data;
+  const result = res?.data;
+  return result;
 }
