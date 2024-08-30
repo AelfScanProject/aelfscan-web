@@ -93,11 +93,16 @@ const nextConfig = {
       },
     ],
   },
-  webpack(config, options) {
+  productionBrowserSourceMaps: true,
+  webpack(config, { isServer }) {
     config.module.rules.push({
       test: /\.proto$/,
       use: 'protobufjs-loader',
     });
+
+    if (!isServer) {
+      config.devtool = 'source-map';
+    }
 
     return config;
   },
