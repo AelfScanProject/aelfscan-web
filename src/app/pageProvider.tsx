@@ -32,6 +32,7 @@ const useMobileContext = () => {
 export { useMobileContext };
 
 function RootProvider({ children, isMobileSSR, config, chartImg }) {
+  console.log(config, 'config');
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = makeStore();
@@ -58,11 +59,17 @@ function RootProvider({ children, isMobileSSR, config, chartImg }) {
         <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config, chartImg }}>
           <ReduxProvider store={storeRef.current}>
             <WebLoginProvider config={config}>
-              <OpentelemetryProvider config={config}>
+              {config.NETWORK_TYPE === 'test' ? (
+                <OpentelemetryProvider config={config}>
+                  <div id="scroll-content" className="flex min-h-screen flex-col justify-between">
+                    {children}
+                  </div>
+                </OpentelemetryProvider>
+              ) : (
                 <div id="scroll-content" className="flex min-h-screen flex-col justify-between">
                   {children}
                 </div>
-              </OpentelemetryProvider>
+              )}
             </WebLoginProvider>
           </ReduxProvider>
         </MobileContext.Provider>
