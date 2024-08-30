@@ -13,7 +13,7 @@ import { getAddress, getPageNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { TablePageSize } from '@_types/common';
-const TAB_NAME = 'portkeyactivity';
+const TAB_NAME = 'aatransactions';
 export default function List() {
   const isMobile = useMobileAll();
   const { defaultPage, defaultPageSize } = useSearchAfterParams(TablePageSize.mini, TAB_NAME);
@@ -73,7 +73,9 @@ export default function List() {
   }, [total]);
 
   const multiTitleDesc = useMemo(() => {
-    return `Showing the last 500k records`;
+    return `Tips："AA Transactions" refers to transactions executed using the account abstraction mechanism on a
+            blockchain platform, which makes transaction processing and account management more flexible and
+            customizable.`;
   }, []);
 
   const pageChange = (page: number) => {

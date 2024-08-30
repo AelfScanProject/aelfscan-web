@@ -118,17 +118,8 @@ export default function getColumns({
       },
     },
     {
-      title: 'Value',
-      width: 148,
-      key: 'transactionValue',
-      dataIndex: 'transactionValue',
-      render: (text) => {
-        return <span className="break-all text-base-100">{text != null ? addSymbol(divDecimals(text)) : '-'}</span>;
-      },
-    },
-    {
       title: 'Txn Fee',
-      width: 158,
+      width: 180,
       key: 'transactionFee',
       dataIndex: 'transactionFee',
       render: (text) => {
