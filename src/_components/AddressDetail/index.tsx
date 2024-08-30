@@ -209,8 +209,8 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
   ];
   if (addressTypeList.includes('PortKey')) {
     items.splice(2, 0, {
-      key: 'portkeyactivity',
-      label: 'Portkey Activity',
+      key: 'aatransactions',
+      label: 'AA Transactions',
       children: <PortkeyActivity />,
     });
   }

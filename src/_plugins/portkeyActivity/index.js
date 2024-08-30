@@ -21,7 +21,7 @@ import { getAddress, getPageNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { TablePageSize } from '@_types/common';
-var TAB_NAME = 'portkeyactivity';
+var TAB_NAME = 'aatransactions';
 export default function List() {
   var isMobile = useMobileAll();
   var _useSearchAfterParams = useSearchAfterParams(TablePageSize.mini, TAB_NAME),
