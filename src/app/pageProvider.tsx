@@ -19,10 +19,10 @@ import { Provider as ReduxProvider } from 'react-redux';
 import useResponsive from '@_hooks/useResponsive';
 import dynamic from 'next/dynamic';
 import WebLoginProvider from './webLoginProvider';
-// const OpentelemetryProvider = dynamic(
-//   () => import('./opentelemetryProvider').then((mod) => mod.OpentelemetryProvider),
-//   { ssr: false },
-// );
+const OpentelemetryProvider = dynamic(
+  () => import('./opentelemetryProvider').then((mod) => mod.OpentelemetryProvider),
+  { ssr: false },
+);
 
 const MobileContext = createContext<any>({});
 
@@ -58,11 +58,11 @@ function RootProvider({ children, isMobileSSR, config, chartImg }) {
         <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config, chartImg }}>
           <ReduxProvider store={storeRef.current}>
             <WebLoginProvider config={config}>
-              {/* <OpentelemetryProvider config={config}> */}
-              <div id="scroll-content" className="flex min-h-screen flex-col justify-between">
-                {children}
-              </div>
-              {/* </OpentelemetryProvider> */}
+              <OpentelemetryProvider config={config}>
+                <div id="scroll-content" className="flex min-h-screen flex-col justify-between">
+                  {children}
+                </div>
+              </OpentelemetryProvider>
             </WebLoginProvider>
           </ReduxProvider>
         </MobileContext.Provider>
