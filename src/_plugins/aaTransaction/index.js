@@ -113,7 +113,7 @@ export default function List() {
     return "More than > ".concat(total, " transactions found");
   }, [total]);
   var multiTitleDesc = useMemo(function () {
-    return "Showing the last 500k records";
+    return "Tips\uFF1A\"AA Transactions\" refers to transactions executed using the account abstraction mechanism on a\n            blockchain platform, which makes transaction processing and account management more flexible and\n            customizable.";
   }, []);
   var pageChange = function pageChange(page) {
     setCurrentPage(page);
