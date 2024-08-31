@@ -85,19 +85,6 @@ const nextConfig = {
           // },
         ];
   },
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-store, no-cache, must-revalidate, proxy-revalidate',
-          },
-        ],
-      },
-    ];
-  },
   images: {
     remotePatterns: [
       {
@@ -106,11 +93,16 @@ const nextConfig = {
       },
     ],
   },
-  webpack(config, options) {
+  productionBrowserSourceMaps: true,
+  webpack(config, { isServer }) {
     config.module.rules.push({
       test: /\.proto$/,
       use: 'protobufjs-loader',
     });
+
+    if (!isServer) {
+      config.devtool = 'source-map';
+    }
 
     return config;
   },

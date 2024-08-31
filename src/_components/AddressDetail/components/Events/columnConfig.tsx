@@ -61,7 +61,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       },
     },
     {
-      title: 'Method',
+      title: 'Log Event',
       width: 128,
       dataIndex: 'methodName',
       key: 'methodName',

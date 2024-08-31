@@ -43,15 +43,6 @@ function RootProvider({ children, isMobileSSR, config, chartImg }) {
     setIsMobile(isMobileClient);
   }, [isMobileClient]);
 
-  // const WebLoginProvider = useMemo(() => {
-  //   return dynamic(
-  //     async () => {
-  //       return import('./webLoginProvider');
-  //     },
-  //     { ssr: false },
-  //   );
-  // }, []);
-
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
       <ConfigProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>

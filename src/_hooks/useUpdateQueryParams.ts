@@ -1,27 +1,32 @@
 import { useRouter } from 'next/navigation';
+import { useCallback, useMemo } from 'react';
 
 export const useUpdateQueryParams = () => {
   const router = useRouter();
 
-  const updateQueryParams = (params) => {
-    const currentUrl = new URL(window.location.href);
-    const newSearchParams = new URLSearchParams(currentUrl.search);
+  const updateQueryParams = useCallback(
+    (params) => {
+      const currentUrl = new URL(window.location.href);
+      const newSearchParams = new URLSearchParams(currentUrl.search);
 
-    Object.keys(params).forEach((key) => {
-      newSearchParams.set(key, params[key]);
-    });
+      Object.keys(params).forEach((key) => {
+        newSearchParams.set(key, params[key]);
+      });
 
-    // Construct the new URL with updated query params and hash
-    const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}`;
+      // Construct the new URL with updated query params and hash
+      const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}`;
 
-    // Use Next.js router to replace the state
-    if (newUrl !== window.location.href) {
-      router.replace(newUrl, { scroll: false });
-    }
-  };
+      // Use Next.js router to replace the state
+      if (newUrl !== window.location.href) {
+        router.replace(newUrl, { scroll: false });
+      }
+    },
+    [router],
+  );
 
-  return updateQueryParams;
+  return useMemo(() => updateQueryParams, [updateQueryParams]);
 };
+
 export const useDeleteQueryParam = () => {
   const router = useRouter();
   const deleteQueryParam = (params: string[], updateData?: any) => {

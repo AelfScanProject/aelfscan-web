@@ -70,14 +70,14 @@ function HeaderTitle(props: IHeaderTitleProps): ReactNode {
     return (
       <>
         <div className="total-text text-sm font-normal leading-22 text-base-100">{props.multi.title}</div>
-        <div className="bottom-text text-xs font-normal leading-5 text-base-200">{props.multi.desc}</div>
+        <div className="bottom-text max-w-[600px] text-xs font-normal leading-5 text-base-200">{props.multi.desc}</div>
       </>
     );
   } else {
     return (
       <div className="single align-center flex">
         <IconFont className="text-xs" type="Rank" />
-        <div className="total-tex ml-1 text-sm font-normal leading-22  text-base-100 ">{props.single?.title}</div>
+        <div className="total-tex ml-1 text-sm font-normal leading-22  text-base-100">{props.single?.title}</div>
       </div>
     );
   }

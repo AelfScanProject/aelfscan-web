@@ -113,7 +113,7 @@ export const API_List = {
   chart: CHART_API_LIST,
 };
 
-type REQUEST_FUNCTION = (opt?: RequestWithParams) => Promise<any>;
+export type REQUEST_FUNCTION = (opt?: RequestWithParams) => Promise<any>;
 
 export type REQUEST_API_TYPE = {
   [X in keyof typeof API_List]: {
