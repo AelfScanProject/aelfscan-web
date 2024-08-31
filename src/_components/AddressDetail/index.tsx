@@ -29,7 +29,7 @@ import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import AdsImage from '@_components/AdsImage';
 import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
-import PortkeyActivity from '@_plugins/portkeyActivity';
+import PortkeyActivity from '@_plugins/aaTransaction';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
