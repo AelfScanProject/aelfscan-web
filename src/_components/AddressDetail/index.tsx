@@ -7,7 +7,7 @@ import QrCode from '@_components/QrCode';
 import Overview from './components/overview';
 import { formatDate, numberFormatter, thousandsNumber } from '@_utils/formatter';
 import EPTabs, { EPTabsRef } from '../EPTabs/index';
-import TransctionList from '@app/[chain]/transactions/list';
+import TransactionList from '@app/[chain]/transactions/list';
 import TokenTransfers from '@_components/TokenTransfers';
 import NFTTransfers from '@_components/NFTTransfers';
 import History from './components/History';
@@ -29,7 +29,7 @@ import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import AdsImage from '@_components/AdsImage';
 import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
-import PortkeyActivity from '@_plugins/aaTransaction';
+import AATransactionList from '@app/[chain]/transactions/aaList';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -186,8 +186,10 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     {
       key: 'transactions',
       label: 'Transactions',
-      children: (
-        <TransctionList
+      children: addressTypeList.includes('PortKey') ? (
+        <AATransactionList />
+      ) : (
+        <TransactionList
           showHeader={false}
           SSRData={{ total: 0, data: [] }}
           defaultPage={defaultPage}
@@ -207,13 +209,6 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       children: <NFTTransfers showHeader={false} />,
     },
   ];
-  if (addressTypeList.includes('PortKey')) {
-    items.splice(2, 0, {
-      key: 'aatransactions',
-      label: 'AA Transactions',
-      children: <PortkeyActivity />,
-    });
-  }
   if (!isAddress) {
     defaultTab = defaultTab || 'contract';
     items.push(

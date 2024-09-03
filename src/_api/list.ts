@@ -111,6 +111,9 @@ export const API_List = {
   nfts: NFT_API_List,
   address: ADDRESS_API_LIST,
   chart: CHART_API_LIST,
+  portkey: {
+    getTransactionList: `${BASE_API}/app/portkey/transactions`,
+  },
 };
 
 export type REQUEST_FUNCTION = (opt?: RequestWithParams) => Promise<any>;
