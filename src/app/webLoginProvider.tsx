@@ -27,6 +27,10 @@ export default function ExWebLoginProvider({ children, config }) {
       baseURL: config.BASE_URL,
       timeout: 30000,
     },
+    referralInfo: {
+      referralCode: '',
+      projectCode: '13009',
+    },
     socialLogin: {
       Portkey: {
         websiteName: APP_NAME,
