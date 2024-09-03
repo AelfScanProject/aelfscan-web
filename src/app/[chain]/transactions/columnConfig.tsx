@@ -125,7 +125,9 @@ export default function getColumns({
       key: 'transactionValue',
       dataIndex: 'transactionValue',
       render: (text) => {
-        return <span className="break-all text-base-100">{addSymbol(divDecimals(text))}</span>;
+        return (
+          <span className="break-all text-base-100">{text || text === 0 ? addSymbol(divDecimals(text)) : '-'}</span>
+        );
       },
     },
     {
