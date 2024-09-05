@@ -48,15 +48,3 @@ export async function fetchServerTransactionList(
   const data = result?.data || defaultTransactionList;
   return data;
 }
-
-export async function fetchAATransactionList(data: TTransactionsListRequestParams): Promise<ITransactionsResponse> {
-  const res = await request.portkey.getTransactionList({
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const result = res?.data;
-  return result;
-}

@@ -9,13 +9,12 @@ import { pageSizeOption } from '@_utils/contant';
 import { ITransactionsResponseItem, TChainID } from '@_api/type';
 import { useParams, useSearchParams } from 'next/navigation';
 import { fetchTransactionList } from '@_api/fetchTransactions';
-import { getAddress, getAddressSearchAfter, getPageNumber, getSort } from '@_utils/formatter';
+import { getAddress, getAddressSearchAfter, getSort } from '@_utils/formatter';
 import { useEffectOnce } from 'react-use';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { PageTypeEnum } from '@_types';
 const TAB_NAME = 'transactions';
 export default function List({ SSRData, showHeader = true, defaultPage, defaultPageSize, defaultPageType }) {
-  console.log(SSRData, 'transactionSSRData');
   const isMobile = useMobileAll();
 
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
