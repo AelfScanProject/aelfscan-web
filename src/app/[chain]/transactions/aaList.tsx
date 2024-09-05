@@ -12,7 +12,7 @@ import { getAddress, getPageNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { TablePageSize } from '@_types/common';
-import { fetchAATransactionList } from '@_api/fetchTransactions';
+import { fetchTransactionList } from '@_api/fetchTransactions';
 const TAB_NAME = 'transactions';
 export default function List() {
   const isMobile = useMobileAll();
@@ -32,7 +32,7 @@ export default function List() {
       skipCount: getPageNumber(currentPage, pageSize),
       chainId: chain as TChainID,
       maxResultCount: pageSize,
-      caAddress: [address && getAddress(address as string)],
+      address: address && getAddress(address as string),
     };
     try {
       if (mountRef.current) {
@@ -46,7 +46,7 @@ export default function List() {
       console.log(error, 'error.rr');
     }
     try {
-      const res = await fetchAATransactionList(params);
+      const res = await fetchTransactionList(params);
       setTotal(res.total);
       setData(res.transactions);
     } finally {
