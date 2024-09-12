@@ -8,9 +8,10 @@ import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
-import { SYMBOL } from '@_utils/contant';
+import { MULTI_CHAIN, SYMBOL } from '@_utils/contant';
 import { v4 as uuidv4 } from 'uuid';
 import { PageTypeEnum } from '@_types';
+import { TChainID } from '@_api/type';
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss Z') => {
   if (typeof date === 'number') {
     if (type === 'Date Time (UTC)') {
@@ -143,6 +144,15 @@ export const getAddressSearchAfter = (currentPage, data, pageType) => {
     : ([] as any[]);
 };
 
+export const getBlockTimeSearchAfter = (currentPage, data, pageType) => {
+  return currentPage !== 1 && data && data.length
+    ? [
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockTime : data[0].blockTime,
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
+      ]
+    : ([] as any[]);
+};
+
 export const getHoldersSearchAfter = (currentPage, data, pageType) => {
   return currentPage !== 1 && data && data.length
     ? [
@@ -174,3 +184,7 @@ export function getOrCreateUserId() {
   }
   return userId;
 }
+
+export const getChainId = (chainId: string): TChainID => {
+  return (chainId === MULTI_CHAIN ? '' : chainId) as TChainID;
+};

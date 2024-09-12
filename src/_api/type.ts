@@ -1,7 +1,7 @@
 import { ILogsProps } from '@_components/LogsContainer/type';
 import { AddressType, SortEnum } from '@_types/common';
 
-export type TChainID = 'AELF' | 'tDVV' | 'tDVW';
+export type TChainID = 'AELF' | 'tDVV' | 'tDVW' | '' | 'multiChain';
 
 export interface IBurntFee {
   usdFee: number;
@@ -48,6 +48,7 @@ export interface ITransactionsRequestParams extends RequestInit {
 export interface ITransactionsResponseItem {
   transactionId: string;
   status: TransactionStatus;
+  chainIds: TChainID[];
   method: string;
   blockHeight: number;
   timestamp: string;
@@ -281,6 +282,7 @@ export interface IContractRequestParams extends RequestInit {
 export interface IContractDataItem {
   address: string;
   contractName: string;
+  chainIds: TChainID[];
   type: string;
   contractVersion: string;
   version: string;
@@ -298,6 +300,7 @@ export interface IContractResponseData {
 export interface IAccountsItem {
   balance: string;
   transactionCount: number;
+  chainIds: TChainID[];
   percentage: number;
   address: string;
   addressType: AddressType;

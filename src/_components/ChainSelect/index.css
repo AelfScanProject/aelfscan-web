@@ -25,7 +25,7 @@
 }
 
 .chain-select-options.explorer-select-dropdown {
-  @apply !px-2 !pt-2 !pb-1 !mt-6 !top-[82px];
+  /* @apply !px-2 !pt-2 !pb-1 !mt-6 !top-[82px]; */
   .explorer-select-item {
     @apply min-h-[32px] !py-[6px] !px-2 !mb-1;
     .explorer-select-item-option-content {

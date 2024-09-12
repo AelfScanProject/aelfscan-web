@@ -14,5 +14,9 @@ export const THEME_CONFIG: ThemeConfig = {
     Descriptions: {
       itemPaddingBottom: 0,
     },
+    Tag: {
+      defaultBg: '#fafafa',
+      defaultColor: 'rgba(0, 0, 0, 0.88)',
+    },
   },
 };

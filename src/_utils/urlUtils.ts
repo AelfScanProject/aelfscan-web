@@ -1,6 +1,6 @@
 import { store } from '@_store';
 import { Chain } from 'global';
-import { SYMBOL } from './contant';
+import { MULTI_CHAIN, SYMBOL } from './contant';
 import Papa from 'papaparse';
 import dayjs from 'dayjs';
 import { saveAs } from 'file-saver';
@@ -13,6 +13,9 @@ export function getPathnameFirstSlash(pathname: string) {
 export default function addressFormat(address: string, chainId?: string, prefix?: string) {
   const defaultChainId = store.getState().getChainId.defaultChain;
   if (!address) return '';
+  if (chainId === MULTI_CHAIN) {
+    return `${prefix || SYMBOL}_${address}`;
+  }
   return `${prefix || SYMBOL}_${address}_${chainId || defaultChainId}`;
 }
 

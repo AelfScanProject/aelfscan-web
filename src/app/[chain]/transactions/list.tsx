@@ -5,16 +5,23 @@ import getColumns from './columnConfig';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { pageSizeOption } from '@_utils/contant';
-import { ITransactionsResponseItem, TChainID } from '@_api/type';
+import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
+import { ITransactionsResponseItem } from '@_api/type';
 import { useParams, useSearchParams } from 'next/navigation';
 import { fetchTransactionList } from '@_api/fetchTransactions';
-import { getAddress, getAddressSearchAfter, getSort } from '@_utils/formatter';
+import { getAddress, getBlockTimeSearchAfter, getChainId, getSort } from '@_utils/formatter';
 import { useEffectOnce } from 'react-use';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { PageTypeEnum } from '@_types';
 const TAB_NAME = 'transactions';
-export default function List({ SSRData, showHeader = true, defaultPage, defaultPageSize, defaultPageType }) {
+export default function List({
+  SSRData,
+  showHeader = true,
+  defaultPage,
+  defaultPageSize,
+  defaultPageType,
+  defaultChain,
+}) {
   const isMobile = useMobileAll();
 
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
@@ -30,16 +37,19 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
   const defaultSearchAfter = searchParams.get('searchAfter');
   const activeTab = (searchParams.get('tab') as string) === TAB_NAME;
   const updateQueryParams = useUpdateQueryParams();
+
+  const [selectChain, setSelectChain] = useState(defaultChain);
+
   const fetchData = useCallback(
-    async (page, pageSize, data, pageType) => {
+    async (page, pageSize, data, pageType, chain) => {
       const sort = getSort(pageType, page);
-      const searchAfter = getAddressSearchAfter(page, data, pageType);
+      const searchAfter = getBlockTimeSearchAfter(page, data, pageType);
       setLoading(true);
       const params = {
-        chainId: chain as TChainID,
+        chainId: getChainId(chain as string),
         maxResultCount: pageSize,
         orderInfos: [
-          { orderBy: 'BlockHeight', sort },
+          { orderBy: 'BlockTime', sort },
           { orderBy: 'TransactionId', sort },
         ],
         address: address && getAddress(address as string),
@@ -52,6 +62,7 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
             updateQueryParams({
               p: page,
               ps: pageSize,
+              chain,
               pageType,
               searchAfter: JSON.stringify(searchAfter),
             });
@@ -59,6 +70,7 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
             updateQueryParams({
               p: page,
               ps: pageSize,
+              chain,
               tab: TAB_NAME,
               pageType,
               searchAfter: JSON.stringify(searchAfter),
@@ -77,12 +89,12 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
         mountRef.current = true;
       }
     },
-    [activeTab, address, chain, defaultSearchAfter, showHeader, updateQueryParams],
+    [activeTab, address, defaultSearchAfter, showHeader, updateQueryParams],
   );
 
   useEffectOnce(() => {
     if (showHeader) return;
-    fetchData(currentPage, pageSize, data, pageType);
+    fetchData(currentPage, pageSize, data, pageType, selectChain);
   });
   const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
     return getColumns({
@@ -113,14 +125,21 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
       setPageType(PageTypeEnum.PREV);
     }
     setCurrentPage(page);
-    fetchData(page, pageSize, data, pageType);
+    fetchData(page, pageSize, data, pageType, selectChain);
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
     setPageType(PageTypeEnum.NEXT);
-    fetchData(page, size, data, PageTypeEnum.NEXT);
+    fetchData(page, size, data, PageTypeEnum.NEXT, selectChain);
+  };
+
+  const chainChange = (value: string) => {
+    setSelectChain(value);
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+    fetchData(1, pageSize, data, PageTypeEnum.NEXT, value);
   };
 
   return (
@@ -132,6 +151,11 @@ export default function List({ SSRData, showHeader = true, defaultPage, defaultP
             title: multiTitle,
             desc: multiTitleDesc,
           },
+        }}
+        showMultiChain={chain === MULTI_CHAIN}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
         }}
         loading={loading}
         dataSource={data}

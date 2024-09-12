@@ -41,7 +41,7 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     } else if (searchType === 'contracts') {
       return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}`;
     } else if (searchType === 'accounts') {
-      return `/${defaultChain}/address/${addressFormat((item as string) || '', defaultChain)}`;
+      return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}`;
     }
 
     return '';
@@ -91,7 +91,7 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
           <div className="w-full break-words text-sm leading-[22px] text-base-100">
             {searchType === 'transaction' || searchType === 'block'
               ? item?.transactionId || item?.blockHeight
-              : addressFormat((item as string) || '', defaultChain)}
+              : addressFormat(item.address || '', defaultChain)}
           </div>
         )}
       </li>
