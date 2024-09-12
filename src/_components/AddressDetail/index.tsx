@@ -195,6 +195,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           defaultPage={defaultPage}
           defaultPageSize={defaultPageSize}
           defaultPageType={defaultPageType}
+          defaultChain={chain}
         />
       ),
     },

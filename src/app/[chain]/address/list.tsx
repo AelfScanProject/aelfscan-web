@@ -13,14 +13,14 @@ import { useCallback, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { IAccountResponseData, IAccountsItem, TChainID } from '@_api/type';
-import { pageSizeOption } from '@_utils/contant';
+import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
 import { useParams } from 'next/navigation';
-import { getAccountSearchAfter, getSort, thousandsNumber } from '@_utils/formatter';
+import { getAccountSearchAfter, getChainId, getSort, thousandsNumber } from '@_utils/formatter';
 import { fetchTopAccounts } from '@_api/fetchContact';
 import { PageTypeEnum } from '@_types';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 
-export default function List({ SSRData, defaultPage, defaultPageSize, defaultPageType }) {
+export default function List({ SSRData, defaultPage, defaultPageSize, defaultPageType, defaultChain }) {
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
@@ -30,15 +30,17 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
   const [totalBalance, setTotalBalance] = useState<number>(SSRData.totalBalance);
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
 
+  const [selectChain, setSelectChain] = useState(defaultChain);
+
   const updateQueryParams = useUpdateQueryParams();
   const { chain } = useParams<{ chain: TChainID }>();
   const fetchData = useCallback(
-    async (page, size, data, pageType) => {
+    async (page, size, data, pageType, chain) => {
       const sort = getSort(pageType, page);
       const searchAfter = getAccountSearchAfter(page, data, pageType);
-      updateQueryParams({ p: page, ps: size, pageType, searchAfter: JSON.stringify(searchAfter) });
+      updateQueryParams({ p: page, ps: size, pageType, chain, searchAfter: JSON.stringify(searchAfter) });
       const params = {
-        chainId: chain || 'AELF',
+        chainId: getChainId(chain),
         maxResultCount: size,
         orderInfos: [
           { orderBy: 'FormatAmount', sort },
@@ -57,7 +59,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
       }
       setLoading(false);
     },
-    [chain, updateQueryParams],
+    [updateQueryParams],
   );
   const multiTitle = useMemo(() => {
     return `A total of ${thousandsNumber(total)} accounts found (${totalBalance} ELF)`;
@@ -80,14 +82,21 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
       setPageType(PageTypeEnum.PREV);
     }
     setCurrentPage(page);
-    fetchData(page, pageSize, data, pageType);
+    fetchData(page, pageSize, data, pageType, selectChain);
   };
 
   const pageSizeChange = (page: number, pageSize: number) => {
     setPageSize(pageSize);
     setCurrentPage(page);
     setPageType(PageTypeEnum.NEXT);
-    fetchData(page, pageSize, data, PageTypeEnum.NEXT);
+    fetchData(page, pageSize, data, PageTypeEnum.NEXT, selectChain);
+  };
+
+  const chainChange = (value: string) => {
+    setSelectChain(value);
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+    fetchData(1, pageSize, data, PageTypeEnum.NEXT, value);
   };
 
   return (
@@ -100,11 +109,18 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
             desc: total > 10000 ? multiTitleDesc : '',
           },
         }}
+        showMultiChain={chain === MULTI_CHAIN}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
+        }}
         dataSource={data}
         loading={loading}
         columns={columns}
         isMobile={isMobile}
-        rowKey="address"
+        rowKey={(record) => {
+          return record.address + record.chainIds.join('');
+        }}
         total={total}
         showLast={false}
         options={pageSizeOption}

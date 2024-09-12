@@ -8,6 +8,8 @@ import React, { ReactNode, useMemo } from 'react';
 import CommonEmpty from './empty';
 import './index.css';
 import EPTooltip from '@_components/EPToolTip';
+import MultiChainSelect from '@_components/ChainSelect/multiCain';
+import { SelectProps } from 'antd';
 
 export interface ITableSearch extends Omit<ISearchProps, 'onPressEnter'> {
   value?: string;
@@ -37,7 +39,9 @@ export interface ICommonTableProps<T> extends ITableProps<T> {
   headerTitle?: IHeaderTitleProps | ReactNode;
   defaultCurrent?: number;
   className?: string;
+  showMultiChain?: boolean;
   topSearchProps?: ITableSearch;
+  MultiChainSelectProps?: SelectProps;
   options?: any[];
   order?: SortOrder | undefined | null;
   field?: string | null;
@@ -98,9 +102,11 @@ export default function TableApp({
   headerTitle,
   hiddenTitle,
   hiddenPagination,
+  showMultiChain,
   showLast = true,
   emptyText,
   headerLeftNode,
+  MultiChainSelectProps = {},
   ...params
 }: ICommonTableProps<any>) {
   const { onSearchChange, disabledTooltip = true, ...searchProps } = topSearchProps || {};
@@ -123,7 +129,12 @@ export default function TableApp({
           {headerLeftNode}
         </div>
         {!hiddenPagination && (
-          <div className="header-pagination">
+          <div className="header-pagination flex items-center">
+            {showMultiChain && (
+              <div>
+                <MultiChainSelect props={MultiChainSelectProps} />
+              </div>
+            )}
             {showTopSearch ? (
               <EPTooltip
                 title={disabledTooltip ? '' : topSearchProps?.placeholder}

@@ -48,10 +48,15 @@ interface IContactItem {
   address: string;
 }
 
+interface IAccountsItem {
+  chainIds: string[];
+  address: string;
+}
+
 export interface ISearchResponse {
   tokens: ITokens[];
   nfts: ITokens[];
-  accounts: string[];
+  accounts: IAccountsItem[];
   contracts: IContactItem[];
   block?: {
     blockHeight: number;

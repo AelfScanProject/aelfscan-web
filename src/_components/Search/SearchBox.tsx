@@ -118,7 +118,7 @@ const Search = ({
           return `/nftItem?chainId=${defaultChain}&&itemSymbol=${nfts[0].symbol}`;
         }
       } else if (accounts.length) {
-        router.push(`/${defaultChain}/address/${addressFormat((accounts[0] as string) || '', defaultChain)}`);
+        router.push(`/${defaultChain}/address/${addressFormat((accounts[0].address as string) || '', defaultChain)}`);
       } else if (contracts.length) {
         router.push(`/${defaultChain}/address/${addressFormat(contracts[0].address || '', defaultChain)}`);
       } else {
