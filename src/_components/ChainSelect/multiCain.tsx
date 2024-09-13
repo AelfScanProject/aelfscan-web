@@ -21,6 +21,7 @@ export default function MultiChainSelect({ props }: { props: SelectProps }) {
         popupClassName="chain-select-options"
         popupMatchSelectWidth={false}
         defaultValue={selectChain}
+        style={{ width: '160px' }}
         {...props}>
         {chainArr?.map((item) => {
           return (
