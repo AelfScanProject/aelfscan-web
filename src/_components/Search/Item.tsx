@@ -89,11 +89,17 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
           </div>
         ) : (
           <div className="max-w-full flex-1 break-words text-sm leading-[22px] text-base-100">
+<<<<<<< HEAD
             {searchType === 'transaction'
               ? item?.transactionId
               : searchType === 'blocks'
                 ? item.blockHeight
                 : addressFormat(item.address || '', defaultChain)}
+=======
+            {searchType === 'transaction' || searchType === 'block'
+              ? item?.transactionId || item?.blockHeight
+              : addressFormat(item.address || '', defaultChain)}
+>>>>>>> a02d6913 (feat: ui adjust)
           </div>
         )}
         <BasicTag chainIds={item.chainIds || []} />
