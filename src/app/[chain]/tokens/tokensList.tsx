@@ -7,20 +7,20 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { ITokenList, ITokenListItem } from '../token/[tokenSymbol]/type';
 import { useParams } from 'next/navigation';
 import { fetchTokenList } from '@_api/fetchTokens';
-import { TChainID } from '@_api/type';
-import { getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber } from '@_utils/formatter';
 import { pageSizeOption } from '@_utils/contant';
 import { SortEnum } from '@_types/common';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 interface TokensListProps {
   SSRData: ITokenList;
   defaultPage: string;
   defaultPageSize: string;
+  defaultChain: string;
 }
 
-export default function TokensList({ SSRData, defaultPage, defaultPageSize }: TokensListProps) {
-  console.log(SSRData, 'tokenSSRData');
+export default function TokensList({ SSRData, defaultPage, defaultPageSize, defaultChain }: TokensListProps) {
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
   const [pageSize, setPageSize] = useState<number>(Number(defaultPageSize));
@@ -30,6 +30,8 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
   const [sort, setSort] = useState<SortEnum>(SortEnum.desc);
   const updateQueryParams = useUpdateQueryParams();
 
+  const [selectChain, setSelectChain] = useState(defaultChain);
+
   const { chain } = useParams();
 
   const mountRef = useRef(true);
@@ -38,7 +40,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
     const params = {
       skipCount: getPageNumber(currentPage, pageSize),
       maxResultCount: pageSize,
-      chainId: chain as TChainID,
+      chainId: getChainId(selectChain),
       sort,
       orderBy: 'HolderCount',
     };
@@ -48,7 +50,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
     setData(data.list);
     setLoading(false);
     return data;
-  }, [chain, currentPage, pageSize, sort]);
+  }, [selectChain, currentPage, pageSize, sort]);
 
   useEffect(() => {
     if (mountRef.current) {
@@ -63,21 +65,29 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
     setSort(sort === SortEnum.desc ? SortEnum.asc : SortEnum.desc);
   }, [loading, sort]);
 
+  const multi = useMultiChain();
+
   const columns = useMemo(
-    () => getColumns({ currentPage, pageSize, sort, ChangeOrder, chain }),
-    [ChangeOrder, chain, currentPage, pageSize, sort],
+    () => getColumns({ currentPage, pageSize, sort, ChangeOrder, chain, multi }),
+    [ChangeOrder, chain, currentPage, multi, pageSize, sort],
   );
   const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize });
+    updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
-    updateQueryParams({ p: page, ps: size });
+    updateQueryParams({ p: page, ps: size, chain: selectChain });
     setCurrentPage(page);
+  };
+
+  const chainChange = (value) => {
+    updateQueryParams({ p: 1, ps: pageSize, chain: value });
+    setCurrentPage(1);
+    setSelectChain(value);
   };
 
   return (
@@ -90,6 +100,11 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
           },
         }}
         loading={loading}
+        showMultiChain={true}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
+        }}
         dataSource={data}
         columns={columns}
         isMobile={isMobile}

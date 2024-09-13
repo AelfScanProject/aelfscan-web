@@ -13,11 +13,11 @@ import { useCallback, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { IBlocksResponse, IBlocksResponseItem, TChainID } from '@_api/type';
-import { pageSizeOption } from '@_utils/contant';
+import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
 import { fetchBlocks } from '@_api/fetchBlocks';
 import { useParams } from 'next/navigation';
 import { Spin } from 'antd';
-import { getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 
 export enum pageType {
@@ -37,7 +37,7 @@ function isLastPage(totalItems, itemsPerPage, currentPage) {
   return currentPage >= totalPages;
 }
 
-export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
+export default function BlockList({ SSRData, defaultPage, defaultPageSize, defaultChain }) {
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
@@ -46,11 +46,14 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
   const [data, setData] = useState<IBlocksResponseItem[]>(SSRData.blocks);
   const { chain } = useParams<{ chain: TChainID }>();
   const updateQueryParams = useUpdateQueryParams();
+
+  const [selectChain, setSelectChain] = useState(defaultChain);
+
   const fetchData = useCallback(
-    async (page, size) => {
+    async (page, size, chain) => {
       const isLast = isLastPage(total, size, page);
       const params = {
-        chainId: chain,
+        chainId: getChainId(chain as string) || 'AELF',
         skipCount: isLast ? 0 : getPageNumber(page, size),
         maxResultCount: size,
         isLastPage: isLast,
@@ -65,7 +68,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
       }
       setLoading(false);
     },
-    [chain, total],
+    [total],
   );
 
   const [timeFormat, setTimeFormat] = useState<string>('Age');
@@ -84,15 +87,22 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize });
-    fetchData(page, pageSize);
+    updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
+    fetchData(page, pageSize, selectChain);
   };
 
   const pageSizeChange = (page: number, pageSize: number) => {
     setPageSize(pageSize);
     setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize });
-    fetchData(page, pageSize);
+    updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
+    fetchData(page, pageSize, selectChain);
+  };
+
+  const chainChange = (value: string) => {
+    setSelectChain(value);
+    setCurrentPage(1);
+    updateQueryParams({ p: 1, ps: pageSize, chain: value });
+    fetchData(1, pageSize, value);
   };
 
   const multiTitle = useMemo(() => {
@@ -109,6 +119,11 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize }) {
               title: multiTitle,
               desc: `(Showing blocks between #${pageMinBlock} to #${pageMaxBlock})`,
             },
+          }}
+          showMultiChain={chain === MULTI_CHAIN}
+          MultiChainSelectProps={{
+            value: selectChain,
+            onChange: chainChange,
           }}
           loading={false}
           dataSource={data}

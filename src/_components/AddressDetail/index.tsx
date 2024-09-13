@@ -30,6 +30,10 @@ import AdsImage from '@_components/AdsImage';
 import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 import AATransactionList from '@app/[chain]/transactions/aaList';
+import addressFormat from '@_utils/urlUtils';
+import { useEnvContext } from 'next-runtime-env';
+import { checkMainNet } from '@_utils/isMainNet';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -40,6 +44,9 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
   const addressType = useMemo<number>(() => {
     return SSRData.addressType;
   }, [SSRData]);
+
+  const multi = useMultiChain();
+
   const isAddress = addressType === 0;
   const title = isAddress ? 'Address' : 'Contract';
   const {
@@ -93,6 +100,10 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       },
     ];
   }, [elfBalance, elfBalanceOfUsd, elfPriceInUsd, tokenHoldings]);
+
+  const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
+  const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
+
   const addressMoreInfo = useMemo(() => {
     return [
       {
@@ -135,6 +146,28 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       },
     ];
   }, [chain, firstTransactionSend, lastTransactionSend]);
+  const MultiChainInfo = useMemo(() => {
+    const chainId = chain === 'AELF' ? (isMainNet ? 'tDVV' : 'tDVW') : 'AELF';
+    return [
+      {
+        label: 'Multichain Holders',
+        value: <span className="inline-block leading-[22px]">{thousandsNumber(39939)}</span>,
+      },
+      {
+        label: 'Multichain',
+        value: (
+          <div className="flex items-center">
+            <Link className="h-[22px]" href={`/${chainId}/address/${addressFormat(address, chainId)}}`}>
+              <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
+                SideChain {chainId}
+              </span>
+            </Link>
+            <span className="ml-1 inline-block text-base-100">({thousandsNumber(39939)} Holders)</span>
+          </div>
+        ),
+      },
+    ];
+  }, [address, chain, isMainNet]);
   const contractInfo = useMemo(() => {
     return [
       {
@@ -264,9 +297,10 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           </div>
         </HeadTitle>
       </div>
-      <div className={clsx(isMobile && 'flex-col', 'address-overview flex')}>
-        <Overview title="Overview" className={clsx(isMobile && '!mr-0 mb-4', 'mr-4 flex-1')} items={OverviewInfo} />
+      <div className={clsx(isMobile && 'flex-col', 'address-overview flex gap-4')}>
+        <Overview title="Overview" className="flex-1" items={OverviewInfo} />
         <Overview title="MoreInfo" className="flex-1" items={isAddress ? addressMoreInfo : contractInfo} />
+        {!multi && isAddress && <Overview title="Multichain Info" className="flex-1" items={MultiChainInfo} />}
       </div>
       {adsData && adsData.adsBannerId && (
         <div className="mt-4">

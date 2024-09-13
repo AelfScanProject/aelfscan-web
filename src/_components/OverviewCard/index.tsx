@@ -59,7 +59,12 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
         <Flex vertical gap={16} flex={1}>
           {col1Items?.map((item, index) => renderItem(item, index))}
         </Flex>
-        {col2Items?.length && <Divider className="card-divider" type="vertical" />}
+        {col2Items?.length && (
+          <Divider
+            className={`card-divider ${isMobile && '!mx-0 !my-4'}`}
+            type={isMobile ? 'horizontal' : 'vertical'}
+          />
+        )}
         <Flex vertical gap={16} flex={1}>
           {col2Items?.map((item, index) => renderItem(item, index))}
         </Flex>

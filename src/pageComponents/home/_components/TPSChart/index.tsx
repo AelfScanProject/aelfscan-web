@@ -8,6 +8,7 @@ import './index.css';
 import ReactEchartComponent from './useChart';
 import clsx from 'clsx';
 import { useAppSelector } from '@_store';
+import { MULTI_CHAIN } from '@_utils/contant';
 interface IDataItem {
   count: number;
   end: number;
@@ -41,11 +42,12 @@ const symbol =
 
 const getOption = (tpsData, defaultChain) => {
   const { owner, all } = tpsData;
+  const multi = defaultChain === MULTI_CHAIN;
   const xAxisData: string[] = [];
   const allData: IDataItem[] | ILastDataItem[] = [];
   const ownData: IDataItem[] | ILastDataItem[] = [];
-  const { length } = owner;
-  owner.forEach((item, index) => {
+  const { length } = all;
+  all.forEach((item, index) => {
     const startTime = new Date(item.start);
     const hours = startTime.getHours();
     let minutes = '' + startTime.getMinutes();
@@ -54,8 +56,8 @@ const getOption = (tpsData, defaultChain) => {
     }
 
     xAxisData.push(`${hours}:${minutes}`);
-    allData.push(all[index].count);
-    ownData.push(item.count);
+    allData.push(item.count);
+    multi && ownData.push(owner[index].count);
   });
   allData[length - 1] = {
     value: allData[length - 1],
@@ -78,7 +80,7 @@ const getOption = (tpsData, defaultChain) => {
     color: ['#5c28a9', '#266CD3'],
     legend: {
       show: true,
-      data: ['All Chains', defaultChain],
+      data: !multi ? ['All Chains', defaultChain] : ['All Chains'],
       top: 'top',
       left: 'right',
     },
@@ -134,32 +136,47 @@ const getOption = (tpsData, defaultChain) => {
         color: 'red',
       },
     },
-    series: [
-      {
-        name: 'All Chains',
-        data: allData,
-        smooth: true,
-        type: 'line',
-        itemStyle: {
-          opacity: 0,
-        },
-        areaStyle: {
-          color: 'rgba(255, 255, 255, 0.1)',
-        },
-      },
-      {
-        name: defaultChain,
-        data: ownData,
-        smooth: true,
-        type: 'line',
-        itemStyle: {
-          opacity: 0,
-        },
-        areaStyle: {
-          color: 'rgba(255, 255, 255, 0.1)',
-        },
-      },
-    ],
+    series: !multi
+      ? [
+          {
+            name: 'All Chains',
+            data: allData,
+            smooth: true,
+            type: 'line',
+            itemStyle: {
+              opacity: 0,
+            },
+            areaStyle: {
+              color: 'rgba(255, 255, 255, 0.1)',
+            },
+          },
+          {
+            name: defaultChain,
+            data: ownData,
+            smooth: true,
+            type: 'line',
+            itemStyle: {
+              opacity: 0,
+            },
+            areaStyle: {
+              color: 'rgba(255, 255, 255, 0.1)',
+            },
+          },
+        ]
+      : [
+          {
+            name: 'All Chains',
+            data: allData,
+            smooth: true,
+            type: 'line',
+            itemStyle: {
+              opacity: 0,
+            },
+            areaStyle: {
+              color: 'rgba(255, 255, 255, 0.1)',
+            },
+          },
+        ],
   };
 };
 function TPSChart({ isMobile, data }: IProps) {

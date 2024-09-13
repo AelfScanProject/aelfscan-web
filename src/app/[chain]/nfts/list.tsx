@@ -4,7 +4,7 @@ import Table from '@_components/Table';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import getColumns from './columnConfig';
 import { INFTsTableData, INFTsTableItem } from './type';
-import { getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
 import { SortEnum } from '@_types/common';
@@ -12,14 +12,16 @@ import { fetchNFTSList } from '@_api/fetchNFTS';
 import { pageSizeOption } from '@_utils/contant';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 interface TokensListProps {
   SSRData: INFTsTableData;
   defaultPage: string | number;
   defaultPageSize: string | number;
+  defaultChain: string;
 }
 
-export default function TokensList({ SSRData, defaultPage, defaultPageSize }: TokensListProps) {
+export default function TokensList({ SSRData, defaultPage, defaultPageSize, defaultChain }: TokensListProps) {
   console.log(SSRData, 'SSRData');
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
@@ -28,6 +30,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<INFTsTableItem[]>(SSRData.list);
   const [sort, setSort] = useState<SortEnum>(SortEnum.desc);
+  const [selectChain, setSelectChain] = useState(defaultChain);
   const updateQueryParams = useUpdateQueryParams();
 
   const mountRef = useRef(true);
@@ -37,7 +40,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
     const params = {
       skipCount: getPageNumber(currentPage, pageSize),
       maxResultCount: pageSize,
-      chainId: chain as TChainID,
+      chainId: getChainId(selectChain),
       sort,
       orderBy: 'HolderCount',
     };
@@ -47,7 +50,9 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
     setData(data.list);
     setLoading(false);
     return data;
-  }, [chain, currentPage, pageSize, sort]);
+  }, [selectChain, currentPage, pageSize, sort]);
+
+  const multi = useMultiChain();
 
   const ChangeOrder = useCallback(() => {
     if (loading) return;
@@ -55,19 +60,25 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
   }, [loading, sort]);
 
   const columns = useMemo(
-    () => getColumns({ currentPage, pageSize, ChangeOrder, sort, chain }),
-    [ChangeOrder, chain, currentPage, pageSize, sort],
+    () => getColumns({ currentPage, pageSize, ChangeOrder, sort, chain, multi }),
+    [ChangeOrder, chain, currentPage, multi, pageSize, sort],
   );
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize });
+    updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
   };
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
-    updateQueryParams({ p: page, ps: size });
+    updateQueryParams({ p: page, ps: size, chain: selectChain });
     setCurrentPage(page);
+  };
+
+  const chainChange = (value) => {
+    updateQueryParams({ p: 1, ps: pageSize, chain: value });
+    setCurrentPage(1);
+    setSelectChain(value);
   };
 
   useEffect(() => {
@@ -92,6 +103,11 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize }: To
         loading={loading}
         dataSource={data}
         columns={columns}
+        showMultiChain={true}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
+        }}
         isMobile={isMobile}
         rowKey={(item) => {
           return item.nftCollection?.symbol;

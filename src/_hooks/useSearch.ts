@@ -14,7 +14,7 @@ import { useDebounce } from 'react-use';
 import { fetchSearchData } from '@_api/fetchSearch';
 import { useAppSelector } from '@_store';
 import { TChainID } from '@_api/type';
-import { getAddress } from '@_utils/formatter';
+import { getAddress, getChainId } from '@_utils/formatter';
 export const useUpdateDataByQuery = () => {
   const { state, dispatch } = useSearchContext();
   const { query, filterType } = state;
@@ -52,7 +52,7 @@ export const useUpdateDataByQuery = () => {
         setLoading(true);
         const params = {
           filterType: filterType?.filterType,
-          chainId: defaultChain as TChainID,
+          chainId: getChainId(defaultChain || ''),
           keyword: getAddress(query.trim()),
           searchType: 0,
         };

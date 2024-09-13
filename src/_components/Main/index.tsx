@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { usePathname } from 'next/navigation';
 const adsPath = ['/AELF/contactusadvertise', '/tDVV/contactusadvertise', '/tDVW/contactusadvertise'];
-export const homePath = ['/', '/AELF', '/tDVV', '/tDVW'];
+export const homePath = ['/', '/AELF', '/tDVV', '/tDVW', '/muliChain'];
 export default function MainContainer({ children }) {
   const path = usePathname();
   const isMobile = useMobileAll();
