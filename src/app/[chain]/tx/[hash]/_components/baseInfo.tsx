@@ -256,11 +256,11 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
                         />
                       </div>
                       <div className="flex items-center">
-                        <span className="mx-1 inline-block shrink-0">From</span>
+                        <span className="mx-1 inline-block shrink-0">To</span>
                         <ContractToken
-                          address={nftsTransfer?.from?.address}
-                          name={nftsTransfer?.from?.name}
-                          type={nftsTransfer?.from?.addressType}
+                          address={nftsTransfer?.to?.address}
+                          name={nftsTransfer?.to?.name}
+                          type={nftsTransfer?.to?.addressType}
                           chainId={chain as string}
                         />
                       </div>

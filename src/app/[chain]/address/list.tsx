@@ -119,7 +119,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
         columns={columns}
         isMobile={isMobile}
         rowKey={(record) => {
-          return record.address + record.chainIds.join('');
+          return record.address + record.chainIds?.join('');
         }}
         total={total}
         showLast={false}
