@@ -56,7 +56,9 @@ export default function getColumns({
                   <IconFont className="mr-1" type="question-circle-error" />
                 )}
                 <EPTooltip title={text} mode="dark">
-                  <Link className="block w-[120px] truncate text-link" href={`/${records.chainIds[0]}/tx/${text}`}>
+                  <Link
+                    className="block w-[120px] truncate text-link"
+                    href={`/${records.chainIds ? records.chainIds[0] : chainId}/tx/${text}`}>
                     {text}
                   </Link>
                 </EPTooltip>
