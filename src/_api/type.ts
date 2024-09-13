@@ -79,6 +79,7 @@ export interface IBlocksRequestParams extends RequestInit {
 export interface IBlocksResponseItem {
   blockHeight: number;
   timestamp: string;
+  chainIds: TChainID[];
   transactionCount: number;
   timeSpan: string;
   reward: string;
@@ -352,11 +353,38 @@ export interface IAccountTransfersRequestParams extends RequestInit {
 export interface IBlockchainOverviewResponse {
   tokenPriceInUsd: number;
   tokenPriceRate24h: number;
+  mergeAccounts: {
+    total: number;
+    mainChain: number;
+    sideChain: number;
+  };
+  mergeTokens: {
+    total: number;
+    mainChain: number;
+    sideChain: number;
+  };
+  mergeNfts: {
+    total: number;
+    mainChain: number;
+    sideChain: number;
+  };
+  mergeTransactions: {
+    total: number;
+    mainChain: number;
+    sideChain: number;
+  };
+  mergeTps: {
+    total: string;
+    mainChain: string;
+    sideChain: string;
+  };
   transactions: number;
   tps: number;
   tpsTime: string;
   reward: string;
+  marketCap: string;
   blockHeight: number;
+  tokens: number;
   accounts: number;
   citizenWelfare: string;
 }

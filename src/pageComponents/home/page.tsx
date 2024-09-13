@@ -20,10 +20,44 @@ import { Skeleton, Spin } from 'antd';
 import { useAppSelector } from '@_store';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
-import { IPageBannerAdsDetail } from '@_api/type';
+import { IPageBannerAdsDetail, TChainID } from '@_api/type';
 import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 import AdsImage from '@_components/AdsImage';
+import { MULTI_CHAIN } from '@_utils/contant';
+import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
+
+const tokens = [
+  {
+    imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin_ELF.png',
+    name: 'Native Token',
+    symbol: 'ELF',
+    Transfers: 2223333,
+    type: 0,
+    Holders: 3333333,
+    chainIds: ['AELF', 'tDVW'],
+  },
+  {
+    imageUrl: '',
+    name: 'Portal Token',
+    symbol: 'PORT',
+    type: 0,
+    Transfers: 2223333,
+    Holders: 3333333,
+    chainIds: ['AELF', 'tDVW'],
+  },
+];
+
+export interface ITokensItem {
+  imageUrl: string;
+  name: string;
+  chainIds: TChainID[];
+  symbol: string;
+  type: TokenTypeEnum;
+  Transfers: number;
+  Holders: number;
+}
+
 function Home() {
   const { blocks, transactions, tpsData, defaultChain } = useAppSelector((state) => state.getChainId);
 
@@ -48,27 +82,48 @@ function Home() {
     return isMobile;
   }, [isMobile]);
 
+  const multi = useMemo(() => {
+    return defaultChain === MULTI_CHAIN;
+  }, [defaultChain]);
+
   const OverView = useMemo(() => {
-    return <InfoSection></InfoSection>;
-  }, []);
+    return <InfoSection multi={multi}></InfoSection>;
+  }, [multi]);
 
   const LatestAll = useMemo(() => {
     return (
       <div className={clsx('latest-all', mobile && 'latest-all-mobile')}>
-        <div className="flex-1">
-          <Spin spinning={blocks.loading}>
-            <Latest iconType="latest-block" isBlocks={true} data={blocks.data}></Latest>
-          </Spin>
-        </div>
+        {multi ? (
+          <div className="flex-1">
+            <Spin spinning={blocks.loading}>
+              <Latest
+                iconType="latest-tokens"
+                title="Hot Tokens"
+                isBlocks={false}
+                data={tokens as ITokensItem[]}></Latest>
+            </Spin>
+          </div>
+        ) : (
+          <div className="flex-1">
+            <Spin spinning={blocks.loading}>
+              <Latest iconType="latest-block" title="Latest Blocks" isBlocks={true} data={blocks.data}></Latest>
+            </Spin>
+          </div>
+        )}
         <div className="flex-1">
           <Spin spinning={transactions.loading}>
-            <Latest iconType="latest-tx" isBlocks={false} data={transactions.data}></Latest>
+            <Latest iconType="latest-tx" title="Latest Transactions" isBlocks={false} data={transactions.data}></Latest>
           </Spin>
         </div>
       </div>
     );
-  }, [mobile, blocks, transactions]);
+  }, [mobile, blocks, multi, transactions]);
+
   const title = useMemo(() => {
+    const multi = defaultChain === MULTI_CHAIN;
+    if (multi) {
+      return 'AELF Explorer';
+    }
     if (isMainNet) {
       return defaultChain === 'AELF' ? 'AELF MainChain Explorer' : `AELF SideChain (${defaultChain}) Explorer `;
     } else {
@@ -76,7 +131,6 @@ function Home() {
         ? 'AELF MainChain Testnet Explorer'
         : `AELF SideChain (${defaultChain}) Testnet Explorer `;
     }
-    return; //
   }, [isMainNet, defaultChain]);
 
   return (
@@ -85,6 +139,11 @@ function Home() {
         <div className="banner-section z-8 relative flex justify-start">
           <div className="w-full flex-00auto md:w-[75%] min-[993px]:w-[58.333%]">
             <h2 className={`${!isMainNet && '!text-base-100'}`}>{title}</h2>
+            {multi && (
+              <h3 className={`${!isMainNet && '!text-base-100'} text-sm leading-[22px]`}>
+                Supporting Mainchain and SideChain({isMainNet ? 'tDVV' : 'tDVW'})
+              </h3>
+            )}
             <div className="search-section my-4 min-[996px]:mb-10">
               <SearchComp isMobile={mobile} />
             </div>

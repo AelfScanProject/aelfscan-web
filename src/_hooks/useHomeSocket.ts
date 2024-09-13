@@ -5,6 +5,7 @@ import { ITPSData } from '@pageComponents/home/_components/TPSChart';
 import { useAppDispatch } from '@_store';
 import { setHomeBlocks, setHomeTransactions, setHomeTpsData } from '@_store/features/chainIdSlice';
 import SignalR from '@_socket/signalr';
+import { MULTI_CHAIN } from '@_utils/contant';
 
 interface IIntervalData {
   blocks: Array<IBlocksResponseItem>;
@@ -46,11 +47,11 @@ const useHomeSocket = (chain: TChainID) => {
   }, [blocks, blocksLoading, tpsData, tpsLoading, transactions, transactionsLoading]);
 
   useEffect(() => {
+    const selectChain = chain === MULTI_CHAIN ? '' : chain;
     function fetchAndReceiveWs() {
       if (!socket || !chain) {
         return;
       }
-
       socket.registerHandler('ReceiveMergeBlockInfo', (data) => {
         const { latestBlocks, latestTransactions } = data;
         const blocks = latestBlocks?.blocks || [];
@@ -83,16 +84,16 @@ const useHomeSocket = (chain: TChainID) => {
         );
         setTpsLoading(false);
       });
-      socket.sendEvent('RequestTransactionDataChart', { chainId: chain });
-      socket.sendEvent('RequestMergeBlockInfo', { chainId: chain });
+      socket.sendEvent('RequestTransactionDataChart', { chainId: selectChain });
+      socket.sendEvent('RequestMergeBlockInfo', { chainId: selectChain });
     }
 
     fetchAndReceiveWs();
 
     return () => {
       console.log('signalR----destroy');
-      socket?.sendEvent('UnsubscribeTransactionDataChart', { chainId: chain });
-      socket?.sendEvent('UnsubscribeMergeBlockInfo', { chainId: chain });
+      socket?.sendEvent('UnsubscribeTransactionDataChart', { chainId: selectChain });
+      socket?.sendEvent('UnsubscribeMergeBlockInfo', { chainId: selectChain });
       socket?.destroy();
     };
   }, [chain, socket]);

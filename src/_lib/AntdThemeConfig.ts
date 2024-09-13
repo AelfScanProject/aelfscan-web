@@ -15,8 +15,9 @@ export const THEME_CONFIG: ThemeConfig = {
       itemPaddingBottom: 0,
     },
     Tag: {
-      defaultBg: '#fafafa',
-      defaultColor: 'rgba(0, 0, 0, 0.88)',
+      defaultBg: '#F7F8FA',
+      defaultColor: '#252525',
+      colorBorder: '#EAECEF',
     },
   },
 };

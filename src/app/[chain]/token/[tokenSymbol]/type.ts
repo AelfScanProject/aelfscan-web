@@ -1,4 +1,4 @@
-import { IFromInfo } from '@_api/type';
+import { IFromInfo, TChainID } from '@_api/type';
 import { IToken } from '@_types/common';
 
 export interface ITransferItem {
@@ -64,6 +64,7 @@ export interface ITokenListItem {
   circulatingSupply: number;
   holderPercentChange24H: number;
   token: IToken;
+  chainIds: TChainID[];
   type: TokenTypeEnum;
 }
 

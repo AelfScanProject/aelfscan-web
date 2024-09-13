@@ -117,7 +117,7 @@
         @apply pt-4 pb-2 font-medium leading-20;
       }
       .search-result-ul-item{
-        @apply cursor-pointer p-2 leading-6 gap-1 flex items-center rounded flex-wrap
+        @apply cursor-pointer p-2 leading-6 gap-1 flex items-center rounded flex-wrap justify-between;
       }
       .search-result-ul-item-circle{
         @apply border-D0 rounded-full border w-6 h-6 text-center text-base-100 font-bold

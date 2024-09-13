@@ -94,11 +94,11 @@ const Search = ({
   const onSearchHandler = useCallback(async () => {
     if (!dataWithOrderIdx) return;
     if (dataWithOrderIdx?.transaction) {
-      const { transactionId } = dataWithOrderIdx.transaction;
-      router.push(`/${defaultChain}/tx/${transactionId}`);
+      const { transactionId, chainIds } = dataWithOrderIdx.transaction;
+      router.push(`/${chainIds && chainIds[0]}/tx/${transactionId}`);
     } else if (dataWithOrderIdx?.block) {
-      const { blockHeight } = dataWithOrderIdx.block;
-      router.push(`/${defaultChain}/block/${blockHeight}`);
+      const { blockHeight, chainIds } = dataWithOrderIdx.block;
+      router.push(`/${chainIds && chainIds[0]}/block/${blockHeight}`);
     } else {
       const params = {
         filterType: filterType?.filterType,
@@ -115,7 +115,7 @@ const Search = ({
           // collection
           router.push(`/nft?chainId=${defaultChain}&&collectionSymbol=${nfts[0].symbol}`);
         } else {
-          return `/nftItem?chainId=${defaultChain}&&itemSymbol=${nfts[0].symbol}`;
+          return `/nftItem?chainId=${nfts[0]?.chainIds && nfts[0]?.chainIds[0]}&&itemSymbol=${nfts[0].symbol}`;
         }
       } else if (accounts.length) {
         router.push(`/${defaultChain}/address/${addressFormat((accounts[0].address as string) || '', defaultChain)}`);

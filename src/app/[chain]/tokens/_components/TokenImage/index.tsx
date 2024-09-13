@@ -6,11 +6,13 @@ import clsx from 'clsx';
 interface ITokenImageProps {
   token: Partial<IToken>;
   className?: string;
+  width?: string;
+  height?: string;
 }
 
 const { Text } = Typography;
 
-export default function TokenImage({ token, className }: ITokenImageProps) {
+export default function TokenImage({ token, className, width = '24px', height = '24px' }: ITokenImageProps) {
   return (
     <>
       {token?.imageUrl ? (
@@ -18,13 +20,13 @@ export default function TokenImage({ token, className }: ITokenImageProps) {
           className={clsx('size-6 rounded-xl', className)}
           src={token.imageUrl}
           alt="logo"
-          width="24px"
-          height="24px"
+          width={width}
+          height={height}
         />
       ) : (
         <div
           className={clsx(
-            'flex size-6 items-center justify-center rounded-xl border-[1px] border-solid border-[#D0D0D0] bg-white',
+            'flex size-6 items-center justify-center rounded-xl border border-solid border-D0 bg-white',
             className,
           )}>
           <Text size="small" fontWeight={FontWeightEnum.Bold}>
