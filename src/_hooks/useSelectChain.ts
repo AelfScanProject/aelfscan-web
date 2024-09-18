@@ -21,3 +21,8 @@ export const useMainNet = () => {
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
   return isMainNet;
 };
+
+export const useSideChain = () => {
+  const isMainNet = useMainNet();
+  return isMainNet ? 'tDVV' : 'tDVW';
+};

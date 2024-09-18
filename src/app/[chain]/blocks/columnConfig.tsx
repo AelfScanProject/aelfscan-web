@@ -28,8 +28,10 @@ export default function getColumns({ timeFormat, handleTimeChange, chianId }): C
           width: '112px',
           dataIndex: 'blockHeight',
           key: 'blockHeight',
-          render: (text) => (
-            <Link className="block text-sm leading-[22px] text-link" href={`/${chianId}/block/${text}`}>
+          render: (text, record) => (
+            <Link
+              className="block text-sm leading-[22px] text-link"
+              href={`/${record.chainIds ? record.chainIds[0] : chianId}/block/${text}`}>
               {text}
             </Link>
           ),
@@ -58,7 +60,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chianId }): C
           render: (text, record) => (
             <Link
               className="block text-sm leading-[22px] text-link"
-              href={`/${chianId}/block/${record.blockHeight}?tab=transactions`}>
+              href={`/${record.chainIds ? record.chainIds[0] : chianId}/block/${record.blockHeight}?tab=transactions`}>
               {text}
             </Link>
           ),
@@ -73,7 +75,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chianId }): C
               <Link
                 className="block text-sm leading-[22px] text-link"
                 title={`${addressFormat(address, chianId)}`}
-                href={`/${record.chainIds && record.chainIds[0]}/address/${addressFormat(address, chianId)}`}>
+                href={`/${record.chainIds ? record.chainIds[0] : chianId}/address/${addressFormat(address, chianId)}`}>
                 {record.producerName ? record.producerName : `${addressFormat(hiddenAddress(address, 4, 4), chianId)}`}
               </Link>
               <Copy value={addressFormat(address, chianId)} />
@@ -105,8 +107,10 @@ export default function getColumns({ timeFormat, handleTimeChange, chianId }): C
           width: '96px',
           dataIndex: 'blockHeight',
           key: 'blockHeight',
-          render: (text) => (
-            <Link className="block text-sm leading-[22px] text-link" href={`/${chianId}/block/${text}`}>
+          render: (text, record) => (
+            <Link
+              className="block text-sm leading-[22px] text-link"
+              href={`/${record.chainIds ? record.chainIds[0] : chianId}/block/${text}`}>
               {text}
             </Link>
           ),
@@ -135,7 +139,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chianId }): C
           render: (text, record) => (
             <Link
               className="block text-sm leading-[22px] text-link"
-              href={`/${chianId}/block/${record.blockHeight}?tab=transactions`}>
+              href={`/${record.chainIds ? record.chainIds[0] : chianId}/block/${record.blockHeight}?tab=transactions`}>
               {text}
             </Link>
           ),
@@ -150,7 +154,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chianId }): C
               <Link
                 className="block text-sm leading-[22px] text-link"
                 title={`${addressFormat(address, chianId)}`}
-                href={`/${chianId}/address/${addressFormat(address, chianId)}`}>
+                href={`/${record.chainIds ? record.chainIds[0] : chianId}/address/${addressFormat(address, chianId)}`}>
                 {record.producerName ? record.producerName : `${addressFormat(hiddenAddress(address, 4, 4), chianId)}`}
               </Link>
               <Copy value={addressFormat(address, chianId)} />

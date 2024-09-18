@@ -426,6 +426,7 @@ export interface CollectionTransfer {
   transactionId: string;
   status: TransactionStatus;
   method: string;
+  chainIds: TChainID[];
   blockHeight: number;
   blockTime: string;
   from: IFromInfo;
@@ -455,6 +456,7 @@ export interface Address {
 export interface HolderItem {
   address: Address;
   quantity: string;
+  chainIds: TChainID[];
   percentage: string;
   value: number;
 }

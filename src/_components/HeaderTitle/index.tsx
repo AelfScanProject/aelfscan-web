@@ -6,6 +6,8 @@
  * @Description: title
  */
 import PageAd from '@_components/PageAd';
+import { useSideChain } from '@_hooks/useSelectChain';
+import { Button } from 'aelf-design';
 import clsx from 'clsx';
 import React from 'react';
 export default function HeadTitle({
@@ -13,19 +15,40 @@ export default function HeadTitle({
   children,
   className,
   adPage,
+  mainLink,
+  hiddenAds,
+  sideLink,
 }: {
   content: string;
   children?: React.ReactNode;
   className?: string;
+  mainLink?: string;
+  sideLink?: string;
   adPage: string;
+  hiddenAds?: boolean;
 }) {
+  const chain = useSideChain();
   return (
     <>
-      <div className={clsx(className, 'header-title flex items-end bg-inherit py-5')}>
-        <div className="text-xl font-medium not-italic text-base-100">{content}</div>
-        {children}
+      <div className={clsx('header-title flex flex-wrap items-center gap-4 bg-inherit py-5')}>
+        <div className={clsx('flex items-end text-xl font-medium not-italic text-base-100', className)}>
+          {content}
+          {children}
+        </div>
+        <div className="flex items-center gap-2">
+          {mainLink && (
+            <Button className="!h-7 !px-2" size="small" ghost type="primary">
+              View on MainChain
+            </Button>
+          )}
+          {sideLink && (
+            <Button className="!h-7 !px-2" size="small" ghost type="primary">
+              View on SideChain({chain})
+            </Button>
+          )}
+        </div>
       </div>
-      <PageAd adPage={adPage} />
+      {!hiddenAds && <PageAd adPage={adPage} />}
     </>
   );
 }

@@ -101,12 +101,25 @@ function Latest({ isBlocks, data, iconType, title }: IProps) {
                 </div>
               )}
               {multi && iconType === 'latest-tokens' ? (
-                <div className="middle">
-                  <div>
-                    <div className="text-sm text-base-100">{thousandsNumber(ele.Transfers)}</div>
-                    <div className="text-xs text-base-200">Transfers</div>
+                isMD ? (
+                  <div className="mt-1 flex w-full items-center">
+                    <div className="flex flex-1 items-center gap-2">
+                      <div className="text-xs text-base-200">Transfers</div>
+                      <div className="text-sm text-base-100">{thousandsNumber(ele.Transfers)}</div>
+                    </div>
+                    <div className="flex flex-1 items-center gap-2">
+                      <div className="text-xs text-base-200">Holders</div>
+                      <div className="text-sm text-base-100">{thousandsNumber(ele.Holders)}</div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="middle !flex-row !items-start !justify-start">
+                    <div>
+                      <div className="text-sm text-base-100">{thousandsNumber(ele.Transfers)}</div>
+                      <div className="text-xs text-base-200">Transfers</div>
+                    </div>
+                  </div>
+                )
               ) : (
                 <div className="middle">
                   {isBlocks ? (
@@ -159,7 +172,9 @@ function Latest({ isBlocks, data, iconType, title }: IProps) {
                   )}
                 </div>
               )}
-              {!isMD && <div className="right">{RewrdInfo(ele)}</div>}
+              {!isMD && (
+                <div className={`right ${iconType === 'latest-tokens' && '!items-start'}`}>{RewrdInfo(ele)}</div>
+              )}
             </div>
           );
         })}

@@ -8,7 +8,7 @@
 import { ChainId } from 'global';
 import Detail from './detail';
 import { fetchTokenDetail } from '@_api/fetchTokens';
-import { TChainID } from '@_api/type';
+import { getChainId } from '@_utils/formatter';
 
 export default async function TokenSymbol({
   params: { chain, tokenSymbol },
@@ -17,7 +17,7 @@ export default async function TokenSymbol({
     tokenSymbol: string;
   };
 }) {
-  const tokenDetail = await fetchTokenDetail({ chainId: chain as TChainID, symbol: tokenSymbol, cache: 'no-store' });
+  const tokenDetail = await fetchTokenDetail({ chainId: getChainId(chain), symbol: tokenSymbol, cache: 'no-store' });
   console.log(tokenDetail, 'tokenDetail');
   return (
     <div>

@@ -11,11 +11,12 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { pageSizeOption } from '@_utils/contant';
 import { TChainID } from '@_api/type';
 import { useParams } from 'next/navigation';
-import { getAddress, getSort, getTransferSearchAfter } from '@_utils/formatter';
+import { getAddress, getChainId, getSort, getTransferSearchAfter } from '@_utils/formatter';
 import { fetchTokenDetailTransfers } from '@_api/fetchTokens';
 import { PageTypeEnum } from '@_types';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 interface ITransfersProps extends ITokenSearchProps {}
 
@@ -39,10 +40,8 @@ const TAB_NAME = '';
 
 const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInputChange }: ITransfersProps, ref) => {
   const isMobile = useMobileAll();
-  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(
-    50,
-    TAB_NAME,
-  );
+  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
+    useSearchAfterParams(50, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
@@ -52,6 +51,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
   const [address, setAddress] = useState<string>('');
   const [searchData, setSearchData] = useState<TTransferSearchData>();
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
+  const [selectChain, setSelectChain] = useState(defaultChain);
 
   const mountRef = useRef(false);
 
@@ -66,7 +66,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
       const sort = getSort(pageType, currentPage);
       const searchAfter = getTransferSearchAfter(currentPage, data, pageType);
       const params = {
-        chainId: chain as TChainID,
+        chainId: getChainId(selectChain),
         symbol: tokenSymbol as string,
         maxResultCount: pageSize,
         search: getAddress(searchText ?? ''.trim()),
@@ -83,6 +83,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
             p: currentPage,
             ps: pageSize,
             pageType,
+            chain: selectChain,
             tab: TAB_NAME,
             searchAfter: JSON.stringify(searchAfter),
           });
@@ -101,7 +102,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
       setLoading(false);
       mountRef.current = true;
     }
-  }, [pageType, currentPage, chain, tokenSymbol, pageSize, searchText]);
+  }, [pageType, currentPage, chain, tokenSymbol, pageSize, searchText, selectChain]);
 
   useImperativeHandle(
     ref,
@@ -129,10 +130,17 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
     setCurrentPage(page);
     setPageType(PageTypeEnum.NEXT);
   };
+  const chainChange = (value) => {
+    setSelectChain(value);
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+  };
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const multi = useMultiChain();
 
   const columns = useMemo(
     () =>
@@ -140,8 +148,9 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
         timeFormat,
         handleTimeChange: () => setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age'),
         chain,
+        multi,
       }),
-    [chain, timeFormat],
+    [chain, timeFormat, multi],
   );
   const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
 
@@ -193,6 +202,11 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
           },
           onSearchChange,
           placeholder: 'Filter Address / Txn Hash',
+        }}
+        showMultiChain={true}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
         }}
         showTopSearch
         loading={loading}

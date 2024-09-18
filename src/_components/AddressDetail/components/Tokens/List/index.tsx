@@ -4,13 +4,14 @@ import getColumns from './columnConfig';
 import './index.css';
 import { TokensListItemType } from '@_types/commonDetail';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { getAddress, getPageNumber, numberFormatter } from '@_utils/formatter';
+import { getAddress, getChainId, getPageNumber, numberFormatter } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
 import { fetchAccountsDetailTokens } from '@_api/fetchContact';
 import { TableProps } from 'antd';
 import { Switch } from 'aelf-design';
 import { SortEnum, TableSortEnum } from '@_types/common';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 type OnChange = NonNullable<TableProps<TokensListItemType>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -32,12 +33,14 @@ export default function TokensList() {
 
   const { chain, address } = useParams();
 
+  const [selectChain, setSelectChain] = useState(chain as string);
+
   const fetchData = useCallback(async () => {
     try {
       const params = {
         skipCount: getPageNumber(currentPage, pageSize),
         maxResultCount: pageSize,
-        chainId: chain as TChainID,
+        chainId: getChainId(selectChain),
         address: getAddress(address as string),
         orderBy: sortedInfo.order ? (sortedInfo.columnKey as string) : undefined,
         sort: sortedInfo.order ? SortEnum[TableSortEnum[sortedInfo.order]] : undefined,
@@ -53,9 +56,11 @@ export default function TokensList() {
     } finally {
       setLoading(false);
     }
-  }, [SearchFetchText, address, chain, currentPage, pageSize, sortedInfo.columnKey, sortedInfo.order]);
+  }, [SearchFetchText, address, selectChain, currentPage, pageSize, sortedInfo.columnKey, sortedInfo.order]);
 
-  const columns = getColumns(sortedInfo, chain, showELF);
+  const multi = useMultiChain();
+
+  const columns = getColumns(sortedInfo, chain, showELF, multi);
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
@@ -64,6 +69,10 @@ export default function TokensList() {
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
+  };
+  const chainChange = (value) => {
+    setCurrentPage(1);
+    setSelectChain(value);
   };
 
   const searchChange = useCallback((value) => {
@@ -91,6 +100,11 @@ export default function TokensList() {
               title: `Tokens (${total})`,
               desc: desc,
             },
+          }}
+          showMultiChain={true}
+          MultiChainSelectProps={{
+            value: selectChain,
+            onChange: chainChange,
           }}
           topSearchProps={{
             value: searchText,

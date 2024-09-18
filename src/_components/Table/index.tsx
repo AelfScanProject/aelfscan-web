@@ -10,6 +10,7 @@ import './index.css';
 import EPTooltip from '@_components/EPToolTip';
 import MultiChainSelect from '@_components/ChainSelect/multiCain';
 import { SelectProps } from 'antd';
+import { usePad } from '@_hooks/useResponsive';
 
 export interface ITableSearch extends Omit<ISearchProps, 'onPressEnter'> {
   value?: string;
@@ -89,7 +90,6 @@ function HeaderTitle(props: IHeaderTitleProps): ReactNode {
 const scroll = { x: 'max-content' };
 export default function TableApp({
   pageNum,
-  isMobile,
   pageSize,
   defaultCurrent,
   total,
@@ -116,22 +116,28 @@ export default function TableApp({
     };
   }, [emptyType, emptyText]);
 
+  const isPad = usePad();
+
   return (
     <div className={clsx('ep-table rounded-lg bg-white shadow-table', !showLast && 'ep-table-hidden-page')}>
       <div
         className={clsx(
           'ep-table-header',
           showTopSearch ? 'py-4' : 'p-4',
-          `ep-table-header-${isMobile ? 'mobile' : 'pc'}`,
+          `ep-table-header-${isPad ? 'mobile' : 'pc'}`,
         )}>
         <div className="header-left mr-4 flex flex-1 flex-col justify-between lg:flex-row lg:items-center">
           {!hiddenTitle && <div>{isReactNode(headerTitle) ? headerTitle : <HeaderTitle {...headerTitle} />}</div>}
           {headerLeftNode}
         </div>
         {!hiddenPagination && (
-          <div className="header-pagination flex items-center">
+          <div
+            className={clsx(
+              'header-pagination flex w-full flex-col items-start min-[769px]:w-auto  min-[769px]:flex-row min-[769px]:items-center',
+              showTopSearch && 'gap-3 min-[769px]:gap-0',
+            )}>
             {showMultiChain && (
-              <div>
+              <div className="w-full min-[769px]:w-auto">
                 <MultiChainSelect props={MultiChainSelectProps} />
               </div>
             )}
