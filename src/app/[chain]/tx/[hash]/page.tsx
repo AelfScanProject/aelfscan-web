@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Detail from './_components/detail';
 import { fetchTransactionDetails } from '@_api/fetchTransactions';
 import { HashParams, TSearchParamsForTransactionDetail } from 'global';
@@ -20,7 +20,13 @@ export default async function TransactionDetails({
     cache: 'no-store',
   });
 
-  const transactionDetailData = transactionDetailDataList?.list?.[0] || {};
+  const transactionDetailData = transactionDetailDataList?.list?.[0];
+
+  if (!transactionDetailData) {
+    const defaultChain = params.chain; // or set your default chain here if it's a fixed value
+    const query = params.hash; // or set the query to the appropriate value
+    return redirect(`/${defaultChain}/search/${query.trim()}`);
+  }
   console.log(JSON.stringify(transactionDetailData));
   return <Detail SSRData={transactionDetailData} />;
 }
