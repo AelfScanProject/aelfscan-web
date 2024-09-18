@@ -6,13 +6,14 @@ import { ITokenDetail } from '../../type';
 import NumberPercentGroup from '../NumberPercentGroup';
 import { AddressType } from '@_types/common';
 import { useParams } from 'next/navigation';
-import { useMobileAll } from '@_hooks/useResponsive';
+import { usePad } from '@_hooks/useResponsive';
 import clsx from 'clsx';
 import Overview from '@_components/AddressDetail/components/overview';
 import { useMainNet, useMultiChain } from '@_hooks/useSelectChain';
 import Link from 'next/link';
 import addressFormat from '@_utils/urlUtils';
 import { useMemo } from 'react';
+import OverviewFourCard from '@_components/OverviewCard/four';
 
 const TokenDetail = (chain): IOverviewItem[] => {
   return [
@@ -61,6 +62,80 @@ const TokenDetail = (chain): IOverviewItem[] => {
   ];
 };
 
+const multiTokenDetail = (): IOverviewItem[][] => {
+  return [
+    [
+      {
+        key: 'totalSupply',
+        label: 'MAXIMUM SUPPLY',
+        format: thousandsNumber,
+        tooltip: 'The maximum number of tokens that will ever exist in the lifetime of the cryptocurrency.',
+      },
+      {
+        key: 'price',
+        label: 'PRICE',
+        render: (text, record) => (
+          <NumberPercentGroup decorator="$" number={text} percent={record['pricePercentChange24h']} />
+        ),
+      },
+    ],
+    [
+      {
+        key: 'circulatingSupply',
+        label: 'CIRCULATING SUPPLY',
+        format: thousandsNumber,
+        tooltip:
+          "Circulating Supply is the best approximation of the number of tokens that are circulating in the market and in the general public's hands.",
+      },
+      {
+        key: 'mainCirculatingSupply',
+        label: 'MainChain CIRCULATING SUPPLY',
+        format: thousandsNumber,
+      },
+      {
+        key: 'sideCirculatingSupply',
+        label: 'SideChain CIRCULATING SUPPLY',
+        format: thousandsNumber,
+        render: () => <span className="inline-block leading-[22px]">--</span>,
+      },
+    ],
+    [
+      {
+        key: 'holders',
+        label: 'TOTAL HOLDERS',
+        render: (text, record) => <NumberPercentGroup number={text} percent={record['holderPercentChange24H']} />,
+      },
+      {
+        key: 'mainHolders',
+        label: 'MainChain HOLDERS',
+        render: (text, record) => <NumberPercentGroup number={text} percent={record['holderPercentChange24H']} />,
+      },
+      {
+        key: 'sideHolders',
+        label: 'SideChain HOLDERS',
+        render: (text, record) => <NumberPercentGroup number={text} percent={record['holderPercentChange24H']} />,
+      },
+    ],
+    [
+      {
+        key: 'transferCount',
+        label: 'TOTAL TRANSFERS',
+        format: thousandsNumber,
+      },
+      {
+        key: 'mainTransferCount',
+        label: 'MainChain TRANSFERS',
+        format: thousandsNumber,
+      },
+      {
+        key: 'sideTransferCount',
+        label: 'SideChain TRANSFERS',
+        format: thousandsNumber,
+      },
+    ],
+  ];
+};
+
 interface IDetailProps {
   data: Partial<ITokenDetail>;
 }
@@ -68,7 +143,7 @@ interface IDetailProps {
 export default function OverView({ data = {} }: IDetailProps) {
   const { chain } = useParams();
   const TokenDetailItems = TokenDetail(chain);
-  const isMobile = useMobileAll();
+  const isPad = usePad();
   const isMainNet = useMainNet();
   const multi = useMultiChain();
 
@@ -97,16 +172,22 @@ export default function OverView({ data = {} }: IDetailProps) {
     ];
   }, [chain, data?.tokenContractAddress, isMainNet]);
 
+  const multiTokenDetailItems = multiTokenDetail();
+
   return (
     <div className="mb-4">
-      <div className={clsx(isMobile && 'flex-col', 'address-overview flex gap-4')}>
-        <div className="flex-1">
-          <OverviewCard items={TokenDetailItems} dataSource={data} breakIndex={4} />
+      {multi ? (
+        <OverviewFourCard items={multiTokenDetailItems} dataSource={data} />
+      ) : (
+        <div className={clsx(isPad && 'flex-col', 'address-overview flex gap-4')}>
+          <div className="flex-1">
+            <OverviewCard items={TokenDetailItems} dataSource={data} breakIndex={4} />
+          </div>
+          {!multi && (
+            <Overview title="Multichain Info" className={` ${isPad && '!w-full'} w-[448px]`} items={MultiChainInfo} />
+          )}
         </div>
-        {!multi && (
-          <Overview title="Multichain Info" className={` ${isMobile && '!w-full'} w-[448px]`} items={MultiChainInfo} />
-        )}
-      </div>
+      )}
     </div>
   );
 }

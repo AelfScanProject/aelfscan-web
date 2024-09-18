@@ -9,7 +9,7 @@ const HomePage: FC = () => {
   const Plugin = useMemo(() => {
     return dynamic(
       () => {
-        return import(`@_plugins/${pathname}/index`);
+        return import(`@_pluginsComponents/${pathname}/index`);
       },
       { ssr: false },
     );

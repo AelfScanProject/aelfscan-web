@@ -5,7 +5,7 @@ import { Divider, Flex } from 'antd';
 import { useCallback, useMemo } from 'react';
 import './index.css';
 import { IOverviewCardProps, IOverviewItem } from './type';
-import { useMobileAll } from '@_hooks/useResponsive';
+import { useMD } from '@_hooks/useResponsive';
 
 const { Text } = Typography;
 
@@ -17,7 +17,7 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
     return [col1Items, col2Items];
   }, [breakIndex, items]);
 
-  const isMobile = useMobileAll();
+  const isMobile = useMD();
 
   const renderItem = useCallback(
     (item: IOverviewItem, index: number) => {

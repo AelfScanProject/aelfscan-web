@@ -1,4 +1,4 @@
-import { IFromInfo, TransactionStatus } from '@_api/type';
+import { IFromInfo, TChainID, TransactionStatus } from '@_api/type';
 import { IToken } from './common';
 
 export interface ITransactionFeeItem {
@@ -19,6 +19,7 @@ export type TokenTransfersItemType = {
   status: TransactionStatus;
   transactionFeeList: ITransactionFeeItem[];
   symbol: string;
+  chainIds: TChainID[];
   symbolName: string;
   symbolImageUrl: string;
 };
@@ -32,6 +33,7 @@ export type TokensListItemType = {
   token: IToken;
   quantity: number;
   valueOfUsd: number;
+  chainIds: TChainID[];
   priceOfUsd: number;
   priceOfUsdPercentChange24h: number;
   priceOfElf: number;
@@ -48,6 +50,7 @@ export interface ITokens {
 export type NftsItemType = {
   nftCollection: IToken;
   token: IToken;
+  chainIds: TChainID[];
   transferCount: number;
   firstNftTime: string;
   quantity: number;

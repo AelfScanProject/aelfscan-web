@@ -5,10 +5,55 @@ import './index.css';
 import IconFont from '@_components/IconFont';
 import { addSymbol, thousandsNumber, unitConverter } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
-import { Skeleton } from 'antd';
+import { Dropdown, Skeleton } from 'antd';
 import useResponsive from '@_hooks/useResponsive';
 import { useMemo } from 'react';
+import { useSideChain } from '@_hooks/useSelectChain';
 const clsPrefix = 'home-info-section';
+
+const MultiDown = ({
+  mainCount,
+  sideCount,
+  tps,
+}: {
+  mainCount?: number;
+  sideCount?: number;
+  tps?: {
+    main?: string;
+    side?: string;
+  };
+}) => {
+  const sideChain = useSideChain();
+  const items = [
+    {
+      key: 'main',
+      label: (
+        <div className="flex items-center">
+          <IconFont type="mainchain"></IconFont>
+          <div className="ml-1 mr-2 text-sm leading-[22px] text-base-100">MainChain</div>
+          <div className="text-sm leading-[22px] text-base-200">{thousandsNumber(mainCount || 0)}</div>
+          {tps && <span className="text-sm leading-[22px] text-base-200">({tps?.main} TPS)</span>}
+        </div>
+      ),
+    },
+    {
+      key: 'side',
+      label: (
+        <div className="flex items-center">
+          <IconFont type="sidechain"></IconFont>
+          <div className="ml-1 mr-2 text-sm leading-[22px] text-base-100">SideChain({sideChain})</div>
+          <div className="text-sm leading-[22px] text-base-200">{thousandsNumber(sideCount || 0)}</div>
+          {tps && <span className="text-sm leading-[22px] text-base-200">({tps?.side} TPS)</span>}
+        </div>
+      ),
+    },
+  ];
+  return (
+    <Dropdown menu={{ items }} placement="bottomLeft">
+      <IconFont className="Direction-Down ml-[6px]" color="#858585" type="Direction-Down"></IconFont>
+    </Dropdown>
+  );
+};
 
 const InfoSection = ({ multi }: { multi: boolean }) => {
   const { tokenInfo: overview } = useAppSelector((state) => state.getChainId);
@@ -16,21 +61,26 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
   const { isMD, isPad } = useResponsive();
 
   const transactionsOverview = useMemo(() => {
+    const { mainChain, sideChain } = overview?.mergeTransactions || {};
+    const { mainChain: mainTps, sideChain: sideTps } = overview?.mergeTps || {};
     return (
       overview && (
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-transaction`)}>
           <IconFont type="transactions-d6cj46ag"></IconFont>
           <div className="content">
             <span className="title">Transactions</span>
-            <div>
+            <div className="flex items-center">
               <span className="desc">{unitConverter(overview.mergeTransactions.total, 2)}</span>
-              <span className="text-sm leading-[22px] text-base-200">（{overview.mergeTps.total} TPS）</span>
+              <span className="ml-[6px] text-sm leading-[22px] text-base-200">({overview.mergeTps.total} TPS)</span>
+              {multi && (
+                <MultiDown mainCount={mainChain} sideCount={sideChain} tps={{ main: mainTps, side: sideTps }} />
+              )}
             </div>
           </div>
         </div>
       )
     );
-  }, [overview]);
+  }, [multi, overview]);
   const PriceOverview = useMemo(() => {
     return (
       overview && (
@@ -40,9 +90,9 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
           </div>
           <div className="content">
             <span className="title">ELF Price</span>
-            <span className="desc">
+            <span className="desc flex items-center">
               {typeof overview.tokenPriceInUsd === 'number' ? `$${thousandsNumber(overview.tokenPriceInUsd)}` : '-'}
-              <span className={clsx('range', +range >= 0 ? 'rise' : 'fall')}>
+              <span className={clsx('range !ml-[6px]', +range >= 0 ? 'rise' : 'fall')}>
                 ({+range >= 0 ? '+' : ''}
                 {+range}%)
               </span>
@@ -71,7 +121,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
     return (
       overview && (
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-height`)}>
-          <IconFont type="reward"></IconFont>
+          <IconFont type="MarketCap"></IconFont>
           <div className="content">
             <span className="title">Market Cap</span>
             <span className="desc">{unitConverter(overview.marketCap, 2)}</span>
@@ -81,13 +131,17 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
     );
   }, [overview]);
   const accountsOverview = useMemo(() => {
+    const { mainChain, sideChain } = overview?.mergeAccounts || {};
     return (
       overview && (
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-accounts`)}>
           <IconFont type="account-d6cj465m"></IconFont>
           <div className="content">
             <span className="title">{multi ? 'Total Account' : 'Accounts'}</span>
-            <span className="desc">{thousandsNumber(overview.mergeAccounts.total)}</span>
+            <span className="desc flex items-center">
+              {thousandsNumber(overview.mergeAccounts.total)}
+              {multi && <MultiDown mainCount={mainChain} sideCount={sideChain} />}
+            </span>
           </div>
         </div>
       )
@@ -107,31 +161,39 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
     );
   }, [overview]);
   const tokensOverview = useMemo(() => {
+    const { mainChain, sideChain } = overview?.mergeTokens || {};
     return (
       overview && (
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-reward`)}>
-          <IconFont type="reward"></IconFont>
+          <IconFont type="Token"></IconFont>
           <div className="content">
             <span className="title">Tokens</span>
-            <span className="desc">{overview.mergeTokens.total}</span>
+            <span className="desc flex items-center">
+              {overview.mergeTokens.total}
+              {multi && <MultiDown mainCount={mainChain} sideCount={sideChain} />}
+            </span>
           </div>
         </div>
       )
     );
-  }, [overview]);
+  }, [multi, overview]);
   const nftsOverview = useMemo(() => {
+    const { mainChain, sideChain } = overview?.mergeNfts || {};
     return (
       overview && (
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-reward`)}>
-          <IconFont type="reward"></IconFont>
+          <IconFont type="NFT"></IconFont>
           <div className="content">
             <span className="title">NFTs</span>
-            <span className="desc">{overview.mergeNfts.total}</span>
+            <span className="desc">
+              {overview.mergeNfts.total}
+              {multi && <MultiDown mainCount={mainChain} sideCount={sideChain} />}
+            </span>
           </div>
         </div>
       )
     );
-  }, [overview]);
+  }, [multi, overview]);
   const welfareOverview = useMemo(() => {
     return (
       overview && (

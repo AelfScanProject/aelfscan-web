@@ -5,7 +5,7 @@ import Copy from '@_components/Copy';
 import IconFont from '../IconFont/index';
 import QrCode from '@_components/QrCode';
 import Overview from './components/overview';
-import { formatDate, numberFormatter, thousandsNumber } from '@_utils/formatter';
+import { formatDate, getAddress, numberFormatter, thousandsNumber } from '@_utils/formatter';
 import EPTabs, { EPTabsRef } from '../EPTabs/index';
 import TransactionList from '@app/[chain]/transactions/list';
 import TokenTransfers from '@_components/TokenTransfers';
@@ -31,9 +31,9 @@ import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 import AATransactionList from '@app/[chain]/transactions/aaList';
 import addressFormat from '@_utils/urlUtils';
-import { useEnvContext } from 'next-runtime-env';
-import { checkMainNet } from '@_utils/isMainNet';
-import { useMultiChain } from '@_hooks/useSelectChain';
+import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
+import OverviewThreeCard from '@_components/OverviewCard/three';
+import { IOverviewItem } from '@_components/OverviewCard/type';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -101,8 +101,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     ];
   }, [elfBalance, elfBalanceOfUsd, elfPriceInUsd, tokenHoldings]);
 
-  const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
-  const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
+  const sideChain = useSideChain();
 
   const addressMoreInfo = useMemo(() => {
     return [
@@ -147,7 +146,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     ];
   }, [chain, firstTransactionSend, lastTransactionSend]);
   const MultiChainInfo = useMemo(() => {
-    const chainId = chain === 'AELF' ? (isMainNet ? 'tDVV' : 'tDVW') : 'AELF';
+    const chainId = chain === 'AELF' ? sideChain : 'AELF';
     return [
       {
         label: 'Multichain Holders',
@@ -157,7 +156,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         label: 'Multichain',
         value: (
           <div className="flex items-center">
-            <Link className="h-[22px]" href={`/${chainId}/address/${addressFormat(address, chainId)}}`}>
+            <Link className="h-[22px]" href={`/${chainId}/address/${addressFormat(getAddress(address), chainId)}}`}>
               <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
                 SideChain {chainId}
               </span>
@@ -167,7 +166,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         ),
       },
     ];
-  }, [address, chain, isMainNet]);
+  }, [address, chain, sideChain]);
   const contractInfo = useMemo(() => {
     return [
       {
@@ -277,10 +276,69 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
   });
 
   const isMobile = useMobileAll();
+
+  const multiTokenDetail = (): IOverviewItem[][] => {
+    return [
+      [
+        {
+          key: 'value',
+          label: 'Total Value',
+          format: thousandsNumber,
+          render: (text, record) => <div className="text-sm font-medium leading-[22px] text-base-100">$200.21</div>,
+        },
+        {
+          key: 'token',
+          label: 'Total Token',
+          render: (text, record) => <div className="text-sm font-medium leading-[22px] text-base-100">88 Tokens</div>,
+        },
+      ],
+      [
+        {
+          key: 'mainValue',
+          label: 'MainChain Value',
+          render: (text, record) => (
+            <div className="text-sm font-medium leading-[22px] text-base-100">
+              $162.71
+              <span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">(99%)</span>
+            </div>
+          ),
+        },
+        {
+          key: 'mainToken',
+          label: 'MainChain Token',
+          render: (text, record) => <div className="text-sm font-medium leading-[22px] text-base-100">40 Tokens</div>,
+        },
+      ],
+      [
+        {
+          key: 'sideValue',
+          label: 'MainChain Value',
+          render: (text, record) => (
+            <div className="text-sm font-medium leading-[22px] text-base-100">
+              $162.71
+              <span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">(99%)</span>
+            </div>
+          ),
+        },
+        {
+          key: 'sideToken',
+          label: 'MainChain Token',
+          render: (text, record) => <div className="text-sm font-medium leading-[22px] text-base-100">37 Tokens</div>,
+        },
+      ],
+    ];
+  };
+
+  const multiDetailItems = multiTokenDetail();
   return (
     <div className="address-detail">
       <div className="address-header">
-        <HeadTitle className={isMobile && 'flex-col !items-start'} adPage={title + 'detail'} content={title}>
+        <HeadTitle
+          className={isMobile && 'flex-col !items-start'}
+          adPage={title + 'detail'}
+          content={title}
+          mainLink={`/AELF/address/${addressFormat(getAddress(address), 'AELF')}`}
+          sideLink={`/${sideChain}/address/${addressFormat(getAddress(address), sideChain)}`}>
           <div className={clsx('code-box ml-2', isMobile && '!ml-0 flex flex-wrap items-center')}>
             <span className="break-all text-sm leading-[22px] ">
               {address}
@@ -297,11 +355,15 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           </div>
         </HeadTitle>
       </div>
-      <div className={clsx(isMobile && 'flex-col', 'address-overview flex gap-4')}>
-        <Overview title="Overview" className="flex-1" items={OverviewInfo} />
-        <Overview title="MoreInfo" className="flex-1" items={isAddress ? addressMoreInfo : contractInfo} />
-        {!multi && isAddress && <Overview title="Multichain Info" className="flex-1" items={MultiChainInfo} />}
-      </div>
+      {multi ? (
+        <OverviewThreeCard items={multiDetailItems} dataSource={SSRData} title="Portfolio" />
+      ) : (
+        <div className={clsx(isMobile && 'flex-col', 'address-overview flex gap-4')}>
+          <Overview title="Overview" className="flex-1" items={OverviewInfo} />
+          <Overview title="MoreInfo" className="flex-1" items={isAddress ? addressMoreInfo : contractInfo} />
+          {!multi && isAddress && <Overview title="Multichain Info" className="flex-1" items={MultiChainInfo} />}
+        </div>
+      )}
       {adsData && adsData.adsBannerId && (
         <div className="mt-4">
           <AdsImage adPage="Addressdetail" adsItem={adsData} />

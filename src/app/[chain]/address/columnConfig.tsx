@@ -34,7 +34,6 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
                 address={text}
                 type={record.addressType}
                 chainId={chain}
-                chainIds={record.chainIds}
               />
             </div>
           ),

@@ -8,6 +8,7 @@ export interface ITransferItem {
   blockHeight: string;
   blockTime: string;
   from: IFromInfo;
+  chainIds: TChainID[];
   to: IFromInfo;
   quantity: number;
 }
@@ -23,6 +24,7 @@ export interface ITransferTableData {
 export interface IHolderItem {
   address: IFromInfo;
   quantity: string;
+  chainIds: TChainID[];
   percentage: string;
   value: string;
 }
@@ -46,6 +48,7 @@ export interface ITokenDetail {
   circulatingSupply: string;
   holders: number;
   price: number;
+  chainIds: TChainID[];
   holderPercentChange24h: number;
   transferCount: number;
   pricePercentChange24h: number;

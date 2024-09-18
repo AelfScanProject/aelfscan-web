@@ -6,12 +6,12 @@ import getColumns from './columns';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchTokenDetailHolders } from '@_api/fetchTokens';
 import { useParams } from 'next/navigation';
-import { TChainID } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
 import { PageTypeEnum } from '@_types';
-import { getHoldersSearchAfter, getSort } from '@_utils/formatter';
+import { getChainId, getHoldersSearchAfter, getSort } from '@_utils/formatter';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 interface HoldersProps extends ITokenSearchProps {}
 
@@ -20,10 +20,8 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
   const isMobile = useMobileAll();
 
   const { chain, tokenSymbol } = useParams();
-  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(
-    50,
-    TAB_NAME,
-  );
+  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
+    useSearchAfterParams(50, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,6 +29,9 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
   const [data, setData] = useState<IHolderItem[]>();
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
   const mountRef = useRef(false);
+
+  const [selectChain, setSelectChain] = useState(defaultChain);
+
   const updateQueryParams = useUpdateQueryParams();
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -38,7 +39,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
       const sort = getSort(pageType, currentPage);
       const searchAfter = getHoldersSearchAfter(currentPage, data, pageType);
       const params = {
-        chainId: chain as TChainID,
+        chainId: getChainId(selectChain),
         symbol: tokenSymbol as string,
         maxResultCount: pageSize,
         orderInfos: [
@@ -54,6 +55,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
             p: currentPage,
             ps: pageSize,
             pageType,
+            chain: selectChain,
             tab: TAB_NAME,
             searchAfter: JSON.stringify(searchAfter),
           });
@@ -70,7 +72,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
       setLoading(false);
       mountRef.current = true;
     }
-  }, [chain, tokenSymbol, pageSize, pageType, currentPage]);
+  }, [chain, tokenSymbol, pageSize, pageType, currentPage, selectChain]);
 
   const pageChange = (page: number) => {
     if (page > currentPage) {
@@ -86,12 +88,22 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
     setCurrentPage(page);
     setPageType(PageTypeEnum.NEXT);
   };
+  const chainChange = (value) => {
+    setSelectChain(value);
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+  };
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  const columns = useMemo(() => getColumns({ currentPage, pageSize, chain }), [currentPage, pageSize, chain]);
+  const multi = useMultiChain();
+
+  const columns = useMemo(
+    () => getColumns({ currentPage, pageSize, chain, multi }),
+    [currentPage, pageSize, chain, multi],
+  );
   const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
 
   return (
@@ -108,6 +120,11 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
             onSearchInputChange(currentTarget.value);
           },
           onSearchChange,
+        }}
+        showMultiChain={true}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
         }}
         // showTopSearch
         loading={loading}

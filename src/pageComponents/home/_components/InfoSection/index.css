@@ -46,6 +46,18 @@
       }
     }
   }
+
+  .Direction-Down {
+    svg {
+      @apply !w-5 !h-5;
+    }
+  }
+
+  .explorer-dropdown-open {
+    svg {
+      @apply rotate-180 transition-all;
+    }
+  }
 }
 .home-info-section-mobile {
   @apply rounded-lg shadow-[0px_8px_16px_0px_rgba(0,0,0,0.04)] py-0;
