@@ -27,7 +27,6 @@ export default async function TransactionDetails({
     const query = params.hash; // or set the query to the appropriate value
     return redirect(`/${defaultChain}/search/${query.trim()}`);
   }
-
   return <Detail SSRData={transactionDetailData} />;
 }
 
