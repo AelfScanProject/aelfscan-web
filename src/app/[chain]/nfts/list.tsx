@@ -6,7 +6,6 @@ import getColumns from './columnConfig';
 import { INFTsTableData, INFTsTableItem } from './type';
 import { getChainId, getPageNumber } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
-import { TChainID } from '@_api/type';
 import { SortEnum } from '@_types/common';
 import { fetchNFTSList } from '@_api/fetchNFTS';
 import { pageSizeOption } from '@_utils/contant';
@@ -103,7 +102,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
         loading={loading}
         dataSource={data}
         columns={columns}
-        showMultiChain={true}
+        showMultiChain={multi}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

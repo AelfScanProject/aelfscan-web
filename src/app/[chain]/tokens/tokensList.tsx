@@ -100,7 +100,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
           },
         }}
         loading={loading}
-        showMultiChain={true}
+        showMultiChain={multi}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

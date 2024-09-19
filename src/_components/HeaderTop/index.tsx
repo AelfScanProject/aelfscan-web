@@ -18,6 +18,8 @@ import { useMemo } from 'react';
 import { MenuProps } from 'antd';
 import useHomeSocket from '@_hooks/useHomeSocket';
 import useSearchFilter from '@_hooks/useSearchFilters';
+import ChainSelect from '@_components/ChainSelect';
+import { homePath } from '@_components/Main';
 
 // at public file
 const TopIconMain = '/image/aelf-header-top.svg';
@@ -36,7 +38,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   const { defaultChain } = useAppSelector((state) => state.getChainId);
   const origin = typeof window !== 'undefined' && window.location.origin;
   const pathname = usePathname();
-  const isHideSearch = ['/', '/tDVW', '/tDVV'].includes(pathname) || pathname.includes('search-');
+  const isHideSearch = homePath.includes(pathname) || pathname.includes('search-');
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const items: MenuProps['items'] = useMemo(() => {
     return networkList.map((item) => {
@@ -105,18 +107,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
           )}
 
           <div className="flex items-center">
-            {!isHideSearch && !isMobile && (
-              <Search
-                searchIcon={true}
-                searchButton={false}
-                enterIcon={true}
-                label="otherSearch"
-                searchWrapClassNames={clsx('px-3', 'py-2', '!w-[590px]', 'rounded border-D0 bg-F7')}
-                searchInputClassNames={clsx('!pl-0')}
-                placeholder={'Search by Address / Txn Hash / Block'}
-                lightMode={true}
-              />
-            )}
+            {!isMobile && <ChainSelect setCurrent={setCurrent} />}
             <Dropdown trigger={['click']} overlayClassName="network-drop w-[180px]" menu={{ items }}>
               <div className={clsx(`${clsPrefix}-right`)}>
                 <div className={clsx(`${clsPrefix}-explorer-change`)}>

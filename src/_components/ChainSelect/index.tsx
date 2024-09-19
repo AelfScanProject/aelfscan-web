@@ -37,7 +37,7 @@ export default function ChainSelect({ setCurrent }) {
   return (
     <div className="chain-select-container" id="chain-select-container">
       <Select
-        className="chain-select common-select-wrapper"
+        className="chain-select common-select-wrapper !h-10 min-w-[126px]"
         popupClassName="chain-select-options"
         value={selectChain}
         popupMatchSelectWidth={false}

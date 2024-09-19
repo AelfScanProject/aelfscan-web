@@ -1,7 +1,7 @@
 .header-menu-container {
   @apply bg-white h-12;
   &-content {
-    @apply max-w-[1400px] mx-auto pl-2 h-full flex justify-between align-middle;
+    @apply max-w-[1400px] mx-auto px-2 h-full flex items-center justify-between align-middle;
     .explorer-menu-light.explorer-menu-horizontal {
       @apply border-y-0 my-auto leading-[48px];
       .explorer-menu-overflow-item,
