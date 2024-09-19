@@ -8,7 +8,6 @@ import { usePad } from '@_hooks/useResponsive';
 import { useAppDispatch } from '@_store';
 import { setChainArr } from '@_store/features/chainIdSlice';
 import { usePathname } from 'next/navigation';
-import { getPathnameFirstSlash } from '@_utils/urlUtils';
 
 const clsPrefix = 'header-container';
 export default function Header({ chainList, networkList, headerMenuList }) {
@@ -20,10 +19,9 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   }, [chainArr, dispatch]);
 
   const pathname = usePathname();
-  const secondSlashIndex = pathname.slice(6).indexOf('/');
-  const [current, setCurrent] = useState(
-    secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5)),
-  );
+  const segments = pathname.split('/');
+  const defaultCurrent = segments.length > 2 ? `/${segments[2]}` : '/';
+  const [current, setCurrent] = useState(defaultCurrent);
   const headerList = useMemo(() => {
     return headerMenuList.map((ele) => ele.headerMenu_id);
   }, [headerMenuList]);
@@ -39,8 +37,9 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   }, [headerList]);
 
   useEffect(() => {
-    const secondSlashIndex = pathname.slice(6).indexOf('/');
-    const current = secondSlashIndex === -1 ? pathname.slice(5) : getPathnameFirstSlash(pathname.slice(5));
+    const segments = pathname.split('/');
+    const current = segments.length > 2 ? `/${segments[2]}` : '/';
+
     if (menus.find((item) => item.path === current)) {
       setCurrent(current);
     } else if (pathname.includes('/nft')) {
