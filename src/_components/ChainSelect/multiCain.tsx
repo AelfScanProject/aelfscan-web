@@ -15,7 +15,7 @@ export default function MultiChainSelect({ props }: { props: SelectProps }) {
   }, [chain]);
 
   return (
-    <div className="chain-select-container w-full !py-0" id="chain-select-container">
+    <div className="chain-select-container mr-4 w-full !py-0" id="chain-select-container">
       <Select
         className="chain-select common-select-wrapper w-full max-w-[304px] min-[769px]:w-[160px]"
         popupClassName="chain-select-options"

@@ -5,11 +5,14 @@ import { useMemo } from 'react';
 import clsx from 'clsx';
 import './index.css';
 import IconFont from '@_components/IconFont';
-import ChainSelect from '@_components/ChainSelect';
+import Search from '@_components/Search';
 import { MenuItem } from '@_types';
 import { getPathnameFirstSlash, isURL } from '@_utils/urlUtils';
 import { useAppSelector } from '@_store';
 import Link from 'next/link';
+import { usePad } from '@_hooks/useResponsive';
+import { homePath } from '@_components/Main';
+import { usePathname } from 'next/navigation';
 interface IProps {
   headerMenuList: MenuItem[];
   setCurrent: (key: string) => void;
@@ -80,11 +83,28 @@ export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: 
     }
   };
 
+  const isMobile = usePad();
+
+  const pathname = usePathname();
+
+  const isHideSearch = homePath.includes(pathname) || pathname.includes('search-');
+
   return (
     <div className={clsx(`${clsPrefix}`)}>
       <div className={`${clsPrefix}-content`}>
         <Menu className="flex-1" onClick={onClick} selectedKeys={[selectedKey]} mode="horizontal" items={items}></Menu>
-        <ChainSelect setCurrent={setCurrent} />
+        {!isHideSearch && !isMobile && (
+          <Search
+            searchIcon={true}
+            searchButton={false}
+            enterIcon={true}
+            label="otherSearch"
+            searchWrapClassNames={clsx('px-3', 'py-2', 'h-[40px] !w-[560px]', 'rounded border-D0 bg-F7')}
+            searchInputClassNames={clsx('!pl-0')}
+            placeholder={'Search by Address / Txn Hash / Block'}
+            lightMode={true}
+          />
+        )}
       </div>
     </div>
   );
