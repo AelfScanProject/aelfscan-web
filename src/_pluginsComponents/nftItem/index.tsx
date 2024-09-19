@@ -6,7 +6,7 @@ import './index.css';
 import NFTDetails from './NFTDetails';
 import { fetchCollectionItemDetail } from '@_api/fetchNFTS';
 import { TChainID } from '@_api/type';
-import { ItemSymbolDetailOverview } from '../type';
+import { ItemSymbolDetailOverview } from './type';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 export default async function NFTDetailsPage() {
