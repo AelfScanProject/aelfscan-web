@@ -70,7 +70,12 @@ function Latest({ isBlocks, data, iconType, title }: IProps) {
                         ? `/nftItem?chainId=${ele.chainIds[0]}&itemSymbol=${ele.symbol}`
                         : `/${defaultChain}/token/${ele.symbol}`
                     }>
-                    <TokenTableCell token={ele} subtitle={<BasicTag chainIds={ele.chainIds} />}>
+                    <TokenTableCell
+                      token={{
+                        ...ele,
+                        name: ele.tokenName,
+                      }}
+                      subtitle={<BasicTag chainIds={ele.chainIds} />}>
                       <TokenImage className="!size-7" width="28px" height="28px" token={ele} />
                     </TokenTableCell>
                   </Link>
