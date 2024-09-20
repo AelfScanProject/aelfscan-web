@@ -53,7 +53,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
     async (page, size, chain) => {
       const isLast = isLastPage(total, size, page);
       const params = {
-        chainId: getChainId(chain as string) || 'AELF',
+        chainId: getChainId(chain as string),
         skipCount: isLast ? 0 : getPageNumber(page, size),
         maxResultCount: size,
         isLastPage: isLast,
@@ -129,7 +129,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
           dataSource={data}
           columns={columns}
           isMobile={isMobile}
-          rowKey="blockHeight"
+          rowKey={(record) => record.blockHeight + record?.chainIds.join('')}
           total={total}
           options={pageSizeOption}
           pageSize={pageSize}
