@@ -130,7 +130,7 @@ function Home() {
             <h2 className={`${!isMainNet && '!text-base-100'}`}>{title}</h2>
             {multi && (
               <h3 className={`${!isMainNet && '!text-base-100'} text-sm leading-[22px]`}>
-                Supporting Mainchain and SideChain({isMainNet ? 'tDVV' : 'tDVW'})
+                Supporting MainChain and SideChain({isMainNet ? 'tDVV' : 'tDVW'})
               </h3>
             )}
             <div className="search-section my-4 min-[996px]:mb-10">
