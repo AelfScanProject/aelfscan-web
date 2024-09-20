@@ -129,7 +129,7 @@ export default function TokensList() {
           columns={columns}
           isMobile={isMobile}
           rowKey={(record) => {
-            return record.token?.symbol;
+            return record.token?.symbol + record?.chainIds?.join('');
           }}
           total={total}
           pageSize={pageSize}
