@@ -20,46 +20,35 @@ import { Skeleton, Spin } from 'antd';
 import { useAppSelector } from '@_store';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
-import { IPageBannerAdsDetail, TChainID } from '@_api/type';
+import { IPageBannerAdsDetail, ITopTokensItem } from '@_api/type';
 import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 import AdsImage from '@_components/AdsImage';
 import { MULTI_CHAIN } from '@_utils/contant';
-import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
 
-const tokens = [
-  {
-    imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin_ELF.png',
-    name: 'Native Token',
-    symbol: 'ELF',
-    Transfers: 2223333,
-    type: 0,
-    Holders: 3333333,
-    chainIds: ['AELF', 'tDVW'],
-  },
-  {
-    imageUrl: '',
-    name: 'Portal Token',
-    symbol: 'PORT',
-    type: 0,
-    Transfers: 2223333,
-    Holders: 3333333,
-    chainIds: ['AELF', 'tDVW'],
-  },
-];
-
-export interface ITokensItem {
-  imageUrl: string;
-  name: string;
-  chainIds: TChainID[];
-  symbol: string;
-  type: TokenTypeEnum;
-  Transfers: number;
-  Holders: number;
-}
+// const tokens = [
+//   {
+//     imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin_ELF.png',
+//     name: 'Native Token',
+//     symbol: 'ELF',
+//     transfers: 2223333,
+//     type: 0,
+//     holder: 3333333,
+//     chainIds: ['AELF', 'tDVW'],
+//   },
+//   {
+//     imageUrl: '',
+//     name: 'Portal Token',
+//     symbol: 'PORT',
+//     type: 0,
+//     transfers: 2223333,
+//     holder: 3333333,
+//     chainIds: ['AELF', 'tDVW'],
+//   },
+// ];
 
 function Home() {
-  const { blocks, transactions, tpsData, defaultChain } = useAppSelector((state) => state.getChainId);
+  const { blocks, transactions, tpsData, defaultChain, tokens } = useAppSelector((state) => state.getChainId);
 
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
@@ -95,12 +84,12 @@ function Home() {
       <div className={clsx('latest-all', mobile && 'latest-all-mobile')}>
         {multi ? (
           <div className="flex-1">
-            <Spin spinning={blocks.loading}>
+            <Spin spinning={tokens.loading}>
               <Latest
                 iconType="latest-tokens"
                 title="Hot Tokens"
                 isBlocks={false}
-                data={tokens as ITokensItem[]}></Latest>
+                data={tokens.data as ITopTokensItem[]}></Latest>
             </Spin>
           </div>
         ) : (
@@ -117,7 +106,7 @@ function Home() {
         </div>
       </div>
     );
-  }, [mobile, blocks, multi, transactions]);
+  }, [mobile, blocks, multi, transactions, tokens]);
 
   const title = useMemo(() => {
     const multi = defaultChain === MULTI_CHAIN;
