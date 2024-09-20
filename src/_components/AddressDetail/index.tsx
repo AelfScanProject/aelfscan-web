@@ -149,8 +149,8 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     const chainId = chain === 'AELF' ? sideChain : 'AELF';
     return [
       {
-        label: 'Multichain Holders',
-        value: <span className="inline-block leading-[22px]">{thousandsNumber(39939)}</span>,
+        label: 'Multichain Portfolio',
+        value: <span className="inline-block leading-[22px]">$25243.323</span>,
       },
       {
         label: 'Multichain',
@@ -161,7 +161,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
                 SideChain {chainId}
               </span>
             </Link>
-            <span className="ml-1 inline-block text-base-100">({thousandsNumber(39939)} Holders)</span>
+            <span className="ml-1 inline-block text-base-100">($222.2)</span>
           </div>
         ),
       },
