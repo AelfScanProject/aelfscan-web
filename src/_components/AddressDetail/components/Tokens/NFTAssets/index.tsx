@@ -108,7 +108,7 @@ export default function NFTAssets() {
           options={[10, 20]}
           dataSource={data}
           columns={columns}
-          rowKey={(record) => record.token?.symbol}
+          rowKey={(record) => record.token?.symbol + record?.chainIds?.join('')}
           total={total}
           pageSize={pageSize}
           pageNum={currentPage}
