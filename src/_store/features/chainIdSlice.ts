@@ -4,7 +4,12 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { ChainItem } from '@_types';
 import { ChainId } from '@_utils/contant';
 import { Chain } from 'global';
-import { IBlockchainOverviewResponse, IBlocksResponseItem, ITransactionsResponseItem } from '@_api/type';
+import {
+  IBlockchainOverviewResponse,
+  IBlocksResponseItem,
+  ITopTokensItem,
+  ITransactionsResponseItem,
+} from '@_api/type';
 import { ITPSData } from '@pageComponents/home/_components/TPSChart';
 import { TSearchValidator } from '@_components/Search/type';
 
@@ -19,6 +24,10 @@ export interface IChainState {
   transactions: {
     loading: boolean;
     data: ITransactionsResponseItem[];
+  };
+  tokens: {
+    loading: boolean;
+    data: ITopTokensItem[];
   };
   tpsData: {
     loading: boolean;
@@ -35,6 +44,10 @@ const initialState: IChainState = {
     data: [],
   },
   transactions: {
+    loading: true,
+    data: [],
+  },
+  tokens: {
     loading: true,
     data: [],
   },
@@ -64,6 +77,9 @@ export const chainIdSlice = createSlice({
     setHomeTransactions: (state, action) => {
       state.transactions = action.payload;
     },
+    setHomeTokens: (state, action) => {
+      state.tokens = action.payload;
+    },
     setHomeTpsData: (state, action) => {
       state.tpsData = action.payload;
     },
@@ -86,6 +102,7 @@ export const {
   setTokenInfo,
   setHomeBlocks,
   setHomeTransactions,
+  setHomeTokens,
   setHomeTpsData,
   setHomeFilters,
 } = chainIdSlice.actions;
