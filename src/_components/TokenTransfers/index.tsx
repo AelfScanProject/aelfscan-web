@@ -130,7 +130,7 @@ export default function List() {
         }}
         loading={loading}
         dataSource={data}
-        showMultiChain={true}
+        showMultiChain={multi}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
