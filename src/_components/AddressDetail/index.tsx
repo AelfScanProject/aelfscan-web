@@ -1,11 +1,11 @@
 'use client';
-import { IAddressResponse, IAddressTokensDetail } from '@_types/commonDetail';
+import { IAddressResponse, IAddressTokensDetail, IPortfolio } from '@_types/commonDetail';
 import HeadTitle from '@_components/HeaderTitle';
 import Copy from '@_components/Copy';
 import IconFont from '../IconFont/index';
 import QrCode from '@_components/QrCode';
 import Overview from './components/overview';
-import { formatDate, getAddress, numberFormatter, thousandsNumber } from '@_utils/formatter';
+import { fixedDecimals, formatDate, getAddress, numberFormatter, thousandsNumber } from '@_utils/formatter';
 import EPTabs, { EPTabsRef } from '../EPTabs/index';
 import TransactionList from '@app/[chain]/transactions/list';
 import TokenTransfers from '@_components/TokenTransfers';
@@ -63,6 +63,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     addressTypeList,
     firstTransactionSend,
     contractTransactionHash,
+    portfolio,
   } = SSRData;
 
   console.log(SSRData, 'AddressDetail');
@@ -277,19 +278,23 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
 
   const isMobile = useMobileAll();
 
-  const multiTokenDetail = (): IOverviewItem[][] => {
+  const multiTokenDetail = (data?: IPortfolio): IOverviewItem[][] => {
     return [
       [
         {
           key: 'value',
           label: 'Total Value',
           format: thousandsNumber,
-          render: (text, record) => <div className="text-sm font-medium leading-[22px] text-base-100">$200.21</div>,
+          render: (text, record) => (
+            <div className="text-sm font-medium leading-[22px] text-base-100">${data?.total.usdValue}</div>
+          ),
         },
         {
           key: 'token',
           label: 'Total Token',
-          render: (text, record) => <div className="text-sm font-medium leading-[22px] text-base-100">88 Tokens</div>,
+          render: (text, record) => (
+            <div className="text-sm font-medium leading-[22px] text-base-100">{data?.total.count} Tokens</div>
+          ),
         },
       ],
       [
@@ -298,38 +303,46 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           label: 'MainChain Value',
           render: (text, record) => (
             <div className="text-sm font-medium leading-[22px] text-base-100">
-              $162.71
-              <span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">(99%)</span>
+              ${data?.mainChain?.usdValue}
+              <span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">
+                ({fixedDecimals(data?.mainChain?.usdValuePercentage)}%)
+              </span>
             </div>
           ),
         },
         {
           key: 'mainToken',
           label: 'MainChain Token',
-          render: (text, record) => <div className="text-sm font-medium leading-[22px] text-base-100">40 Tokens</div>,
+          render: (text, record) => (
+            <div className="text-sm font-medium leading-[22px] text-base-100">{data?.mainChain?.count} Tokens</div>
+          ),
         },
       ],
       [
         {
           key: 'sideValue',
-          label: 'MainChain Value',
+          label: 'SideChain Value',
           render: (text, record) => (
             <div className="text-sm font-medium leading-[22px] text-base-100">
-              $162.71
-              <span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">(99%)</span>
+              ${data?.sideChain?.usdValue}
+              <span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">
+                ({fixedDecimals(data?.sideChain?.usdValuePercentage)}%)
+              </span>
             </div>
           ),
         },
         {
           key: 'sideToken',
-          label: 'MainChain Token',
-          render: (text, record) => <div className="text-sm font-medium leading-[22px] text-base-100">37 Tokens</div>,
+          label: 'SideChain Token',
+          render: (text, record) => (
+            <div className="text-sm font-medium leading-[22px] text-base-100">{data?.sideChain?.count} Tokens</div>
+          ),
         },
       ],
     ];
   };
 
-  const multiDetailItems = multiTokenDetail();
+  const multiDetailItems = multiTokenDetail(portfolio);
   return (
     <div className="address-detail">
       <div className="address-header">
@@ -337,8 +350,16 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           className={isMobile && 'flex-col !items-start'}
           adPage={title + 'detail'}
           content={title}
-          mainLink={`/AELF/address/${addressFormat(getAddress(address), 'AELF')}`}
-          sideLink={`/${sideChain}/address/${addressFormat(getAddress(address), sideChain)}`}>
+          mainLink={
+            multi && portfolio?.chainIds.includes('AELF')
+              ? `/AELF/address/${addressFormat(getAddress(address), 'AELF')}`
+              : ''
+          }
+          sideLink={
+            multi && portfolio?.chainIds.includes(sideChain)
+              ? `/${sideChain}/address/${addressFormat(getAddress(address), sideChain)}`
+              : ''
+          }>
           <div className={clsx('code-box ml-2', isMobile && '!ml-0 flex flex-wrap items-center')}>
             <span className="break-all text-sm leading-[22px] ">
               {address}
