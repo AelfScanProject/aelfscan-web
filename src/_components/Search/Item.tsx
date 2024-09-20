@@ -27,7 +27,7 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     const { transactionId, chainIds, blockHeight } = item;
     if (searchType === 'transaction') {
       return `/${chainIds && chainIds[0]}/tx/${transactionId}`;
-    } else if (searchType === 'block') {
+    } else if (searchType === 'blocks') {
       return `/${chainIds && chainIds[0]}/block/${blockHeight}`;
     } else if (searchType === 'nfts') {
       if (item.type === 2) {
@@ -39,7 +39,7 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     } else if (searchType === 'tokens') {
       return `/${defaultChain}/token/${item.symbol}`;
     } else if (searchType === 'contracts') {
-      return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}`;
+      return `/${chainIds && chainIds[0]}/address/${addressFormat(item.address || '', defaultChain)}`;
     } else if (searchType === 'accounts') {
       return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}`;
     }
@@ -89,9 +89,11 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
           </div>
         ) : (
           <div className="max-w-full flex-1 break-words text-sm leading-[22px] text-base-100">
-            {searchType === 'transaction' || searchType === 'block'
-              ? item?.transactionId || item?.blockHeight
-              : addressFormat(item.address || '', defaultChain)}
+            {searchType === 'transaction'
+              ? item?.transactionId
+              : searchType === 'blocks'
+                ? item.blockHeight
+                : addressFormat(item.address || '', defaultChain)}
           </div>
         )}
         <BasicTag chainIds={item.chainIds || []} />

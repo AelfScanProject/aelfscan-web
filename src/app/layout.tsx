@@ -41,7 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         id: 3,
         index: 1,
         key: 'multiChain',
-        label: 'MultiChain',
+        label: 'All Chains',
         user_created: '16285d01-1de1-4eeb-ab7a-a26d6323a488',
         user_updated: '16285d01-1de1-4eeb-ab7a-a26d6323a488',
       },

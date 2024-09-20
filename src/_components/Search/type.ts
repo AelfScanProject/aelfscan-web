@@ -35,7 +35,7 @@ export enum FilterTypeEnum {
   Nfts,
 }
 
-export type TType = 'tokens' | 'nfts' | 'accounts' | 'contracts' | 'transaction' | 'block';
+export type TType = 'tokens' | 'nfts' | 'accounts' | 'contracts' | 'transaction' | 'blocks';
 
 interface ITokens {
   image: string;
@@ -57,16 +57,18 @@ interface IAccountsItem {
   address: string;
 }
 
+interface IBlocksItem {
+  blockHeight: number;
+  blockHash: string;
+  chainIds: TChainID[];
+}
+
 export interface ISearchResponse {
   tokens: ITokens[];
   nfts: ITokens[];
   accounts: IAccountsItem[];
   contracts: IContactItem[];
-  block?: {
-    blockHeight: number;
-    blockHash: string;
-    chainIds: TChainID[];
-  };
+  blocks: IBlocksItem[];
   transaction: {
     transactionId: string;
     blockHeight: number;

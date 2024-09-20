@@ -1,5 +1,5 @@
 import { ColumnsType } from 'antd/es/table';
-import { addSymbol, divDecimals, formatDate, thousandsNumber, validateVersion } from '@_utils/formatter';
+import { addSymbol, formatDate, thousandsNumber } from '@_utils/formatter';
 import IconFont from '@_components/IconFont';
 import { IContractDataItem } from '@_api/type';
 import ContractToken from '@_components/ContractToken';
@@ -22,8 +22,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
                 showContractAddress
                 address={text}
                 type={AddressType.Contract}
-                chainId={chain}
-                chainIds={record.chainIds}
+                chainId={record.chainIds[0] || chain}
               />
             </div>
           ),
