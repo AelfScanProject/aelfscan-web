@@ -134,7 +134,7 @@ export default function List({ showHeader = true }) {
             title: singleTitle,
           },
         }}
-        showMultiChain={true}
+        showMultiChain={multi}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

@@ -351,12 +351,12 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           adPage={title + 'detail'}
           content={title}
           mainLink={
-            multi && portfolio?.chainIds.includes('AELF')
+            multi && portfolio?.chainIds?.includes('AELF')
               ? `/AELF/address/${addressFormat(getAddress(address), 'AELF')}`
               : ''
           }
           sideLink={
-            multi && portfolio?.chainIds.includes(sideChain)
+            multi && portfolio?.chainIds?.includes(sideChain)
               ? `/${sideChain}/address/${addressFormat(getAddress(address), sideChain)}`
               : ''
           }>

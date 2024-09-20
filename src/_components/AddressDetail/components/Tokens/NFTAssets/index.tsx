@@ -99,7 +99,7 @@ export default function NFTAssets() {
               searchChange(value);
             },
           }}
-          showMultiChain={true}
+          showMultiChain={multi}
           MultiChainSelectProps={{
             value: selectChain,
             onChange: chainChange,
