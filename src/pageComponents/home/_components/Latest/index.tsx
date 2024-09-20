@@ -6,7 +6,7 @@ import Link from 'next/link';
 import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
 import clsx from 'clsx';
 import EPTooltip from '@_components/EPToolTip';
-import { IBlocksResponseItem, ITransactionsResponseItem } from '@_api/type';
+import { IBlocksResponseItem, ITopTokensItem, ITransactionsResponseItem } from '@_api/type';
 import { divDecimals, formatDate, thousandsNumber } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
 import ContractToken from '@_components/ContractToken';
@@ -14,7 +14,6 @@ import { useMD } from '@_hooks/useResponsive';
 import { memo, useMemo } from 'react';
 import BasicTag from '@_components/BasicTag';
 import { MULTI_CHAIN } from '@_utils/contant';
-import { ITokensItem } from '@pageComponents/home/page';
 import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
 import TokenTableCell from '@_components/TokenTableCell';
 import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
@@ -23,7 +22,7 @@ interface IProps {
   isBlocks: boolean;
   iconType: string;
   title: string;
-  data: IBlocksResponseItem[] | ITransactionsResponseItem[] | ITokensItem[];
+  data: IBlocksResponseItem[] | ITransactionsResponseItem[] | ITopTokensItem[];
 }
 
 function Latest({ isBlocks, data, iconType, title }: IProps) {
@@ -37,7 +36,7 @@ function Latest({ isBlocks, data, iconType, title }: IProps) {
     return multi && iconType === 'latest-tokens' ? (
       <div className="middle">
         <div>
-          <div className="text-sm text-base-100">{thousandsNumber(ele.Holders)}</div>
+          <div className="text-sm text-base-100">{thousandsNumber(ele.holder)}</div>
           <div className="text-xs text-base-200">Holders</div>
         </div>
       </div>
@@ -59,7 +58,7 @@ function Latest({ isBlocks, data, iconType, title }: IProps) {
     <div className={clsx(clsPrefix, isMD && `${clsPrefix}-mobile`)}>
       <div className="title">{title}</div>
       <div className="content">
-        {data.map((ele) => {
+        {data?.map((ele) => {
           return (
             <div className="item" key={ele.transactionId || ele.blockHeight || ele.symbol}>
               {multi && iconType === 'latest-tokens' ? (
@@ -105,17 +104,17 @@ function Latest({ isBlocks, data, iconType, title }: IProps) {
                   <div className="mt-1 flex w-full items-center">
                     <div className="flex flex-1 items-center gap-2">
                       <div className="text-xs text-base-200">Transfers</div>
-                      <div className="text-sm text-base-100">{thousandsNumber(ele.Transfers)}</div>
+                      <div className="text-sm text-base-100">{thousandsNumber(ele.transfers)}</div>
                     </div>
                     <div className="flex flex-1 items-center gap-2">
                       <div className="text-xs text-base-200">Holders</div>
-                      <div className="text-sm text-base-100">{thousandsNumber(ele.Holders)}</div>
+                      <div className="text-sm text-base-100">{thousandsNumber(ele.holder)}</div>
                     </div>
                   </div>
                 ) : (
                   <div className="middle !flex-row !items-start !justify-start">
                     <div>
-                      <div className="text-sm text-base-100">{thousandsNumber(ele.Transfers)}</div>
+                      <div className="text-sm text-base-100">{thousandsNumber(ele.transfers)}</div>
                       <div className="text-xs text-base-200">Transfers</div>
                     </div>
                   </div>

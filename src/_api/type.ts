@@ -397,6 +397,7 @@ export interface ISearchParams extends RequestInit {
 }
 
 import { IToken } from '@_types/common';
+import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
 import { ISearchProps } from 'aelf-design';
 
 // Collection detail api return type
@@ -577,4 +578,14 @@ export interface IPageBannerAdsDetail {
   clickLink: string;
   text: string;
   searchKey: string;
+}
+
+export interface ITopTokensItem {
+  imageUrl: string;
+  name: string;
+  chainIds: TChainID[];
+  symbol: string;
+  type: TokenTypeEnum;
+  transfers: number;
+  holder: number;
 }
