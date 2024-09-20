@@ -101,7 +101,7 @@ export default function TokensList() {
               desc: desc,
             },
           }}
-          showMultiChain={true}
+          showMultiChain={multi}
           MultiChainSelectProps={{
             value: selectChain,
             onChange: chainChange,
