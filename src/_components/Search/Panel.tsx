@@ -88,22 +88,19 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
     return Object.entries(dataWithOrderIdx).filter(([filterType, list]) => list && Array.isArray(list));
   }, [dataWithOrderIdx]);
 
-  // if (!query) {
-  //   return null;
-  // }
-  if ((dataWithOrderIdx?.transaction || dataWithOrderIdx?.block) && query) {
+  if (dataWithOrderIdx?.transaction && query) {
     return (
       <div className="search-result-panel">
         <div>{children}</div>
         <Spin spinning={loading}>
           <ul className="search-result-ul">
             <div className="search-result-ul-wrap">
-              <p className="search-result-ul-title">{dataWithOrderIdx?.transaction ? 'transaction' : 'block'}</p>
+              <p className="search-result-ul-title">{'transaction'}</p>
               <Item
-                key={`item${dataWithOrderIdx?.transaction ? 'transaction' : 'block'}`}
-                searchType={dataWithOrderIdx?.transaction ? ('transaction' as TType) : ('block' as TType)}
+                key={`item${'transaction'}`}
+                searchType={'transaction' as TType}
                 index={1}
-                item={dataWithOrderIdx?.transaction || dataWithOrderIdx?.block}
+                item={dataWithOrderIdx?.transaction}
               />
             </div>
           </ul>
@@ -116,7 +113,7 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
     return (
       <div className="search-result-panel">
         <div>{children}</div>
-        {query && !dataWithOrderIdx?.transaction && !dataWithOrderIdx?.block && (
+        {query && !dataWithOrderIdx?.transaction && (
           <div className="search-result-empty">
             <IconFont type="result-empty" className="mr-1 size-3" />
             <span>Sorry, search not found.</span>

@@ -62,11 +62,7 @@ const Search = ({
     if (adsDetail?.adsId) {
       return hasFocus;
     } else {
-      return (
-        hasFocus && query && canShowListBox && dataWithOrderIdx
-        // !dataWithOrderIdx?.transaction &&
-        // !dataWithOrderIdx?.block
-      );
+      return hasFocus && query && canShowListBox && dataWithOrderIdx;
     }
   }, [adsDetail, canShowListBox, dataWithOrderIdx, hasFocus, query]);
 
@@ -96,9 +92,6 @@ const Search = ({
     if (dataWithOrderIdx?.transaction) {
       const { transactionId, chainIds } = dataWithOrderIdx.transaction;
       router.push(`/${chainIds && chainIds[0]}/tx/${transactionId}`);
-    } else if (dataWithOrderIdx?.block) {
-      const { blockHeight, chainIds } = dataWithOrderIdx.block;
-      router.push(`/${chainIds && chainIds[0]}/block/${blockHeight}`);
     } else {
       const params = {
         filterType: filterType?.filterType,
@@ -107,7 +100,7 @@ const Search = ({
         searchType: 0,
       };
       const res = await fetchSearchData(params);
-      const { tokens, nfts, accounts, contracts } = res;
+      const { tokens, nfts, accounts, contracts, blocks } = res;
       if (tokens.length) {
         router.push(`/${defaultChain}/token/${tokens[0].symbol}`);
       } else if (nfts.length) {
@@ -120,7 +113,11 @@ const Search = ({
       } else if (accounts.length) {
         router.push(`/${defaultChain}/address/${addressFormat((accounts[0].address as string) || '', defaultChain)}`);
       } else if (contracts.length) {
-        router.push(`/${defaultChain}/address/${addressFormat(contracts[0].address || '', defaultChain)}`);
+        router.push(
+          `/${contracts[0]?.chainIds && contracts[0]?.chainIds[0]}/address/${addressFormat(contracts[0].address || '', defaultChain)}`,
+        );
+      } else if (blocks.length) {
+        router.push(`/${blocks[0]?.chainIds && blocks[0]?.chainIds[0]}/block/${blocks[0].blockHeight}`);
       } else {
         router.push(`/${defaultChain}/search/${query.trim()}`);
       }
