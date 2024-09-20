@@ -58,7 +58,7 @@ const FileTree = (props: IFileTreeProps) => {
     return {
       filesWithKey: filesHandled,
       firstFileKey: [firstKey],
-      firstDirectory: [filesHandled[0].key],
+      firstDirectory: [filesHandled[0]?.key],
     };
   }, [files]);
   const onSelect = (_, e) => {

@@ -54,7 +54,7 @@ function handleFiles(data: IContractSourceCode) {
   } catch (e) {
     result = data.contractSourceCode;
   } finally {
-    defaultFile = getDefaultFile(result, [result[0].name]);
+    defaultFile = getDefaultFile(result, result[0] ? [result[0]?.name] : []);
   }
   return {
     result,
