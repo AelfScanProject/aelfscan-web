@@ -101,6 +101,19 @@ export interface IAddressTokensDetail {
   totalValueOfElf: number;
 }
 
+interface IPortfolioItem {
+  count: number;
+  usdValue: number;
+  usdValuePercentage: number;
+}
+
+export interface IPortfolio {
+  mainChain?: IPortfolioItem;
+  sideChain?: IPortfolioItem;
+  total: IPortfolioItem;
+  chainIds: TChainID[];
+}
+
 export interface IAddressResponse extends IAddressTokensDetail {
   symbol: string;
   contractName: string; // contract address
@@ -122,6 +135,7 @@ export interface IAddressResponse extends IAddressTokensDetail {
   elfBalanceOfUsd: number;
   elfBalance: number;
   elfPriceInUsd: number;
+  portfolio?: IPortfolio;
 }
 
 export enum TitleEnum {

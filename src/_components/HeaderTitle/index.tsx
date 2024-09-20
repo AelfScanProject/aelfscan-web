@@ -11,6 +11,7 @@ import PageAd from '@_components/PageAd';
 import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 import { Button } from 'aelf-design';
 import clsx from 'clsx';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import React, { useMemo } from 'react';
 export default function HeadTitle({
@@ -46,14 +47,18 @@ export default function HeadTitle({
         <div className="flex items-center gap-2">
           {!multi && <ChainTags chainIds={chainIds} className="border-D0 leading-[18px]" />}
           {mainLink && (
-            <Button className="!h-7 !px-2" size="small" ghost type="primary">
-              View on MainChain
-            </Button>
+            <Link href={mainLink}>
+              <Button className="!h-7 !px-2" size="small" ghost type="primary">
+                View on MainChain
+              </Button>
+            </Link>
           )}
           {sideLink && (
-            <Button className="!h-7 !px-2" size="small" ghost type="primary">
-              View on SideChain({sideChain})
-            </Button>
+            <Link href={sideLink}>
+              <Button className="!h-7 !px-2" size="small" ghost type="primary">
+                View on SideChain({sideChain})
+              </Button>
+            </Link>
           )}
         </div>
       </div>
