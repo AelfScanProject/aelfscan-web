@@ -8,7 +8,7 @@ export default async function BlocksPage({ params, searchParams }) {
   const ps = searchParams['ps'] || TablePageSize.mini;
   const defaultChain = searchParams['chain'] || params.chain;
   const data = await fetchServerBlocks({
-    chainId: getChainId(defaultChain) || 'AELF',
+    chainId: getChainId(defaultChain),
     maxResultCount: ps,
     skipCount: getPageNumber(Number(p), ps),
     cache: 'no-store',
