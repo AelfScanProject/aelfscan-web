@@ -582,7 +582,7 @@ export interface IPageBannerAdsDetail {
 
 export interface ITopTokensItem {
   imageUrl: string;
-  name: string;
+  tokenName: string;
   chainIds: TChainID[];
   symbol: string;
   type: TokenTypeEnum;
