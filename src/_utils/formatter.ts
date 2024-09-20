@@ -89,7 +89,7 @@ const TUnit = BUnit * 1000;
 export const fixedDecimals = (count?: number | BigNumber | string, num = 4) => {
   const bigCount = BigNumber.isBigNumber(count) ? count : new BigNumber(count || '');
   if (bigCount.isNaN()) return '0';
-  return bigCount.dp(num, BigNumber.ROUND_DOWN).toFixed();
+  return bigCount.dp(num, BigNumber.ROUND_HALF_UP).toFixed();
 };
 
 function enConverter(num: BigNumber, decimal = 3) {
