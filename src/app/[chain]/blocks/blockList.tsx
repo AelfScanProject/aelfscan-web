@@ -129,7 +129,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
           dataSource={data}
           columns={columns}
           isMobile={isMobile}
-          rowKey={(record) => record.blockHeight + record?.chainIds.join('')}
+          rowKey={(record) => record.blockHeight + record?.chainIds?.join('')}
           total={total}
           options={pageSizeOption}
           pageSize={pageSize}
