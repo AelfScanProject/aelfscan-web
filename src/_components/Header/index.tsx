@@ -38,7 +38,7 @@ export default function Header({ chainList, networkList, headerMenuList }) {
 
   useEffect(() => {
     const segments = pathname.split('/');
-    const current = segments.length > 2 ? `/${segments[2]}` : '/';
+    const current = segments.length > 2 ? `/${segments[2]}` : '';
 
     if (menus.find((item) => item.path === current)) {
       setCurrent(current);

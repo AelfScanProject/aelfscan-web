@@ -6,7 +6,7 @@ import { thousandsNumber } from '@_utils/formatter';
 import ChainTags from '@_components/ChainTags';
 
 export default function getColumns(currentPage, pageSize, chain, multi): ColumnsType<HolderItem> {
-  return !multi
+  return multi
     ? [
         {
           title: <span>#</span>,
