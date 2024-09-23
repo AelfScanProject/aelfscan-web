@@ -12,7 +12,7 @@ import { ITransferItem } from '../../type';
 import ChainTags from '@_components/ChainTags';
 
 export default function getColumns({ timeFormat, handleTimeChange, chain, multi }): ColumnsType<ITransferItem> {
-  return !multi
+  return multi
     ? [
         {
           title: (

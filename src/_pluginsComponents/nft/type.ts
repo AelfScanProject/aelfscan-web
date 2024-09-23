@@ -10,8 +10,20 @@ export interface CollectionDetailData {
   holders: number;
   transferCount: number;
   floorPriceOfUsd: number;
+  mergeHolders: number;
   floorPrice: number;
   tokenContractAddress: string;
+  mainChainFloorPrice: number;
+  sideChainFloorPrice: number;
+  mainChainFloorPriceOfUsd: number;
+  sideChainFloorPriceOfUsd: number;
+  mainChainItems: number;
+  mainChainHolders: number;
+  mainChainTransferCount: number;
+  sideChainItems: number;
+  sideChainHolders: number;
+  sideChainTransferCount: number;
+  chainIds: TChainID[];
 }
 
 export interface CollectionDetailApiResponse {

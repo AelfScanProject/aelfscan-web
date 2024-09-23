@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import IconFont from '@_components/IconFont';
 import { CollectionDetailData } from '../type';
 
@@ -14,93 +14,142 @@ import { FontWeightEnum, Typography } from 'aelf-design';
 import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 import OverviewThreeCard from '@_components/OverviewCard/three';
 import { IOverviewItem } from '@_components/OverviewCard/type';
-import NumberPercentGroup from '@app/[chain]/token/[tokenSymbol]/_components/NumberPercentGroup';
+import Overview from '@_components/AddressDetail/components/overview';
+import Link from 'next/link';
+import { usePad } from '@_hooks/useResponsive';
+import clsx from 'clsx';
 const { Title } = Typography;
 
 export interface OverViewProps {
   overview: CollectionDetailData;
 }
+const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
+  return [
+    [
+      {
+        key: 'Items',
+        label: 'Items',
+        format: thousandsNumber,
+        tooltip: 'The total number of NFT items in the collection',
+        render: (text, record) => (
+          <div className="text-sm leading-[22px] text-base-100">{thousandsNumber(overview.items)}</div>
+        ),
+      },
+      {
+        key: 'mainChainFloorPrice',
+        label: 'MainChain FLOOR PRICE',
+        render: (text, record) =>
+          record.mainChainFloorPrice !== -1 ? (
+            <div className="text-sm leading-[22px] text-base-100">
+              ${record.mainChainFloorPriceOfUsd}
+              <span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">
+                ({addSymbol(record.mainChainFloorPrice)})
+              </span>
+            </div>
+          ) : (
+            '--'
+          ),
+      },
+      {
+        key: 'sideChainFloorPrice',
+        label: 'SideChain FLOOR PRICE',
+        render: (text, record) =>
+          record.sideChainFloorPrice !== -1 ? (
+            <div className="text-sm leading-[22px] text-base-100">
+              ${record.sideChainFloorPriceOfUsd}
+              <span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">
+                ({addSymbol(record.sideChainFloorPrice)})
+              </span>
+            </div>
+          ) : (
+            '--'
+          ),
+      },
+    ],
+    [
+      {
+        key: 'mergeHolders',
+        label: 'TOTAL HOLDERS',
+      },
+      {
+        key: 'mainChainHolders',
+        label: 'MainChain HOLDERS',
+      },
+      {
+        key: 'sideChainHolders',
+        label: 'SideChain HOLDERS',
+      },
+    ],
+    [
+      {
+        key: 'transferCount',
+        label: 'TOTAL TRANSFERS',
+      },
+      {
+        key: 'mainChainTransferCount',
+        label: 'MainChain TRANSFERS',
+      },
+      {
+        key: 'sideChainTransferCount',
+        label: 'Side TRANSFERS',
+      },
+    ],
+  ];
+};
 export default function OverView(props: OverViewProps) {
   const searchParams = useSearchParams();
   const chain = searchParams.get('chainId');
   const { overview } = props;
   const multi = useMultiChain();
   const sideChain = useSideChain();
+  const isPad = usePad();
+  const collectionSymbol: string = searchParams.get('collectionSymbol') || '';
 
-  const multiDetail = (): IOverviewItem[][] => {
+  const MultiChainInfo = useMemo(() => {
+    const chainId = chain === 'AELF' ? sideChain : 'AELF';
     return [
-      [
-        {
-          key: 'Items',
-          label: 'Items',
-          format: thousandsNumber,
-          tooltip: 'The total number of NFT items in the collection',
-          render: (text, record) => <div className="text-sm leading-[22px] text-base-100">{thousandsNumber(1000)}</div>,
-        },
-        {
-          key: 'mainFloorPrice',
-          label: 'MainChain FLOOR PRICE',
-          render: (text, record) => (
-            <div className="text-sm leading-[22px] text-base-100">
-              $0.17<span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">(0.1ELF)</span>
+      {
+        label: 'Multichain Holders',
+        value: <span className="inline-block leading-[22px]">{thousandsNumber(overview?.mergeHolders || 0)}</span>,
+      },
+      {
+        label: 'Multichain',
+        value:
+          overview?.chainIds?.length && overview?.chainIds?.length > 1 ? (
+            <div className="flex items-center">
+              <Link className="h-[22px]" href={`/nft?chainId=${chainId}&&collectionSymbol=${collectionSymbol}`}>
+                <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
+                  SideChain {chainId}
+                </span>
+              </Link>
+              <span className="ml-1 inline-block text-base-100">
+                ({thousandsNumber(chain === 'AELF' ? overview?.sideChainHolders || 0 : overview?.mainChainHolders || 0)}{' '}
+                Holders)
+              </span>
             </div>
+          ) : (
+            '--'
           ),
-        },
-        {
-          key: 'sideFloorPrice',
-          label: 'SideChain FLOOR PRICE',
-          render: (text, record) => (
-            <div className="text-sm leading-[22px] text-base-100">
-              $0.17<span className="ml-1 inline-block text-sm font-normal leading-[22px] text-base-200">(0.1ELF)</span>
-            </div>
-          ),
-        },
-      ],
-      [
-        {
-          key: 'holders',
-          label: 'TOTAL HOLDERS',
-          render: (text, record) => <NumberPercentGroup decorator="" number={222} percent={'0.11122'} />,
-        },
-        {
-          key: 'MainChainHOLDERS',
-          label: 'MainChain HOLDERS',
-          render: (text, record) => <div className="text-sm leading-[22px] text-base-100">4099</div>,
-        },
-        {
-          key: 'SideChainHOLDERS',
-          label: 'SideChain HOLDERS',
-          render: (text, record) => <div className="text-sm leading-[22px] text-base-100">40999</div>,
-        },
-      ],
-      [
-        {
-          key: 'TOTALTRANSFERS',
-          label: 'TOTAL TRANSFERS',
-          render: (text, record) => <div className="text-sm leading-[22px] text-base-100">4099</div>,
-        },
-        {
-          key: 'MainChainTRANSFERS',
-          label: 'MainChain TRANSFERS',
-          render: (text, record) => <div className="text-sm leading-[22px] text-base-100">4099</div>,
-        },
-        {
-          key: 'SideTRANSFERS',
-          label: 'Side TRANSFERS',
-          render: (text, record) => <div className="text-sm leading-[22px] text-base-100">40999</div>,
-        },
-      ],
+      },
     ];
-  };
+  }, [chain, overview, sideChain, collectionSymbol]);
 
-  const multiDetailItems = multiDetail();
+  const multiDetailItems = multiDetail(overview);
   return (
     <div className="collection-overview-wrap">
       <HeadTitle
         content={`${overview?.nftCollection?.name || '--'}`}
         adPage="nftdetail"
-        mainLink={multi ? `/nft?chainId=AELF&&collectionSymbol=${overview?.nftCollection?.symbol}` : ''}
-        sideLink={multi ? `/nft?chainId=${sideChain}&&collectionSymbol=${overview?.nftCollection?.symbol}` : ''}>
+        mainLink={
+          multi && overview.chainIds?.includes('AELF')
+            ? `/nft?chainId=AELF&&collectionSymbol=${overview?.nftCollection?.symbol}`
+            : ''
+        }
+        sideLink={
+          multi && overview.chainIds?.includes(sideChain)
+            ? `/nft?chainId=${sideChain}&&collectionSymbol=${overview?.nftCollection?.symbol}`
+            : ''
+        }>
         <Title
           level={6}
           fontWeight={FontWeightEnum.Bold}
@@ -109,79 +158,87 @@ export default function OverView(props: OverViewProps) {
       {multi ? (
         <OverviewThreeCard items={multiDetailItems} dataSource={overview} title="Overview" />
       ) : (
-        <div className="collection-overview-body">
-          <h2 className="flex items-center">Overview</h2>
-          <div className="collection-overview-data">
-            <ul className="collection-overview-left">
-              <li className="collection-overview-data-item">
-                <div className="title">
-                  <span className="icon">
-                    <EPTooltip title="The total number of NFT items in the collection" mode="dark" pointAtCenter={true}>
-                      <IconFont type="question-circle" />
-                    </EPTooltip>
-                  </span>
-                  ITEMS
-                </div>
-                <div className="desc">{thousandsNumber(overview.items)}</div>
-              </li>
-              <li className="collection-overview-data-item">
-                <div className="title">HOLDERS</div>
-                <div className="desc">{thousandsNumber(overview.holders)}</div>
-              </li>
-              <li className="collection-overview-data-item">
-                <div className="title">TOTAL TRANSFERS</div>
-                <div className="desc">{thousandsNumber(overview.transferCount)}</div>
-              </li>
-            </ul>
-            <ul className="collection-overview-right">
-              <li className="collection-overview-data-item">
-                <div className="title">
-                  <span className="icon">
-                    <EPTooltip
-                      title="This is the MultiToken contract that defines a common implementation for fungible and non-fungible tokens."
-                      mode="dark"
-                      pointAtCenter={true}>
-                      <IconFont type="question-circle" />
-                    </EPTooltip>
-                  </span>
-                  CONTRACT
-                </div>
-                <div className="desc item-center flex">
-                  <IconFont className="mr-1 text-sm" type="Contract" />
-                  <ContractToken
-                    address={overview.tokenContractAddress}
-                    type={AddressType.address}
-                    chainId={chain as TChainID}
-                  />
-                </div>
-              </li>
-              <li className="collection-overview-data-item">
-                <div className="title">
-                  <span className="icon">
-                    <EPTooltip
-                      title="The lowest listing price of an NFT item in the collection"
-                      mode="dark"
-                      pointAtCenter={true}>
-                      <IconFont type="question-circle" />
-                    </EPTooltip>
-                  </span>
-                  FLOOR PRICE
-                </div>
-                <div className="desc h-[22px]">
-                  {overview.floorPrice !== -1 ? (
-                    <>
-                      <span className="inline-block leading-[22px]">${overview.floorPriceOfUsd}</span>
-                      <span className="ml-1 inline-block text-xs leading-[22px] text-base-200">
-                        ({addSymbol(overview.floorPrice)})
-                      </span>
-                    </>
-                  ) : (
-                    '--'
-                  )}
-                </div>
-              </li>
-            </ul>
+        <div className={clsx(isPad && 'flex-col', 'address-overview flex gap-4')}>
+          <div className="collection-overview-body flex-1">
+            <h2 className="flex items-center">Overview</h2>
+            <div className="collection-overview-data">
+              <ul className="collection-overview-left">
+                <li className="collection-overview-data-item">
+                  <div className="title">
+                    <span className="icon">
+                      <EPTooltip
+                        title="The total number of NFT items in the collection"
+                        mode="dark"
+                        pointAtCenter={true}>
+                        <IconFont type="question-circle" />
+                      </EPTooltip>
+                    </span>
+                    ITEMS
+                  </div>
+                  <div className="desc">{thousandsNumber(overview.items)}</div>
+                </li>
+                <li className="collection-overview-data-item">
+                  <div className="title">HOLDERS</div>
+                  <div className="desc">{thousandsNumber(overview.holders)}</div>
+                </li>
+                <li className="collection-overview-data-item">
+                  <div className="title">TOTAL TRANSFERS</div>
+                  <div className="desc">{thousandsNumber(overview.transferCount)}</div>
+                </li>
+              </ul>
+              <ul className="collection-overview-right">
+                <li className="collection-overview-data-item">
+                  <div className="title">
+                    <span className="icon">
+                      <EPTooltip
+                        title="This is the MultiToken contract that defines a common implementation for fungible and non-fungible tokens."
+                        mode="dark"
+                        pointAtCenter={true}>
+                        <IconFont type="question-circle" />
+                      </EPTooltip>
+                    </span>
+                    CONTRACT
+                  </div>
+                  <div className="desc item-center flex">
+                    <IconFont className="mr-1 text-sm" type="Contract" />
+                    <ContractToken
+                      address={overview.tokenContractAddress}
+                      type={AddressType.address}
+                      chainId={chain as TChainID}
+                    />
+                  </div>
+                </li>
+                <li className="collection-overview-data-item">
+                  <div className="title">
+                    <span className="icon">
+                      <EPTooltip
+                        title="The lowest listing price of an NFT item in the collection"
+                        mode="dark"
+                        pointAtCenter={true}>
+                        <IconFont type="question-circle" />
+                      </EPTooltip>
+                    </span>
+                    FLOOR PRICE
+                  </div>
+                  <div className="desc h-[22px]">
+                    {overview.floorPrice !== -1 ? (
+                      <>
+                        <span className="inline-block leading-[22px]">${overview.floorPriceOfUsd}</span>
+                        <span className="ml-1 inline-block text-xs leading-[22px] text-base-200">
+                          ({addSymbol(overview.floorPrice)})
+                        </span>
+                      </>
+                    ) : (
+                      '--'
+                    )}
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
+          {!multi && (
+            <Overview title="Multichain Info" className={` ${isPad && '!w-full'} w-[448px]`} items={MultiChainInfo} />
+          )}
         </div>
       )}
     </div>

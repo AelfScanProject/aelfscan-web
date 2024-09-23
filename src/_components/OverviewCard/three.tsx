@@ -52,11 +52,12 @@ export default function OverviewThreeCard({ items, dataSource, title = 'Overview
         {items.map((item, index) => {
           return (
             <>
-              <Flex key={index} vertical gap={16} flex={1}>
+              <Flex key={'Flex' + index} vertical gap={16} flex={1}>
                 {item?.map((data, index) => renderItem(data, index))}
               </Flex>
               {index !== items.length - 1 && (
                 <Divider
+                  key={'Divider' + index}
                   className={`card-divider ${isMobile && '!mx-0 !my-4'}`}
                   type={isMobile ? 'horizontal' : 'vertical'}
                 />

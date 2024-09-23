@@ -85,8 +85,8 @@ export default function Detail({ tokenDetail }: IDetailProps) {
       <HeadTitle
         content={`${tokenDetail?.token?.name || '--'}`}
         adPage="tokendetail"
-        mainLink={multi ? `/AELF/token/${tokenSymbol}` : ''}
-        sideLink={multi ? `/${sideChain}/token/${tokenSymbol}` : ''}>
+        mainLink={multi && tokenDetail?.chainIds?.includes('AELF') ? `/AELF/token/${tokenSymbol}` : ''}
+        sideLink={multi && tokenDetail?.chainIds?.includes(sideChain) ? `/${sideChain}/token/${tokenSymbol}` : ''}>
         <Title
           level={6}
           fontWeight={FontWeightEnum.Bold}

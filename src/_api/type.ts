@@ -406,10 +406,22 @@ export interface CollectionDetailData {
   nftCollection: IToken;
   items: number;
   holders: number;
+  mergeHolders: number;
   transferCount: number;
   floorPriceOfUsd: number;
   floorPrice: number;
   tokenContractAddress: string;
+  mainChainFloorPrice: number;
+  sideChainFloorPrice: number;
+  mainChainFloorPriceOfUsd: number;
+  sideChainFloorPriceOfUsd: number;
+  mainChainItems: number;
+  mainChainHolders: number;
+  mainChainTransferCount: number;
+  sideChainItems: number;
+  sideChainHolders: number;
+  sideChainTransferCount: number;
+  chainIds: TChainID[];
 }
 
 export interface CollectionDetailApiResponse {

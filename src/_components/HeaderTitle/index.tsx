@@ -12,7 +12,7 @@ import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 import { Button } from 'aelf-design';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import React, { useMemo } from 'react';
 export default function HeadTitle({
   content,
@@ -33,10 +33,12 @@ export default function HeadTitle({
 }) {
   const sideChain = useSideChain();
   const { chain } = useParams<{ chain: TChainID }>();
+  const params = useSearchParams();
+  const chainId = params.get('chainId') as TChainID;
   const multi = useMultiChain();
   const chainIds = useMemo(() => {
-    return [chain];
-  }, [chain]);
+    return [chain || chainId];
+  }, [chain, chainId]);
   return (
     <>
       <div className={clsx('header-title flex flex-wrap items-center gap-4 bg-inherit py-5', !multi && '!gap-2')}>

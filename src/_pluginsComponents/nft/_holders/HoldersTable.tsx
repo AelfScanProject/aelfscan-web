@@ -131,7 +131,7 @@ export default function Holder(props: HolderProps) {
         topSearchProps={{ ...topSearchProps, onSearchChange }}
         loading={loading}
         dataSource={data}
-        showMultiChain={true}
+        showMultiChain={multi}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
