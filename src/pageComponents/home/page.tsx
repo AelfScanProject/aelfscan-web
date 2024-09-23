@@ -152,13 +152,15 @@ function Home() {
         </div>
       )}
       {LatestAll}
-      <div className="mx-auto box-border w-full max-w-[1440px] px-4 min-[769px]:px-6 min-[993px]:min-w-[200px] min-[993px]:px-10">
-        {!tpsData.loading && tpsData.data ? (
-          <TPSChart isMobile={mobile} data={tpsData.data}></TPSChart>
-        ) : (
-          <Skeleton className="w-full" active />
-        )}
-      </div>
+      {!multi && (
+        <div className="mx-auto box-border w-full max-w-[1440px] px-4 min-[769px]:px-6 min-[993px]:min-w-[200px] min-[993px]:px-10">
+          {!tpsData.loading && tpsData.data ? (
+            <TPSChart isMobile={mobile} data={tpsData.data}></TPSChart>
+          ) : (
+            <Skeleton className="w-full" active />
+          )}
+        </div>
+      )}
     </main>
   );
 }

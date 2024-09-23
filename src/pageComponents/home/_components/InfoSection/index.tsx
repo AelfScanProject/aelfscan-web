@@ -32,7 +32,7 @@ const MultiDown = ({
           <IconFont type="mainchain"></IconFont>
           <div className="ml-1 mr-2 text-sm leading-[22px] text-base-100">MainChain</div>
           <div className="text-sm leading-[22px] text-base-200">{thousandsNumber(mainCount || 0)}</div>
-          {tps && <span className="text-sm leading-[22px] text-base-200">({tps?.main} TPS)</span>}
+          {/* {tps && <span className="text-sm leading-[22px] text-base-200">({tps?.main} TPS)</span>} */}
         </div>
       ),
     },
@@ -43,7 +43,7 @@ const MultiDown = ({
           <IconFont type="sidechain"></IconFont>
           <div className="ml-1 mr-2 text-sm leading-[22px] text-base-100">SideChain({sideChain})</div>
           <div className="text-sm leading-[22px] text-base-200">{thousandsNumber(sideCount || 0)}</div>
-          {tps && <span className="text-sm leading-[22px] text-base-200">({tps?.side} TPS)</span>}
+          {/* {tps && <span className="text-sm leading-[22px] text-base-200">({tps?.side} TPS)</span>} */}
         </div>
       ),
     },
@@ -71,7 +71,9 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
             <span className="title">Transactions</span>
             <div className="flex items-center">
               <span className="desc">{unitConverter(overview.mergeTransactions.total, 2)}</span>
-              <span className="ml-[6px] text-sm leading-[22px] text-base-200">({overview.mergeTps.total} TPS)</span>
+              {!multi && (
+                <span className="ml-[6px] text-sm leading-[22px] text-base-200">({overview.mergeTps.total} TPS)</span>
+              )}
               {multi && (
                 <MultiDown mainCount={mainChain} sideCount={sideChain} tps={{ main: mainTps, side: sideTps }} />
               )}
