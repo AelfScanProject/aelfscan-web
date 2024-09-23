@@ -9,9 +9,8 @@ import { useParams } from 'next/navigation';
 import { usePad } from '@_hooks/useResponsive';
 import clsx from 'clsx';
 import Overview from '@_components/AddressDetail/components/overview';
-import { useMainNet, useMultiChain } from '@_hooks/useSelectChain';
+import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 import Link from 'next/link';
-import addressFormat from '@_utils/urlUtils';
 import { useMemo } from 'react';
 import OverviewFourCard from '@_components/OverviewCard/four';
 
@@ -88,32 +87,31 @@ const multiTokenDetail = (): IOverviewItem[][] => {
           "Circulating Supply is the best approximation of the number of tokens that are circulating in the market and in the general public's hands.",
       },
       {
-        key: 'mainCirculatingSupply',
+        key: 'mainChainCirculatingSupply',
         label: 'MainChain CIRCULATING SUPPLY',
         format: thousandsNumber,
       },
       {
-        key: 'sideCirculatingSupply',
+        key: 'sideChainCirculatingSupply',
         label: 'SideChain CIRCULATING SUPPLY',
         format: thousandsNumber,
-        render: () => <span className="inline-block leading-[22px]">--</span>,
       },
     ],
     [
       {
-        key: 'holders',
+        key: 'mergeHolders',
         label: 'TOTAL HOLDERS',
         render: (text, record) => <NumberPercentGroup number={text} percent={record['holderPercentChange24H']} />,
       },
       {
-        key: 'mainHolders',
+        key: 'mainChainHolders',
         label: 'MainChain HOLDERS',
-        render: (text, record) => <NumberPercentGroup number={text} percent={record['holderPercentChange24H']} />,
+        format: thousandsNumber,
       },
       {
-        key: 'sideHolders',
+        key: 'sideChainHolders',
         label: 'SideChain HOLDERS',
-        render: (text, record) => <NumberPercentGroup number={text} percent={record['holderPercentChange24H']} />,
+        format: thousandsNumber,
       },
     ],
     [
@@ -123,12 +121,12 @@ const multiTokenDetail = (): IOverviewItem[][] => {
         format: thousandsNumber,
       },
       {
-        key: 'mainTransferCount',
+        key: 'mainChainTransferCount',
         label: 'MainChain TRANSFERS',
         format: thousandsNumber,
       },
       {
-        key: 'sideTransferCount',
+        key: 'sideChainTransferCount',
         label: 'SideChain TRANSFERS',
         format: thousandsNumber,
       },
@@ -141,36 +139,40 @@ interface IDetailProps {
 }
 
 export default function OverView({ data = {} }: IDetailProps) {
-  const { chain } = useParams();
+  const { chain, tokenSymbol } = useParams();
   const TokenDetailItems = TokenDetail(chain);
   const isPad = usePad();
-  const isMainNet = useMainNet();
   const multi = useMultiChain();
+  const sideChain = useSideChain();
 
   const MultiChainInfo = useMemo(() => {
-    const chainId = chain === 'AELF' ? (isMainNet ? 'tDVV' : 'tDVW') : 'AELF';
+    const chainId = chain === 'AELF' ? sideChain : 'AELF';
     return [
       {
         label: 'Multichain Holders',
-        value: <span className="inline-block leading-[22px]">{thousandsNumber(39939)}</span>,
+        value: <span className="inline-block leading-[22px]">{thousandsNumber(data?.mergeHolders || 0)}</span>,
       },
       {
         label: 'Multichain',
-        value: (
-          <div className="flex items-center">
-            <Link
-              className="h-[22px]"
-              href={`/${chainId}/address/${addressFormat(data?.tokenContractAddress || '', chainId)}}`}>
-              <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
-                SideChain {chainId}
+        value:
+          data?.chainIds?.length && data?.chainIds?.length > 1 ? (
+            <div className="flex items-center">
+              <Link className="h-[22px]" href={`/${chainId}/token/${tokenSymbol}`}>
+                <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
+                  SideChain {chainId}
+                </span>
+              </Link>
+              <span className="ml-1 inline-block text-base-100">
+                ({thousandsNumber(chain === 'AELF' ? data?.sideChainHolders || 0 : data?.mainChainHolders || 0)}{' '}
+                Holders)
               </span>
-            </Link>
-            <span className="ml-1 inline-block text-base-100">({thousandsNumber(39939)} Holders)</span>
-          </div>
-        ),
+            </div>
+          ) : (
+            '--'
+          ),
       },
     ];
-  }, [chain, data?.tokenContractAddress, isMainNet]);
+  }, [chain, data, sideChain, tokenSymbol]);
 
   const multiTokenDetailItems = multiTokenDetail();
 

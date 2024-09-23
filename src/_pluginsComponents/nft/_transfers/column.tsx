@@ -14,7 +14,7 @@ import NFTImage from '@_components/NFTImage';
 import ChainTags from '@_components/ChainTags';
 
 export default function getColumns({ timeFormat, handleTimeChange, chainId, multi }): ColumnsType<CollectionTransfer> {
-  return !multi
+  return multi
     ? [
         {
           title: (

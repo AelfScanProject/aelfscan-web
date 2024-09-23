@@ -54,6 +54,14 @@ export interface ITokenDetail {
   pricePercentChange24h: number;
   tokenContractAddress: string;
   decimals: number;
+  // multi
+  mainChainCirculatingSupply: number;
+  sideChainCirculatingSupply: number;
+  mainChainHolders: number;
+  sideChainHolders: number;
+  mergeHolders: number;
+  mainChainTransferCount: number;
+  sideChainTransferCount: number;
 }
 
 export enum TokenTypeEnum {

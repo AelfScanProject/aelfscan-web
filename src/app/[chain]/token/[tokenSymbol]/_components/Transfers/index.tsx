@@ -203,7 +203,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
           onSearchChange,
           placeholder: 'Filter Address / Txn Hash',
         }}
-        showMultiChain={true}
+        showMultiChain={multi}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

@@ -159,7 +159,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
           },
         }}
         showTopSearch={true}
-        showMultiChain={true}
+        showMultiChain={multi}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
