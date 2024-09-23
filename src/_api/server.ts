@@ -64,7 +64,7 @@ async function service(url: string, options: RequestWithParams) {
       cache: 'no-store',
       headers: {
         'pre-release': '1',
-        ...(options.headers || {}),
+        ...(options?.headers || {}),
       },
     });
     if (response.ok) {
