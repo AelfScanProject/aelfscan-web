@@ -5,7 +5,7 @@ import getColumns from '@_components/TokenTransfers/columnConfig';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { ITokenTransfers, TokenTransfersItemType } from '@_types/commonDetail';
-import { getAddress, getChainId, getSort, getTransferSearchAfter, thousandsNumber } from '@_utils/formatter';
+import { getAddress, getBlockTimeSearchAfter, getChainId, getSort, thousandsNumber } from '@_utils/formatter';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
@@ -43,14 +43,14 @@ export default function List({ showHeader = true }) {
 
   const fetchData = useCallback(async () => {
     const sort = getSort(pageType, currentPage);
-    const searchAfter = getTransferSearchAfter(currentPage, data, pageType);
+    const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType);
     const params = {
       chainId: getChainId(selectChain),
       maxResultCount: pageSize,
       tokenType: 1,
       address: getAddress(address),
       orderInfos: [
-        { orderBy: 'BlockHeight', sort },
+        { orderBy: 'BlockTime', sort },
         { orderBy: 'TransactionId', sort },
       ],
       searchAfter: !mountRef.current && defaultSearchAfter && activeTab ? JSON.parse(defaultSearchAfter) : searchAfter,
