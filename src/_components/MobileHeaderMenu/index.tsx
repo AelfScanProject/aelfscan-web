@@ -3,7 +3,7 @@ import IconFont from '@_components/IconFont';
 import { MenuItem, NetworkItem } from '@_types';
 import { Drawer, Menu, MenuProps } from 'antd';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import './index.css';
 import { useAppDispatch, useAppSelector } from '@_store';
@@ -97,6 +97,12 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   const pathname = usePathname();
   const origin = typeof window !== 'undefined' && window.location.origin;
 
+  const { chain } = useParams();
+  const chainId = useSearchParams().get('chainId');
+  const selectChain = useMemo(() => {
+    return chainId || (chain as string) || defaultChain;
+  }, [chain, chainId, defaultChain]);
+
   const networkItems: MenuProps['items'] = useMemo(() => {
     const Explorers = [
       {
@@ -132,10 +138,10 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
         key: item?.key,
         label: (
           <a
-            className={`box-border flex items-center justify-between rounded-md px-3 py-[9px] text-sm leading-[22px]  ${defaultChain === item?.key ? '!bg-F7 !text-link' : '!text-base-100'}`}
+            className={`box-border flex items-center justify-between rounded-md px-3 py-[9px] text-sm leading-[22px]  ${selectChain === item?.key ? '!bg-F7 !text-link' : '!text-base-100'}`}
             onClick={() => onSelectHandler(item.key)}>
             <span>{item?.label}</span>
-            {defaultChain === item.key && <Image width={12} height={12} alt="correct" src="/image/correct.svg" />}
+            {selectChain === item.key && <Image width={12} height={12} alt="correct" src="/image/correct.svg" />}
           </a>
         ),
       };
@@ -152,8 +158,6 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
       ...chainList,
     ];
   }, [chainArr, defaultChain, networkList, onSelectHandler, origin]);
-
-  console.log(networkItems, 'networkItems');
 
   const items: MenuProps['items'] = [...convertMenuItems(headerMenuList)];
 

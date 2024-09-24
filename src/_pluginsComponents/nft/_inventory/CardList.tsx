@@ -58,7 +58,8 @@ function NftCardList(props: NftCardListProps) {
       {list.map((itemObj, index) => {
         return (
           <div key={index} className="collection-detail-inventory-item">
-            <Link href={`/nftItem?chainId=${chain}&&itemSymbol=${itemObj?.item?.symbol}`}>
+            <Link
+              href={`/nftItem?chainId=${(itemObj?.chainIds && itemObj?.chainIds[0]) || chain}&&itemSymbol=${itemObj?.item?.symbol}`}>
               <Card hoverable cover={<NFTImage className="rounded object-cover" src={itemObj?.item?.imageUrl} />}>
                 <div>
                   <span className="text-xs leading-5 text-base-200">Symbol:</span>
@@ -74,7 +75,7 @@ function NftCardList(props: NftCardListProps) {
                       title={`Click to see transaction with last sale price of $${itemObj.lastSalePriceInUsd} (${itemObj.lastSalePrice} ${itemObj.lastSaleAmountSymbol})`}>
                       <Link
                         className="inline-block truncate"
-                        href={`/${chain}/tx/${itemObj.lastTransactionId}?blockHeight=${itemObj.blockHeight}`}>
+                        href={`/${(itemObj?.chainIds && itemObj?.chainIds[0]) || chain}/tx/${itemObj.lastTransactionId}`}>
                         <span className="mx-1">${itemObj.lastSalePriceInUsd}</span>
                         <span>
                           ({itemObj.lastSalePrice} {itemObj.lastSaleAmountSymbol})

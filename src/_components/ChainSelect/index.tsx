@@ -17,8 +17,8 @@ export default function ChainSelect({ setCurrent }) {
   const { chain } = useParams();
   const chainId = useSearchParams().get('chainId');
   const selectChain = useMemo(() => {
-    return (chain as string) || defaultChain;
-  }, [chain, defaultChain]);
+    return chainId || (chain as string) || defaultChain;
+  }, [chain, chainId, defaultChain]);
 
   const onChangeHandler = (value: string) => {
     dispatch(setDefaultChain(value));

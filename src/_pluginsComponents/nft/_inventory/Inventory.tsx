@@ -5,7 +5,6 @@ import { InventoryItem } from '../type';
 import { useSearchParams } from 'next/navigation';
 import { ITableSearch } from '@_components/Table';
 import { fetchNFTInventory } from '@_api/fetchNFTS';
-import { TChainID } from '@_api/type';
 import { getAddress, getChainId } from '@_utils/formatter';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
@@ -16,9 +15,8 @@ export interface InventoryProps {
 const TAB_NAME = 'inventory';
 export default function Inventory(props: InventoryProps) {
   const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
   const collectionSymbol: string = searchParams.get('collectionSymbol') || '';
-  const { defaultPage, defaultPageSize } = useSearchAfterParams(50, TAB_NAME);
+  const { defaultPage, defaultPageSize, defaultChain } = useSearchAfterParams(50, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,6 +27,7 @@ export default function Inventory(props: InventoryProps) {
   const updateQueryParams = useUpdateQueryParams();
 
   const [text, setSearchText] = useState<string>('');
+  const [selectChain] = useState(defaultChain);
 
   const [searchVal, setSearchVal] = useState<string>(props.search || '');
 
@@ -59,6 +58,7 @@ export default function Inventory(props: InventoryProps) {
 
   const fetchInventoryListWrap = useCallback(async () => {
     setLoading(true);
+    console.log(mountRef.current, 'mountRef');
     try {
       try {
         if (mountRef.current) {
@@ -72,7 +72,7 @@ export default function Inventory(props: InventoryProps) {
         console.log(error, 'error.rr');
       }
       const res = await fetchNFTInventory({
-        chainId: getChainId(chain as string),
+        chainId: getChainId(selectChain as string),
         skipCount: (currentPage - 1) * pageSize,
         maxResultCount: pageSize,
         search: getAddress(searchVal ?? ''),
@@ -86,7 +86,7 @@ export default function Inventory(props: InventoryProps) {
     } finally {
       mountRef.current = true;
     }
-  }, [chain, currentPage, pageSize, searchVal, collectionSymbol]);
+  }, [selectChain, currentPage, pageSize, searchVal, collectionSymbol]);
 
   const pageChange = async (page: number) => {
     setCurrentPage(page);
