@@ -166,7 +166,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
             <div className="flex items-center">
               <Link className="h-[22px]" href={`/${chainId}/address/${addressFormat(getAddress(address), chainId)}}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
-                  SideChain {chainId}
+                  {chain !== 'AELF' ? 'MainChain' : `SideChain ${chainId}`}
                 </span>
               </Link>
               <span className="ml-1 inline-block text-base-100">
