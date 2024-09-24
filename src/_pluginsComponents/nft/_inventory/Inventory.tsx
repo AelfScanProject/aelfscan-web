@@ -5,7 +5,6 @@ import { InventoryItem } from '../type';
 import { useSearchParams } from 'next/navigation';
 import { ITableSearch } from '@_components/Table';
 import { fetchNFTInventory } from '@_api/fetchNFTS';
-import { TChainID } from '@_api/type';
 import { getAddress, getChainId } from '@_utils/formatter';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';

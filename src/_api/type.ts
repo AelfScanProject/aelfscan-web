@@ -495,6 +495,7 @@ export interface InventoryItem {
   lastSaleAmountSymbol: string;
   blockHeight: number;
   lastSalePrice: number;
+  chainIds: TChainID[];
 }
 export interface CollectionInventoryData {
   total: number;
