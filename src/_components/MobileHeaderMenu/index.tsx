@@ -16,6 +16,7 @@ import clsx from 'clsx';
 import { Dropdown } from 'aelf-design';
 import Image from 'next/image';
 import { homePath } from '@_components/Main';
+import { DEFAULT_CHAIN } from '@_utils/contant';
 const ChangeIcoTest = '/image/aelf-header-top-test-change.svg';
 
 interface IProps {
@@ -67,7 +68,9 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
             </a>
           ) : (
             <Link
-              href={path === '/' ? (defaultChain === 'AELF' ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`}>
+              href={
+                path === '/' ? (defaultChain === DEFAULT_CHAIN ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`
+              }>
               {label}
             </Link>
           ),
@@ -81,7 +84,7 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   const onSelectHandler = useCallback(
     (value: string) => {
       dispatch(setDefaultChain(value));
-      if (value === 'AELF') {
+      if (value === DEFAULT_CHAIN) {
         router.push('/');
       } else {
         router.push(`/${value}`);

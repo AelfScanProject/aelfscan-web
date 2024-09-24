@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { usePad } from '@_hooks/useResponsive';
 import { homePath } from '@_components/Main';
 import { usePathname } from 'next/navigation';
+import { DEFAULT_CHAIN } from '@_utils/contant';
 interface IProps {
   headerMenuList: MenuItem[];
   setCurrent: (key: string) => void;
@@ -36,7 +37,9 @@ export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: 
             </a>
           ) : (
             <Link
-              href={path === '/' ? (defaultChain === 'AELF' ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`}>
+              href={
+                path === '/' ? (defaultChain === DEFAULT_CHAIN ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`
+              }>
               {ele.label}
             </Link>
           ),
@@ -65,7 +68,9 @@ export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: 
               </a>
             ) : (
               <Link
-                href={path === '/' ? (defaultChain === 'AELF' ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`}>
+                href={
+                  path === '/' ? (defaultChain === DEFAULT_CHAIN ? '/' : `/${defaultChain}`) : `/${defaultChain}${path}`
+                }>
                 {label}
               </Link>
             ),

@@ -58,6 +58,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     tokenHoldings,
     elfBalanceOfUsd,
     elfBalance,
+    chainIds,
     elfPriceInUsd,
     lastTransactionSend,
     addressTypeList,
@@ -161,7 +162,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       {
         label: 'Multichain',
         value:
-          portfolio?.chainIds && portfolio?.chainIds.length > 1 ? (
+          chainIds && chainIds.length > 1 ? (
             <div className="flex items-center">
               <Link className="h-[22px]" href={`/${chainId}/address/${addressFormat(getAddress(address), chainId)}}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
@@ -177,7 +178,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           ),
       },
     ];
-  }, [address, chain, sideChain, portfolio]);
+  }, [address, chain, sideChain, portfolio, chainIds]);
   const contractInfo = useMemo(() => {
     return [
       {
@@ -361,12 +362,10 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           adPage={title + 'detail'}
           content={title}
           mainLink={
-            multi && portfolio?.chainIds?.includes('AELF')
-              ? `/AELF/address/${addressFormat(getAddress(address), 'AELF')}`
-              : ''
+            multi && chainIds?.includes('AELF') ? `/AELF/address/${addressFormat(getAddress(address), 'AELF')}` : ''
           }
           sideLink={
-            multi && portfolio?.chainIds?.includes(sideChain)
+            multi && chainIds?.includes(sideChain)
               ? `/${sideChain}/address/${addressFormat(getAddress(address), sideChain)}`
               : ''
           }>
