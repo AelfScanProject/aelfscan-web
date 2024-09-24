@@ -93,6 +93,7 @@ export interface InventoryItem {
   item: IToken;
   lastSalePriceInUsd: number;
   lastSaleAmount: number;
+  chainIds: TChainID[];
   lastTransactionId: string;
   lastSaleAmountSymbol: string;
   blockHeight: number;
