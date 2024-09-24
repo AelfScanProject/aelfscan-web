@@ -24,6 +24,8 @@ export interface CollectionDetailData {
   sideChainHolders: number;
   sideChainTransferCount: number;
   chainIds: TChainID[];
+  mergeItems: string;
+  mergeTransferCount: number;
 }
 
 export interface CollectionDetailApiResponse {

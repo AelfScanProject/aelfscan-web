@@ -406,6 +406,8 @@ export interface CollectionDetailData {
   nftCollection: IToken;
   items: number;
   holders: number;
+  mergeItems: string;
+  mergeTransferCount: number;
   mergeHolders: number;
   transferCount: number;
   floorPriceOfUsd: number;

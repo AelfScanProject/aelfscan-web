@@ -27,12 +27,12 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
   return [
     [
       {
-        key: 'Items',
+        key: 'mergeItems',
         label: 'Items',
         format: thousandsNumber,
         tooltip: 'The total number of NFT items in the collection',
         render: (text, record) => (
-          <div className="text-sm leading-[22px] text-base-100">{thousandsNumber(overview.items)}</div>
+          <div className="text-sm leading-[22px] text-base-100">{thousandsNumber(overview.mergeItems)}</div>
         ),
       },
       {
@@ -70,28 +70,34 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
       {
         key: 'mergeHolders',
         label: 'TOTAL HOLDERS',
+        format: thousandsNumber,
       },
       {
         key: 'mainChainHolders',
         label: 'MainChain HOLDERS',
+        format: thousandsNumber,
       },
       {
         key: 'sideChainHolders',
+        format: thousandsNumber,
         label: 'SideChain HOLDERS',
       },
     ],
     [
       {
-        key: 'transferCount',
+        key: 'mergeTransferCount',
         label: 'TOTAL TRANSFERS',
+        format: thousandsNumber,
       },
       {
         key: 'mainChainTransferCount',
         label: 'MainChain TRANSFERS',
+        format: thousandsNumber,
       },
       {
         key: 'sideChainTransferCount',
         label: 'Side TRANSFERS',
+        format: thousandsNumber,
       },
     ],
   ];
