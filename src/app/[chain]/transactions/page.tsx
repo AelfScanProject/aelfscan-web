@@ -24,7 +24,7 @@ export default async function BlocksPage({ params, searchParams }) {
     searchAfter: defaultSearchAfter && JSON.parse(defaultSearchAfter),
     maxResultCount: ps,
     orderInfos: [
-      { orderBy: 'BlockHeight', sort },
+      { orderBy: 'BlockTime', sort },
       { orderBy: 'TransactionId', sort },
     ],
     cache: 'no-store',
