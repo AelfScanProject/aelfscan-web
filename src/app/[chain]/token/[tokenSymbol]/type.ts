@@ -46,6 +46,8 @@ export interface ITokenDetail {
   token: IToken;
   totalSupply: string;
   circulatingSupply: string;
+  mergeCirculatingSupply: number;
+  mergeTransferCount: number;
   holders: number;
   price: number;
   chainIds: TChainID[];

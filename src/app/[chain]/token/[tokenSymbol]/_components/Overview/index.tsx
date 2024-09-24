@@ -80,7 +80,7 @@ const multiTokenDetail = (): IOverviewItem[][] => {
     ],
     [
       {
-        key: 'circulatingSupply',
+        key: 'mergeCirculatingSupply',
         label: 'CIRCULATING SUPPLY',
         format: thousandsNumber,
         tooltip:
@@ -116,7 +116,7 @@ const multiTokenDetail = (): IOverviewItem[][] => {
     ],
     [
       {
-        key: 'transferCount',
+        key: 'mergeTransferCount',
         label: 'TOTAL TRANSFERS',
         format: thousandsNumber,
       },
