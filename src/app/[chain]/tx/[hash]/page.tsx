@@ -21,7 +21,6 @@ export default async function TransactionDetails({
   });
 
   const transactionDetailData = transactionDetailDataList?.list?.[0] || {};
-  console.log(JSON.stringify(transactionDetailData));
   return <Detail SSRData={transactionDetailData} />;
 }
 
