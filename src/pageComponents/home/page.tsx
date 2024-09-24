@@ -11,7 +11,6 @@ import SearchComp from './_components/SearchWithClient';
 import clsx from 'clsx';
 import './index.css';
 import { memo, useMemo, useState } from 'react';
-// import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
 import Latest from './_components/Latest';
 import TPSChart from './_components/TPSChart';
 import { useMobileAll } from '@_hooks/useResponsive';
@@ -25,27 +24,6 @@ import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 import AdsImage from '@_components/AdsImage';
 import { MULTI_CHAIN } from '@_utils/contant';
-
-// const tokens = [
-//   {
-//     imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin_ELF.png',
-//     name: 'Native Token',
-//     symbol: 'ELF',
-//     transfers: 2223333,
-//     type: 0,
-//     holder: 3333333,
-//     chainIds: ['AELF', 'tDVW'],
-//   },
-//   {
-//     imageUrl: '',
-//     name: 'Portal Token',
-//     symbol: 'PORT',
-//     type: 0,
-//     transfers: 2223333,
-//     holder: 3333333,
-//     chainIds: ['AELF', 'tDVW'],
-//   },
-// ];
 
 function Home() {
   const { blocks, transactions, tpsData, defaultChain, tokens } = useAppSelector((state) => state.getChainId);
@@ -89,6 +67,7 @@ function Home() {
                 iconType="latest-tokens"
                 title="Hot Tokens"
                 isBlocks={false}
+                tips={`The tokens with the highest number of holding addresses on the network, indicating the most popular and widely held assets within the ecosystem.`}
                 data={tokens.data as ITopTokensItem[]}></Latest>
             </Spin>
           </div>
@@ -101,7 +80,12 @@ function Home() {
         )}
         <div className="flex-1">
           <Spin spinning={transactions.loading}>
-            <Latest iconType="latest-tx" title="Latest Transactions" isBlocks={false} data={transactions.data}></Latest>
+            <Latest
+              iconType="latest-tx"
+              tips={`The most recent transactions on the network, providing real-time data on the latest activity across the MainChain and SideChain.`}
+              title="Latest Transactions"
+              isBlocks={false}
+              data={transactions.data}></Latest>
           </Spin>
         </div>
       </div>
