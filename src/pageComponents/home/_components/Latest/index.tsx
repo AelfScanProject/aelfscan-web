@@ -22,10 +22,11 @@ interface IProps {
   isBlocks: boolean;
   iconType: string;
   title: string;
+  tips?: string;
   data: IBlocksResponseItem[] | ITransactionsResponseItem[] | ITopTokensItem[];
 }
 
-function Latest({ isBlocks, data, iconType, title }: IProps) {
+function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
   const isMD = useMD();
   const { defaultChain } = useAppSelector((state) => state.getChainId);
 
@@ -56,7 +57,12 @@ function Latest({ isBlocks, data, iconType, title }: IProps) {
 
   return (
     <div className={clsx(clsPrefix, isMD && `${clsPrefix}-mobile`)}>
-      <div className="title">{title}</div>
+      <div className="title">
+        {title}
+        <EPTooltip title={tips} mode="dark">
+          {multi && <IconFont className="question text-base" type="question-circle" />}
+        </EPTooltip>
+      </div>
       <div className="content">
         {data?.map((ele) => {
           return (
