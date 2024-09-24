@@ -20,7 +20,7 @@
       .title {
         @apply text-xs leading-5 text-base-200 flex items-center;
         .icon {
-          @apply mr-[4px] text-xs inline-block;
+          @apply ml-[4px] text-xs inline-block;
           .anticon, svg {
             @apply w-full h-full;
           }

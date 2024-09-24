@@ -5,3 +5,4 @@ export const ChainId = 'AELF';
 export const SYMBOL = 'ELF';
 
 export const MULTI_CHAIN = 'multiChain';
+export const DEFAULT_CHAIN = 'multiChain';

@@ -20,6 +20,7 @@ import useHomeSocket from '@_hooks/useHomeSocket';
 import useSearchFilter from '@_hooks/useSearchFilters';
 import ChainSelect from '@_components/ChainSelect';
 import { homePath } from '@_components/Main';
+import { DEFAULT_CHAIN } from '@_utils/contant';
 
 // at public file
 const TopIconMain = '/image/aelf-header-top.svg';
@@ -91,7 +92,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
           height="32"
           onClick={() => {
             const chainId = chain || defaultChain;
-            router.push(chainId === 'AELF' ? '/' : `/${chainId}`);
+            router.push(chainId === DEFAULT_CHAIN ? '/' : `/${chainId}`);
             setCurrent('/');
           }}
         />

@@ -111,7 +111,6 @@ export interface IPortfolio {
   mainChain?: IPortfolioItem;
   sideChain?: IPortfolioItem;
   total: IPortfolioItem;
-  chainIds: TChainID[];
 }
 
 export interface IAddressResponse extends IAddressTokensDetail {
@@ -121,6 +120,7 @@ export interface IAddressResponse extends IAddressTokensDetail {
   author: string; // contract add
   tokenHoldings: number;
   addressType: number;
+  chainIds: TChainID[];
   contractTransactionHash: string; // contract add
   lastTransactionSend: {
     transactionId: string;

@@ -18,14 +18,14 @@ export default function OverviewThreeCard({ items, dataSource, title = 'Overview
       return (
         <Flex key={key} vertical>
           <Flex gap={4} align="center">
+            <Text size="small" style={{ color: '#858585' }}>
+              {label}
+            </Text>
             {tooltip && (
               <EPTooltip title={tooltip} mode="dark">
                 <IconFont className="text-xs" type="question-circle" />
               </EPTooltip>
             )}
-            <Text size="small" style={{ color: '#858585' }}>
-              {label}
-            </Text>
           </Flex>
           <Flex>
             <div className="min-h-[22px]">

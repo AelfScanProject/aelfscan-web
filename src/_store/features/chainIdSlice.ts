@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AppState } from '@_store';
 import { HYDRATE } from 'next-redux-wrapper';
 import { ChainItem } from '@_types';
-import { ChainId } from '@_utils/contant';
+import { DEFAULT_CHAIN } from '@_utils/contant';
 import { Chain } from 'global';
 import {
   IBlockchainOverviewResponse,
@@ -37,7 +37,7 @@ export interface IChainState {
 }
 const initialState: IChainState = {
   chainArr: [],
-  defaultChain: ChainId,
+  defaultChain: DEFAULT_CHAIN,
   tokenInfo: null,
   blocks: {
     loading: true,
