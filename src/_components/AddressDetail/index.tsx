@@ -151,23 +151,33 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     return [
       {
         label: 'Multichain Portfolio',
-        value: <span className="inline-block leading-[22px]">$25243.323</span>,
+        value:
+          portfolio?.total.usdValue || portfolio?.total.usdValue === 0 ? (
+            <span className="inline-block leading-[22px]">${portfolio?.total.usdValue}</span>
+          ) : (
+            '--'
+          ),
       },
       {
         label: 'Multichain',
-        value: (
-          <div className="flex items-center">
-            <Link className="h-[22px]" href={`/${chainId}/address/${addressFormat(getAddress(address), chainId)}}`}>
-              <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
-                SideChain {chainId}
+        value:
+          portfolio?.chainIds && portfolio?.chainIds.length > 1 ? (
+            <div className="flex items-center">
+              <Link className="h-[22px]" href={`/${chainId}/address/${addressFormat(getAddress(address), chainId)}}`}>
+                <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
+                  SideChain {chainId}
+                </span>
+              </Link>
+              <span className="ml-1 inline-block text-base-100">
+                (${chain === 'AELF' ? portfolio?.sideChain?.usdValue : portfolio?.mainChain?.usdValue})
               </span>
-            </Link>
-            <span className="ml-1 inline-block text-base-100">($222.2)</span>
-          </div>
-        ),
+            </div>
+          ) : (
+            '--'
+          ),
       },
     ];
-  }, [address, chain, sideChain]);
+  }, [address, chain, sideChain, portfolio]);
   const contractInfo = useMemo(() => {
     return [
       {
