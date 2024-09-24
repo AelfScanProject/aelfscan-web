@@ -2,11 +2,12 @@
 import { Select } from 'antd';
 import { useAppDispatch, useAppSelector } from '@_store';
 import { setDefaultChain } from '@_store/features/chainIdSlice';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 const { Option } = Select;
 import './index.css';
 import { useMemo } from 'react';
 import { useEffectOnce } from 'react-use';
+import { DEFAULT_CHAIN } from '@_utils/contant';
 
 export default function ChainSelect({ setCurrent }) {
   const { chainArr, defaultChain } = useAppSelector((state) => state.getChainId);
@@ -14,13 +15,14 @@ export default function ChainSelect({ setCurrent }) {
   const router = useRouter();
 
   const { chain } = useParams();
+  const chainId = useSearchParams().get('chainId');
   const selectChain = useMemo(() => {
     return (chain as string) || defaultChain;
   }, [chain, defaultChain]);
 
   const onChangeHandler = (value: string) => {
     dispatch(setDefaultChain(value));
-    if (value === 'AELF') {
+    if (value === DEFAULT_CHAIN) {
       router.push('/');
     } else {
       router.push(`/${value}`);
@@ -29,8 +31,9 @@ export default function ChainSelect({ setCurrent }) {
   };
 
   useEffectOnce(() => {
-    if (chain) {
-      dispatch(setDefaultChain(chain));
+    const defaultChain = chain || chainId;
+    if (defaultChain) {
+      dispatch(setDefaultChain(defaultChain));
     }
   });
 

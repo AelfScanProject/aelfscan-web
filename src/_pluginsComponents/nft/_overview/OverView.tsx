@@ -165,6 +165,7 @@ export default function OverView(props: OverViewProps) {
               <ul className="collection-overview-left">
                 <li className="collection-overview-data-item">
                   <div className="title">
+                    ITEMS
                     <span className="icon">
                       <EPTooltip
                         title="The total number of NFT items in the collection"
@@ -173,7 +174,6 @@ export default function OverView(props: OverViewProps) {
                         <IconFont type="question-circle" />
                       </EPTooltip>
                     </span>
-                    ITEMS
                   </div>
                   <div className="desc">{thousandsNumber(overview.items)}</div>
                 </li>
@@ -189,6 +189,7 @@ export default function OverView(props: OverViewProps) {
               <ul className="collection-overview-right">
                 <li className="collection-overview-data-item">
                   <div className="title">
+                    CONTRACT
                     <span className="icon">
                       <EPTooltip
                         title="This is the MultiToken contract that defines a common implementation for fungible and non-fungible tokens."
@@ -197,7 +198,6 @@ export default function OverView(props: OverViewProps) {
                         <IconFont type="question-circle" />
                       </EPTooltip>
                     </span>
-                    CONTRACT
                   </div>
                   <div className="desc item-center flex">
                     <IconFont className="mr-1 text-sm" type="Contract" />
@@ -210,6 +210,7 @@ export default function OverView(props: OverViewProps) {
                 </li>
                 <li className="collection-overview-data-item">
                   <div className="title">
+                    FLOOR PRICE
                     <span className="icon">
                       <EPTooltip
                         title="The lowest listing price of an NFT item in the collection"
@@ -218,7 +219,6 @@ export default function OverView(props: OverViewProps) {
                         <IconFont type="question-circle" />
                       </EPTooltip>
                     </span>
-                    FLOOR PRICE
                   </div>
                   <div className="desc h-[22px]">
                     {overview.floorPrice !== -1 ? (

@@ -8,6 +8,8 @@ import { usePad } from '@_hooks/useResponsive';
 import { useAppDispatch } from '@_store';
 import { setChainArr } from '@_store/features/chainIdSlice';
 import { usePathname } from 'next/navigation';
+import { useMultiChain } from '@_hooks/useSelectChain';
+import { cloneDeep } from 'lodash';
 
 const clsPrefix = 'header-container';
 export default function Header({ chainList, networkList, headerMenuList }) {
@@ -22,9 +24,20 @@ export default function Header({ chainList, networkList, headerMenuList }) {
   const segments = pathname.split('/');
   const defaultCurrent = segments.length > 2 ? `/${segments[2]}` : '/';
   const [current, setCurrent] = useState(defaultCurrent);
+  const multi = useMultiChain();
   const headerList = useMemo(() => {
-    return headerMenuList.map((ele) => ele.headerMenu_id);
-  }, [headerMenuList]);
+    const result = cloneDeep(headerMenuList.map((ele) => ele.headerMenu_id));
+    if (multi || pathname === '/') {
+      return result.map((item) => {
+        if (item.children && item.children.length > 0) {
+          item.children = item.children.filter((child) => child.path !== '/chart');
+        }
+        return item;
+      });
+    } else {
+      return result;
+    }
+  }, [headerMenuList, multi, pathname]);
   const menus = useMemo(() => {
     return headerList.reduce((pre, cur) => {
       if (cur.children.length) {
