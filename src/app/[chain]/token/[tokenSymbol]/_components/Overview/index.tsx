@@ -159,7 +159,7 @@ export default function OverView({ data = {} }: IDetailProps) {
             <div className="flex items-center">
               <Link className="h-[22px]" href={`/${chainId}/token/${tokenSymbol}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
-                  SideChain {chainId}
+                  {chain !== 'AELF' ? 'MainChain' : `SideChain ${chainId}`}
                 </span>
               </Link>
               <span className="ml-1 inline-block text-base-100">
