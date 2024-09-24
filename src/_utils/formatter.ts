@@ -12,7 +12,7 @@ import { MULTI_CHAIN, SYMBOL } from '@_utils/contant';
 import { v4 as uuidv4 } from 'uuid';
 import { PageTypeEnum } from '@_types';
 import { TChainID } from '@_api/type';
-export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss Z') => {
+export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss') => {
   if (typeof date === 'number') {
     if (type === 'Date Time (UTC)') {
       return dayjs.unix(date).format(format);
