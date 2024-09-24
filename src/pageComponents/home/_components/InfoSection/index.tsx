@@ -9,6 +9,7 @@ import { Dropdown, Skeleton } from 'antd';
 import useResponsive from '@_hooks/useResponsive';
 import { useMemo } from 'react';
 import { useSideChain } from '@_hooks/useSelectChain';
+import EPTooltip from '@_components/EPToolTip';
 const clsPrefix = 'home-info-section';
 
 const MultiDown = ({
@@ -68,7 +69,14 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-transaction`)}>
           <IconFont type="transactions-d6cj46ag"></IconFont>
           <div className="content">
-            <span className="title">Transactions</span>
+            <span className="title flex items-center gap-1">
+              Transactions
+              <EPTooltip
+                title={`The total number of transactions that have occurred on the MainChain and SideChain since the mainnet launch, showcasing the network's overall activity and usage.`}
+                mode="dark">
+                {multi && <IconFont className="question text-xs" type="question-circle" />}
+              </EPTooltip>
+            </span>
             <div className="flex items-center">
               <span className="desc">{unitConverter(overview.mergeTransactions.total, 2)}</span>
               {!multi && (
@@ -91,7 +99,14 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
             <IconFont width={24} height={24} type="ELF"></IconFont>
           </div>
           <div className="content">
-            <span className="title">ELF Price</span>
+            <span className="title">
+              ELF Price
+              <EPTooltip
+                title={`The current market price of the ELF token, reflecting its value in the cryptocurrency market.`}
+                mode="dark">
+                {multi && <IconFont className="question text-xs" type="question-circle" />}
+              </EPTooltip>
+            </span>
             <span className="desc flex items-center">
               {typeof overview.tokenPriceInUsd === 'number' ? `$${thousandsNumber(overview.tokenPriceInUsd)}` : '-'}
               <span className={clsx('range !ml-[6px]', +range >= 0 ? 'rise' : 'fall')}>
@@ -103,7 +118,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         </div>
       )
     );
-  }, [overview, range]);
+  }, [multi, overview, range]);
 
   const blockHeightOverview = useMemo(() => {
     return (
@@ -125,13 +140,20 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-height`)}>
           <IconFont type="MarketCap"></IconFont>
           <div className="content">
-            <span className="title">Market Cap</span>
+            <span className="title">
+              Market Cap
+              <EPTooltip
+                title={`= Current Price x Circulating Supply. Refers to the total market value of a cryptocurrency’s circulating supply, indicating the overall valuation of the ELF token in the market.`}
+                mode="dark">
+                {multi && <IconFont className="question text-xs" type="question-circle" />}
+              </EPTooltip>
+            </span>
             <span className="desc">{unitConverter(overview.marketCap, 2)}</span>
           </div>
         </div>
       )
     );
-  }, [overview]);
+  }, [multi, overview]);
   const accountsOverview = useMemo(() => {
     const { mainChain, sideChain } = overview?.mergeAccounts || {};
     return (
@@ -139,7 +161,14 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-accounts`)}>
           <IconFont type="account-d6cj465m"></IconFont>
           <div className="content">
-            <span className="title">{multi ? 'Total Account' : 'Accounts'}</span>
+            <span className="title">
+              {multi ? 'Total Account' : 'Accounts'}
+              <EPTooltip
+                title={`The total number of addresses that have conducted at least one transaction on the MainChain or SideChain, representing active participation in the network.`}
+                mode="dark">
+                {multi && <IconFont className="question text-xs" type="question-circle" />}
+              </EPTooltip>
+            </span>
             <span className="desc flex items-center">
               {thousandsNumber(overview.mergeAccounts.total)}
               {multi && <MultiDown mainCount={mainChain} sideCount={sideChain} />}
@@ -169,7 +198,14 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-reward`)}>
           <IconFont type="Token"></IconFont>
           <div className="content">
-            <span className="title">Tokens</span>
+            <span className="title">
+              Tokens
+              <EPTooltip
+                title={`The total number of tokens issued on the MainChain and SideChain, reflecting the diversity of assets created within the aelf ecosystem.`}
+                mode="dark">
+                {multi && <IconFont className="question text-xs" type="question-circle" />}
+              </EPTooltip>
+            </span>
             <span className="desc flex items-center">
               {overview.mergeTokens.total}
               {multi && <MultiDown mainCount={mainChain} sideCount={sideChain} />}
@@ -186,7 +222,14 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-reward`)}>
           <IconFont type="NFT"></IconFont>
           <div className="content">
-            <span className="title">NFTs</span>
+            <span className="title">
+              NFTs
+              <EPTooltip
+                title={`The total number of NFTs issued on the MainChain and SideChain, indicating the scope of non-fungible assets and digital collectibles within the network.`}
+                mode="dark">
+                {multi && <IconFont className="question text-xs" type="question-circle" />}
+              </EPTooltip>
+            </span>
             <span className="desc">
               {overview.mergeNfts.total}
               {multi && <MultiDown mainCount={mainChain} sideCount={sideChain} />}
