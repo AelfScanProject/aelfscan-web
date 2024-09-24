@@ -9,9 +9,8 @@ import { getSearchByHashItems, getSearchByHolderItems } from './utils';
 
 import { useMobileAll } from '@_hooks/useResponsive';
 import { pageSizeOption } from '@_utils/contant';
-import { TChainID } from '@_api/type';
 import { useParams } from 'next/navigation';
-import { getAddress, getChainId, getSort, getTransferSearchAfter } from '@_utils/formatter';
+import { getAddress, getChainId, getSort, getBlockTimeSearchAfter } from '@_utils/formatter';
 import { fetchTokenDetailTransfers } from '@_api/fetchTokens';
 import { PageTypeEnum } from '@_types';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
@@ -64,14 +63,14 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
     setLoading(true);
     try {
       const sort = getSort(pageType, currentPage);
-      const searchAfter = getTransferSearchAfter(currentPage, data, pageType);
+      const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType);
       const params = {
         chainId: getChainId(selectChain),
         symbol: tokenSymbol as string,
         maxResultCount: pageSize,
         search: getAddress(searchText ?? ''.trim()),
         orderInfos: [
-          { orderBy: 'BlockHeight', sort },
+          { orderBy: 'BlockTime', sort },
           { orderBy: 'TransactionId', sort },
         ],
         searchAfter:
