@@ -96,7 +96,7 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
       },
       {
         key: 'sideChainTransferCount',
-        label: 'Side TRANSFERS',
+        label: 'SideChain TRANSFERS',
         format: thousandsNumber,
       },
     ],
