@@ -5,6 +5,7 @@
  * @LastEditTime: 2023-08-17 10:37:04
  * @Description: title
  */
+'use client';
 import { TChainID } from '@_api/type';
 import ChainTags from '@_components/ChainTags';
 import PageAd from '@_components/PageAd';
@@ -39,6 +40,7 @@ export default function HeadTitle({
   const chainIds = useMemo(() => {
     return [chain || chainId];
   }, [chain, chainId]);
+
   return (
     <>
       <div className={clsx('header-title flex flex-wrap items-center gap-4 bg-inherit py-5', !multi && '!gap-2')}>

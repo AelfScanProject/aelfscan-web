@@ -7,7 +7,7 @@ import { ColumnsType } from 'antd/es/table';
 import { CollectionTransfer } from '../type';
 import { useSearchParams } from 'next/navigation';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { getAddress, getChainId, getSort, getTransferSearchAfter } from '@_utils/formatter';
+import { getAddress, getChainId, getSort, getBlockTimeSearchAfter } from '@_utils/formatter';
 import { fetchNFTTransfers } from '@_api/fetchNFTS';
 import { PageTypeEnum } from '@_types';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
@@ -73,7 +73,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
 
     try {
       const sort = getSort(pageType, currentPage);
-      const searchAfter = getTransferSearchAfter(currentPage, data, pageType);
+      const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType);
       try {
         if (mountRef.current) {
           updateQueryParams({
@@ -81,7 +81,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
             ps: pageSize,
             chain: selectChain,
             pageType,
-            tab: TAB_NAME,
+            tab: '',
             searchAfter: JSON.stringify(searchAfter),
           });
         }
@@ -94,7 +94,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
         collectionSymbol: collectionSymbol,
         chainId: getChainId(selectChain),
         orderInfos: [
-          { orderBy: 'BlockHeight', sort },
+          { orderBy: 'BlockTime', sort },
           { orderBy: 'TransactionId', sort },
         ],
         searchAfter:
