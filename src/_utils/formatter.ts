@@ -144,10 +144,10 @@ export const getAddressSearchAfter = (currentPage, data, pageType) => {
     : ([] as any[]);
 };
 
-export const getBlockTimeSearchAfter = (currentPage, data, pageType) => {
+export const getBlockTimeSearchAfter = (currentPage, data, pageType, key = 'blockTime') => {
   return currentPage !== 1 && data && data.length
     ? [
-        pageType === PageTypeEnum.NEXT ? data[data.length - 1].blockTime : data[0].blockTime,
+        pageType === PageTypeEnum.NEXT ? data[data.length - 1][key] : data[0][key],
         pageType === PageTypeEnum.NEXT ? data[data.length - 1].transactionId : data[0].transactionId,
       ]
     : ([] as any[]);

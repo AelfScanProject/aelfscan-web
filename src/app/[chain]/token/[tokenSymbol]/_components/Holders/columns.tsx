@@ -21,7 +21,7 @@ export default function getColumns({ currentPage, pageSize, chain, multi }): Col
           key: 'address',
           render: (data, record) => {
             const { address, addressType } = data;
-            return <ContractToken address={address} type={addressType} chainId={chain} chainIds={record.chainIds} />;
+            return <ContractToken address={address} type={addressType} chainId={chain} />;
           },
         },
         {
