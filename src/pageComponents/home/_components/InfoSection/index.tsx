@@ -6,7 +6,7 @@ import IconFont from '@_components/IconFont';
 import { addSymbol, thousandsNumber, unitConverter } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
 import { Dropdown, Skeleton } from 'antd';
-import useResponsive from '@_hooks/useResponsive';
+import useResponsive, { useMD } from '@_hooks/useResponsive';
 import { useMemo } from 'react';
 import { useSideChain } from '@_hooks/useSelectChain';
 import EPTooltip from '@_components/EPToolTip';
@@ -25,6 +25,7 @@ const MultiDown = ({
   };
 }) => {
   const sideChain = useSideChain();
+  const isMd = useMD();
   const items = [
     {
       key: 'main',
@@ -50,7 +51,7 @@ const MultiDown = ({
     },
   ];
   return (
-    <Dropdown menu={{ items }} placement="bottomLeft">
+    <Dropdown menu={{ items }} placement={isMd ? 'bottom' : 'bottomLeft'}>
       <IconFont className="Direction-Down ml-[6px]" color="#858585" type="Direction-Down"></IconFont>
     </Dropdown>
   );
@@ -72,6 +73,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
             <span className="title flex items-center gap-1">
               Transactions
               <EPTooltip
+                placement={isMD ? 'top' : 'topLeft'}
                 title={`The total number of transactions that have occurred on the MainChain and SideChain since the mainnet launch, showcasing the network's overall activity and usage.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
@@ -90,7 +92,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         </div>
       )
     );
-  }, [multi, overview]);
+  }, [isMD, multi, overview]);
   const PriceOverview = useMemo(() => {
     return (
       overview && (
@@ -102,6 +104,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
             <span className="title">
               ELF Price
               <EPTooltip
+                placement={isMD ? 'top' : 'topLeft'}
                 title={`The current market price of the ELF token, reflecting its value in the cryptocurrency market.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
@@ -118,7 +121,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         </div>
       )
     );
-  }, [multi, overview, range]);
+  }, [isMD, multi, overview, range]);
 
   const blockHeightOverview = useMemo(() => {
     return (
@@ -143,7 +146,8 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
             <span className="title">
               Market Cap
               <EPTooltip
-                title={`= Current Price x Circulating Supply. Refers to the total market value of a cryptocurrency’s circulating supply, indicating the overall valuation of the ELF token in the market.`}
+                placement={isMD ? 'top' : 'topLeft'}
+                title={`Market Cap = Current Price x Circulating Supply. Refers to the total market value of a cryptocurrency’s circulating supply, indicating the overall valuation of the ELF token in the market.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
               </EPTooltip>
@@ -153,7 +157,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         </div>
       )
     );
-  }, [multi, overview]);
+  }, [isMD, multi, overview]);
   const accountsOverview = useMemo(() => {
     const { mainChain, sideChain } = overview?.mergeAccounts || {};
     return (
@@ -164,6 +168,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
             <span className="title">
               {multi ? 'Total Account' : 'Accounts'}
               <EPTooltip
+                placement={isMD ? 'top' : 'topLeft'}
                 title={`The total number of addresses that have conducted at least one transaction on the MainChain or SideChain, representing active participation in the network.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
@@ -177,7 +182,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         </div>
       )
     );
-  }, [multi, overview]);
+  }, [isMD, multi, overview]);
   const rewardsOverview = useMemo(() => {
     return (
       overview && (
@@ -201,6 +206,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
             <span className="title">
               Tokens
               <EPTooltip
+                placement={isMD ? 'top' : 'topLeft'}
                 title={`The total number of tokens issued on the MainChain and SideChain, reflecting the diversity of assets created within the aelf ecosystem.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
@@ -214,7 +220,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         </div>
       )
     );
-  }, [multi, overview]);
+  }, [isMD, multi, overview]);
   const nftsOverview = useMemo(() => {
     const { mainChain, sideChain } = overview?.mergeNfts || {};
     return (
@@ -225,6 +231,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
             <span className="title">
               NFTs
               <EPTooltip
+                placement={isMD ? 'top' : 'topLeft'}
                 title={`The total number of NFTs issued on the MainChain and SideChain, indicating the scope of non-fungible assets and digital collectibles within the network.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
@@ -238,7 +245,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
         </div>
       )
     );
-  }, [multi, overview]);
+  }, [isMD, multi, overview]);
   const welfareOverview = useMemo(() => {
     return (
       overview && (
