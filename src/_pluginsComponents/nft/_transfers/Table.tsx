@@ -73,7 +73,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
 
     try {
       const sort = getSort(pageType, currentPage);
-      const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType);
+      const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType, 'dateTime');
       try {
         if (mountRef.current) {
           updateQueryParams({
