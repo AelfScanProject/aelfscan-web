@@ -6,17 +6,18 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { pageSizeOption } from '@_utils/contant';
-import { ITransactionsResponseItem, TChainID } from '@_api/type';
+import { ITransactionsResponseItem } from '@_api/type';
 import { useParams } from 'next/navigation';
-import { getAddress, getPageNumber } from '@_utils/formatter';
+import { getAddress, getChainId, getPageNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { TablePageSize } from '@_types/common';
 import { fetchTransactionList } from '@_api/fetchTransactions';
+import { useMultiChain } from '@_hooks/useSelectChain';
 const TAB_NAME = 'transactions';
 export default function List() {
   const isMobile = useMobileAll();
-  const { defaultPage, defaultPageSize } = useSearchAfterParams(TablePageSize.mini, TAB_NAME);
+  const { defaultPage, defaultPageSize, defaultChain } = useSearchAfterParams(TablePageSize.mini, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
   const [pageSize, setPageSize] = useState<number>(Number(defaultPageSize));
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,12 +26,14 @@ export default function List() {
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const { chain, address } = useParams();
   const mountRef = useRef(false);
+
+  const [selectChain, setSelectChain] = useState(defaultChain);
   const updateQueryParams = useUpdateQueryParams();
   const fetchData = useCallback(async () => {
     setLoading(true);
     const params = {
       skipCount: getPageNumber(currentPage, pageSize),
-      chainId: chain as TChainID,
+      chainId: getChainId(selectChain as string),
       maxResultCount: pageSize,
       address: address && getAddress(address as string),
     };
@@ -39,6 +42,7 @@ export default function List() {
         updateQueryParams({
           p: currentPage,
           ps: pageSize,
+          chain: selectChain,
           tab: TAB_NAME,
         });
       }
@@ -53,7 +57,7 @@ export default function List() {
       setLoading(false);
       mountRef.current = true;
     }
-  }, [address, chain, currentPage, pageSize, updateQueryParams]);
+  }, [address, currentPage, pageSize, selectChain, updateQueryParams]);
 
   useEffect(() => {
     fetchData();
@@ -84,6 +88,12 @@ export default function List() {
     setPageSize(size);
     setCurrentPage(page);
   };
+  const chainChange = (value) => {
+    setCurrentPage(1);
+    setSelectChain(value);
+  };
+
+  const multi = useMultiChain();
 
   return (
     <div>
@@ -93,6 +103,11 @@ export default function List() {
             title: multiTitle,
             desc: multiTitleDesc,
           },
+        }}
+        showMultiChain={multi}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
         }}
         loading={loading}
         dataSource={data}
