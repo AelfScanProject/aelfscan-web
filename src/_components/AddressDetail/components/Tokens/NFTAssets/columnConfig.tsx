@@ -45,7 +45,7 @@ export default function getColumns(chain, sortedInfo, multi): ColumnsType<NftsIt
           dataIndex: 'nftCollection',
           key: 'nftCollection',
           render: (collection, record) =>
-            !collection && (
+            collection && (
               <Link href={`/${record.chainIds ? record.chainIds[0] : chain}/token/${collection.symbol}`}>
                 <div className="flex items-center">
                   <EPTooltip mode="dark" title={collection.name}>
@@ -118,7 +118,7 @@ export default function getColumns(chain, sortedInfo, multi): ColumnsType<NftsIt
           dataIndex: 'nftCollection',
           key: 'nftCollection',
           render: (collection, record) =>
-            !collection && (
+            collection && (
               <Link href={`/${record.chainIds ? record.chainIds[0] : chain}/token/${collection.symbol}`}>
                 <div className="flex items-center">
                   <EPTooltip mode="dark" title={collection.name}>

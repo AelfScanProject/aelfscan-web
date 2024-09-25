@@ -56,7 +56,9 @@ export default function getColumns({
                   <IconFont className="mr-1" type="question-circle-error" />
                 )}
                 <EPTooltip title={text} mode="dark">
-                  <Link className="block w-[120px] truncate text-link" href={`/${records.chainIds[0]}/tx/${text}`}>
+                  <Link
+                    className="block w-[120px] truncate text-link"
+                    href={`/${(records?.chainIds && records?.chainIds[0]) || chainId}/tx/${text}`}>
                     {text}
                   </Link>
                 </EPTooltip>
@@ -85,8 +87,10 @@ export default function getColumns({
           dataIndex: 'blockHeight',
           hidden: type === 'block',
           key: 'blockHeight',
-          render: (text) => (
-            <Link className="block text-link" href={`/${chainId}/block/${text}`}>
+          render: (text, records) => (
+            <Link
+              className="block text-link"
+              href={`/${(records?.chainIds && records?.chainIds[0]) || chainId}/block/${text}`}>
               {text}
             </Link>
           ),
@@ -111,13 +115,13 @@ export default function getColumns({
           dataIndex: 'from',
           title: 'From',
           width: 196,
-          render: (fromData, record) => {
+          render: (fromData, records) => {
             const { address } = fromData;
             return (
               <ContractToken
                 address={address}
                 name={fromData.name}
-                chainId={record.chainIds[0]}
+                chainId={(records?.chainIds && records?.chainIds[0]) || chainId}
                 type={fromData.addressType}
               />
             );
@@ -133,13 +137,13 @@ export default function getColumns({
         {
           dataIndex: 'to',
           title: 'To',
-          render: (toData, record) => {
+          render: (toData, records) => {
             const { address } = toData;
             return (
               <ContractToken
                 address={address}
                 name={toData.name}
-                chainId={record.chainIds[0]}
+                chainId={(records?.chainIds && records?.chainIds[0]) || chainId}
                 type={toData.addressType}
               />
             );
@@ -190,7 +194,9 @@ export default function getColumns({
                   <IconFont className="mr-1" type="question-circle-error" />
                 )}
                 <EPTooltip title={text} mode="dark">
-                  <Link className="block w-[120px] truncate text-link" href={`/${records.chainIds[0]}/tx/${text}`}>
+                  <Link
+                    className="block w-[120px] truncate text-link"
+                    href={`/${(records?.chainIds && records?.chainIds[0]) || chainId}/tx/${text}`}>
                     {text}
                   </Link>
                 </EPTooltip>
@@ -220,7 +226,9 @@ export default function getColumns({
           hidden: type === 'block',
           key: 'blockHeight',
           render: (text, records) => (
-            <Link className="block text-link" href={`/${records.chainIds[0]}/block/${text}`}>
+            <Link
+              className="block text-link"
+              href={`/${(records?.chainIds && records?.chainIds[0]) || chainId}/block/${text}`}>
               {text}
             </Link>
           ),
@@ -245,13 +253,13 @@ export default function getColumns({
           dataIndex: 'from',
           title: 'From',
           width: 196,
-          render: (fromData, record) => {
+          render: (fromData, records) => {
             const { address } = fromData;
             return (
               <ContractToken
                 address={address}
                 name={fromData.name}
-                chainId={record.chainIds[0]}
+                chainId={(records?.chainIds && records?.chainIds[0]) || chainId}
                 type={fromData.addressType}
               />
             );
@@ -267,13 +275,13 @@ export default function getColumns({
         {
           dataIndex: 'to',
           title: 'To',
-          render: (toData, record) => {
+          render: (toData, records) => {
             const { address } = toData;
             return (
               <ContractToken
                 address={address}
                 name={toData.name}
-                chainId={record.chainIds[0]}
+                chainId={(records?.chainIds && records?.chainIds[0]) || chainId}
                 type={toData.addressType}
               />
             );
