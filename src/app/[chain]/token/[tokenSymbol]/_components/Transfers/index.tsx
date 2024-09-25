@@ -151,7 +151,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
       }),
     [chain, timeFormat, multi],
   );
-  const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
+  const title = useMemo(() => `A total of ${total} records found`, [total]);
 
   const searchByHolder: DescriptionsProps['items'] = useMemo(
     () => getSearchByHolderItems(address, isMobile, searchData),
