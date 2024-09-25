@@ -146,6 +146,7 @@ export default function OverView(props: OverViewProps) {
       <HeadTitle
         content={`${overview?.nftCollection?.name || '--'}`}
         adPage="nftdetail"
+        className="!block"
         mainLink={
           multi && overview.chainIds?.includes('AELF')
             ? `/nft?chainId=AELF&&collectionSymbol=${overview?.nftCollection?.symbol}`
@@ -159,7 +160,7 @@ export default function OverView(props: OverViewProps) {
         <Title
           level={6}
           fontWeight={FontWeightEnum.Bold}
-          className="ml-1 !text-[#858585]">{`(${overview?.nftCollection?.symbol || '--'})`}</Title>
+          className="ml-1 inline !text-[#858585]">{`(${overview?.nftCollection?.symbol || '--'})`}</Title>
       </HeadTitle>
       {multi ? (
         <OverviewThreeCard items={multiDetailItems} dataSource={overview} title="Overview" />
