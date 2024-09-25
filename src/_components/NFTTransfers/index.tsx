@@ -43,7 +43,7 @@ export default function List({ showHeader = true }) {
 
   const fetchData = useCallback(async () => {
     const sort = getSort(pageType, currentPage);
-    const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType);
+    const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType, 'dateTime');
     const params = {
       chainId: getChainId(selectChain),
       maxResultCount: pageSize,

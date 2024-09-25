@@ -63,7 +63,7 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
     setLoading(true);
     try {
       const sort = getSort(pageType, currentPage);
-      const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType);
+      const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType, 'dateTime');
       const params = {
         chainId: getChainId(selectChain),
         symbol: tokenSymbol as string,
