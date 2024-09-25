@@ -1,10 +1,16 @@
 import { TChainID } from '@_api/type';
 import clsx from 'clsx';
 
-export default function BasicTag({ chainIds, size = 'small' }: { chainIds: TChainID[]; size?: 'small' | 'large' }) {
+export default function BasicTag({
+  chainIds = [],
+  size = 'small',
+}: {
+  chainIds: TChainID[];
+  size?: 'small' | 'large';
+}) {
   return (
     <div className="flex items-center gap-1">
-      {chainIds.sort().map((item) => {
+      {[...chainIds].sort().map((item) => {
         return (
           <div
             key={item}
