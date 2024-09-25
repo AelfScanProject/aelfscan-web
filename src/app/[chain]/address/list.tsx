@@ -19,6 +19,7 @@ import { getAccountSearchAfter, getChainId, getSort, thousandsNumber } from '@_u
 import { fetchTopAccounts } from '@_api/fetchContact';
 import { PageTypeEnum } from '@_types';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 export default function List({ SSRData, defaultPage, defaultPageSize, defaultPageType, defaultChain }) {
   const isMobile = useMobileAll();
@@ -61,9 +62,16 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
     },
     [updateQueryParams],
   );
+
+  const multi = useMultiChain();
+
   const multiTitle = useMemo(() => {
-    return `A total of ${thousandsNumber(total)} accounts found (${totalBalance} ELF)`;
-  }, [total, totalBalance]);
+    if (multi) {
+      return `Displaying only the top 10,000 accounts (${totalBalance} ELF)`;
+    } else {
+      return `A total of ${thousandsNumber(total)} accounts found (${totalBalance} ELF)`;
+    }
+  }, [multi, total, totalBalance]);
 
   const multiTitleDesc = useMemo(() => {
     return '(Showing the top 10,000 accounts only)';
