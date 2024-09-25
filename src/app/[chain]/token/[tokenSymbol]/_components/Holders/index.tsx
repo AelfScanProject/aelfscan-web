@@ -104,7 +104,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
     () => getColumns({ currentPage, pageSize, chain, multi }),
     [currentPage, pageSize, chain, multi],
   );
-  const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
+  const title = useMemo(() => `A total of ${total} holders found`, [total]);
 
   return (
     <div>
