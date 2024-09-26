@@ -14,7 +14,7 @@ export default function addressFormat(address: string, chainId?: string, prefix?
   const defaultChainId = store.getState().getChainId.defaultChain;
   if (!address) return '';
   if (chainId === MULTI_CHAIN) {
-    return `${prefix || SYMBOL}_${address}`;
+    return address;
   }
   return `${prefix || SYMBOL}_${address}_${chainId || defaultChainId}`;
 }

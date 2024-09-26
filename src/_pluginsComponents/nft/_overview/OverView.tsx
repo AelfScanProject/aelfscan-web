@@ -146,6 +146,7 @@ export default function OverView(props: OverViewProps) {
       <HeadTitle
         content={`${overview?.nftCollection?.name || '--'}`}
         adPage="nftdetail"
+        hiddenAds
         className="!block"
         mainLink={
           multi && overview.chainIds?.includes('AELF')

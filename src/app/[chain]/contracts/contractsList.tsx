@@ -76,7 +76,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultCha
         headerTitle={{
           multi: {
             title: multiTitle,
-            desc: total > 1000 ? '(Showing the last 1,000 contracts only)' : '',
+            desc: '',
           },
         }}
         showMultiChain={chain === MULTI_CHAIN}

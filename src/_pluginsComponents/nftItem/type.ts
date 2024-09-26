@@ -8,6 +8,7 @@
 //   from: string;
 //   to: string;
 
+import { TChainID } from '@_api/type';
 import { IToken } from '@_types/common';
 
 // }
@@ -41,6 +42,7 @@ export interface IActivityTableData {
   action: string;
   blockTime: number;
   price: number;
+  chainIds: TChainID[];
   priceOfUsd: number;
   priceSymbol: string;
   quantity: number;
@@ -52,6 +54,7 @@ export interface IActivityTableData {
 export interface HolderItem {
   address: Address;
   quantity: string;
+  chainIds: TChainID[];
   percentage: string;
   value: number;
 }
@@ -71,6 +74,7 @@ export interface ItemSymbolDetailOverview {
   owner: string[];
   issuer: string[];
   tokenSymbol: string;
+  chainIds: TChainID[];
   quantity: number;
   marketPlaces: MarketPlace;
   isSeed: boolean;

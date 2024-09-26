@@ -8,6 +8,8 @@ import { ItemSymbolDetailOverview } from '../type';
 import NFTImage from '@_components/NFTImage';
 import { Typography } from 'antd';
 import { useSearchParams } from 'next/navigation';
+import HeadTitle from '@_components/HeaderTitle';
+import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 
 const { Paragraph } = Typography;
 
@@ -80,6 +82,11 @@ export default function OverView(props: OverViewProps) {
       ),
     });
   }
+  const multi = useMultiChain();
+  const sideChain = useSideChain();
+
+  const itemSymbol = searchParams.get('itemSymbol') || '';
+
   return (
     <div className="ntf-overview-wrap">
       <div className="nft-image-wrap">
@@ -87,7 +94,20 @@ export default function OverView(props: OverViewProps) {
       </div>
       <div className="nft-detail-wrap">
         <div className="nft-title-wrap">
-          <h1 className="nft-title">{overview.item?.name}</h1>
+          {/* <h1 className="nft-title">{overview.item?.name}</h1> */}
+          <HeadTitle
+            content={overview.item?.name}
+            hiddenAds
+            mainLink={
+              !(multi && overview.chainIds?.includes('AELF')) ? `/nftItem?chainId=AELF&&itemSymbol=${itemSymbol}` : ''
+            }
+            sideLink={
+              !(multi && overview.chainIds?.includes(sideChain))
+                ? `/nftItem?chainId=${sideChain}&&itemSymbol=${itemSymbol}`
+                : ''
+            }
+            adPage="collectionItemDetail"
+          />
           <div className="nft-thumb">
             <div className="nft-thumb-image-wrap">
               <NFTImage className="aspect-square w-full object-cover" src={overview.nftCollection?.imageUrl} />

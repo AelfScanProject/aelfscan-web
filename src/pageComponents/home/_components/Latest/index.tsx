@@ -77,7 +77,7 @@ function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
                     prefetch={false}
                     href={
                       ele.type === TokenTypeEnum.nft
-                        ? `/nftItem?chainId=${ele.chainIds[0]}&itemSymbol=${ele.symbol}`
+                        ? `/nftItem?chainId=${defaultChain}&itemSymbol=${ele.symbol}`
                         : `/${defaultChain}/token/${ele.symbol}`
                     }>
                     <TokenTableCell

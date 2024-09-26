@@ -97,7 +97,14 @@ export default function getColumns({ timeFormat, handleTimeChange, chain, multi 
           key: 'from',
           render: (data, record) => {
             const { address, addressType } = data;
-            return <ContractToken address={address} type={addressType} chainId={chain} chainIds={record.chainIds} />;
+            return (
+              <ContractToken
+                address={address}
+                type={addressType}
+                chainId={(record.chainIds && record.chainIds[0]) || chain}
+                chainIds={record.chainIds}
+              />
+            );
           },
         },
         {
@@ -115,7 +122,12 @@ export default function getColumns({ timeFormat, handleTimeChange, chain, multi 
           render: (data, record) => {
             const { address, addressType } = data;
             return (
-              <ContractToken address={address || ''} type={addressType} chainId={chain} chainIds={record.chainIds} />
+              <ContractToken
+                address={address || ''}
+                type={addressType}
+                chainId={(record.chainIds && record.chainIds[0]) || chain}
+                chainIds={record.chainIds}
+              />
             );
           },
         },

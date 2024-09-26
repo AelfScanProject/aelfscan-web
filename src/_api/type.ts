@@ -543,6 +543,7 @@ export interface IActivityTableData {
   transactionId: string;
   action: string;
   blockTime: number;
+  chainIds: TChainID[];
   price: number;
   priceOfUsd: number;
   priceSymbol: string;
@@ -566,6 +567,7 @@ export interface ItemSymbolDetailOverview {
   holders: number;
   owner: string[];
   issuer: string[];
+  chainIds: TChainID[];
   tokenSymbol: string;
   quantity: number;
   marketPlaces: MarketPlace;
