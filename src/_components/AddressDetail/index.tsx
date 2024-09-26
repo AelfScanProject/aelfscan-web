@@ -31,15 +31,9 @@ import { useEffectOnce } from 'react-use';
 import { fetchBannerAdsDetail } from '@_api/fetchSearch';
 import AATransactionList from '@app/[chain]/transactions/aaList';
 import addressFormat from '@_utils/urlUtils';
-<<<<<<< HEAD
 import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 import OverviewThreeCard from '@_components/OverviewCard/three';
 import { IOverviewItem } from '@_components/OverviewCard/type';
-=======
-import { useEnvContext } from 'next-runtime-env';
-import { checkMainNet } from '@_utils/isMainNet';
-import { useMultiChain } from '@_hooks/useSelectChain';
->>>>>>> 4ac59b11 (feat: ui adjust)
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -109,12 +103,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     ];
   }, [elfBalance, elfBalanceOfUsd, elfPriceInUsd, tokenHoldings]);
 
-<<<<<<< HEAD
   const sideChain = useSideChain();
-=======
-  const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
-  const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
->>>>>>> 4ac59b11 (feat: ui adjust)
 
   const addressMoreInfo = useMemo(() => {
     return [
@@ -396,7 +385,6 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           </div>
         </HeadTitle>
       </div>
-<<<<<<< HEAD
       {multi ? (
         <OverviewThreeCard items={multiDetailItems} dataSource={SSRData} title="Portfolio" />
       ) : (
@@ -406,13 +394,6 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           {!multi && isAddress && <Overview title="Multichain Info" className="flex-1" items={MultiChainInfo} />}
         </div>
       )}
-=======
-      <div className={clsx(isMobile && 'flex-col', 'address-overview flex gap-4')}>
-        <Overview title="Overview" className="flex-1" items={OverviewInfo} />
-        <Overview title="MoreInfo" className="flex-1" items={isAddress ? addressMoreInfo : contractInfo} />
-        {!multi && isAddress && <Overview title="Multichain Info" className="flex-1" items={MultiChainInfo} />}
-      </div>
->>>>>>> 4ac59b11 (feat: ui adjust)
       {adsData && adsData.adsBannerId && (
         <div className="mt-4">
           <AdsImage adPage="Addressdetail" adsItem={adsData} />
