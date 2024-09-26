@@ -11,7 +11,7 @@ import { useRef, useState } from 'react';
 export interface NFTDetailsProps {
   overview: ItemSymbolDetailOverview;
 }
-const holders = 'Holders';
+const holders = 'holders';
 export default function NFTDetails(props: NFTDetailsProps) {
   const { overview } = props;
   console.log(overview, 'overview');

@@ -47,7 +47,6 @@ export default function OverViewDetail(props: OverViewDetailProps) {
         <div className="nft-detail-item-right">
           {owner?.length === 1 && (
             <span>
-              {' '}
               <ContractToken address={owner[0]} type={AddressType.address} chainId={chain} />
             </span>
           )}

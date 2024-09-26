@@ -34,7 +34,7 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
         // collection
         return `/nft/?chainId=${defaultChain}&&collectionSymbol=${item.symbol}`;
       } else {
-        return `/nftItem?chainId=${chainIds && chainIds[0]}&&itemSymbol=${item.symbol}`;
+        return `/nftItem?chainId=${defaultChain}&&itemSymbol=${item.symbol}`;
       }
     } else if (searchType === 'tokens') {
       return `/${defaultChain}/token/${item.symbol}`;

@@ -108,7 +108,7 @@ const Search = ({
           // collection
           router.push(`/nft?chainId=${defaultChain}&&collectionSymbol=${nfts[0].symbol}`);
         } else {
-          return `/nftItem?chainId=${nfts[0]?.chainIds && nfts[0]?.chainIds[0]}&&itemSymbol=${nfts[0].symbol}`;
+          return `/nftItem?chainId=${defaultChain}&&itemSymbol=${nfts[0].symbol}`;
         }
       } else if (accounts.length) {
         router.push(`/${defaultChain}/address/${addressFormat((accounts[0].address as string) || '', defaultChain)}`);

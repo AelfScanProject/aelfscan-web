@@ -58,8 +58,7 @@ function NftCardList(props: NftCardListProps) {
       {list.map((itemObj, index) => {
         return (
           <div key={index} className="collection-detail-inventory-item">
-            <Link
-              href={`/nftItem?chainId=${(itemObj?.chainIds && itemObj?.chainIds[0]) || chain}&&itemSymbol=${itemObj?.item?.symbol}`}>
+            <Link href={`/nftItem?chainId=${chain}&&itemSymbol=${itemObj?.item?.symbol}`}>
               <Card hoverable cover={<NFTImage className="rounded object-cover" src={itemObj?.item?.imageUrl} />}>
                 <div>
                   <span className="text-xs leading-5 text-base-200">Symbol:</span>

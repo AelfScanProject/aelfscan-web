@@ -44,7 +44,10 @@ export default function ContractToken({
             prefetch={false}
             className="text-link"
             href={`/${jumpChain}/address/${addressFormat(address || '', chainId)}`}>
-            {addressFormat(hiddenAddress(address || '', count, count), chainId)}
+            {addressFormat(
+              hiddenAddress(address || '', chainId === MULTI_CHAIN ? 7 : count, chainId === MULTI_CHAIN ? 8 : count),
+              chainId,
+            )}
           </Link>
         </EPTooltip>
         {showCopy && <Copy value={addressFormat(address, chainId)} />}

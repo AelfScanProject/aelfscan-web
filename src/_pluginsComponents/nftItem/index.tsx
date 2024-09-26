@@ -1,32 +1,33 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import './index.css';
-// import request from '@_api';
 import NFTDetails from './NFTDetails';
 import { fetchCollectionItemDetail } from '@_api/fetchNFTS';
-import { TChainID } from '@_api/type';
 import { ItemSymbolDetailOverview } from './type';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
+import { getChainId } from '@_utils/formatter';
 export default async function NFTDetailsPage() {
   const searchParams = useSearchParams();
   const chain = searchParams.get('chainId');
   const itemSymbol: string = searchParams.get('itemSymbol') || '';
   const [overviewData, setOverviewData] = useState<ItemSymbolDetailOverview>();
-  const fetchData = async () => {
+  const [loading, setLoading] = useState(true);
+  const fetchData = useCallback(async () => {
+    setLoading(true);
     const [overview] = await Promise.all([
       fetchCollectionItemDetail({
-        chainId: chain as TChainID,
+        chainId: getChainId(chain || ''),
         symbol: itemSymbol,
         cache: 'no-store',
       }),
     ]);
+    setLoading(false);
     setOverviewData(overview);
-  };
+  }, [chain, itemSymbol]);
 
-  useEffectOnce(() => {
+  useEffect(() => {
     fetchData();
-  });
-  return overviewData ? <NFTDetails overview={overviewData} /> : <PageLoadingSkeleton />;
+  }, [fetchData]);
+  return !loading && overviewData ? <NFTDetails overview={overviewData} /> : <PageLoadingSkeleton />;
 }
