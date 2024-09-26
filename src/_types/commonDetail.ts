@@ -1,5 +1,6 @@
 import { IFromInfo, TChainID, TransactionStatus } from '@_api/type';
 import { IToken } from './common';
+import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
 
 export interface ITransactionFeeItem {
   symbol: string;
@@ -31,6 +32,7 @@ export interface ITokenTransfers {
 
 export type TokensListItemType = {
   token: IToken;
+  type: TokenTypeEnum;
   quantity: number;
   valueOfUsd: number;
   chainIds: TChainID[];

@@ -9,6 +9,7 @@ import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
 import Link from 'next/link';
 import EPTooltip from '@_components/EPToolTip';
 import ChainTags from '@_components/ChainTags';
+import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
 
 export default function getColumns(sortedInfo, chain, showELF, multi): ColumnsType<TokensListItemType> {
   return multi
@@ -27,7 +28,12 @@ export default function getColumns(sortedInfo, chain, showELF, multi): ColumnsTy
           title: 'Token Name',
           render: (token, record) => {
             return (
-              <Link href={`/${record.chainIds ? record.chainIds[0] : chain}/token/${token.symbol}`}>
+              <Link
+                href={
+                  record.type === TokenTypeEnum.nft
+                    ? `/nftItem?chainId=${record.chainIds ? record.chainIds[0] : chain}&itemSymbol=${record.token.symbol}`
+                    : `/${record.chainIds ? record.chainIds[0] : chain}/token/${token.symbol}`
+                }>
                 <TokenTableCell showSymbol={false} token={token}>
                   <TokenImage token={token} />
                 </TokenTableCell>
@@ -102,7 +108,12 @@ export default function getColumns(sortedInfo, chain, showELF, multi): ColumnsTy
           title: 'Token Name',
           render: (token, record) => {
             return (
-              <Link href={`/${record.chainIds ? record.chainIds[0] : chain}/token/${token.symbol}`}>
+              <Link
+                href={
+                  record.type === TokenTypeEnum.nft
+                    ? `/nftItem?chainId=${record.chainIds ? record.chainIds[0] : chain}&itemSymbol=${record.token.symbol}`
+                    : `/${record.chainIds ? record.chainIds[0] : chain}/token/${token.symbol}`
+                }>
                 <TokenTableCell showSymbol={false} token={token}>
                   <TokenImage token={token} />
                 </TokenTableCell>
