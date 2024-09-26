@@ -6,11 +6,7 @@ import Link from 'next/link';
 import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
 import clsx from 'clsx';
 import EPTooltip from '@_components/EPToolTip';
-<<<<<<< HEAD
 import { IBlocksResponseItem, ITopTokensItem, ITransactionsResponseItem } from '@_api/type';
-=======
-import { IBlocksResponseItem, ITransactionsResponseItem } from '@_api/type';
->>>>>>> 4ac59b11 (feat: ui adjust)
 import { divDecimals, formatDate, thousandsNumber } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
 import ContractToken from '@_components/ContractToken';
