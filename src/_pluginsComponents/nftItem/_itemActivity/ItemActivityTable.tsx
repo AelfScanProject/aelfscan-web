@@ -8,14 +8,15 @@ import { IActivityTableData, ItemSymbolDetailOverview } from '../type';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchNFTItemActivity } from '@_api/fetchNFTS';
 import { useSearchParams } from 'next/navigation';
-import { getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber } from '@_utils/formatter';
 import { TChainID } from '@_api/type';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+import { useMultiChain } from '@_hooks/useSelectChain';
 const TAB_NAME = 'activity';
 export default function ItemActivityTable({ detailData }: { detailData: ItemSymbolDetailOverview }) {
   const isMobile = useMobileAll();
-  const { defaultPage, defaultPageSize } = useSearchAfterParams(25, TAB_NAME);
+  const { defaultPage, defaultPageSize, defaultChain } = useSearchAfterParams(25, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,6 +29,8 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
 
   const updateQueryParams = useUpdateQueryParams();
 
+  const [selectChain, setSelectChain] = useState(defaultChain);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -36,6 +39,7 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
           updateQueryParams({
             p: currentPage,
             ps: pageSize,
+            chain: selectChain,
             tab: TAB_NAME,
           });
         }
@@ -43,7 +47,7 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
         console.log(error, 'error.rr');
       }
       const data = await fetchNFTItemActivity({
-        chainId: chain as TChainID,
+        chainId: getChainId(selectChain),
         symbol: itemSymbol,
         skipCount: getPageNumber(currentPage, pageSize),
         maxResultCount: pageSize,
@@ -54,7 +58,10 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
       setLoading(false);
       mountRef.current = true;
     }
-  }, [chain, currentPage, itemSymbol, pageSize]);
+  }, [selectChain, currentPage, itemSymbol, pageSize]);
+
+  const multi = useMultiChain();
+
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const columns = useMemo<ColumnsType<IActivityTableData>>(() => {
     return getColumns({
@@ -64,8 +71,9 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
       },
       chainId: chain,
       detailData,
+      multi,
     });
-  }, [chain, detailData, timeFormat]);
+  }, [chain, detailData, timeFormat, multi]);
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
@@ -74,6 +82,10 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
+  };
+  const chainChange = (value) => {
+    setCurrentPage(1);
+    setSelectChain(value);
   };
 
   useEffect(() => {
@@ -88,6 +100,11 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
             title: `A total of ${total} records found`,
             desc: '',
           },
+        }}
+        showMultiChain={multi}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
         }}
         loading={loading}
         dataSource={data}

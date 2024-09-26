@@ -45,7 +45,7 @@ export default function getColumns({
             <Link
               href={
                 record.type === TokenTypeEnum.nft
-                  ? `/nftItem?chainId=${(record.chainIds && record.chainIds[0]) || chain}&itemSymbol=${record.token.symbol}`
+                  ? `/nftItem?chainId=${chain}&itemSymbol=${record.token.symbol}`
                   : `/${chain}/token/${text.symbol}`
               }>
               <TokenTableCell token={text}>
@@ -119,11 +119,7 @@ export default function getColumns({
             <Link
               href={
                 record.type === TokenTypeEnum.nft
-<<<<<<< HEAD
-                  ? `/nftItem?chainId=${(record.chainIds && record.chainIds[0]) || chain}&itemSymbol=${record.token.symbol}`
-=======
-                  ? `/nftItem?chainId=${record.chainIds && record.chainIds[0]}&itemSymbol=${record.token.symbol}`
->>>>>>> a02d6913 (feat: ui adjust)
+                  ? `/nftItem?chainId=${chain}&itemSymbol=${record.token.symbol}`
                   : `/${chain}/token/${text.symbol}`
               }>
               <TokenTableCell token={text}>
