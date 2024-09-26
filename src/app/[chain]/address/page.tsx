@@ -1,4 +1,4 @@
-import { getChainId, getPageNumber, getSort } from '@_utils/formatter';
+import { getChainId, getSort } from '@_utils/formatter';
 import AccountsList from './list';
 import { fetchServerTopAccounts } from '@_api/fetchContact';
 import { TablePageSize } from '@_types/common';

@@ -5,7 +5,7 @@ import getColumns from '@_components/TokenTransfers/columnConfig';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { ITokenTransfers, TokenTransfersItemType } from '@_types/commonDetail';
-import { getAddress, getSort, getTransferSearchAfter, thousandsNumber } from '@_utils/formatter';
+import { getAddress, getBlockTimeSearchAfter, getChainId, getSort, thousandsNumber } from '@_utils/formatter';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
@@ -13,6 +13,7 @@ import { fetchAccountTransfers } from '@_api/fetchContact';
 import { PageTypeEnum } from '@_types';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
+import { useMultiChain } from '@_hooks/useSelectChain';
 export interface IResponseData {
   total: number;
   data: TokenTransfersItemType[];
@@ -20,10 +21,8 @@ export interface IResponseData {
 const TAB_NAME = 'nfttransfers';
 export default function List({ showHeader = true }) {
   const isMobile = useMobileAll();
-  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(
-    25,
-    TAB_NAME,
-  );
+  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
+    useSearchAfterParams(25, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
@@ -32,24 +31,26 @@ export default function List({ showHeader = true }) {
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
 
+  const [selectChain, setSelectChain] = useState(defaultChain);
+
   const mountRef = useRef(false);
 
   const updateQueryParams = useUpdateQueryParams();
-  const { chain, address } = useParams<{
+  const { address } = useParams<{
     chain: TChainID;
     address: string;
   }>();
 
   const fetchData = useCallback(async () => {
     const sort = getSort(pageType, currentPage);
-    const searchAfter = getTransferSearchAfter(currentPage, data, pageType);
+    const searchAfter = getBlockTimeSearchAfter(currentPage, data, pageType, 'dateTime');
     const params = {
-      chainId: chain,
+      chainId: getChainId(selectChain),
       maxResultCount: pageSize,
       tokenType: 1,
       address: getAddress(address),
       orderInfos: [
-        { orderBy: 'BlockHeight', sort },
+        { orderBy: 'BlockTime', sort },
         { orderBy: 'TransactionId', sort },
       ],
       searchAfter: !mountRef.current && defaultSearchAfter && activeTab ? JSON.parse(defaultSearchAfter) : searchAfter,
@@ -60,6 +61,7 @@ export default function List({ showHeader = true }) {
           p: currentPage,
           ps: pageSize,
           pageType,
+          chain: selectChain,
           tab: TAB_NAME,
           searchAfter: JSON.stringify(searchAfter),
         });
@@ -78,7 +80,9 @@ export default function List({ showHeader = true }) {
       setLoading(false);
       mountRef.current = true;
     }
-  }, [address, chain, currentPage, pageSize, pageType]);
+  }, [address, selectChain, currentPage, pageSize, pageType]);
+
+  const multi = useMultiChain();
 
   const columns = useMemo<ColumnsType<TokenTransfersItemType>>(() => {
     return getColumns({
@@ -88,8 +92,9 @@ export default function List({ showHeader = true }) {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
       address,
+      multi,
     });
-  }, [address, timeFormat]);
+  }, [address, multi, timeFormat]);
 
   const singleTitle = useMemo(() => {
     return `A total of ${thousandsNumber(total)} NFT transfers found`;
@@ -110,6 +115,12 @@ export default function List({ showHeader = true }) {
     setPageType(PageTypeEnum.NEXT);
   };
 
+  const chainChange = (value) => {
+    setSelectChain(value);
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
+  };
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -122,6 +133,11 @@ export default function List({ showHeader = true }) {
           single: {
             title: singleTitle,
           },
+        }}
+        showMultiChain={multi}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
         }}
         loading={loading}
         dataSource={data}

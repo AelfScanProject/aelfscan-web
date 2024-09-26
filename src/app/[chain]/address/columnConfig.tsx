@@ -26,7 +26,7 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
         {
           title: 'Address',
           dataIndex: 'address',
-          width: '294px',
+          width: '336px',
           render: (text, record) => (
             <div className="address flex items-center">
               <ContractToken
@@ -34,14 +34,13 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
                 address={text}
                 type={record.addressType}
                 chainId={chain}
-                chainIds={record.chainIds}
               />
             </div>
           ),
         },
         {
           title: 'Chain',
-          width: 200,
+          width: 224,
           dataIndex: 'chainIds',
           key: 'chainIds',
           render: (chainIds) => <ChainTags chainIds={chainIds} />,
@@ -54,7 +53,7 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
             </div>
           ),
           dataIndex: 'balance',
-          width: '294px',
+          width: '256px',
           render(balance) {
             return `${numberFormatter(balance)}`;
           },
@@ -69,7 +68,7 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
             </div>
           ),
           dataIndex: 'percentage',
-          width: '224px',
+          width: '208px',
           render(percentage) {
             return `${percentage}%`;
           },
@@ -84,7 +83,7 @@ export default function getColumns(currentPage, pageSize, chain): ColumnsType<IA
             </div>
           ),
           dataIndex: 'transactionCount',
-          width: '224px',
+          width: '208px',
           render(transactionCount) {
             return `${thousandsNumber(transactionCount)}`;
           },

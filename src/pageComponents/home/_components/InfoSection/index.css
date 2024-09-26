@@ -27,10 +27,16 @@
         @apply w-12 h-12;
       }
     }
+
+    .question {
+      svg {
+        @apply !w-4 !h-4;
+      }
+    }
     .content {
       @apply flex flex-col ml-3;
       .title {
-        @apply text-[14px] font-[400] leading-[22px] text-base-200;
+        @apply flex items-center gap-1 text-[14px] font-[400] leading-[22px] text-base-200;
       }
       .desc {
         @apply text-[20px] font-[500] leading-[28px] text-base-100;
@@ -44,6 +50,18 @@
           }
         }
       }
+    }
+  }
+
+  .Direction-Down {
+    svg {
+      @apply !w-5 !h-5;
+    }
+  }
+
+  .explorer-dropdown-open {
+    svg {
+      @apply rotate-180 transition-all;
     }
   }
 }

@@ -33,6 +33,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const headersList = headers();
   const isMobile = isMobileOnServer(headersList);
   const { headerMenuList, footerMenuList, chainList, networkList, config, chartImg } = await fetchCMS();
+  const mockChainlist = [
+    {
+      chainList_id: {
+        date_created: '2024-04-25T12:42:17.000Z',
+        date_updated: '2024-05-30T06:26:22.000Z',
+        id: 3,
+        index: 1,
+        key: 'multiChain',
+        label: 'All Chains',
+        user_created: '16285d01-1de1-4eeb-ab7a-a26d6323a488',
+        user_updated: '16285d01-1de1-4eeb-ab7a-a26d6323a488',
+      },
+    },
+    ...chainList,
+  ];
   return (
     <html lang="en">
       <Script
@@ -60,7 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <StyleRegistry>
               <RootProvider isMobileSSR={isMobile} config={config} chartImg={chartImg}>
                 <Suspense>
-                  <Header chainList={chainList} networkList={networkList} headerMenuList={headerMenuList} />
+                  <Header chainList={mockChainlist} networkList={networkList} headerMenuList={headerMenuList} />
                 </Suspense>
                 <Suspense>
                   <MainContainer>{children}</MainContainer>

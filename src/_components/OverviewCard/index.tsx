@@ -5,7 +5,7 @@ import { Divider, Flex } from 'antd';
 import { useCallback, useMemo } from 'react';
 import './index.css';
 import { IOverviewCardProps, IOverviewItem } from './type';
-import { useMobileAll } from '@_hooks/useResponsive';
+import { useMD } from '@_hooks/useResponsive';
 
 const { Text } = Typography;
 
@@ -17,7 +17,7 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
     return [col1Items, col2Items];
   }, [breakIndex, items]);
 
-  const isMobile = useMobileAll();
+  const isMobile = useMD();
 
   const renderItem = useCallback(
     (item: IOverviewItem, index: number) => {
@@ -25,14 +25,14 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
       return (
         <Flex key={key} vertical>
           <Flex gap={4} align="center">
+            <Text size="small" style={{ color: '#858585' }}>
+              {label}
+            </Text>
             {tooltip && (
               <EPTooltip title={tooltip} mode="dark">
                 <IconFont className="text-xs" type="question-circle" />
               </EPTooltip>
             )}
-            <Text size="small" style={{ color: '#858585' }}>
-              {label}
-            </Text>
           </Flex>
           <Flex>
             <div className="min-h-[22px]">
@@ -59,7 +59,12 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
         <Flex vertical gap={16} flex={1}>
           {col1Items?.map((item, index) => renderItem(item, index))}
         </Flex>
-        {col2Items?.length && <Divider className="card-divider" type="vertical" />}
+        {col2Items?.length && (
+          <Divider
+            className={`card-divider ${isMobile && '!mx-0 !my-4'}`}
+            type={isMobile ? 'horizontal' : 'vertical'}
+          />
+        )}
         <Flex vertical gap={16} flex={1}>
           {col2Items?.map((item, index) => renderItem(item, index))}
         </Flex>

@@ -4,6 +4,7 @@ import { useAppDispatch } from '@_store';
 import { setTokenInfo } from '@_store/features/chainIdSlice';
 import SignalR from '@_socket/signalr';
 import SignalRManager from '@_socket';
+import { MULTI_CHAIN } from '@_utils/contant';
 interface IIntervalData {
   overviewLoading: boolean;
   BlockchainOverview: IBlockchainOverviewResponse | undefined;
@@ -33,6 +34,7 @@ const useBlockchainOverview = (chain: TChainID) => {
   }, [BlockchainOverview, overviewLoading]);
 
   useEffect(() => {
+    const selectChain = chain === MULTI_CHAIN ? '' : chain;
     function fetchAndReceiveWs() {
       if (!socket || !chain) {
         return;
@@ -44,14 +46,14 @@ const useBlockchainOverview = (chain: TChainID) => {
         setOverviewLoading(false);
       });
 
-      socket.sendEvent('RequestBlockchainOverview', { chainId: chain });
+      socket.sendEvent('RequestBlockchainOverview', { chainId: selectChain });
     }
 
     fetchAndReceiveWs();
 
     return () => {
       console.log('signalR----destroy');
-      socket?.sendEvent('UnsubscribeBlockchainOverview', { chainId: chain });
+      socket?.sendEvent('UnsubscribeBlockchainOverview', { chainId: selectChain });
       socket?.destroy();
     };
   }, [chain, socket]);

@@ -1,0 +1,8 @@
+.collection-detail-inventory-item {
+  .explorer-card-body {
+    @apply py-4 px-3;
+  }
+  .explorer-card-cover {
+    @apply pt-3 px-3 rounded;
+  }
+}

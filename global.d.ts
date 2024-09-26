@@ -25,7 +25,7 @@ type ItemSymbol = {
 };
 
 type NftCollectionPageParams = ChainId & CollectionSymbol;
-type Chain = 'AELF' | 'tDVV' | 'tDVW';
+type Chain = 'AELF' | 'tDVV' | 'tDVW' | 'multiChain';
 
 type TSearchParamsForTransactionDetail = {
   blockHeight: number;

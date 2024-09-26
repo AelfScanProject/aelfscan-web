@@ -14,28 +14,19 @@ export default function MultiChainSelect({ props }: { props: SelectProps }) {
     return chain as string;
   }, [chain]);
 
-  const chainList = useMemo(() => {
-    return [
-      {
-        key: 'multiChain',
-        label: 'All Chains',
-      },
-      ...chainArr,
-    ];
-  }, [chainArr]);
-
   return (
-    <div className="chain-select-container" id="chain-select-container">
+    <div className="chain-select-container mr-4 w-full !py-0" id="chain-select-container">
       <Select
-        className="chain-select common-select-wrapper"
+        className="chain-select common-select-wrapper w-full max-w-[304px] min-[769px]:w-[160px]"
         popupClassName="chain-select-options"
         popupMatchSelectWidth={false}
         defaultValue={selectChain}
+        style={{ width: '160px' }}
         {...props}>
-        {chainList?.map((item) => {
+        {chainArr?.map((item) => {
           return (
             <Option className="common-select-option-wrapper chain-select-option" key={item.key} value={item.key}>
-              {chainList.find((ele) => ele.key === item.key)!.label}
+              {chainArr.find((ele) => ele.key === item.key)!.label}
             </Option>
           );
         })}

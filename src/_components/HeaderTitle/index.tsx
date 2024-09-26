@@ -5,27 +5,68 @@
  * @LastEditTime: 2023-08-17 10:37:04
  * @Description: title
  */
+'use client';
+import { TChainID } from '@_api/type';
+import ChainTags from '@_components/ChainTags';
 import PageAd from '@_components/PageAd';
+import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
+import { Button } from 'aelf-design';
 import clsx from 'clsx';
-import React from 'react';
+import Link from 'next/link';
+import { useParams, useSearchParams } from 'next/navigation';
+import React, { useMemo } from 'react';
 export default function HeadTitle({
   content,
   children,
   className,
   adPage,
+  mainLink,
+  hiddenAds,
+  sideLink,
 }: {
   content: string;
   children?: React.ReactNode;
   className?: string;
+  mainLink?: string;
+  sideLink?: string;
   adPage: string;
+  hiddenAds?: boolean;
 }) {
+  const sideChain = useSideChain();
+  const { chain } = useParams<{ chain: TChainID }>();
+  const params = useSearchParams();
+  const chainId = params.get('chainId') as TChainID;
+  const multi = useMultiChain();
+  const chainIds = useMemo(() => {
+    return [chain || chainId];
+  }, [chain, chainId]);
+
   return (
     <>
-      <div className={clsx(className, 'header-title flex items-end bg-inherit py-5')}>
-        <div className="text-xl font-medium not-italic text-base-100">{content}</div>
-        {children}
+      <div className={clsx('header-title flex flex-wrap items-center gap-4 bg-inherit py-5', !multi && '!gap-2')}>
+        <div className={clsx('flex items-end text-xl font-medium not-italic text-base-100', className)}>
+          {content}
+          {children}
+        </div>
+        <div className="flex items-center gap-2">
+          {!multi && <ChainTags chainIds={chainIds} className="border-D0 leading-[18px]" />}
+          {mainLink && (
+            <Link href={mainLink}>
+              <Button className="!h-7 !px-2" size="small" ghost type="primary">
+                View on MainChain
+              </Button>
+            </Link>
+          )}
+          {sideLink && (
+            <Link href={sideLink}>
+              <Button className="!h-7 !px-2" size="small" ghost type="primary">
+                View on SideChain({sideChain})
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
-      <PageAd adPage={adPage} />
+      {!hiddenAds && <PageAd adPage={adPage} />}
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { ColumnsType } from 'antd/es/table';
-import { addSymbol, divDecimals, formatDate, thousandsNumber, validateVersion } from '@_utils/formatter';
+import { addSymbol, formatDate, thousandsNumber } from '@_utils/formatter';
 import IconFont from '@_components/IconFont';
 import { IContractDataItem } from '@_api/type';
 import ContractToken from '@_components/ContractToken';
@@ -13,7 +13,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
     ? [
         {
           title: 'Address',
-          width: 128,
+          width: 224,
           dataIndex: 'address',
           key: 'address',
           render: (text, record) => (
@@ -22,22 +22,21 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
                 showContractAddress
                 address={text}
                 type={AddressType.Contract}
-                chainId={chain}
-                chainIds={record.chainIds}
+                chainId={record.chainIds[0] || chain}
               />
             </div>
           ),
         },
         {
           title: 'Chain',
-          width: 200,
+          width: 144,
           dataIndex: 'chainIds',
           key: 'chainIds',
           render: (chainIds) => <ChainTags chainIds={chainIds} />,
         },
         {
           title: 'Contract Name',
-          width: '188px',
+          width: '208px',
           dataIndex: 'contractName',
           key: 'contractName',
           render: (text) => (
@@ -51,7 +50,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
         },
         {
           title: 'Type',
-          width: 152,
+          width: 168,
           dataIndex: 'type',
           key: 'type',
         },
@@ -59,7 +58,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
           title: 'Version',
           dataIndex: 'contractVersion',
           key: 'contractVersion',
-          width: 100,
+          width: 120,
           render(version) {
             return version ? `V ${version}` : '-';
           },
@@ -67,7 +66,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
         {
           title: 'Balance',
           dataIndex: 'balance',
-          width: 150,
+          width: 224,
           key: 'balance',
           render(balance) {
             return typeof balance === 'number' && balance >= 0 ? addSymbol(balance) : '-';
@@ -75,7 +74,7 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
         },
         {
           title: 'Txns',
-          width: 96,
+          width: 112,
           key: 'txns',
           dataIndex: 'txns',
           render(txns) {

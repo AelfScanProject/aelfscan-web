@@ -62,6 +62,10 @@ async function service(url: string, options: RequestWithParams) {
     const response = await fetch(url, {
       ...options,
       cache: 'no-store',
+      headers: {
+        // 'pre-release': '1',
+        ...(options?.headers || {}),
+      },
     });
     if (response.ok) {
       return await response.json();

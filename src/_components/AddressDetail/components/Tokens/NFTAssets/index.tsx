@@ -3,13 +3,12 @@ import { useCallback, useEffect, useState } from 'react';
 import getColumns from './columnConfig';
 import './index.css';
 import { NftsItemType } from '@_types/commonDetail';
-import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchAccountsDetailNFTAssets } from '@_api/fetchContact';
 import { useParams } from 'next/navigation';
-import { getAddress, getPageNumber } from '@_utils/formatter';
-import { TChainID } from '@_api/type';
+import { getAddress, getChainId, getPageNumber } from '@_utils/formatter';
 import { TableProps } from 'antd';
 import { SortEnum, TableSortEnum } from '@_types/common';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 type OnChange = NonNullable<TableProps<NftsItemType>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -26,12 +25,14 @@ export default function NFTAssets() {
   const { chain, address } = useParams();
   const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
+  const [selectChain, setSelectChain] = useState(chain as string);
+
   const fetchData = useCallback(async () => {
     try {
       const params = {
         skipCount: getPageNumber(currentPage, pageSize),
         maxResultCount: pageSize,
-        chainId: chain as TChainID,
+        chainId: getChainId(selectChain),
         address: getAddress(address as string),
         orderBy: sortedInfo.order ? (sortedInfo.columnKey as string) : undefined,
         sort: sortedInfo.order ? SortEnum[TableSortEnum[sortedInfo.order]] : undefined,
@@ -45,8 +46,10 @@ export default function NFTAssets() {
     } finally {
       setLoading(false);
     }
-  }, [SearchFetchText, address, chain, currentPage, pageSize, sortedInfo]);
-  const columns = getColumns(chain, sortedInfo);
+  }, [SearchFetchText, address, selectChain, currentPage, pageSize, sortedInfo]);
+
+  const multi = useMultiChain();
+  const columns = getColumns(chain, sortedInfo, multi);
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
@@ -55,6 +58,11 @@ export default function NFTAssets() {
   const pageSizeChange = (page, size) => {
     setPageSize(size);
     setCurrentPage(page);
+  };
+
+  const chainChange = (value) => {
+    setCurrentPage(1);
+    setSelectChain(value);
   };
 
   const searchChange = (value) => {
@@ -69,7 +77,6 @@ export default function NFTAssets() {
     fetchData();
   }, [fetchData]);
 
-  const isMobile = useMobileAll();
   return (
     <div className="asset-list">
       <div className="table-container p-4 pb-0">
@@ -92,12 +99,16 @@ export default function NFTAssets() {
               searchChange(value);
             },
           }}
+          showMultiChain={multi}
+          MultiChainSelectProps={{
+            value: selectChain,
+            onChange: chainChange,
+          }}
           onChange={handleChange}
           options={[10, 20]}
           dataSource={data}
           columns={columns}
-          isMobile={isMobile}
-          rowKey={(record) => record.token?.symbol}
+          rowKey={(record) => record.token?.symbol + record?.chainIds?.join('')}
           total={total}
           pageSize={pageSize}
           pageNum={currentPage}

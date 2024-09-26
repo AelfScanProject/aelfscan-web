@@ -62,11 +62,7 @@ const Search = ({
     if (adsDetail?.adsId) {
       return hasFocus;
     } else {
-      return (
-        hasFocus && query && canShowListBox && dataWithOrderIdx
-        // !dataWithOrderIdx?.transaction &&
-        // !dataWithOrderIdx?.block
-      );
+      return hasFocus && query && canShowListBox && dataWithOrderIdx;
     }
   }, [adsDetail, canShowListBox, dataWithOrderIdx, hasFocus, query]);
 
@@ -94,11 +90,8 @@ const Search = ({
   const onSearchHandler = useCallback(async () => {
     if (!dataWithOrderIdx) return;
     if (dataWithOrderIdx?.transaction) {
-      const { transactionId } = dataWithOrderIdx.transaction;
-      router.push(`/${defaultChain}/tx/${transactionId}`);
-    } else if (dataWithOrderIdx?.block) {
-      const { blockHeight } = dataWithOrderIdx.block;
-      router.push(`/${defaultChain}/block/${blockHeight}`);
+      const { transactionId, chainIds } = dataWithOrderIdx.transaction;
+      router.push(`/${chainIds && chainIds[0]}/tx/${transactionId}`);
     } else {
       const params = {
         filterType: filterType?.filterType,
@@ -107,7 +100,7 @@ const Search = ({
         searchType: 0,
       };
       const res = await fetchSearchData(params);
-      const { tokens, nfts, accounts, contracts } = res;
+      const { tokens, nfts, accounts, contracts, blocks } = res;
       if (tokens.length) {
         router.push(`/${defaultChain}/token/${tokens[0].symbol}`);
       } else if (nfts.length) {
@@ -115,12 +108,16 @@ const Search = ({
           // collection
           router.push(`/nft?chainId=${defaultChain}&&collectionSymbol=${nfts[0].symbol}`);
         } else {
-          return `/nftItem?chainId=${defaultChain}&&itemSymbol=${nfts[0].symbol}`;
+          return `/nftItem?chainId=${nfts[0]?.chainIds && nfts[0]?.chainIds[0]}&&itemSymbol=${nfts[0].symbol}`;
         }
       } else if (accounts.length) {
         router.push(`/${defaultChain}/address/${addressFormat((accounts[0].address as string) || '', defaultChain)}`);
       } else if (contracts.length) {
-        router.push(`/${defaultChain}/address/${addressFormat(contracts[0].address || '', defaultChain)}`);
+        router.push(
+          `/${contracts[0]?.chainIds && contracts[0]?.chainIds[0]}/address/${addressFormat(contracts[0].address || '', defaultChain)}`,
+        );
+      } else if (blocks.length) {
+        router.push(`/${blocks[0]?.chainIds && blocks[0]?.chainIds[0]}/block/${blocks[0].blockHeight}`);
       } else {
         router.push(`/${defaultChain}/search/${query.trim()}`);
       }

@@ -1,4 +1,4 @@
-import { IFromInfo, TransactionStatus } from '@_api/type';
+import { IFromInfo, TChainID, TransactionStatus } from '@_api/type';
 import { IToken } from './common';
 
 export interface ITransactionFeeItem {
@@ -19,6 +19,7 @@ export type TokenTransfersItemType = {
   status: TransactionStatus;
   transactionFeeList: ITransactionFeeItem[];
   symbol: string;
+  chainIds: TChainID[];
   symbolName: string;
   symbolImageUrl: string;
 };
@@ -32,6 +33,7 @@ export type TokensListItemType = {
   token: IToken;
   quantity: number;
   valueOfUsd: number;
+  chainIds: TChainID[];
   priceOfUsd: number;
   priceOfUsdPercentChange24h: number;
   priceOfElf: number;
@@ -48,6 +50,7 @@ export interface ITokens {
 export type NftsItemType = {
   nftCollection: IToken;
   token: IToken;
+  chainIds: TChainID[];
   transferCount: number;
   firstNftTime: string;
   quantity: number;
@@ -98,6 +101,18 @@ export interface IAddressTokensDetail {
   totalValueOfElf: number;
 }
 
+interface IPortfolioItem {
+  count: number;
+  usdValue: number;
+  usdValuePercentage: number;
+}
+
+export interface IPortfolio {
+  mainChain?: IPortfolioItem;
+  sideChain?: IPortfolioItem;
+  total: IPortfolioItem;
+}
+
 export interface IAddressResponse extends IAddressTokensDetail {
   symbol: string;
   contractName: string; // contract address
@@ -105,6 +120,7 @@ export interface IAddressResponse extends IAddressTokensDetail {
   author: string; // contract add
   tokenHoldings: number;
   addressType: number;
+  chainIds: TChainID[];
   contractTransactionHash: string; // contract add
   lastTransactionSend: {
     transactionId: string;
@@ -119,6 +135,7 @@ export interface IAddressResponse extends IAddressTokensDetail {
   elfBalanceOfUsd: number;
   elfBalance: number;
   elfPriceInUsd: number;
+  portfolio?: IPortfolio;
 }
 
 export enum TitleEnum {
