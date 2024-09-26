@@ -265,7 +265,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       children: <NFTTransfers showHeader={false} />,
     },
   ];
-  if (!isAddress) {
+  if (!isAddress && !multi) {
     defaultTab = defaultTab || 'contract';
     items.push(
       {

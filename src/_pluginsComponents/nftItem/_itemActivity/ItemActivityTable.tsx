@@ -9,11 +9,10 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchNFTItemActivity } from '@_api/fetchNFTS';
 import { useSearchParams } from 'next/navigation';
 import { getChainId, getPageNumber } from '@_utils/formatter';
-import { TChainID } from '@_api/type';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { useMultiChain } from '@_hooks/useSelectChain';
-const TAB_NAME = 'activity';
+const TAB_NAME = '';
 export default function ItemActivityTable({ detailData }: { detailData: ItemSymbolDetailOverview }) {
   const isMobile = useMobileAll();
   const { defaultPage, defaultPageSize, defaultChain } = useSearchAfterParams(25, TAB_NAME);
@@ -110,7 +109,7 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
-        rowKey="transactionId"
+        // rowKey="transactionId"
         total={total}
         options={[10, 25, 50]}
         pageSize={pageSize}

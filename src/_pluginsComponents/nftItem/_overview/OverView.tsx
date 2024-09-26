@@ -99,10 +99,10 @@ export default function OverView(props: OverViewProps) {
             content={overview.item?.name}
             hiddenAds
             mainLink={
-              !(multi && overview.chainIds?.includes('AELF')) ? `/nftItem?chainId=AELF&&itemSymbol=${itemSymbol}` : ''
+              multi && overview.chainIds?.includes('AELF') ? `/nftItem?chainId=AELF&&itemSymbol=${itemSymbol}` : ''
             }
             sideLink={
-              !(multi && overview.chainIds?.includes(sideChain))
+              multi && overview.chainIds?.includes(sideChain)
                 ? `/nftItem?chainId=${sideChain}&&itemSymbol=${itemSymbol}`
                 : ''
             }
