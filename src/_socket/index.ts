@@ -15,7 +15,7 @@ class SignalRManager {
 
   public async initSocket(): Promise<SignalR | null> {
     if (!this.socket) {
-      const signalR = new SignalR({ url: 'https://testnet.aelfscan.io/api/app/blockchain/explore' });
+      const signalR = new SignalR({ url: '/api/app/blockchain/explore' });
       try {
         await signalR.initAndStart();
         this.socket = signalR;
