@@ -7,12 +7,11 @@ import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { IContractDataItem, IContractResponseData, TChainID } from '@_api/type';
 import { fetchContactList } from '@_api/fetchContact';
-import { getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
-import { pageSizeOption } from '@_utils/contant';
+import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-export default function List({ SSRData, defaultPage, defaultPageSize }) {
-  console.log(SSRData, defaultPage, defaultPageSize, 'SSRData');
+export default function List({ SSRData, defaultPage, defaultPageSize, defaultChain }) {
   const isMobile = useMobileAll();
 
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
@@ -21,28 +20,26 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<IContractDataItem[]>(SSRData.list);
   const updateQueryParams = useUpdateQueryParams();
+  const [selectChain, setSelectChain] = useState(defaultChain);
 
   const { chain } = useParams<{ chain: TChainID }>();
 
-  const fetchData = useCallback(
-    async (page, size) => {
-      const params = {
-        chainId: chain,
-        skipCount: getPageNumber(page, size),
-        maxResultCount: size,
-      };
-      setLoading(true);
-      try {
-        const res: IContractResponseData = await fetchContactList(params);
-        setTotal(res.total);
-        setData(res.list);
-      } catch (error) {
-        setLoading(false);
-      }
+  const fetchData = useCallback(async (page, size, chain) => {
+    const params = {
+      chainId: getChainId(chain),
+      skipCount: getPageNumber(page, size),
+      maxResultCount: size,
+    };
+    setLoading(true);
+    try {
+      const res: IContractResponseData = await fetchContactList(params);
+      setTotal(res.total);
+      setData(res.list);
+    } catch (error) {
       setLoading(false);
-    },
-    [chain],
-  );
+    }
+    setLoading(false);
+  }, []);
 
   const columns = useMemo<ColumnsType<IContractDataItem>>(() => {
     return getColumns(chain);
@@ -50,15 +47,22 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize });
-    fetchData(page, pageSize);
+    updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
+    fetchData(page, pageSize, selectChain);
   };
 
   const pageSizeChange = (page: number, pageSize: number) => {
     setPageSize(pageSize);
     setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize });
-    fetchData(page, pageSize);
+    updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
+    fetchData(page, pageSize, selectChain);
+  };
+
+  const chainChange = (value: string) => {
+    setSelectChain(value);
+    setCurrentPage(1);
+    updateQueryParams({ p: 1, ps: pageSize, chain: value });
+    fetchData(1, pageSize, value);
   };
 
   const multiTitle = useMemo(() => {
@@ -72,8 +76,13 @@ export default function List({ SSRData, defaultPage, defaultPageSize }) {
         headerTitle={{
           multi: {
             title: multiTitle,
-            desc: total > 1000 ? '(Showing the last 1,000 contracts only)' : '',
+            desc: '',
           },
+        }}
+        showMultiChain={chain === MULTI_CHAIN}
+        MultiChainSelectProps={{
+          value: selectChain,
+          onChange: chainChange,
         }}
         loading={loading}
         dataSource={data}

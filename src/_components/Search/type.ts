@@ -1,3 +1,4 @@
+import { TChainID } from '@_api/type';
 import { ReactNode, PropsWithChildren } from 'react';
 
 /*
@@ -16,6 +17,7 @@ export type TSingle = {
   address: string;
   transactionId: string;
   sortIdx: number;
+  chainIds: TChainID[];
   blockHeight: number;
   type?: number;
 };
@@ -33,11 +35,12 @@ export enum FilterTypeEnum {
   Nfts,
 }
 
-export type TType = 'tokens' | 'nfts' | 'accounts' | 'contracts' | 'transaction' | 'block';
+export type TType = 'tokens' | 'nfts' | 'accounts' | 'contracts' | 'transaction' | 'blocks';
 
 interface ITokens {
   image: string;
   name: string;
+  chainIds: TChainID[];
   symbol: string;
   price: number;
   type?: number;
@@ -46,21 +49,31 @@ interface ITokens {
 interface IContactItem {
   name: string;
   address: string;
+  chainIds: TChainID[];
+}
+
+interface IAccountsItem {
+  chainIds: TChainID[];
+  address: string;
+}
+
+interface IBlocksItem {
+  blockHeight: number;
+  blockHash: string;
+  chainIds: TChainID[];
 }
 
 export interface ISearchResponse {
   tokens: ITokens[];
   nfts: ITokens[];
-  accounts: string[];
+  accounts: IAccountsItem[];
   contracts: IContactItem[];
-  block?: {
-    blockHeight: number;
-    blockHash: string;
-  };
+  blocks: IBlocksItem[];
   transaction: {
     transactionId: string;
     blockHeight: number;
     blockHash: string;
+    chainIds: TChainID[];
   };
 }
 

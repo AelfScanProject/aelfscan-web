@@ -11,3 +11,10 @@ export interface IOverviewCardProps {
   dataSource: object;
   breakIndex?: number; // start at 0
 }
+
+export interface IFourOverviewCardProps {
+  items: IOverviewItem[][];
+  dataSource: object;
+  title?: string;
+  breakIndex?: number; // start at 0
+}

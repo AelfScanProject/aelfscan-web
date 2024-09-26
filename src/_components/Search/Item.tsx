@@ -10,6 +10,7 @@ import addressFormat from '@_utils/urlUtils';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import BasicTag from '@_components/BasicTag';
 
 const Item = ({ index, item, searchType }: { index: number; searchType: TType; item: Partial<TSingle> }) => {
   const { state, dispatch } = useSearchContext();
@@ -23,12 +24,11 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
   }
 
   const url = useMemo(() => {
+    const { transactionId, chainIds, blockHeight } = item;
     if (searchType === 'transaction') {
-      const { transactionId } = item;
-      return `/${defaultChain}/tx/${transactionId}`;
-    } else if (searchType === 'block') {
-      const { blockHeight } = item;
-      return `/${defaultChain}/block/${blockHeight}`;
+      return `/${chainIds && chainIds[0]}/tx/${transactionId}`;
+    } else if (searchType === 'blocks') {
+      return `/${chainIds && chainIds[0]}/block/${blockHeight}`;
     } else if (searchType === 'nfts') {
       if (item.type === 2) {
         // collection
@@ -39,9 +39,9 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     } else if (searchType === 'tokens') {
       return `/${defaultChain}/token/${item.symbol}`;
     } else if (searchType === 'contracts') {
-      return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}`;
+      return `/${chainIds && chainIds[0]}/address/${addressFormat(item.address || '', defaultChain)}`;
     } else if (searchType === 'accounts') {
-      return `/${defaultChain}/address/${addressFormat((item as string) || '', defaultChain)}`;
+      return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}`;
     }
 
     return '';
@@ -59,7 +59,7 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
         data-sort-idx={index}
         className={clsx('search-result-ul-item', isHighlighted && 'bg-[#D8DDE5]')}>
         {searchType === 'nfts' || searchType === 'tokens' ? (
-          <>
+          <div className="flex flex-wrap items-center gap-1">
             {item.address && <span className="search-result-ul-item-circle">C</span>}
             <span className="size-6">
               <TokenImage
@@ -78,9 +78,9 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
               <span>$</span>
               <span>{item.price || 0.0}</span>
             </span>
-          </>
+          </div>
         ) : searchType === 'contracts' ? (
-          <div className="flex-col">
+          <div className="flex-1 flex-col">
             <div className="leading-20">Name : {item.name || 'Unknown'}</div>
             <div className="search-result-ul-item-gray leading-20">
               <IconFont type="Contract" className="mr-1 size-3" />
@@ -88,12 +88,15 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
             </div>
           </div>
         ) : (
-          <div className="w-full break-words text-sm leading-[22px] text-base-100">
-            {searchType === 'transaction' || searchType === 'block'
-              ? item?.transactionId || item?.blockHeight
-              : addressFormat((item as string) || '', defaultChain)}
+          <div className="max-w-full flex-1 break-words text-sm leading-[22px] text-base-100">
+            {searchType === 'transaction'
+              ? item?.transactionId
+              : searchType === 'blocks'
+                ? item.blockHeight
+                : addressFormat(item.address || '', defaultChain)}
           </div>
         )}
+        <BasicTag chainIds={item.chainIds || []} />
       </li>
     </Link>
   );

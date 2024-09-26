@@ -3,9 +3,7 @@ import type { ITabsProps } from 'aelf-design';
 import { useEffect, useImperativeHandle, useState, forwardRef } from 'react';
 import './index.css';
 import { useEffectOnce } from 'react-use';
-import { useDeleteQueryParam, useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-import { contractKey } from '@_components/AddressDetail/components/Contract';
-import { getFirstHashValue } from '@_utils/formatter';
+import { useDeleteQueryParam } from '@_hooks/useUpdateQueryParams';
 import { useSearchParams } from 'next/navigation';
 
 export interface EPTabsRef {
@@ -30,11 +28,11 @@ const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChan
   useEffect(() => {
     if (selectKey) {
       if (selectKey) {
-        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter'], {
+        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain'], {
           tab: selectKey,
         });
       } else {
-        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter']);
+        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain']);
       }
       setActiveKey(selectKey as string);
     }
@@ -45,11 +43,11 @@ const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChan
     onTabChange?.(activeKey);
     window.location.hash = '';
     if (activeKey) {
-      deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter'], {
+      deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain'], {
         tab: activeKey,
       });
     } else {
-      deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter']);
+      deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain']);
     }
     setActiveKey(activeKey);
   };

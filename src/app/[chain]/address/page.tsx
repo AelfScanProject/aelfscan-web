@@ -1,4 +1,4 @@
-import { getPageNumber, getSort } from '@_utils/formatter';
+import { getChainId, getSort } from '@_utils/formatter';
 import AccountsList from './list';
 import { fetchServerTopAccounts } from '@_api/fetchContact';
 import { TablePageSize } from '@_types/common';
@@ -10,8 +10,9 @@ export default async function AccountsPage({ params, searchParams }) {
   const defaultPageType = Number(searchParams['pageType'] || PageTypeEnum.NEXT) as unknown as PageTypeEnum;
   const defaultSearchAfter = searchParams['searchAfter'];
   const sort = getSort(defaultPageType, p);
+  const defaultChain = searchParams['chain'] || params.chain;
   const data = await fetchServerTopAccounts({
-    chainId: params.chain || 'AELF',
+    chainId: getChainId(defaultChain),
     maxResultCount: ps,
     searchAfter: defaultSearchAfter && JSON.parse(defaultSearchAfter),
     orderInfos: [
@@ -26,6 +27,7 @@ export default async function AccountsPage({ params, searchParams }) {
       defaultPage={Number(p)}
       defaultPageSize={Number(ps)}
       defaultPageType={defaultPageType}
+      defaultChain={defaultChain}
     />
   );
 }

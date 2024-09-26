@@ -14,5 +14,10 @@ export const THEME_CONFIG: ThemeConfig = {
     Descriptions: {
       itemPaddingBottom: 0,
     },
+    Tag: {
+      defaultBg: '#F7F8FA',
+      defaultColor: '#252525',
+      colorBorder: '#EAECEF',
+    },
   },
 };

@@ -10,13 +10,13 @@ import Transfers, { ITransfersRef } from './_components/Transfers';
 import './index.css';
 import { ITokenDetail, SearchType } from './type';
 import { formatSearchValue, getSearchType } from './utils';
+import { useParams } from 'next/navigation';
+import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 
 const { Title } = Typography;
 
 interface IDetailProps {
   tokenDetail: ITokenDetail;
-  // transfersList: ITransferTableData;
-  // holdersList: IHolderTableData;
 }
 
 export default function Detail({ tokenDetail }: IDetailProps) {
@@ -36,7 +36,6 @@ export default function Detail({ tokenDetail }: IDetailProps) {
     const searchType = getSearchType(value);
     transfersRef?.current?.setSearchStr(val);
     setSearchType(searchType);
-    // fetchTransfersData({ page: 1, pageSize: 50, searchText: val });
   }, []);
 
   const items: TabsProps['items'] = useMemo(() => {
@@ -64,7 +63,6 @@ export default function Detail({ tokenDetail }: IDetailProps) {
           searchType={searchType}
           search={search}
           searchText={searchText}
-          // SSRData={holdersList}
           onSearchChange={onSearchChange}
           onSearchInputChange={onSearchInputChange}
         />
@@ -77,9 +75,18 @@ export default function Detail({ tokenDetail }: IDetailProps) {
     return [transfersItem, holdersItem];
   }, [onSearchChange, onSearchInputChange, search, searchText, searchType]);
 
+  const { tokenSymbol } = useParams();
+  const sideChain = useSideChain();
+
+  const multi = useMultiChain();
+
   return (
     <div className="token-detail">
-      <HeadTitle content={`${tokenDetail?.token?.name || '--'}`} adPage="tokendetail">
+      <HeadTitle
+        content={`${tokenDetail?.token?.name || '--'}`}
+        adPage="tokendetail"
+        mainLink={multi && tokenDetail?.chainIds?.includes('AELF') ? `/AELF/token/${tokenSymbol}` : ''}
+        sideLink={multi && tokenDetail?.chainIds?.includes(sideChain) ? `/${sideChain}/token/${tokenSymbol}` : ''}>
         <Title
           level={6}
           fontWeight={FontWeightEnum.Bold}

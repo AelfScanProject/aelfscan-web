@@ -1,7 +1,7 @@
 import { ILogsProps } from '@_components/LogsContainer/type';
 import { AddressType, SortEnum } from '@_types/common';
 
-export type TChainID = 'AELF' | 'tDVV' | 'tDVW';
+export type TChainID = 'AELF' | 'tDVV' | 'tDVW' | '' | 'multiChain';
 
 export interface IBurntFee {
   usdFee: number;
@@ -48,6 +48,7 @@ export interface ITransactionsRequestParams extends RequestInit {
 export interface ITransactionsResponseItem {
   transactionId: string;
   status: TransactionStatus;
+  chainIds: TChainID[];
   method: string;
   blockHeight: number;
   timestamp: string;
@@ -78,6 +79,7 @@ export interface IBlocksRequestParams extends RequestInit {
 export interface IBlocksResponseItem {
   blockHeight: number;
   timestamp: string;
+  chainIds: TChainID[];
   transactionCount: number;
   timeSpan: string;
   reward: string;
@@ -281,6 +283,7 @@ export interface IContractRequestParams extends RequestInit {
 export interface IContractDataItem {
   address: string;
   contractName: string;
+  chainIds: TChainID[];
   type: string;
   contractVersion: string;
   version: string;
@@ -298,6 +301,7 @@ export interface IContractResponseData {
 export interface IAccountsItem {
   balance: string;
   transactionCount: number;
+  chainIds: TChainID[];
   percentage: number;
   address: string;
   addressType: AddressType;
@@ -349,11 +353,38 @@ export interface IAccountTransfersRequestParams extends RequestInit {
 export interface IBlockchainOverviewResponse {
   tokenPriceInUsd: number;
   tokenPriceRate24h: number;
+  mergeAccounts: {
+    total: number;
+    mainChain: number;
+    sideChain: number;
+  };
+  mergeTokens: {
+    total: number;
+    mainChain: number;
+    sideChain: number;
+  };
+  mergeNfts: {
+    total: number;
+    mainChain: number;
+    sideChain: number;
+  };
+  mergeTransactions: {
+    total: number;
+    mainChain: number;
+    sideChain: number;
+  };
+  mergeTps: {
+    total: string;
+    mainChain: string;
+    sideChain: string;
+  };
   transactions: number;
   tps: number;
   tpsTime: string;
   reward: string;
+  marketCap: string;
   blockHeight: number;
+  tokens: number;
   accounts: number;
   citizenWelfare: string;
 }
@@ -366,6 +397,7 @@ export interface ISearchParams extends RequestInit {
 }
 
 import { IToken } from '@_types/common';
+import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
 import { ISearchProps } from 'aelf-design';
 
 // Collection detail api return type
@@ -374,10 +406,24 @@ export interface CollectionDetailData {
   nftCollection: IToken;
   items: number;
   holders: number;
+  mergeItems: string;
+  mergeTransferCount: number;
+  mergeHolders: number;
   transferCount: number;
   floorPriceOfUsd: number;
   floorPrice: number;
   tokenContractAddress: string;
+  mainChainFloorPrice: number;
+  sideChainFloorPrice: number;
+  mainChainFloorPriceOfUsd: number;
+  sideChainFloorPriceOfUsd: number;
+  mainChainItems: number;
+  mainChainHolders: number;
+  mainChainTransferCount: number;
+  sideChainItems: number;
+  sideChainHolders: number;
+  sideChainTransferCount: number;
+  chainIds: TChainID[];
 }
 
 export interface CollectionDetailApiResponse {
@@ -395,6 +441,7 @@ export interface CollectionTransfer {
   transactionId: string;
   status: TransactionStatus;
   method: string;
+  chainIds: TChainID[];
   blockHeight: number;
   blockTime: string;
   from: IFromInfo;
@@ -424,6 +471,7 @@ export interface Address {
 export interface HolderItem {
   address: Address;
   quantity: string;
+  chainIds: TChainID[];
   percentage: string;
   value: number;
 }
@@ -447,6 +495,7 @@ export interface InventoryItem {
   lastSaleAmountSymbol: string;
   blockHeight: number;
   lastSalePrice: number;
+  chainIds: TChainID[];
 }
 export interface CollectionInventoryData {
   total: number;
@@ -494,6 +543,7 @@ export interface IActivityTableData {
   transactionId: string;
   action: string;
   blockTime: number;
+  chainIds: TChainID[];
   price: number;
   priceOfUsd: number;
   priceSymbol: string;
@@ -517,6 +567,7 @@ export interface ItemSymbolDetailOverview {
   holders: number;
   owner: string[];
   issuer: string[];
+  chainIds: TChainID[];
   tokenSymbol: string;
   quantity: number;
   marketPlaces: MarketPlace;
@@ -544,4 +595,14 @@ export interface IPageBannerAdsDetail {
   clickLink: string;
   text: string;
   searchKey: string;
+}
+
+export interface ITopTokensItem {
+  imageUrl: string;
+  tokenName: string;
+  chainIds: TChainID[];
+  symbol: string;
+  type: TokenTypeEnum;
+  transfers: number;
+  holder: number;
 }

@@ -1,31 +1,45 @@
 .chain-select-container {
-  @apply py-2 mr-5;
+  @apply py-2;
   .explorer-select-selector {
-    @apply !border-[#266CD3] !px-2 !py-[5px] h-8 flex justify-center align-middle;
+    @apply  !px-2 !py-[5px] h-8 flex justify-center align-middle;
     .explorer-select-selection-search {
-      @apply !h-[22px] !text-[14px] !leading-[22px] !text-link;
+      @apply !h-[22px] !text-[14px] !leading-[22px] text-base-100 font-medium;
       input {
         @apply !h-[22px] !leading-[22px];
       }
     }
     .explorer-select-selection-item {
-      @apply text-link !h-[22px] !leading-[22px] !pr-[21px];
+      @apply text-base-100 font-medium !h-[22px] !leading-[22px] !pr-[21px];
+    }
+
+    &:hover {
+      @apply !bg-[#F7F8FA] !border-[#EAECEF];
     }
   }
   .explorer-select-arrow {
     svg {
-      @apply !text-link;
+      @apply text-base-100;
     }
   }
   .explorer-select-single.explorer-select-open {
     .explorer-select-selection-item {
-      @apply !text-link;
+      @apply text-base-100 font-medium;
+    }
+    .explorer-select-selector {
+      @apply !bg-[#F7F8FA] !border-[#EAECEF];
+    }
+
+    .explorer-select-arrow {
+      svg {
+        @apply transition-all rotate-180;
+      }
     }
   }
 }
 
 .chain-select-options.explorer-select-dropdown {
-  @apply !px-2 !pt-2 !pb-1 !mt-6 !top-[82px];
+  /* @apply !px-2 !pt-2 !pb-1 !mt-6 !top-[82px]; */
+  @apply !p-4;
   .explorer-select-item {
     @apply min-h-[32px] !py-[6px] !px-2 !mb-1;
     .explorer-select-item-option-content {
@@ -36,6 +50,6 @@
     @apply !bg-transparent !font-[400] !text-link;
   }
   .explorer-select-item-option-active {
-    @apply !bg-[#D8DDE5];
+    @apply !bg-[#F7F8FA];
   }
 }

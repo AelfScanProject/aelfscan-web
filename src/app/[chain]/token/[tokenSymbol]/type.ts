@@ -1,4 +1,4 @@
-import { IFromInfo } from '@_api/type';
+import { IFromInfo, TChainID } from '@_api/type';
 import { IToken } from '@_types/common';
 
 export interface ITransferItem {
@@ -8,6 +8,7 @@ export interface ITransferItem {
   blockHeight: string;
   blockTime: string;
   from: IFromInfo;
+  chainIds: TChainID[];
   to: IFromInfo;
   quantity: number;
 }
@@ -23,6 +24,7 @@ export interface ITransferTableData {
 export interface IHolderItem {
   address: IFromInfo;
   quantity: string;
+  chainIds: TChainID[];
   percentage: string;
   value: string;
 }
@@ -44,13 +46,24 @@ export interface ITokenDetail {
   token: IToken;
   totalSupply: string;
   circulatingSupply: string;
+  mergeCirculatingSupply: number;
+  mergeTransferCount: number;
   holders: number;
   price: number;
+  chainIds: TChainID[];
   holderPercentChange24h: number;
   transferCount: number;
   pricePercentChange24h: number;
   tokenContractAddress: string;
   decimals: number;
+  // multi
+  mainChainCirculatingSupply: number;
+  sideChainCirculatingSupply: number;
+  mainChainHolders: number;
+  sideChainHolders: number;
+  mergeHolders: number;
+  mainChainTransferCount: number;
+  sideChainTransferCount: number;
 }
 
 export enum TokenTypeEnum {
@@ -64,6 +77,7 @@ export interface ITokenListItem {
   circulatingSupply: number;
   holderPercentChange24H: number;
   token: IToken;
+  chainIds: TChainID[];
   type: TokenTypeEnum;
 }
 
