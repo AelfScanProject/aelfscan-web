@@ -23,6 +23,7 @@ interface IProps {
 const clsPrefix = 'header-menu-container';
 export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: IProps) {
   const { defaultChain } = useAppSelector((state) => state.getChainId);
+  console.log(defaultChain, 'defaultChain');
 
   // TODO: use cms
   const items: MenuProps['items'] = useMemo(() => {
@@ -32,7 +33,10 @@ export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: 
         const path = ele.path;
         return {
           label: isURL(path) ? (
-            <a target="_blank" rel="noreferrer" href={`${path}?chainId=${defaultChain}`}>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={defaultChain === DEFAULT_CHAIN ? path : `${path}?chainId=${defaultChain}`}>
               {ele.label}
             </a>
           ) : (
@@ -63,7 +67,10 @@ export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: 
           const secondSlashIndex = path.slice(1).indexOf('/');
           item.children?.push({
             label: isURL(path) ? (
-              <a target="_blank" rel="noreferrer" href={`${path}?chainId=${defaultChain}`}>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={defaultChain === DEFAULT_CHAIN ? path : `${path}?chainId=${defaultChain}`}>
                 {label}
               </a>
             ) : (

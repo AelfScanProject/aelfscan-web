@@ -63,7 +63,10 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
         const key = secondSlashIndex === -1 ? path : getPathnameFirstSlash(path);
         return getItem(
           isURL(path) ? (
-            <a target="_blank" rel="noreferrer" href={`${path}?chainId=${defaultChain}`}>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={defaultChain === DEFAULT_CHAIN ? path : `${path}?chainId=${defaultChain}`}>
               {label}
             </a>
           ) : (
