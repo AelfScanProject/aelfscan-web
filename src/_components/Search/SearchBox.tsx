@@ -11,7 +11,7 @@ import { useState, useRef, MouseEvent, memo, isValidElement, useMemo, useEffect,
 import clsx from 'clsx';
 import Panel from './Panel';
 import SearchSelect from './Select';
-import { useUpdateDataByQuery, useSelected, useHighlight } from '@_hooks/useSearch';
+import { useUpdateDataByQuery, useSelected } from '@_hooks/useSearch';
 import { ISearchProps } from './type';
 import { useSearchContext } from './SearchProvider';
 import { setQuery, setClear } from './action';
@@ -22,9 +22,7 @@ import { IPageAdsDetail, TChainID } from '@_api/type';
 import { fetchAdsDetail, fetchSearchData } from '@_api/fetchSearch';
 import { useRouter } from 'next/navigation';
 import addressFormat from '@_utils/urlUtils';
-import { AddressType } from '@_types/common';
-import { getAddress } from '@_utils/formatter';
-import { Spin } from 'antd';
+import { getAddress, getChainId } from '@_utils/formatter';
 import { AdTracker } from '@_utils/ad';
 import dayjs from 'dayjs';
 import Image from 'next/image';
@@ -47,7 +45,7 @@ const Search = ({
 }: ISearchProps) => {
   // Global state from context
   const { state, dispatch } = useSearchContext();
-  const { query, selectedItem, highLight, filterType, queryResultData, canShowListBox } = state;
+  const { query, selectedItem, filterType, queryResultData, canShowListBox } = state;
 
   // Component state
   const [hasFocus, setHasFocus] = useState<boolean>(false);
@@ -95,7 +93,7 @@ const Search = ({
     } else {
       const params = {
         filterType: filterType?.filterType,
-        chainId: defaultChain as TChainID,
+        chainId: getChainId(defaultChain || ''),
         keyword: getAddress(query.trim()),
         searchType: 0,
       };
