@@ -11,13 +11,14 @@ import { message } from 'antd';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
-const title = 'aelf Wallet Address Chart';
-const getOption = (list: any[], chain): Highcharts.Options => {
+const title = 'aelf Cumulative Addresses Chart';
+const getOption = (list: any[], multi): Highcharts.Options => {
   const allData: any[] = [];
   const ownerData: any[] = [];
   const customMap = {};
-  const prefix = chain === 'AELF' ? 'MainChain' : 'SideChain';
+
   list.forEach((item) => {
     allData.push([item.date, item.totalUniqueAddressees]);
     ownerData.push([item.date, item.ownerUniqueAddressees]);
@@ -31,7 +32,7 @@ const getOption = (list: any[], chain): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: true,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -108,22 +109,30 @@ const getOption = (list: any[], chain): Highcharts.Options => {
         const ownerValue = customMap[date].ownerUniqueAddressees;
 
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(total)}</b><br/><b>${prefix} Wallet Addresses</b>: <b>${thousandsNumber(ownerValue)}</b><br/>Daily ${prefix} Increase: <b>${thousandsNumber(value)}</b><br/>
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(ownerValue)}</b><br/>Daily Increase: <b>${thousandsNumber(value)}</b><br/>
         `;
       },
     },
-    series: [
-      {
-        name: 'Total Wallet',
-        type: 'line',
-        data: allData,
-      },
-      {
-        name: prefix + ' Wallet',
-        type: 'line',
-        data: ownerData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'Total Wallet',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'Wallet',
+            type: 'line',
+            data: ownerData,
+          },
+        ]
+      : [
+          {
+            name: 'Wallet',
+            type: 'line',
+            data: ownerData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -152,9 +161,12 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+
+  const multi = useMultiChain();
+
   const options = useMemo(() => {
-    return getOption(data?.list || [], chain);
-  }, [data, chain]);
+    return getOption(data?.list || [], multi);
+  }, [data, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
@@ -183,17 +195,6 @@ export default function Page() {
                 <span className="px-1 font-bold">{thousandsNumber(data.highestIncrease.addressCount)}</span>
                 addresses was recorded on
                 <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highestIncrease.date)}</span>
-              </span>
-            ),
-          },
-          {
-            key: 'Lowest',
-            text: (
-              <span>
-                Lowest increase of
-                <span className="px-1 font-bold">{thousandsNumber(data.lowestIncrease.addressCount)}</span>
-                new addresses was recorded on{' '}
-                <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.lowestIncrease.date)}</span>
               </span>
             ),
           },

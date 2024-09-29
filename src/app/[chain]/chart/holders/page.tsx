@@ -11,7 +11,7 @@ import { fetchDailyHolder } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-const title = 'ELF Holders Account';
+const title = 'ELF Holders';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   list.forEach((item) => {
@@ -82,7 +82,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     yAxis: {
       title: {
-        text: 'ELF Holders Account',
+        text: 'ELF Holders',
       },
       labels: {
         formatter: function () {

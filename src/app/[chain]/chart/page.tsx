@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { useMobileContext } from '@app/pageProvider';
 import PageAd from '@_components/PageAd';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 const ChartData = [
   {
@@ -24,7 +25,7 @@ const ChartData = [
         key: 'marketcap',
       },
       {
-        title: 'ELF Supply Growth Chart',
+        title: 'ELF Circulating Supply Growth Chart',
         path: '/chart/supply-growth',
         key: 'supply-growth',
       },
@@ -50,7 +51,7 @@ const ChartData = [
         key: 'transactions',
       },
       {
-        title: 'aelf Wallet Address Chart',
+        title: 'aelf Cumulative Addresses Chart',
         path: '/chart/address',
         key: 'address',
       },
@@ -65,7 +66,7 @@ const ChartData = [
         key: 'active-address',
       },
       {
-        title: 'ELF Holders Account',
+        title: 'ELF Holders',
         path: '/chart/holders',
         key: 'holders',
       },
@@ -98,6 +99,7 @@ const ChartData = [
   },
   {
     id: 'section-network-data',
+    hiddenMulti: true,
     title: 'Network Data',
     charts: [
       {
@@ -165,9 +167,27 @@ const items = [
 export default function Page() {
   const { chartImg } = useMobileContext();
   const { chain } = useParams();
+  const multi = useMultiChain();
   const chainType = useMemo(() => {
+    if (multi) return 'multi';
     return chain === 'AELF' ? 'mainChain' : 'sideChain';
-  }, [chain]);
+  }, [chain, multi]);
+
+  const AnchorItems = useMemo(() => {
+    if (multi) {
+      return items.filter((item) => item.key !== '3');
+    } else {
+      return items;
+    }
+  }, [multi]);
+
+  const renderChartData = useMemo(() => {
+    if (multi) {
+      return ChartData.filter((item) => !item.hiddenMulti);
+    } else {
+      return ChartData;
+    }
+  }, [multi]);
 
   return (
     <div className="mb-[-40px]">
@@ -175,23 +195,15 @@ export default function Page() {
         aelf Charts & Statistics
       </div>
       <PageAd hiddenBorder adPage="chart" />
-      {/* <Button
-        onClick={() => {
-          AdTracker.trackEvent('test-tracker', {
-            page: 'chart',
-          });
-        }}>
-        tracker test
-      </Button> */}
       <div className="charts-container flex">
         <div className="col-xl-2 col-lg-3 d-lg-block box-border hidden border-r border-solid border-color-divider pr-8">
           <div className="sticky top-[120px]">
-            <Anchor targetOffset={200} items={items} />
+            <Anchor targetOffset={200} items={AnchorItems} />
           </div>
         </div>
 
         <div className="w-full min-[993px]:pl-8">
-          {ChartData.map((chartItem) => {
+          {renderChartData.map((chartItem) => {
             return (
               <section id={chartItem.id} key={chartItem.id} className="section-container mb-10">
                 <div className="title mb-4 text-base font-medium text-base-100">{chartItem.title}</div>
