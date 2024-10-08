@@ -1,7 +1,7 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import '../index.css';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IDeployedContractsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
@@ -13,23 +13,46 @@ import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import dayjs from 'dayjs';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 const title = 'aelf Deployed Contracts Chart';
-const getOption = (list: any[]): Highcharts.Options => {
+const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
   const dailyIncreaseData: any[] = [];
   const customMap = {};
 
   list.forEach((item) => {
-    const dateInMillis = dayjs(item.date).valueOf();
-    const totalCount = Number(item.totalCount);
-    const dailyIncreaseContract = Number(item.count);
+    if (multi) {
+      const dateInMillis = dayjs(item.date).valueOf();
+      const dailyIncreaseContract = Number(item.count);
 
-    allData.push([dateInMillis, totalCount]);
-    dailyIncreaseData.push([dateInMillis, dailyIncreaseContract]);
+      allData.push([dateInMillis, Number(item.mergeTotalCount)]);
+      mainData.push([dateInMillis, Number(item.mainChainTotalCount)]);
+      sideData.push([dateInMillis, Number(item.sideChainTotalCount)]);
+      dailyIncreaseData.push([dateInMillis, dailyIncreaseContract]);
 
-    customMap[item.date] = {};
-    customMap[item.date].dailyIncreaseContract = dailyIncreaseContract;
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.mergeTotalCount);
+      customMap[item.date].main = Number(item.mainChainTotalCount);
+      customMap[item.date].side = Number(item.sideChainTotalCount);
+      customMap[item.date].dailyIncreaseContract = dailyIncreaseContract;
+    } else {
+      const dateInMillis = dayjs(item.date).valueOf();
+      const dailyIncreaseContract = Number(item.count);
+
+      allData.push([dateInMillis, Number(item.totalCount)]);
+      mainData.push([dateInMillis, Number(item.totalCount)]);
+      sideData.push([dateInMillis, Number(item.totalCount)]);
+      dailyIncreaseData.push([dateInMillis, dailyIncreaseContract]);
+
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.totalCount);
+      customMap[item.date].main = Number(item.totalCount);
+      customMap[item.date].side = Number(item.totalCount);
+      customMap[item.date].dailyIncreaseContract = dailyIncreaseContract;
+    }
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -37,7 +60,7 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -96,7 +119,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     yAxis: {
       title: {
-        text: 'aelf Cumulative Contracts Chart',
+        text: 'aelf Cumulative Contracts',
       },
     },
     credits: {
@@ -110,19 +133,43 @@ const getOption = (list: any[]): Highcharts.Options => {
         const point = that.points[0] as any;
         const date = point.x;
         const value = point.y;
-        // const newContracts = customMap[date].dailyIncreaseContract;
-        return `
+        const { total, main, side } = customMap[date];
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Deployed Contracts: <b>${thousandsNumber(main)}</b><br/>SideChain Deployed Contracts: <b>${thousandsNumber(side)}</b><br/>
+        `;
+        } else {
+          return `
           ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(value)}</b><br/>
         `;
+        }
       },
     },
-    series: [
-      {
-        name: 'Cumulative Contracts',
-        type: 'line',
-        data: allData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'All Chains',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'MainChain',
+            type: 'line',
+            data: mainData,
+          },
+          {
+            name: 'SideChain',
+            type: 'line',
+            data: sideData,
+          },
+        ]
+      : [
+          {
+            name: 'Cumulative Contracts',
+            type: 'line',
+            data: chain === 'AELF' ? mainData : sideData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -141,7 +188,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyDeployContract({ chainId: chain });
+      const res = await fetchDailyDeployContract({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -153,9 +200,11 @@ export default function Page() {
     fetData();
   });
 
+  const multi = useMultiChain();
+
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain, multi);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {

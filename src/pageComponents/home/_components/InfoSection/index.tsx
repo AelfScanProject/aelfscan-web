@@ -167,7 +167,10 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
           <div className="content">
             <span className="title">
               {multi ? 'Total Account' : 'Accounts'}
-              <EPTooltip placement={isMD ? 'top' : 'topLeft'} mode="dark">
+              <EPTooltip
+                placement={isMD ? 'top' : 'topLeft'}
+                title={`The total number of addresses that have conducted at least one transaction on the MainChain or SideChain, representing active participation in the network.`}
+                mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
               </EPTooltip>
             </span>

@@ -61,7 +61,7 @@ const ChartData = [
         key: 'month-address',
       },
       {
-        title: 'Active aelf Addresses Chart',
+        title: 'Daily Active aelf Addresses',
         path: '/chart/active-address',
         key: 'active-address',
       },
@@ -81,7 +81,7 @@ const ChartData = [
         key: 'avg-txfee',
       },
       {
-        title: 'aelf Daily Tx fee Chart',
+        title: 'aelf Daily Transaction Fee',
         path: '/chart/txfee',
         key: 'txfee',
       },

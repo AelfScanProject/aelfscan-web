@@ -1,90 +1,89 @@
+import { TChainID } from '@_api/type';
 import { ReactNode } from 'react';
 
 export interface IHIGHLIGHTDataItem {
   hiddenTitle?: boolean;
   text: string | ReactNode;
+  hidden?: boolean;
   key: string;
 }
 
+interface IDailyTransactionsDataItem {
+  date: number;
+  transactionCount: number;
+  blockCount: number;
+  mainChainTransactionCount: number;
+  mergeTransactionCount: number;
+  sideChainTransactionCount: number;
+}
+
 export interface IDailyTransactionsData {
-  list: Array<{
-    date: number;
-    transactionCount: number;
-    blockCount: number;
-  }>;
-  highestTransactionCount: {
-    date: number;
-    transactionCount: number;
-    blockCount: number;
-  };
-  lowesTransactionCount: {
-    date: number;
-    transactionCount: number;
-    blockCount: number;
-  };
+  list: Array<IDailyTransactionsDataItem>;
+  highestTransactionCount: IDailyTransactionsDataItem;
+  lowesTransactionCount: IDailyTransactionsDataItem;
   chainId: string;
 }
+
+interface IDailyAddAddressDataItem {
+  date: number;
+  addressCount: number;
+  mainChainAddressCount: number;
+  mainChainTotalUniqueAddressees: number;
+  mergeAddressCount: number;
+  mergeTotalUniqueAddressees: number;
+  ownerUniqueAddressees: number;
+  sideChainAddressCount: number;
+  sideChainTotalUniqueAddressees: number;
+  totalUniqueAddressees: number;
+}
 export interface IDailyAddAddressData {
-  list: Array<{
-    date: number;
-    addressCount: number;
-    ownerUniqueAddressees: number;
-    totalUniqueAddressees: number;
-  }>;
-  highestIncrease: {
-    date: number;
-    addressCount: number;
-    ownerUniqueAddressees: number;
-  };
-  lowestIncrease: {
-    date: number;
-    addressCount: number;
-    ownerUniqueAddressees: number;
-  };
+  list: Array<IDailyAddAddressDataItem>;
+  highestIncrease: IDailyAddAddressDataItem;
+  lowestIncrease: IDailyAddAddressDataItem;
   chainId: string;
+}
+
+interface IDailyActiveAddressDataItem {
+  date: number;
+  addressCount: number;
+  mainChainAddressCount: number;
+  mainChainReceiveAddressCount: number;
+  mainChainSendAddressCount: number;
+  mergeAddressCount: number;
+  mergeReceiveAddressCount: number;
+  mergeSendAddressCount: number;
+  receiveAddressCount: number;
+  sendAddressCount: number;
+  sideChainAddressCount: number;
+  sideChainReceiveAddressCount: number;
+  sideChainSendAddressCount: number;
 }
 
 export interface IDailyActiveAddressData {
-  list: Array<{
-    date: number;
-    addressCount: number;
-    sendAddressCount: number;
-    receiveAddressCount: number;
-  }>;
-  highestActiveCount: {
-    date: number;
-    addressCount: number;
-    sendAddressCount: number;
-    receiveAddressCount: number;
-  };
-  lowestActiveCount: {
-    date: number;
-    addressCount: number;
-    sendAddressCount: number;
-    receiveAddressCount: number;
-  };
+  list: Array<IDailyActiveAddressDataItem>;
+  highestActiveCount: IDailyActiveAddressDataItem;
+  lowestActiveCount: IDailyActiveAddressDataItem;
   chainId: string;
 }
 
+interface IMonthActiveAddressDataItem {
+  dateMonth: number;
+  addressCount: number;
+  mergeAddressCount: number;
+  mainChainAddressCount: number;
+  sideChainAddressCount: number;
+  sendAddressCount: number;
+  receiveAddressCount: number;
+  mainChainReceiveAddressCount: number;
+  mainChainSendAddressCount: number;
+  sideChainReceiveAddressCount: number;
+  sideChainSendAddressCount: number;
+}
+
 export interface IMonthActiveAddressData {
-  list: Array<{
-    dateMonth: number;
-    addressCount: number;
-    sendAddressCount: number;
-    receiveAddressCount: number;
-  }>;
-  highestActiveCount: {
-    dateMonth: number;
-    addressCount: number;
-    sendAddressCount: number;
-    receiveAddressCount: number;
-  };
-  lowestActiveCount: {
-    dateMonth: number;
-    addressCount: number;
-    sendAddressCount: number;
-    receiveAddressCount: number;
-  };
+  list: Array<IMonthActiveAddressDataItem>;
+  highestActiveCount: IMonthActiveAddressDataItem;
+  lowestActiveCount: IMonthActiveAddressDataItem;
   chainId: string;
 }
 export interface IBlockProductionRateData {
@@ -146,6 +145,7 @@ export interface INodeBlockProduceData {
   blocks: number;
   missedBlocks: number;
   blocksRate: string;
+  chainIds: TChainID[];
   missedCycle: number;
   cycleRate: string;
   nodeName: string;
@@ -155,39 +155,35 @@ export interface INodeBlockProduceDataItem {
   list: Array<INodeBlockProduceData>;
 }
 
+interface IAvgTxFeeDataItem {
+  date: number;
+  avgFeeUsdt: string;
+  avgFeeElf: string;
+  mainChainAvgFeeUsdt: string;
+  mergeAvgFeeUsdt: string;
+  sideChainAvgFeeUsdt: string;
+}
+
 export interface IAvgTxFeeData {
   chainId: string;
-  highest: {
-    date: number;
-    avgFeeUsdt: string;
-    avgFeeElf: string;
-  };
-  lowest: {
-    date: number;
-    avgFeeUsdt: string;
-    avgFeeElf: string;
-  };
-  list: Array<{
-    date: number;
-    avgFeeUsdt: string;
-    avgFeeElf: string;
-  }>;
+  highest: IAvgTxFeeDataItem;
+  lowest: IAvgTxFeeDataItem;
+  list: Array<IAvgTxFeeDataItem>;
+}
+
+interface IAvgBlockSizeDataItem {
+  date: number;
+  avgBlockSize: string;
+  mainChainTotalSize: number;
+  mergeTotalSize: number;
+  sideChainTotalSize: number;
 }
 
 export interface IAvgBlockSizeData {
   chainId: string;
-  highest: {
-    date: number;
-    avgBlockSize: string;
-  };
-  lowest: {
-    date: number;
-    avgBlockSize: string;
-  };
-  list: Array<{
-    date: number;
-    avgBlockSize: string;
-  }>;
+  highest: IAvgBlockSizeDataItem;
+  lowest: IAvgBlockSizeDataItem;
+  list: Array<IAvgBlockSizeDataItem>;
 }
 
 export interface IDailyBlockRewardsData {
@@ -217,39 +213,35 @@ export interface IDailyPriceDData {
   }>;
 }
 
+interface IDailyBurntDataItem {
+  date: number;
+  burnt: string;
+  mainChainBurnt: number;
+  mergeBurnt: number;
+  sideChainBurnt: number;
+}
+
 export interface IDailyBurntData {
   chainId: string;
-  highest: {
-    date: number;
-    burnt: string;
-  };
-  lowest: {
-    date: number;
-    burnt: string;
-  };
-  list: Array<{
-    date: number;
-    burnt: string;
-  }>;
+  highest: IDailyBurntDataItem;
+  lowest: IDailyBurntDataItem;
+  list: Array<IDailyBurntDataItem>;
+}
+
+interface IDeployedContractsDataItem {
+  date: number;
+  count: string;
+  totalCount: string;
+  mainChainTotalCount: string;
+  mergeTotalCount: string;
+  sideChainTotalCount: string;
 }
 
 export interface IDeployedContractsData {
   chainId: string;
-  highest: {
-    date: number;
-    count: string;
-    totalCount: string;
-  };
-  lowest: {
-    date: number;
-    count: string;
-    totalCount: string;
-  };
-  list: Array<{
-    date: number;
-    totalCount: number;
-    count: number;
-  }>;
+  highest: IDeployedContractsDataItem;
+  lowest: IDeployedContractsDataItem;
+  list: Array<IDeployedContractsDataItem>;
 }
 
 export interface ISupplyGrowthData {
@@ -274,55 +266,50 @@ export interface IStakedData {
     rate: string;
   }>;
 }
+
+interface IDailyTxFeeDataItem {
+  date: number;
+  totalFeeElf: string;
+  mainChainTotalFeeElf: string;
+  mergeTotalFeeElf: string;
+  sideChainTotalFeeElf: string;
+}
 export interface IDailyTxFeeData {
   chainId: string;
-  highest: {
-    date: number;
-    totalFeeElf: string;
-  };
-  lowest: {
-    date: number;
-    totalFeeElf: string;
-  };
-  list: Array<{
-    date: number;
-    totalFeeElf: string;
-  }>;
+  highest: IDailyTxFeeDataItem;
+  lowest: IDailyTxFeeDataItem;
+  list: Array<IDailyTxFeeDataItem>;
+}
+
+interface IHoldersAccountDataItem {
+  date: number;
+  count: number;
+  mainCount: number;
+  mergeCount: number;
+  sideCount: number;
 }
 
 export interface IHoldersAccountData {
   chainId: string;
-  highest: {
-    date: number;
-    count: number;
-  };
-  lowest: {
-    date: number;
-    count: number;
-  };
-  list: Array<{
-    date: number;
-    count: number;
-  }>;
+  highest: IHoldersAccountDataItem;
+  lowest: IHoldersAccountDataItem;
+  list: Array<IHoldersAccountDataItem>;
+}
+
+interface IContractCallsItem {
+  date: number;
+  callAddressCount: number;
+  callCount: number;
+  mainChainCallCount: number;
+  mergeCallCount: number;
+  sideChainCallCount: number;
 }
 
 export interface IContractCalls {
   chainId: string;
-  highest: {
-    date: number;
-    callAddressCount: number;
-    callCount: number;
-  };
-  lowest: {
-    date: number;
-    callAddressCount: number;
-    callCount: number;
-  };
-  list: Array<{
-    date: number;
-    callAddressCount: number;
-    callCount: number;
-  }>;
+  highest: IContractCallsItem;
+  lowest: IContractCallsItem;
+  list: Array<IContractCallsItem>;
 }
 
 export interface IContractCallItem {

@@ -134,11 +134,11 @@ export default function TableApp({
           <div
             className={clsx(
               'header-pagination flex w-full flex-col items-start min-[769px]:w-auto  min-[769px]:flex-row min-[769px]:items-center',
-              showTopSearch && 'gap-3 min-[769px]:gap-0',
+              showTopSearch && '!flex-row gap-3 min-[769px]:!w-full min-[769px]:flex-row min-[993px]:!w-auto',
             )}>
             {showMultiChain && (
-              <div className="w-full min-[769px]:w-auto">
-                <MultiChainSelect props={MultiChainSelectProps} />
+              <div className="min-w-[120px] max-w-[160px] min-[769px]:w-auto">
+                <MultiChainSelect props={MultiChainSelectProps} className="min-w-[120px]" />
               </div>
             )}
             {showTopSearch ? (
@@ -150,6 +150,7 @@ export default function TableApp({
                 mode="dark">
                 <EPSearch
                   {...searchProps}
+                  className={`${topSearchProps?.className} w-auto flex-1`}
                   onPressEnter={({ currentTarget }) => {
                     onSearchChange?.(currentTarget.value);
                     topSearchProps?.onPressEnter?.(currentTarget.value);

@@ -1,11 +1,10 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IDailyBlockRewardsData } from '../type';
 const title = 'aelf Daily Block Rewards Chart';
-import dayjs from 'dayjs';
 import { exportToCSV } from '@_utils/urlUtils';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
@@ -13,12 +12,15 @@ import { fetchDailyBlockReward } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-const getOption = (list: any[]): Highcharts.Options => {
+import { useMultiChain } from '@_hooks/useSelectChain';
+const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.blockReward)]);
+    const data = Number(item.blockReward);
+    allData.push([item.date, data]);
     customMap[item.date] = {};
+    customMap[item.date].total = data;
     customMap[item.date].totalBlockCount = item.totalBlockCount;
   });
 
@@ -27,7 +29,7 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -99,11 +101,16 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const value = point.y;
-        const totalBlockCount = customMap[date].totalBlockCount;
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Daily Block Rewards</b>: <b>${thousandsNumber(value)} ELF</b><br/>Total Blocks: <b>${thousandsNumber(totalBlockCount)}</b><br/>
+        const { total, totalBlockCount } = customMap[date];
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Daily Block Rewards</b>: <b>${thousandsNumber(total)}</b><br/>Total Blocks: <b>${thousandsNumber(totalBlockCount)}</b><br/>
         `;
+        } else {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Daily Block Rewards</b>: <b>${thousandsNumber(total)} ELF</b><br/>Total Blocks: <b>${thousandsNumber(totalBlockCount)}</b><br/>
+        `;
+        }
       },
     },
     series: [
@@ -130,7 +137,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyBlockReward({ chainId: chain });
+      const res = await fetchDailyBlockReward({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -141,9 +148,10 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+  const multi = useMultiChain();
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain, multi);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {

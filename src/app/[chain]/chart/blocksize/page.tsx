@@ -1,6 +1,6 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IAvgBlockSizeData } from '../type';
@@ -12,10 +12,31 @@ import { fetchDailyAvgBlockSize } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-const getOption = (list: any[]): Highcharts.Options => {
+import { useMultiChain } from '@_hooks/useSelectChain';
+const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
+  const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.avgBlockSize)]);
+    if (multi) {
+      allData.push([item.date, Number(item.mergeTotalSize)]);
+      mainData.push([item.date, Number(item.mainChainTotalSize)]);
+      sideData.push([item.date, Number(item.sideChainTotalSize)]);
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.mergeTotalSize);
+      customMap[item.date].main = Number(item.mainChainTotalSize);
+      customMap[item.date].side = Number(item.sideChainTotalSize);
+    } else {
+      const data = Number(item.avgBlockSize);
+      allData.push([item.date, data]);
+      mainData.push([item.date, data]);
+      sideData.push([item.date, data]);
+      customMap[item.date] = {};
+      customMap[item.date].total = data;
+      customMap[item.date].main = data;
+      customMap[item.date].side = data;
+    }
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -23,7 +44,7 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -95,19 +116,43 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const value = point.y;
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Block Size(Bytes)</b>: <b>${thousandsNumber(value)}</b><br/>
+        const { total, main, side } = customMap[date];
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Block Size(Bytes)</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Block Size(Bytes): <b>${thousandsNumber(main)}</b><br/>SideChain Block Size(Bytes): <b>${thousandsNumber(side)}</b><br/>
         `;
+        } else {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Block Size(Bytes)</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>
+        `;
+        }
       },
     },
-    series: [
-      {
-        name: title,
-        type: 'line',
-        data: allData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'All Chains',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'MainChain',
+            type: 'line',
+            data: mainData,
+          },
+          {
+            name: 'SideChain',
+            type: 'line',
+            data: sideData,
+          },
+        ]
+      : [
+          {
+            name: title,
+            type: 'line',
+            data: allData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -125,7 +170,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyAvgBlockSize({ chainId: chain });
+      const res = await fetchDailyAvgBlockSize({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -136,9 +181,10 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+  const multi = useMultiChain();
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain, multi);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {

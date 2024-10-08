@@ -1,11 +1,10 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IAvgTxFeeData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Average Transaction Fee';
-import dayjs from 'dayjs';
 import { exportToCSV } from '@_utils/urlUtils';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
@@ -13,20 +12,39 @@ import { fetchDailyAvgTransactionFee } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-const getOption = (list: any[]): Highcharts.Options => {
+import { useMultiChain } from '@_hooks/useSelectChain';
+const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.avgFeeUsdt)]);
-    customMap[item.date] = {};
-    customMap[item.date].avgFeeElf = item.avgFeeElf;
+    if (multi) {
+      allData.push([item.date, Number(item.mergeAvgFeeUsdt)]);
+      mainData.push([item.date, Number(item.mainChainAvgFeeUsdt)]);
+      sideData.push([item.date, Number(item.sideChainAvgFeeUsdt)]);
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.mergeAvgFeeUsdt);
+      customMap[item.date].main = Number(item.mainChainAvgFeeUsdt);
+      customMap[item.date].side = Number(item.sideChainAvgFeeUsdt);
+      customMap[item.date].avgFeeElf = item.avgFeeElf;
+    } else {
+      allData.push([item.date, Number(item.avgFeeUsdt)]);
+      mainData.push([item.date, Number(item.avgFeeUsdt)]);
+      sideData.push([item.date, Number(item.avgFeeUsdt)]);
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.avgFeeUsdt);
+      customMap[item.date].main = Number(item.avgFeeUsdt);
+      customMap[item.date].side = Number(item.avgFeeUsdt);
+      customMap[item.date].avgFeeElf = item.avgFeeElf;
+    }
   });
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -85,7 +103,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     yAxis: {
       title: {
-        text: 'Average Txn Fee',
+        text: title,
       },
     },
     credits: {
@@ -98,20 +116,43 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const value = point.y;
-        const avgFeeElf = customMap[date].avgFeeElf;
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Txn Fee</b>: <b>$${thousandsNumber(value)}</b><br/>Average Txn Fee(ELF): <b>${thousandsNumber(avgFeeElf)} ELF</b><br/>
+        const { total, main, side, avgFeeElf } = customMap[date];
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Txn Fee</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Average Tx Fee: <b>${thousandsNumber(main)}</b><br/>SideChain Average Tx Fee: <b>${thousandsNumber(side)}</b><br/>
         `;
+        } else {
+          return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Txn Fee</b>: <b>$${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Average Txn Fee(ELF): <b>${thousandsNumber(avgFeeElf)} ELF</b><br/>
+      `;
+        }
       },
     },
-    series: [
-      {
-        name: 'Active Addresses',
-        type: 'line',
-        data: allData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'All Chains',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'MainChain',
+            type: 'line',
+            data: mainData,
+          },
+          {
+            name: 'SideChain',
+            type: 'line',
+            data: sideData,
+          },
+        ]
+      : [
+          {
+            name: 'Active Addresses',
+            type: 'line',
+            data: chain === 'AELF' ? mainData : sideData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -129,7 +170,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyAvgTransactionFee({ chainId: chain });
+      const res = await fetchDailyAvgTransactionFee({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -140,9 +181,12 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+
+  const multi = useMultiChain();
+
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain, multi);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
@@ -159,6 +203,7 @@ export default function Page() {
     exportToCSV(data?.list || [], title);
   };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
+    const key = multi ? 'mergeAvgFeeUsdt' : 'avgFeeUsdt';
     return data
       ? [
           {
@@ -166,7 +211,7 @@ export default function Page() {
             text: (
               <span>
                 Lowest average transaction fee of
-                <span className="px-1 font-bold">${thousandsNumber(data.lowest?.avgFeeUsdt)}</span>
+                <span className="px-1 font-bold">${thousandsNumber(data.lowest[key])}</span>
                 on
                 <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.lowest?.date)}</span>
               </span>
@@ -177,14 +222,14 @@ export default function Page() {
             text: (
               <span>
                 Highest average transaction fee of
-                <span className="px-1 font-bold">${thousandsNumber(data.highest?.avgFeeUsdt)}</span>
+                <span className="px-1 font-bold">${thousandsNumber(data.highest[key])}</span>
                 on {Highcharts.dateFormat('%A, %B %e, %Y', data.highest?.date)}
               </span>
             ),
           },
         ]
       : [];
-  }, [data]);
+  }, [data, multi]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

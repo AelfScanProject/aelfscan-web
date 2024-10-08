@@ -1,11 +1,10 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IDailyBurntData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Daily ELF Burnt Chart';
-import dayjs from 'dayjs';
 import { exportToCSV } from '@_utils/urlUtils';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
@@ -13,10 +12,30 @@ import { fetchDailyTotalBurnt } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-const getOption = (list: any[]): Highcharts.Options => {
+import { useMultiChain } from '@_hooks/useSelectChain';
+const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
+  const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.burnt)]);
+    if (multi) {
+      allData.push([item.date, Number(item.mergeBurnt)]);
+      mainData.push([item.date, Number(item.mainChainBurnt)]);
+      sideData.push([item.date, Number(item.sideChainBurnt)]);
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.mergeBurnt);
+      customMap[item.date].main = Number(item.mainChainBurnt);
+      customMap[item.date].side = Number(item.sideChainBurnt);
+    } else {
+      allData.push([item.date, Number(item.burnt)]);
+      mainData.push([item.date, Number(item.burnt)]);
+      sideData.push([item.date, Number(item.burnt)]);
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.burnt);
+      customMap[item.date].main = Number(item.burnt);
+      customMap[item.date].side = Number(item.burnt);
+    }
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -24,7 +43,7 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -96,19 +115,43 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const value = point.y;
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Daily ELF Burnt</b>: <b>${thousandsNumber(value)}</b><br/>
+        const { total, main, side } = customMap[date];
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Daily ELF Burnt</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Daily ELF Burnt: <b>${thousandsNumber(main)}</b><br/>SideChain Daily ELF Burnt: <b>${thousandsNumber(side)}</b><br/>
         `;
+        } else {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Daily ELF Burnt</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>
+        `;
+        }
       },
     },
-    series: [
-      {
-        name: title,
-        type: 'line',
-        data: allData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'All Chains',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'MainChain',
+            type: 'line',
+            data: mainData,
+          },
+          {
+            name: 'SideChain',
+            type: 'line',
+            data: sideData,
+          },
+        ]
+      : [
+          {
+            name: title,
+            type: 'line',
+            data: chain === 'AELF' ? mainData : sideData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -126,7 +169,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyTotalBurnt({ chainId: chain });
+      const res = await fetchDailyTotalBurnt({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -137,9 +180,11 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+
+  const multi = useMultiChain();
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain, multi);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
@@ -157,6 +202,7 @@ export default function Page() {
     exportToCSV(data?.list || [], title);
   };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
+    const key = multi ? 'mergeBurnt' : 'burnt';
     return data
       ? [
           {
@@ -164,7 +210,7 @@ export default function Page() {
             text: (
               <span>
                 Highest amount of ELF burnt
-                <span className="px-1 font-bold">{thousandsNumber(data.highest?.burnt)}</span>
+                <span className="px-1 font-bold">{thousandsNumber(data.highest[key])}</span>
                 ELF on
                 <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highest?.date)}</span>
               </span>
@@ -172,17 +218,18 @@ export default function Page() {
           },
           {
             key: 'Lowest',
+            hidden: multi,
             text: (
               <span>
                 Lowest amount of ELF burnt
-                <span className="px-1 font-bold">{thousandsNumber(data.lowest?.burnt)}</span>
+                <span className="px-1 font-bold">{thousandsNumber(data.lowest[key])}</span>
                 ELF on {Highcharts.dateFormat('%A, %B %e, %Y', data.lowest?.date)}
               </span>
             ),
           },
         ]
       : [];
-  }, [data]);
+  }, [data, multi]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

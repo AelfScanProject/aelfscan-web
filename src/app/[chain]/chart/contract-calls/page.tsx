@@ -1,6 +1,6 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IContractCalls, IHIGHLIGHTDataItem } from '../type';
@@ -12,21 +12,39 @@ import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import TopContract from './topContract';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
+import { useMultiChain } from '@_hooks/useSelectChain';
 const title = 'Contract Calls Chart';
-const getOption = (list: any[]): Highcharts.Options => {
+const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.callCount)]);
-    customMap[item.date] = {};
-    customMap[item.date].callAddressCount = item.callAddressCount;
+    if (multi) {
+      allData.push([item.date, item.mergeCallCount]);
+      mainData.push([item.date, item.mainChainCallCount]);
+      sideData.push([item.date, item.sideChainCallCount]);
+      customMap[item.date] = {};
+      customMap[item.date].total = item.mergeCallCount;
+      customMap[item.date].main = item.mainChainCallCount;
+      customMap[item.date].side = item.sideChainCallCount;
+    } else {
+      allData.push([item.date, item.callCount]);
+      mainData.push([item.date, item.callCount]);
+      sideData.push([item.date, item.callCount]);
+      customMap[item.date] = {};
+      customMap[item.date].total = item.callCount;
+      customMap[item.date].main = item.callCount;
+      customMap[item.date].side = item.callCount;
+      customMap[item.date].callAddressCount = item.callAddressCount;
+    }
   });
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -113,20 +131,44 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const value = point.y;
+        const { total, main, side } = customMap[date];
         const callAddressCount = customMap[date].callAddressCount;
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Number of Calls</b>: <b>${thousandsNumber(value)}</b><br/>Calling Accounts: <b>${thousandsNumber(callAddressCount)}</b><br/>
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Number of Calls</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Number of Calls: <b>${thousandsNumber(main)}</b><br/>SideChain Number of Calls: <b>${thousandsNumber(side)}</b><br/>
         `;
+        } else {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Number of Calls</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Calling Accounts: <b>${thousandsNumber(callAddressCount)}</b><br/>
+        `;
+        }
       },
     },
-    series: [
-      {
-        name: 'calls',
-        type: 'line',
-        data: allData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'All Chains',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'MainChain',
+            type: 'line',
+            data: mainData,
+          },
+          {
+            name: 'SideChain',
+            type: 'line',
+            data: sideData,
+          },
+        ]
+      : [
+          {
+            name: 'calls',
+            type: 'line',
+            data: chain === 'AELF' ? mainData : sideData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -144,7 +186,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyContractCall({ chainId: chain });
+      const res = await fetchDailyContractCall({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -155,9 +197,10 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+  const multi = useMultiChain();
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain, multi);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
@@ -174,6 +217,7 @@ export default function Page() {
     exportToCSV(data?.list || [], title);
   };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
+    const key = multi ? 'mergeCallCount' : 'callCount';
     return data
       ? [
           {
@@ -181,7 +225,7 @@ export default function Page() {
             text: (
               <span>
                 Highest calls of
-                <span className="px-1 font-bold">{thousandsNumber(data.highest.callCount)}</span>
+                <span className="px-1 font-bold">{thousandsNumber(data.highest[key])}</span>
                 were recorded on
                 <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highest.date)}</span>
               </span>
@@ -189,7 +233,7 @@ export default function Page() {
           },
         ]
       : [];
-  }, [data]);
+  }, [data, multi]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

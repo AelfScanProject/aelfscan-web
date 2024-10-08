@@ -1,7 +1,5 @@
 import { numberFormatter, thousandsNumber } from '@_utils/formatter';
 import TokensList from './List';
-import NFTAssets from './NFTAssets';
-import { Divider } from 'antd';
 import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { IAddressTokensDetail } from '@_types/commonDetail';
@@ -40,10 +38,6 @@ export default function Tokens({ tokenDetail }: { tokenDetail: IAddressTokensDet
         </div>
       </div>
       <TokensList />
-      <div className="px-4">
-        <Divider className="!m-0" />
-      </div>
-      <NFTAssets />
     </div>
   );
 }

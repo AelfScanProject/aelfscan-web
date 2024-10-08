@@ -6,7 +6,6 @@ import { TokensListItemType } from '@_types/commonDetail';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { getAddress, getChainId, getPageNumber, numberFormatter } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
-import { TChainID } from '@_api/type';
 import { fetchAccountsDetailTokens } from '@_api/fetchContact';
 import { TableProps } from 'antd';
 import { Switch } from 'aelf-design';
@@ -109,6 +108,7 @@ export default function TokensList() {
           topSearchProps={{
             value: searchText,
             placeholder: 'Search Token Name  Token Symbol',
+            className: '!w-auto !min-w-[176px]',
             onChange: ({ currentTarget }) => {
               setSearchText(currentTarget.value);
             },

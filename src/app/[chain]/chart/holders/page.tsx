@@ -1,6 +1,6 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IHIGHLIGHTDataItem, IHoldersAccountData } from '../type';
@@ -11,11 +11,31 @@ import { fetchDailyHolder } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
+import { useMultiChain } from '@_hooks/useSelectChain';
 const title = 'ELF Holders';
-const getOption = (list: any[]): Highcharts.Options => {
+const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
+  const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, item.count]);
+    if (multi) {
+      allData.push([item.date, item.mergeCount]);
+      mainData.push([item.date, item.mainCount]);
+      sideData.push([item.date, item.sideCount]);
+      customMap[item.date] = {};
+      customMap[item.date].total = item.mergeCount;
+      customMap[item.date].main = item.mainCount;
+      customMap[item.date].side = item.sideCount;
+    } else {
+      allData.push([item.date, item.count]);
+      mainData.push([item.date, item.count]);
+      sideData.push([item.date, item.count]);
+      customMap[item.date] = {};
+      customMap[item.date].total = item.count;
+      customMap[item.date].main = item.count;
+      customMap[item.date].side = item.count;
+    }
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -23,7 +43,7 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -110,19 +130,43 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const value = point.y;
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Holders</b>: <b>${thousandsNumber(value)}</b><br/>
+        const { total, main, side } = customMap[date];
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total ELF Holders</b>: <b>${thousandsNumber(total)}</b><br/>MainChain ELF Holders: <b>${thousandsNumber(main)}</b><br/>SideChain ELF Holders: <b>${thousandsNumber(side)}</b><br/>
         `;
+        } else {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Holders</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>
+        `;
+        }
       },
     },
-    series: [
-      {
-        name: 'Total Tx Fee',
-        type: 'line',
-        data: allData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'All Chains',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'MainChain',
+            type: 'line',
+            data: mainData,
+          },
+          {
+            name: 'SideChain',
+            type: 'line',
+            data: sideData,
+          },
+        ]
+      : [
+          {
+            name: 'Total Tx Fee',
+            type: 'line',
+            data: chain === 'AELF' ? mainData : sideData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -140,7 +184,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyHolder({ chainId: chain });
+      const res = await fetchDailyHolder({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -151,9 +195,10 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+  const multi = useMultiChain();
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain, multi);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
@@ -170,6 +215,7 @@ export default function Page() {
     exportToCSV(data?.list || [], title);
   };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
+    const key = multi ? 'mergeCount' : 'count';
     return data
       ? [
           {
@@ -177,7 +223,7 @@ export default function Page() {
             text: (
               <span>
                 Highest holders of
-                <span className="px-1 font-bold">{thousandsNumber(data.highest.count)}</span>
+                <span className="px-1 font-bold">{thousandsNumber(data.highest[key])}</span>
                 account were recorded on
                 <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highest.date)}</span>
               </span>
@@ -185,7 +231,7 @@ export default function Page() {
           },
         ]
       : [];
-  }, [data]);
+  }, [data, multi]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
