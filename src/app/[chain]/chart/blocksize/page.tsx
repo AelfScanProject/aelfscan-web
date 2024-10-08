@@ -20,13 +20,13 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const customMap = {};
   list.forEach((item) => {
     if (multi) {
-      allData.push([item.date, Number(item.mergeTotalSize)]);
-      mainData.push([item.date, Number(item.mainChainTotalSize)]);
-      sideData.push([item.date, Number(item.sideChainTotalSize)]);
+      allData.push([item.date, Number(item.mergeAvgBlockSize)]);
+      mainData.push([item.date, Number(item.mainChainAvgBlockSize)]);
+      sideData.push([item.date, Number(item.sideChainAvgBlockSize)]);
       customMap[item.date] = {};
-      customMap[item.date].total = Number(item.mergeTotalSize);
-      customMap[item.date].main = Number(item.mainChainTotalSize);
-      customMap[item.date].side = Number(item.sideChainTotalSize);
+      customMap[item.date].total = Number(item.mergeAvgBlockSize);
+      customMap[item.date].main = Number(item.mainChainAvgBlockSize);
+      customMap[item.date].side = Number(item.sideChainAvgBlockSize);
     } else {
       const data = Number(item.avgBlockSize);
       allData.push([item.date, data]);

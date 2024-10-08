@@ -174,9 +174,9 @@ export interface IAvgTxFeeData {
 interface IAvgBlockSizeDataItem {
   date: number;
   avgBlockSize: string;
-  mainChainTotalSize: number;
-  mergeTotalSize: number;
-  sideChainTotalSize: number;
+  mainChainAvgBlockSize: string;
+  mergeAvgBlockSize: string;
+  sideChainAvgBlockSize: string;
 }
 
 export interface IAvgBlockSizeData {
