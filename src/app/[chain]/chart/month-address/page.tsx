@@ -101,7 +101,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       endOnTick: false,
       minRange: 30 * 24 * 3600 * 1000, // Minimum range is 1 month
       dateTimeLabelFormats: {
-        month: '%B %Y', // Format x-axis labels as "Jan 2024"
+        month: '%b %y', // Format x-axis labels as "Jan 2024"
       },
     },
     yAxis: {

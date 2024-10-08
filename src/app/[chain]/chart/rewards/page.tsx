@@ -29,7 +29,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: multi,
+      enabled: false,
     },
     colors: ChartColors,
     chart: {
