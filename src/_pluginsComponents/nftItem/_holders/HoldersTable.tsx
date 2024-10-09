@@ -74,7 +74,7 @@ export default function Holder() {
     } finally {
       mountRef.current = true;
     }
-  }, [selectChain, currentPage, itemSymbol, pageSize, pageType]);
+  }, [selectChain, currentPage, itemSymbol, pageSize, pageType, updateQueryParams]);
 
   const multi = useMultiChain();
 

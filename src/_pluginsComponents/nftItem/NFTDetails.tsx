@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ITabsProps } from 'aelf-design';
 import Overview from './_overview/OverView';
 import EPTabs, { EPTabsRef } from '@_components/EPTabs';
@@ -17,18 +17,20 @@ export default function NFTDetails(props: NFTDetailsProps) {
   console.log(overview, 'overview');
   const tabRef = useRef<EPTabsRef>(null);
   const [selectKey, setSelectKey] = useState<string>('');
-  const tabItems: ITabsProps['items'] = [
-    {
-      key: '',
-      label: 'Item Activity',
-      children: <ItemActivityTable detailData={overview} />,
-    },
-    {
-      key: holders,
-      label: 'Holders',
-      children: <ItemHoldersTable />,
-    },
-  ];
+  const tabItems: ITabsProps['items'] = useMemo(() => {
+    return [
+      {
+        key: '',
+        label: 'Item Activity',
+        children: <ItemActivityTable detailData={overview} />,
+      },
+      {
+        key: holders,
+        label: 'Holders',
+        children: <ItemHoldersTable />,
+      },
+    ];
+  }, [overview]);
   const handleHolderClick = () => {
     tabRef.current?.setActiveKey(holders);
   };
