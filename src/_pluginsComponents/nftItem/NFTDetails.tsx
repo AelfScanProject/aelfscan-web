@@ -17,20 +17,18 @@ export default function NFTDetails(props: NFTDetailsProps) {
   console.log(overview, 'overview');
   const tabRef = useRef<EPTabsRef>(null);
   const [selectKey, setSelectKey] = useState<string>('');
-  const tabItems: ITabsProps['items'] = useMemo(() => {
-    return [
-      {
-        key: '',
-        label: 'Item Activity',
-        children: <ItemActivityTable detailData={overview} />,
-      },
-      {
-        key: holders,
-        label: 'Holders',
-        children: <ItemHoldersTable />,
-      },
-    ];
-  }, [overview]);
+  const tabItems: ITabsProps['items'] = [
+    {
+      key: '',
+      label: 'Item Activity',
+      children: <ItemActivityTable detailData={overview} />,
+    },
+    {
+      key: holders,
+      label: 'Holders',
+      children: <ItemHoldersTable />,
+    },
+  ];
   const handleHolderClick = () => {
     tabRef.current?.setActiveKey(holders);
   };
