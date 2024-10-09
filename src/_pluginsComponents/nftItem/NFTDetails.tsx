@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { ITabsProps } from 'aelf-design';
 import Overview from './_overview/OverView';
 import EPTabs, { EPTabsRef } from '@_components/EPTabs';
@@ -17,6 +17,9 @@ export default function NFTDetails(props: NFTDetailsProps) {
   console.log(overview, 'overview');
   const tabRef = useRef<EPTabsRef>(null);
   const [selectKey, setSelectKey] = useState<string>('');
+  useEffect(() => {
+    setSelectKey('');
+  }, [overview]);
   const tabItems: ITabsProps['items'] = [
     {
       key: '',
