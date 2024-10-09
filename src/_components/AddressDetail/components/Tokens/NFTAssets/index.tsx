@@ -16,7 +16,7 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
 export default function NFTAssets() {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(20);
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<NftsItemType[]>([]);
@@ -79,7 +79,7 @@ export default function NFTAssets() {
 
   return (
     <div className="asset-list">
-      <div className="table-container p-4 pb-0">
+      <div className="table-container p-4 py-0">
         <Table
           loading={loading}
           showTopSearch
@@ -107,6 +107,7 @@ export default function NFTAssets() {
           onChange={handleChange}
           options={[10, 20]}
           dataSource={data}
+          hideOnSinglePage={true}
           columns={columns}
           rowKey={(record) => record.token?.symbol + record?.chainIds?.join('')}
           total={total}

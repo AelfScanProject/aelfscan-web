@@ -1,6 +1,6 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IDailyTxFeeData, IHIGHLIGHTDataItem } from '../type';
@@ -11,11 +11,31 @@ import { fetchDailyTxFee } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-const title = 'aelf Daily Tx fee Chart';
-const getOption = (list: any[]): Highcharts.Options => {
+import { useMultiChain } from '@_hooks/useSelectChain';
+const title = 'aelf Daily Transaction Fee';
+const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
+  const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.totalFeeElf)]);
+    if (multi) {
+      allData.push([item.date, Number(item.mergeTotalFeeElf)]);
+      mainData.push([item.date, Number(item.mainChainTotalFeeElf)]);
+      sideData.push([item.date, Number(item.sideChainTotalFeeElf)]);
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.mergeTotalFeeElf);
+      customMap[item.date].main = Number(item.mainChainTotalFeeElf);
+      customMap[item.date].side = Number(item.sideChainTotalFeeElf);
+    } else {
+      allData.push([item.date, Number(item.totalFeeElf)]);
+      mainData.push([item.date, Number(item.totalFeeElf)]);
+      sideData.push([item.date, Number(item.totalFeeElf)]);
+      customMap[item.date] = {};
+      customMap[item.date].total = Number(item.totalFeeElf);
+      customMap[item.date].main = Number(item.totalFeeElf);
+      customMap[item.date].side = Number(item.totalFeeElf);
+    }
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -23,7 +43,7 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -82,7 +102,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     },
     yAxis: {
       title: {
-        text: 'Tx fee per day',
+        text: 'Transaction Fees per Day',
       },
       labels: {
         formatter: function () {
@@ -110,19 +130,43 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const value = point.y;
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Tx Fee</b>: <b>${thousandsNumber(value)} ELF</b><br/>
+        const { total, main, side } = customMap[date];
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transaction Fees</b>: <b>${thousandsNumber(total)} ELF</b><br/>MainChain Transaction Fees: <b>${thousandsNumber(main)} ELF</b><br/>SideChain Transaction Fees: <b>${thousandsNumber(side)} ELF</b><br/>
         `;
+        } else {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transaction Fees</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)} ELF</b><br/>
+        `;
+        }
       },
     },
-    series: [
-      {
-        name: 'Total Tx Fee',
-        type: 'line',
-        data: allData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'All Chains',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'MainChain',
+            type: 'line',
+            data: mainData,
+          },
+          {
+            name: 'SideChain',
+            type: 'line',
+            data: sideData,
+          },
+        ]
+      : [
+          {
+            name: 'Total Tx Fee',
+            type: 'line',
+            data: chain === 'AELF' ? mainData : sideData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -140,7 +184,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyTxFee({ chainId: chain });
+      const res = await fetchDailyTxFee({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -151,9 +195,11 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+
+  const multi = useMultiChain();
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], chain, multi);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
@@ -170,6 +216,7 @@ export default function Page() {
     exportToCSV(data?.list || [], title);
   };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
+    const key = multi ? 'mergeTotalFeeElf' : 'totalFeeElf';
     return data
       ? [
           {
@@ -177,7 +224,7 @@ export default function Page() {
             text: (
               <span>
                 Highest Tx fee of
-                <span className="px-1 font-bold">{thousandsNumber(data.highest.totalFeeElf)} ELF</span>
+                <span className="px-1 font-bold">{thousandsNumber(data.highest[key])} ELF</span>
                 was recorded on
                 <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highest.date)}</span>
               </span>
@@ -185,7 +232,7 @@ export default function Page() {
           },
         ]
       : [];
-  }, [data]);
+  }, [data, multi]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
@@ -193,7 +240,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The aelf Daily Tx fee Chart shows the historical total daily ELF Tx fee of the aelf network."
+        aboutTitle="The aelf Daily Transaction Fee shows the historical total daily ELF Tx fee of the aelf network."
         highlightData={highlightData}
         options={options}
         download={download}

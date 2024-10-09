@@ -11,7 +11,7 @@ import { fetchDailySupplyGrowth } from '@_api/fetchChart';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-const title = 'ELF Supply Growth Chart';
+const title = 'ELF Circulating Supply Growth Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
@@ -124,7 +124,7 @@ const getOption = (list: any[]): Highcharts.Options => {
         const organizationUnlock = customMap[date].organizationUnlock;
         const totalUnReceived = customMap[date].totalUnReceived;
         return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total ELF Supply</b>: <b>${thousandsNumber(value)}</b><br/>+ Daily ELF rewards: <b>${thousandsNumber(reward)}</b><br/>+ Organization Unlock: <b>${thousandsNumber(organizationUnlock)}</b><br/>- MainChain burnt: <b>${thousandsNumber(burnt)}</b><br/>- SideChain burnt: <b>${thousandsNumber(sideChainBurnt)}</b><br/>- Unreceived: <b>${thousandsNumber(totalUnReceived)}</b><br/>
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Circulating Supply</b>: <b>${thousandsNumber(value)}</b><br/>+ Daily ELF rewards: <b>${thousandsNumber(reward)}</b><br/>+ Organization Unlock: <b>${thousandsNumber(organizationUnlock)}</b><br/>- MainChain burnt: <b>${thousandsNumber(burnt)}</b><br/>- SideChain burnt: <b>${thousandsNumber(sideChainBurnt)}</b><br/>- Unreceived: <b>${thousandsNumber(totalUnReceived)}</b><br/>
         `;
       },
     },
@@ -189,7 +189,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The ELF Supply Growth Chart shows a breakdown of daily block reward and burnt fees to arrive at the total daily ELF supply."
+        aboutTitle="The ELF Circulating Supply Growth Chart shows a breakdown of daily block reward and burnt fees to arrive at the total daily ELF supply."
         highlightData={highlightData}
         options={options}
         download={download}

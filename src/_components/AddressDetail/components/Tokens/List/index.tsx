@@ -6,7 +6,6 @@ import { TokensListItemType } from '@_types/commonDetail';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { getAddress, getChainId, getPageNumber, numberFormatter } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
-import { TChainID } from '@_api/type';
 import { fetchAccountsDetailTokens } from '@_api/fetchContact';
 import { TableProps } from 'antd';
 import { Switch } from 'aelf-design';
@@ -20,7 +19,7 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>;
 export default function TokensList() {
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(20);
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [showELF, setShowELF] = useState<boolean>(false);
@@ -92,7 +91,7 @@ export default function TokensList() {
 
   return (
     <div className="token-list px-4">
-      <div className="table-container py-4 pb-0">
+      <div className="table-container">
         <Table
           showTopSearch
           headerTitle={{
@@ -109,6 +108,7 @@ export default function TokensList() {
           topSearchProps={{
             value: searchText,
             placeholder: 'Search Token Name  Token Symbol',
+            className: '!w-auto !min-w-[176px]',
             onChange: ({ currentTarget }) => {
               setSearchText(currentTarget.value);
             },
@@ -125,6 +125,7 @@ export default function TokensList() {
           onChange={handleChange}
           loading={loading}
           options={[10, 20]}
+          hideOnSinglePage={true}
           dataSource={data}
           columns={columns}
           isMobile={isMobile}

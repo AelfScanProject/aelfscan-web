@@ -34,6 +34,7 @@ import addressFormat from '@_utils/urlUtils';
 import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 import OverviewThreeCard from '@_components/OverviewCard/three';
 import { IOverviewItem } from '@_components/OverviewCard/type';
+import NFTAssets from './components/Tokens/NFTAssets';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -228,6 +229,11 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       ),
     },
     {
+      key: 'nfts',
+      label: 'NFTs',
+      children: <NFTAssets />,
+    },
+    {
       key: 'transactions',
       label: 'Transactions',
       children: addressTypeList.includes('PortKey') ? (
@@ -370,16 +376,16 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
               : ''
           }>
           <div className={clsx('code-box ml-2', isMobile && '!ml-0 flex flex-wrap items-center')}>
-            <span className="break-all text-sm leading-[22px] ">
+            <span className="inline-block break-all text-sm leading-[22px] ">
               {address}
-              <Copy className="!ml-4" value={address} />
+              <Copy className="!ml-2" value={address} />
               <EPTooltip
                 placement="bottom"
                 mode="light"
                 getPopupContainer={(node) => node}
                 trigger="click"
                 title={<QrCode value={address} />}>
-                <IconFont className="ml-4 cursor-pointer text-xs" type="QR-Code" />
+                <IconFont className="ml-2 cursor-pointer text-sm" type="QR-Code" />
               </EPTooltip>
             </span>
           </div>

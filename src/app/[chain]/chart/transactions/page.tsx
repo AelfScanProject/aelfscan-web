@@ -1,7 +1,7 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import '../index.css';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChainId, thousandsNumber } from '@_utils/formatter';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChartColors, IDailyTransactionsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
@@ -12,14 +12,34 @@ import { message } from 'antd';
 import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
+import { useMultiChain } from '@_hooks/useSelectChain';
 
 const title = 'aelf Daily Transactions Chart';
-const getOption = (list: any[]): Highcharts.Options => {
+const getOption = (list: any[], multi, chain): Highcharts.Options => {
   const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
   const blockDataMap = {};
   list.forEach((item) => {
-    allData.push([item.date, item.transactionCount]);
-    blockDataMap[item.date] = item.blockCount;
+    if (multi) {
+      allData.push([item.date, item.mergeTransactionCount]);
+      mainData.push([item.date, item.mainChainTransactionCount]);
+      sideData.push([item.date, item.sideChainTransactionCount]);
+      blockDataMap[item.date] = {};
+      blockDataMap[item.date].blockCount = item.blockCount;
+      blockDataMap[item.date].total = item.mergeTransactionCount;
+      blockDataMap[item.date].main = item.mainChainTransactionCount;
+      blockDataMap[item.date].side = item.sideChainTransactionCount;
+    } else {
+      allData.push([item.date, item.transactionCount]);
+      mainData.push([item.date, item.transactionCount]);
+      sideData.push([item.date, item.transactionCount]);
+      blockDataMap[item.date] = {};
+      blockDataMap[item.date].blockCount = item.blockCount;
+      blockDataMap[item.date].total = item.transactionCount;
+      blockDataMap[item.date].main = item.transactionCount;
+      blockDataMap[item.date].side = item.transactionCount;
+    }
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -27,7 +47,7 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   return {
     legend: {
-      enabled: false,
+      enabled: multi,
     },
     colors: ChartColors,
     chart: {
@@ -99,20 +119,43 @@ const getOption = (list: any[]): Highcharts.Options => {
         const that: any = this;
         const point = that.points[0] as any;
         const date = point.x;
-        const transactionCount = point.y;
-        const blockCount = blockDataMap[date];
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(transactionCount)}</b><br/>Total Block Count: <b>${thousandsNumber(blockCount)}</b><br/>
+        const { main, side, blockCount, total } = blockDataMap[date];
+        if (multi) {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Transactions: <b>${thousandsNumber(main)}</b><br/>SideChain Transactions: <b>${thousandsNumber(side)}</b><br/>
         `;
+        } else {
+          return `
+          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Total Block Count: <b>${thousandsNumber(blockCount)}</b><br/>
+        `;
+        }
       },
     },
-    series: [
-      {
-        name: 'Tokyo',
-        type: 'line',
-        data: allData,
-      },
-    ],
+    series: multi
+      ? [
+          {
+            name: 'Total',
+            type: 'line',
+            data: allData,
+          },
+          {
+            name: 'MainChain',
+            type: 'line',
+            data: mainData,
+          },
+          {
+            name: 'SideChain',
+            type: 'line',
+            data: sideData,
+          },
+        ]
+      : [
+          {
+            name: 'Total',
+            type: 'line',
+            data: chain === 'AELF' ? mainData : sideData,
+          },
+        ],
     exporting: {
       enabled: true,
       buttons: {
@@ -130,7 +173,7 @@ export default function Page() {
   const fetData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchDailyTransactions({ chainId: chain });
+      const res = await fetchDailyTransactions({ chainId: getChainId(chain) });
       setData(res);
     } catch (error) {
       message.error(JSON.stringify(error));
@@ -141,9 +184,10 @@ export default function Page() {
   useEffectOnce(() => {
     fetData();
   });
+  const multi = useMultiChain();
   const options = useMemo(() => {
-    return getOption(data?.list || []);
-  }, [data]);
+    return getOption(data?.list || [], multi, chain);
+  }, [chain, data?.list, multi]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
@@ -162,6 +206,7 @@ export default function Page() {
   };
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
+    const key = multi ? 'mergeTransactionCount' : 'transactionCount';
     return data
       ? [
           {
@@ -169,7 +214,7 @@ export default function Page() {
             text: (
               <span>
                 Highest number of
-                <span className="px-1 font-bold">{thousandsNumber(data.highestTransactionCount.transactionCount)}</span>
+                <span className="px-1 font-bold">{thousandsNumber(data.highestTransactionCount[key])}</span>
                 transactions on
                 <span className="pl-1">
                   {Highcharts.dateFormat('%A, %B %e, %Y', data.highestTransactionCount.date)}
@@ -182,14 +227,14 @@ export default function Page() {
             text: (
               <span>
                 Lowest number of
-                <span className="px-1 font-bold">{thousandsNumber(data.lowesTransactionCount.transactionCount)}</span>
+                <span className="px-1 font-bold">{thousandsNumber(data.lowesTransactionCount[key])}</span>
                 transactions on {Highcharts.dateFormat('%A, %B %e, %Y', data.lowesTransactionCount.date)}
               </span>
             ),
           },
         ]
       : [];
-  }, [data]);
+  }, [data, multi]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

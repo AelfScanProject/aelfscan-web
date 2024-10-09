@@ -3,7 +3,7 @@
     margin-inline-end: 8px;
   }
   .explorer-input-affix-wrapper {
-    @apply p-2 box-border border-D0 w-[304px] h-[32px] rounded;
+    @apply p-2 box-border border-D0 max-w-[304px] h-[32px] min-w-[176px] rounded min-[993px]:w-[304px];
     svg {
       @apply text-base-200;
     }
