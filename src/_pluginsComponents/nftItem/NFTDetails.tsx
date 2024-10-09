@@ -7,6 +7,7 @@ import ItemActivityTable from './_itemActivity/ItemActivityTable';
 import ItemHoldersTable from './_holders/HoldersTable';
 import { ItemSymbolDetailOverview } from './type';
 import { useRef, useState } from 'react';
+import { useSearchParams } from 'next/dist/client/components/navigation';
 
 export interface NFTDetailsProps {
   overview: ItemSymbolDetailOverview;
@@ -20,6 +21,10 @@ export default function NFTDetails(props: NFTDetailsProps) {
   useEffect(() => {
     setSelectKey('');
   }, [overview]);
+
+  const searchParams = useSearchParams();
+  const chain = searchParams.get('chainId');
+
   const tabItems: ITabsProps['items'] = [
     {
       key: '',
@@ -40,7 +45,7 @@ export default function NFTDetails(props: NFTDetailsProps) {
     <div className="nft-wrap">
       <Overview overview={overview} onHolderClick={handleHolderClick} />
       <div className="ntf-list-wrap">
-        <EPTabs items={tabItems} selectKey={selectKey} ref={tabRef} />
+        <EPTabs items={tabItems} key={chain} selectKey={selectKey} ref={tabRef} />
       </div>
     </div>
   );
