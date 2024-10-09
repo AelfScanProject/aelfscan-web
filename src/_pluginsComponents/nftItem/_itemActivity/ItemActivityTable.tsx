@@ -57,7 +57,7 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
       setLoading(false);
       mountRef.current = true;
     }
-  }, [selectChain, currentPage, itemSymbol, pageSize]);
+  }, [selectChain, itemSymbol, currentPage, pageSize, updateQueryParams]);
 
   const multi = useMultiChain();
 
