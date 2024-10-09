@@ -5,10 +5,10 @@ import { useMobileAll } from '@_hooks/useResponsive';
 import { IAddressTokensDetail } from '@_types/commonDetail';
 
 export default function Tokens({ tokenDetail }: { tokenDetail: IAddressTokensDetail }) {
-  const isMobile = useMobileAll();
+  // const isMobile = useMobileAll();
   return (
     <div className="token-container">
-      <div className={clsx(isMobile && 'flex-col', 'token-header mx-4 flex border-b border-color-divider pb-4')}>
+      {/* <div className={clsx(isMobile && 'flex-col', 'token-header mx-4 flex border-b border-color-divider pb-4')}>
         <div className="list-items mr-4 box-border w-[197px] pr-4">
           <div className="item-label font10px leading-[18px] text-base-200">NET WORTH IN USD</div>
           <div className="item-value text-sm leading-[22px] text-base-100">
@@ -36,7 +36,7 @@ export default function Tokens({ tokenDetail }: { tokenDetail: IAddressTokensDet
             {numberFormatter(tokenDetail.totalValueOfElf || '', '')}
           </div>
         </div>
-      </div>
+      </div> */}
       <TokensList />
     </div>
   );

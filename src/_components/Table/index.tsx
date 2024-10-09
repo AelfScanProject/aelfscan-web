@@ -40,6 +40,7 @@ export interface ICommonTableProps<T> extends ITableProps<T> {
   headerTitle?: IHeaderTitleProps | ReactNode;
   defaultCurrent?: number;
   className?: string;
+  hideOnSinglePage?: boolean;
   showMultiChain?: boolean;
   topSearchProps?: ITableSearch;
   MultiChainSelectProps?: SelectProps;
@@ -104,6 +105,7 @@ export default function TableApp({
   hiddenPagination,
   showMultiChain,
   showLast = true,
+  hideOnSinglePage,
   emptyText,
   headerLeftNode,
   MultiChainSelectProps = {},
@@ -133,7 +135,7 @@ export default function TableApp({
         {!hiddenPagination && (
           <div
             className={clsx(
-              'header-pagination flex w-full flex-col items-start min-[769px]:w-auto  min-[769px]:flex-row min-[769px]:items-center',
+              'header-pagination flex w-full flex-col items-start gap-3 min-[769px]:w-auto  min-[769px]:flex-row min-[769px]:items-center',
               showTopSearch && '!flex-row gap-3 min-[769px]:!w-full min-[769px]:flex-row min-[993px]:!w-auto',
             )}>
             {showMultiChain && (
@@ -171,6 +173,7 @@ export default function TableApp({
                 defaultCurrent={defaultCurrent}
                 showSizeChanger={false}
                 showLast={showLast}
+                hideOnSinglePage={hideOnSinglePage}
                 pageChange={pageChange}
                 pageSizeChange={pageSizeChange}
               />
@@ -188,6 +191,7 @@ export default function TableApp({
             total={total}
             pageSize={pageSize}
             showLast={showLast}
+            hideOnSinglePage={hideOnSinglePage}
             defaultCurrent={defaultCurrent}
             pageChange={pageChange}
             pageSizeChange={pageSizeChange}
