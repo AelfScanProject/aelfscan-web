@@ -39,21 +39,23 @@ export default function ChainSelect({ setCurrent }) {
 
   return (
     <div className="chain-select-container" id="chain-select-container">
-      <Select
-        className="chain-select common-select-wrapper !h-10 min-w-[126px]"
-        popupClassName="chain-select-options"
-        value={selectChain}
-        popupMatchSelectWidth={false}
-        getPopupContainer={() => document.getElementById('chain-select-container')!}
-        onChange={onChangeHandler}>
-        {chainArr?.map((item) => {
-          return (
-            <Option className="common-select-option-wrapper chain-select-option" key={item.key} value={item.key}>
-              {chainArr.find((ele) => ele.key === item.key)!.label}
-            </Option>
-          );
-        })}
-      </Select>
+      {chainArr && chainArr.length > 0 && (
+        <Select
+          className="chain-select common-select-wrapper !h-10 min-w-[126px]"
+          popupClassName="chain-select-options"
+          value={selectChain}
+          popupMatchSelectWidth={false}
+          getPopupContainer={() => document.getElementById('chain-select-container')!}
+          onChange={onChangeHandler}>
+          {chainArr?.map((item) => {
+            return (
+              <Option className="common-select-option-wrapper chain-select-option" key={item.key} value={item.key}>
+                {chainArr.find((ele) => ele.key === item.key)!.label}
+              </Option>
+            );
+          })}
+        </Select>
+      )}
     </div>
   );
 }

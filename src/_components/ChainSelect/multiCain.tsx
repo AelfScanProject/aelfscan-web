@@ -5,8 +5,9 @@ const { Option } = Select;
 import './index.css';
 import { useMemo } from 'react';
 import { useAppSelector } from '@_store';
+import clsx from 'clsx';
 
-export default function MultiChainSelect({ props }: { props: SelectProps }) {
+export default function MultiChainSelect({ props, className }: { props: SelectProps; className?: string }) {
   const { chainArr } = useAppSelector((state) => state.getChainId);
 
   const { chain } = useParams();
@@ -17,11 +18,10 @@ export default function MultiChainSelect({ props }: { props: SelectProps }) {
   return (
     <div className="chain-select-container mr-4 w-full !py-0" id="chain-select-container">
       <Select
-        className="chain-select common-select-wrapper w-full max-w-[304px] min-[769px]:w-[160px]"
+        className={clsx('chain-select common-select-wrapper w-full max-w-[304px] min-[769px]:w-[160px]', className)}
         popupClassName="chain-select-options"
         popupMatchSelectWidth={false}
         defaultValue={selectChain}
-        style={{ width: '160px' }}
         {...props}>
         {chainArr?.map((item) => {
           return (
