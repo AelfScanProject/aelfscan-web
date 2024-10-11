@@ -6,3 +6,8 @@ export const SYMBOL = 'ELF';
 
 export const MULTI_CHAIN = 'multiChain';
 export const DEFAULT_CHAIN = 'multiChain';
+
+export const TG_BOT_LINK = {
+  Mainnet: 'https://t.me/aelfscan_bot',
+  Testnet: 'https://t.me/aelfscantest_bot',
+};
