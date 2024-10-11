@@ -46,6 +46,7 @@ export default function ExWebLoginProvider({ children, config }) {
     networkType: NETWORK_TYPE,
     chainId: chainId,
     keyboard: true,
+    showVconsole: true,
     noCommonBaseModal: false,
     design: SignInDesignEnum.CryptoDesign,
     titleForSocialDesign: 'Crypto wallet',
