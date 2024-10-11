@@ -36,6 +36,9 @@ export default function ExWebLoginProvider({ children, config }) {
         websiteName: APP_NAME,
         websiteIcon: WEBSITE_ICON,
       },
+      Telegram: {
+        botId: config.TELEGRAM_BOT_ID,
+      },
     },
   };
 
@@ -43,7 +46,6 @@ export default function ExWebLoginProvider({ children, config }) {
     networkType: NETWORK_TYPE,
     chainId: chainId,
     keyboard: true,
-    omitTelegramScript: true,
     noCommonBaseModal: false,
     design: SignInDesignEnum.CryptoDesign,
     titleForSocialDesign: 'Crypto wallet',
