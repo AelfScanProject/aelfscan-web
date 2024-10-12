@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import './index.css';
 import Search from '@_components/Search';
 import MobileHeaderMenu from '@_components/MobileHeaderMenu';
-import { usePathname } from 'next/navigation';
-import { useAppSelector } from '@_store';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@_store';
 import { usePad } from '@_hooks/useResponsive';
 import { MenuItem, NetworkItem } from '@_types';
 import { useEnvContext } from 'next-runtime-env';
@@ -21,6 +21,8 @@ import useSearchFilter from '@_hooks/useSearchFilters';
 import ChainSelect from '@_components/ChainSelect';
 import { homePath } from '@_components/Main';
 import { DEFAULT_CHAIN } from '@_utils/contant';
+import { useEffectOnce } from 'react-use';
+import { setDefaultChain } from '@_store/features/chainIdSlice';
 
 // at public file
 const TopIconMain = '/image/aelf-header-top.svg';
@@ -59,10 +61,20 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
   }, [networkList, origin]);
 
   const { chain } = useParams();
+  const chainId = useSearchParams().get('chainId');
   const router = useRouter();
   const { BlockchainOverview, overviewLoading } = useBlockchainOverview(defaultChain as TChainID);
   useHomeSocket(defaultChain as TChainID);
   useSearchFilter();
+
+  const dispatch = useAppDispatch();
+
+  useEffectOnce(() => {
+    const defaultChain = chain || chainId;
+    if (defaultChain) {
+      dispatch(setDefaultChain(defaultChain));
+    }
+  });
 
   const { tokenPriceRate24h = 0, tokenPriceInUsd = 0 } = BlockchainOverview || {};
 
