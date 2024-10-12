@@ -16,8 +16,9 @@ import clsx from 'clsx';
 import { Dropdown } from 'aelf-design';
 import Image from 'next/image';
 import { homePath } from '@_components/Main';
-import { DEFAULT_CHAIN } from '@_utils/contant';
+import { DEFAULT_CHAIN, TG_BOT_LINK } from '@_utils/contant';
 const ChangeIcoTest = '/image/aelf-header-top-test-change.svg';
+import { TelegramPlatform } from '@portkey/did-ui-react';
 
 interface IProps {
   headerMenuList: MenuItem[];
@@ -106,6 +107,10 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
     return chainId || (chain as string) || defaultChain;
   }, [chain, chainId, defaultChain]);
 
+  const isTg = useMemo(() => {
+    return TelegramPlatform.isTelegramPlatform();
+  }, []);
+
   const networkItems: MenuProps['items'] = useMemo(() => {
     const Explorers = [
       {
@@ -118,9 +123,9 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
         key: item?.key + 'net',
         label: (
           <a
-            target="_blank"
+            target={isTg ? '_self' : '_blank'}
             className={`box-border flex items-center justify-between rounded-md px-3 py-[9px] text-sm leading-[22px]  ${origin === item?.path ? '!bg-F7 !text-link' : '!text-base-100'}`}
-            href={item?.path}
+            href={isTg ? TG_BOT_LINK[item?.key] : item?.path}
             rel="noopener noreferrer">
             <span>{item?.label}</span>
             {origin === item?.path && <Image width={12} height={12} alt="correct" src="/image/correct.svg" />}
@@ -160,7 +165,7 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
       },
       ...chainList,
     ];
-  }, [chainArr, defaultChain, networkList, onSelectHandler, origin]);
+  }, [chainArr, networkList, onSelectHandler, origin, selectChain]);
 
   const items: MenuProps['items'] = [...convertMenuItems(headerMenuList)];
 

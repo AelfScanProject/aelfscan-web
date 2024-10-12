@@ -6,7 +6,6 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 const { Option } = Select;
 import './index.css';
 import { useMemo } from 'react';
-import { useEffectOnce } from 'react-use';
 import { DEFAULT_CHAIN } from '@_utils/contant';
 
 export default function ChainSelect({ setCurrent }) {
@@ -29,13 +28,6 @@ export default function ChainSelect({ setCurrent }) {
     }
     setCurrent('/');
   };
-
-  useEffectOnce(() => {
-    const defaultChain = chain || chainId;
-    if (defaultChain) {
-      dispatch(setDefaultChain(defaultChain));
-    }
-  });
 
   return (
     <div className="chain-select-container" id="chain-select-container">
