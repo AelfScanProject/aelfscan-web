@@ -17,6 +17,7 @@ import copy from 'copy-to-clipboard';
 import EPTooltip from '@_components/EPToolTip';
 import { useEffect } from 'react';
 import { getSecondHashValue } from '@_utils/formatter';
+import { TelegramPlatform } from '@portkey/did-ui-react';
 
 export default function DynamicForm({
   methods,
@@ -87,7 +88,7 @@ export default function DynamicForm({
             <div className="text-xs leading-5 text-base-100">Connect to wallet</div>
           )}
         </div>
-        {isConnected && (
+        {isConnected && !TelegramPlatform.isTelegramPlatform() && (
           <div
             className="logout-warpper boder-color-divider flex size-7 cursor-pointer items-center justify-center rounded-md border border-solid bg-F7"
             onClick={disConnectWallet}>
