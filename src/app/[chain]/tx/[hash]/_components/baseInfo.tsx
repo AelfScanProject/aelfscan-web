@@ -278,22 +278,27 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
       },
       {
         label: 'Value ',
-        tip: 'The amount of txn fee token transacted.',
+        tip: 'The value transfer of Prime tokens (ELF) generated from transactions.',
         value: (
-          <div className={clsx('flex', isMobile ? 'flex-col items-start' : 'items-center')}>
-            {data.transactionValues?.map((transactionValue, idx) => {
-              return (
-                <div
-                  key={idx}
-                  className={clsx('flex items-center', idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider')}>
-                  <span>{transactionValue.amountString}</span>
-                  <span>{transactionValue.symbol}</span>
-                  {Number(transactionValue.nowPrice) && (
-                    <DollarCurrencyRate nowPrice={transactionValue.nowPrice} tradePrice={transactionValue.tradePrice} />
-                  )}
-                </div>
-              );
-            })}
+          <div className={clsx('flex', isMobile ? 'flex-col items-start' : 'flex-col items-start')}>
+            {data.transactionValues?.filter((item) => item.symbol === 'ELF').length > 0
+              ? data.transactionValues
+                  ?.filter((item) => item.symbol === 'ELF')
+                  .map((transactionValue, idx) => {
+                    return (
+                      <div key={idx} className={clsx('flex items-center')}>
+                        <span>{transactionValue.amountString}</span>
+                        <span>{transactionValue.symbol}</span>
+                        {Number(transactionValue.nowPrice) > 0 && (
+                          <DollarCurrencyRate
+                            nowPrice={transactionValue.nowPrice}
+                            tradePrice={transactionValue.tradePrice}
+                          />
+                        )}
+                      </div>
+                    );
+                  })
+              : '-'}
           </div>
         ),
       },
