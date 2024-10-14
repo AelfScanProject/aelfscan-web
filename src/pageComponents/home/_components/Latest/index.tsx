@@ -164,7 +164,7 @@ function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
                           showCopy={false}
                           type={ele.from?.addressType}
                           name={ele.from?.name}
-                          chainId={defaultChain as string}
+                          chainId={(ele.chainIds && ele.chainIds[0]) || (defaultChain as string)}
                         />
                       </span>
                       <span className="to">
@@ -174,7 +174,7 @@ function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
                           type={ele.to?.addressType}
                           name={ele.to?.name}
                           showCopy={false}
-                          chainId={defaultChain as string}
+                          chainId={(ele.chainIds && ele.chainIds[0]) || (defaultChain as string)}
                         />
                         {isMD && RewrdInfo(ele)}
                       </span>
