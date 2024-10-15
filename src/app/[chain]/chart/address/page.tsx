@@ -30,13 +30,13 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
       customMap[item.date].mainData = item.mainChainTotalUniqueAddressees;
       customMap[item.date].sideData = item.sideChainTotalUniqueAddressees;
     } else {
-      allData.push([item.date, item.addressCount]);
-      mainData.push([item.date, item.addressCount]);
-      sideData.push([item.date, item.addressCount]);
+      allData.push([item.date, item.ownerUniqueAddressees]);
+      mainData.push([item.date, item.ownerUniqueAddressees]);
+      sideData.push([item.date, item.ownerUniqueAddressees]);
       customMap[item.date] = {};
-      customMap[item.date].totalCount = item.addressCount;
-      customMap[item.date].mainData = item.addressCount;
-      customMap[item.date].sideData = item.addressCount;
+      customMap[item.date].totalCount = item.ownerUniqueAddressees;
+      customMap[item.date].mainData = item.ownerUniqueAddressees;
+      customMap[item.date].sideData = item.ownerUniqueAddressees;
     }
   });
   const minDate = allData[0] && allData[0][0];
