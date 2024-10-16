@@ -3,6 +3,7 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-csharp';
 import 'ace-builds/src-noconflict/theme-github';
 import 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/ext-searchbox';
 import './code.css';
 import clsx from 'clsx';
 
@@ -24,7 +25,7 @@ const languageDetector = [
 function getLanguage(name) {
   return languageDetector.filter((v) => v.test.test(name))[0].language;
 }
-const CodeViewer = ({ data, name, auto, path }) => {
+const CodeViewer = ({ data, name, auto, path, resetSearch }) => {
   const [language, setLanguage] = useState('csharp');
   useEffect(() => {
     const lang = getLanguage(name);
@@ -32,6 +33,16 @@ const CodeViewer = ({ data, name, auto, path }) => {
   }, [data, name]);
   const onload = (ace) => {
     ace.moveCursorTo(0, 0);
+    ace.commands.addCommand({
+      name: 'showSearch',
+      bindKey: { win: 'Ctrl-F', mac: 'Command-F' },
+      exec: function (editor) {
+        editor.execCommand('find');
+      },
+    });
+    if (resetSearch) {
+      resetSearch(ace);
+    }
   };
   return (
     <div className="code-viewer-container">

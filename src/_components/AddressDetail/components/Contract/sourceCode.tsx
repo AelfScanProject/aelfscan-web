@@ -5,13 +5,18 @@ import CodeViewer from './CodeViewer';
 import { handelCopy } from '@_utils/copy';
 import Download from '@_components/Download';
 import copy from 'copy-to-clipboard';
-import { useMemo, useState } from 'react';
+import { Ace } from 'ace-builds';
+import { useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
 import FileTree from '../FileTree';
 import { useParams } from 'next/navigation';
 import { getAddress } from '@_utils/formatter';
 import './code.css';
+
+interface CustomEditor extends Ace.Editor {
+  searchBox?: any;
+}
 
 export interface IContractSourceCode {
   contractName: string;
@@ -81,12 +86,49 @@ export default function SourceCode({ contractInfo }: { contractInfo: IContractSo
     handelCopy(window.atob(viewerConfig.content));
   };
 
+  const editorRef = useRef<CustomEditor | null>(null);
+
+  const resetSearch = (editor) => {
+    editorRef.current = editor;
+  };
+
   const onFileChange = (names) => {
     const selectedFile = getDefaultFile(files, names);
     if (Object.keys(selectedFile).length > 0) {
       setViewerConfig({
         ...selectedFile,
       });
+    }
+
+    if (editorRef.current && editorRef.current?.searchBox?.active) {
+      const searchKeyword = editorRef.current.searchBox.searchInput.value;
+
+      editorRef.current.setValue(window.atob(selectedFile?.content), -1);
+
+      editorRef.current.execCommand('find', {
+        needle: searchKeyword,
+        backwards: false,
+        wrap: true,
+        caseSensitive: false,
+        wholeWord: false,
+        regExp: false,
+        preventScroll: true,
+      });
+      setTimeout(() => {
+        const totalMatches = editorRef.current?.findAll(searchKeyword, {
+          caseSensitive: false,
+          wholeWord: false,
+          regExp: false,
+          preventScroll: true,
+          backwards: false,
+          wrap: true,
+        });
+
+        if (editorRef.current?.searchBox && totalMatches && totalMatches > 0) {
+          const searchBox = editorRef.current.searchBox;
+          searchBox.searchCounter.innerText = `1 of ${totalMatches}`;
+        }
+      }, 100);
     }
   };
 
@@ -143,6 +185,7 @@ export default function SourceCode({ contractInfo }: { contractInfo: IContractSo
             data={window.atob(viewerConfig?.content || '')}
             name={viewerConfig?.name}
             path={viewerConfig?.path || ''}
+            resetSearch={resetSearch}
           />
         </div>
       </div>
