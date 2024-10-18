@@ -8,7 +8,7 @@ import { exportToCSV } from '@_utils/urlUtils';
 import { fetchUniqueAddresses } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useMultiChain } from '@_hooks/useSelectChain';
-import { useFetchChartData } from '@_hooks/useFetchChartData';
+import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Cumulative Addresses Chart';
 const getOption = (list: any[], multi, chain): Highcharts.Options => {
@@ -89,31 +89,17 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain } = useFetchChartData<IDailyAddAddressData>({
+  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDailyAddAddressData>({
     fetchFunc: fetchUniqueAddresses,
     processData: (res) => res,
   });
-
-  const multi = useMultiChain();
 
   const options = useMemo(() => {
     return getOption(data?.list || [], multi, chain);
   }, [data, multi, chain]);
 
-  useEffect(() => {
-    if (data) {
-      const chart = chartRef.current?.chart;
-      if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
-        chart.xAxis[0].setExtremes(minDate, maxDate);
-      }
-    }
-  }, [chartRef, data]);
+  const { download } = useChartDownloadData(data, chartRef, title);
 
-  const download = () => {
-    exportToCSV(data?.list || [], title);
-  };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = multi ? 'mergeAddressCount' : 'addressCount';
     return data

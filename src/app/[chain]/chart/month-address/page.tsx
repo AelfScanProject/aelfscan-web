@@ -122,12 +122,10 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain } = useFetchChartData<IMonthActiveAddressData>({
+  const { data, loading, chartRef, chain, multi } = useFetchChartData<IMonthActiveAddressData>({
     fetchFunc: fetchMonthActiveAddresses,
     processData: (res) => res,
   });
-
-  const multi = useMultiChain();
 
   const options = useMemo(() => {
     return getOption(data?.list || [], chain, multi);

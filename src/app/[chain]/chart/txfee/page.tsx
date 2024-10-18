@@ -8,7 +8,7 @@ import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyTxFee } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useMultiChain } from '@_hooks/useSelectChain';
-import { useFetchChartData } from '@_hooks/useFetchChartData';
+import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 const title = 'aelf Daily Transaction Fee';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
@@ -89,29 +89,17 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain } = useFetchChartData<IDailyTxFeeData>({
+  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDailyTxFeeData>({
     fetchFunc: fetchDailyTxFee,
     processData: (res) => res,
   });
 
-  const multi = useMultiChain();
   const options = useMemo(() => {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  useEffect(() => {
-    if (data) {
-      const chart = chartRef.current?.chart;
-      if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
-        chart.xAxis[0].setExtremes(minDate, maxDate);
-      }
-    }
-  }, [chartRef, data]);
-  const download = () => {
-    exportToCSV(data?.list || [], title);
-  };
+  const { download } = useChartDownloadData(data, chartRef, title);
+
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = multi ? 'mergeTotalFeeElf' : 'totalFeeElf';
     return data

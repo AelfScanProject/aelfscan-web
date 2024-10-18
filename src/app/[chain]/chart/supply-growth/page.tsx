@@ -8,7 +8,7 @@ import { exportToCSV } from '@_utils/urlUtils';
 import { message } from 'antd';
 import { fetchDailySupplyGrowth } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useFetchChartData } from '@_hooks/useFetchChartData';
+import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 const title = 'ELF Circulating Supply Growth Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
@@ -65,24 +65,7 @@ export default function Page() {
     processData: (res) => res,
   });
 
-  useEffect(() => {
-    if (data) {
-      const chart = chartRef.current?.chart;
-      if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
-        chart.xAxis[0].setExtremes(minDate, maxDate);
-      }
-    }
-  }, [chartRef, data]);
-
-  const download = () => {
-    if (data) {
-      exportToCSV(data?.list || [], title);
-    } else {
-      message.error('No data available to download.');
-    }
-  };
+  const { download } = useChartDownloadData(data, chartRef, title);
 
   const options = useMemo(() => {
     return getOption(data?.list || []);

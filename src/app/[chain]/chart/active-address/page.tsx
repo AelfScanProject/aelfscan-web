@@ -9,7 +9,7 @@ import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyActiveAddresses } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useMultiChain } from '@_hooks/useSelectChain';
-import { useFetchChartData } from '@_hooks/useFetchChartData';
+import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
@@ -95,31 +95,17 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain } = useFetchChartData<IDailyActiveAddressData>({
+  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDailyActiveAddressData>({
     fetchFunc: fetchDailyActiveAddresses,
     processData: (res) => res,
   });
-
-  const multi = useMultiChain();
 
   const options = useMemo(() => {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  useEffect(() => {
-    if (data) {
-      const chart = chartRef.current?.chart;
-      if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
-        chart.xAxis[0].setExtremes(minDate, maxDate);
-      }
-    }
-  }, [chartRef, data]);
+  const { download } = useChartDownloadData(data, chartRef, title);
 
-  const download = () => {
-    exportToCSV(data?.list || [], title);
-  };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = multi ? 'mergeAddressCount' : 'addressCount';
     return data

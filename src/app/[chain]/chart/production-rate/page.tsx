@@ -8,7 +8,7 @@ const title = 'aelf Block Production Rate Chart';
 import { exportToCSV } from '@_utils/urlUtils';
 import { fetchBlockProduceRate } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useFetchChartData } from '@_hooks/useFetchChartData';
+import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
@@ -63,20 +63,8 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data]);
 
-  useEffect(() => {
-    if (data) {
-      const chart = chartRef.current?.chart;
-      if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
-        chart.xAxis[0].setExtremes(minDate, maxDate);
-      }
-    }
-  }, [chartRef, data]);
+  const { download } = useChartDownloadData(data, chartRef, title);
 
-  const download = () => {
-    exportToCSV(data?.list || [], title);
-  };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     return data
       ? [

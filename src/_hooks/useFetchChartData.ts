@@ -1,9 +1,11 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { message } from 'antd';
 import { useEffectOnce } from 'react-use';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { getChainId } from '@_utils/formatter';
+import { useMultiChain } from './useSelectChain';
+import { exportToCSV } from '@_utils/urlUtils';
 
 export function useFetchChartData<DataType>({
   fetchFunc,
@@ -15,6 +17,7 @@ export function useFetchChartData<DataType>({
 }): {
   data: DataType | undefined;
   loading: boolean;
+  multi: boolean;
   chain: string;
   chartRef: React.RefObject<HighchartsReactRefObject>;
 } {
@@ -22,6 +25,7 @@ export function useFetchChartData<DataType>({
   const [data, setData] = useState<DataType>();
   const [loading, setLoading] = useState<boolean>(false);
   const chartRef = useRef<HighchartsReactRefObject>(null);
+  const multi = useMultiChain();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -40,5 +44,23 @@ export function useFetchChartData<DataType>({
     fetchData();
   });
 
-  return { data, loading, chartRef, chain };
+  return { data, loading, chartRef, chain, multi };
+}
+
+export function useChartDownloadData(data: any, chartRef, title) {
+  useEffect(() => {
+    if (data) {
+      const chart = chartRef.current?.chart;
+      if (chart) {
+        const minDate = data.list[0]?.date;
+        const maxDate = data.list[data.list.length - 1]?.date;
+        chart.xAxis[0].setExtremes(minDate, maxDate);
+      }
+    }
+  }, [chartRef, data]);
+  const download = () => {
+    exportToCSV(data?.list || [], title);
+  };
+
+  return { download };
 }
