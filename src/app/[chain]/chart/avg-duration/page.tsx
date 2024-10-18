@@ -2,15 +2,12 @@
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IAelfAVGBlockDurationData, IHIGHLIGHTDataItem } from '../type';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useEffectOnce } from 'react-use';
 import { fetchAvgBlockDuration } from '@_api/fetchChart';
-import { message } from 'antd';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useParams } from 'next/navigation';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 const title = 'aelf AVG Block Duration Chart';
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
@@ -124,31 +121,15 @@ const getOption = (list: any[]): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-
-  const [data, setData] = useState<IAelfAVGBlockDurationData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchAvgBlockDuration({ chainId: chain });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef } = useFetchChartData<IAelfAVGBlockDurationData>({
+    fetchFunc: fetchAvgBlockDuration,
+    processData: (res) => res,
   });
 
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -158,7 +139,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };

@@ -1,41 +1,36 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
+import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IDailyBurntData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Daily ELF Burnt Chart';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
 import { fetchDailyTotalBurnt } from '@_api/fetchChart';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
   const customMap = {};
+
   list.forEach((item) => {
-    if (multi) {
-      allData.push([item.date, Number(item.mergeBurnt)]);
-      mainData.push([item.date, Number(item.mainChainBurnt)]);
-      sideData.push([item.date, Number(item.sideChainBurnt)]);
-      customMap[item.date] = {};
-      customMap[item.date].total = Number(item.mergeBurnt);
-      customMap[item.date].main = Number(item.mainChainBurnt);
-      customMap[item.date].side = Number(item.sideChainBurnt);
-    } else {
-      allData.push([item.date, Number(item.burnt)]);
-      mainData.push([item.date, Number(item.burnt)]);
-      sideData.push([item.date, Number(item.burnt)]);
-      customMap[item.date] = {};
-      customMap[item.date].total = Number(item.burnt);
-      customMap[item.date].main = Number(item.burnt);
-      customMap[item.date].side = Number(item.burnt);
-    }
+    const date = item.date;
+    const burntValue = multi ? Number(item.mergeBurnt) : Number(item.burnt);
+    const mainBurnt = multi ? Number(item.mainChainBurnt) : burntValue;
+    const sideBurnt = multi ? Number(item.sideChainBurnt) : burntValue;
+
+    allData.push([date, burntValue]);
+    mainData.push([date, mainBurnt]);
+    sideData.push([date, sideBurnt]);
+
+    customMap[date] = {
+      total: burntValue,
+      main: mainBurnt,
+      side: sideBurnt,
+    };
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -163,22 +158,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IDailyBurntData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchDailyTotalBurnt({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IDailyBurntData>({
+    fetchFunc: fetchDailyTotalBurnt,
+    processData: (res) => res,
   });
 
   const multi = useMultiChain();
@@ -186,7 +168,6 @@ export default function Page() {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -196,7 +177,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
 
   const download = () => {
     exportToCSV(data?.list || [], title);

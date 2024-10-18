@@ -1,18 +1,14 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IBlockProductionRateData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 const title = 'aelf Block Production Rate Chart';
-import dayjs from 'dayjs';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useEffectOnce } from 'react-use';
 import { fetchBlockProduceRate } from '@_api/fetchChart';
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
@@ -127,28 +123,15 @@ const getOption = (list: any[]): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IBlockProductionRateData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchBlockProduceRate({ chainId: chain });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef } = useFetchChartData<IBlockProductionRateData>({
+    fetchFunc: fetchBlockProduceRate,
+    processData: (res) => res,
   });
+
   const options = useMemo(() => {
     return getOption(data?.list || []);
   }, [data]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -158,7 +141,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
 
   const download = () => {
     exportToCSV(data?.list || [], title);

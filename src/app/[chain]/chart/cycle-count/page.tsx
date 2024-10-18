@@ -2,15 +2,12 @@
 import Highcharts, { AlignValue } from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IAelfDailyCycleCountData, IHIGHLIGHTDataItem } from '../type';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useParams } from 'next/navigation';
-import { useEffectOnce } from 'react-use';
 import { fetchCycleCount } from '@_api/fetchChart';
-import { message } from 'antd';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Daily Cycle Count Chart';
 
@@ -73,29 +70,13 @@ const getChartOption = (list): Highcharts.Options => {
 };
 
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IAelfDailyCycleCountData>();
-  const [loading, setLoading] = useState(false);
-
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchCycleCount({ chainId: chain });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-
-  useEffectOnce(() => {
-    fetchData();
+  const { data, loading, chartRef } = useFetchChartData<IAelfDailyCycleCountData>({
+    fetchFunc: fetchCycleCount,
+    processData: (res) => res,
   });
 
   const options = useMemo(() => getChartOption(data?.list || []), [data]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -105,7 +86,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
 
   const download = () => exportToCSV(data?.list || [], title);
 

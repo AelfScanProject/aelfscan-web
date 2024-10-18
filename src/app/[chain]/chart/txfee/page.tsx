@@ -1,41 +1,36 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
+import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IDailyTxFeeData, IHIGHLIGHTDataItem } from '../type';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
 import { fetchDailyTxFee } from '@_api/fetchChart';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 const title = 'aelf Daily Transaction Fee';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
   const customMap = {};
+
   list.forEach((item) => {
-    if (multi) {
-      allData.push([item.date, Number(item.mergeTotalFeeElf)]);
-      mainData.push([item.date, Number(item.mainChainTotalFeeElf)]);
-      sideData.push([item.date, Number(item.sideChainTotalFeeElf)]);
-      customMap[item.date] = {};
-      customMap[item.date].total = Number(item.mergeTotalFeeElf);
-      customMap[item.date].main = Number(item.mainChainTotalFeeElf);
-      customMap[item.date].side = Number(item.sideChainTotalFeeElf);
-    } else {
-      allData.push([item.date, Number(item.totalFeeElf)]);
-      mainData.push([item.date, Number(item.totalFeeElf)]);
-      sideData.push([item.date, Number(item.totalFeeElf)]);
-      customMap[item.date] = {};
-      customMap[item.date].total = Number(item.totalFeeElf);
-      customMap[item.date].main = Number(item.totalFeeElf);
-      customMap[item.date].side = Number(item.totalFeeElf);
-    }
+    const date = item.date;
+    const totalFeeElf = multi ? Number(item.mergeTotalFeeElf) : Number(item.totalFeeElf);
+    const mainTotalFeeElf = multi ? Number(item.mainChainTotalFeeElf) : totalFeeElf;
+    const sideTotalFeeElf = multi ? Number(item.sideChainTotalFeeElf) : totalFeeElf;
+
+    allData.push([date, totalFeeElf]);
+    mainData.push([date, mainTotalFeeElf]);
+    sideData.push([date, sideTotalFeeElf]);
+
+    customMap[date] = {
+      total: totalFeeElf,
+      main: mainTotalFeeElf,
+      side: sideTotalFeeElf,
+    };
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -178,22 +173,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IDailyTxFeeData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchDailyTxFee({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IDailyTxFeeData>({
+    fetchFunc: fetchDailyTxFee,
+    processData: (res) => res,
   });
 
   const multi = useMultiChain();
@@ -201,7 +183,6 @@ export default function Page() {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -211,7 +192,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };
