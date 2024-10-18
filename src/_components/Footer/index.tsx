@@ -80,7 +80,7 @@ export default function Footer({ footerMenuList }: IProps) {
           <a href="https://t.me/aelfblockchain" target="_blank" rel="noopener noreferrer">
             <Image width={32} height={32} src="/image/telegram.svg" alt="telegram"></Image>
           </a>
-          <a href="http://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
             <Image width={32} height={32} src="/image/youtube.svg" alt="youtube"></Image>
           </a>
           <a href="https://discord.gg/bgysa9xjvD" target="_blank" rel="noopener noreferrer">
