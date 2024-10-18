@@ -1,6 +1,6 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useEffect, useMemo } from 'react';
 import { ChartColors, IContractCalls, IHIGHLIGHTDataItem } from '../type';
@@ -40,108 +40,30 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
-  return {
-    legend: {
-      enabled: multi,
+  const options = getChartOptions({
+    title: title,
+    legend: multi,
+    yAxisTitle: 'Number of Calls',
+    buttonPositionX: -35,
+    tooltipFormatter: function () {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that: any = this;
+      const point = that.points[0] as any;
+      const date = point.x;
+      const { total, main, side } = customMap[date];
+      const callAddressCount = customMap[date].callAddressCount;
+      if (multi) {
+        return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Number of Calls</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Number of Calls: <b>${thousandsNumber(main)}</b><br/>SideChain Number of Calls: <b>${thousandsNumber(side)}</b><br/>
+      `;
+      } else {
+        return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Number of Calls</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Calling Accounts: <b>${thousandsNumber(callAddressCount)}</b><br/>
+      `;
+      }
     },
-    colors: ChartColors,
-    chart: {
-      type: 'line',
-    },
-    rangeSelector: {
-      enabled: true,
-      selected: 3,
-      buttonPosition: {
-        align: 'left',
-        x: -35,
-      },
-      buttons: [
-        {
-          type: 'month',
-          count: 1,
-          text: '1m',
-          title: 'View 1 months',
-        },
-        {
-          type: 'month',
-          count: 6,
-          text: '6m',
-          title: 'View 6 months',
-        },
-        {
-          type: 'year',
-          count: 1,
-          text: '1y',
-          title: 'View 1 year',
-        },
-        {
-          type: 'all',
-          text: 'All',
-          title: 'View all',
-        },
-      ],
-    },
-    navigator: {
-      enabled: false,
-    },
-    title: {
-      text: title,
-      align: 'left',
-    },
-    subtitle: {
-      text: 'Click and drag in the plot area to zoom in',
-      align: 'left',
-    },
-    xAxis: {
-      type: 'datetime',
-      min: minDate,
-      max: maxDate,
-      startOnTick: false,
-      endOnTick: false,
-    },
-    yAxis: {
-      title: {
-        text: 'Number of Calls',
-      },
-      labels: {
-        formatter: function () {
-          // eslint-disable-next-line @typescript-eslint/no-this-alias
-          const num = Number(this.value);
-          if (num >= 1e9) {
-            return (num / 1e9).toFixed(2) + 'B';
-          } else if (num >= 1e6) {
-            return (num / 1e6).toFixed(2) + 'M';
-          } else if (num >= 1e3) {
-            return (num / 1e3).toFixed(2) + 'K';
-          } else {
-            return num.toString();
-          }
-        },
-      },
-    },
-    credits: {
-      enabled: false,
-    },
-    tooltip: {
-      shared: true,
-      formatter: function () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const that: any = this;
-        const point = that.points[0] as any;
-        const date = point.x;
-        const { total, main, side } = customMap[date];
-        const callAddressCount = customMap[date].callAddressCount;
-        if (multi) {
-          return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Number of Calls</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Number of Calls: <b>${thousandsNumber(main)}</b><br/>SideChain Number of Calls: <b>${thousandsNumber(side)}</b><br/>
-        `;
-        } else {
-          return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Number of Calls</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Calling Accounts: <b>${thousandsNumber(callAddressCount)}</b><br/>
-        `;
-        }
-      },
-    },
+    minDate,
+    maxDate,
     series: multi
       ? [
           {
@@ -167,15 +89,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
             data: chain === 'AELF' ? mainData : sideData,
           },
         ],
-    exporting: {
-      enabled: true,
-      buttons: {
-        contextButton: {
-          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
-        },
-      },
-    },
-  };
+  });
+
+  return options;
 };
 export default function Page() {
   const { data, loading, chartRef, chain } = useFetchChartData<IContractCalls>({
