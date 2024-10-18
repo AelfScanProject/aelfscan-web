@@ -3,7 +3,7 @@ import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useEffect, useMemo } from 'react';
-import { ChartColors, IAvgTxFeeData, IHIGHLIGHTDataItem } from '../type';
+import { IAvgTxFeeData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Average Transaction Fee';
 import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyAvgTransactionFee } from '@_api/fetchChart';

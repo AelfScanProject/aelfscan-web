@@ -358,3 +358,159 @@ export interface ITVLData {
 }
 
 export const ChartColors = ['#266CD3', '#954CF1', '#EEB420', '#0EAF58'];
+
+export const ChartData = [
+  {
+    id: 'section-market-data',
+    title: 'Market Data',
+    charts: [
+      {
+        title: 'ELF Daily Price (USD) Chart',
+        path: '/chart/price',
+        key: 'price',
+      },
+      {
+        title: 'aelf Market Cap Chart',
+        path: '/chart/marketcap',
+        key: 'marketcap',
+      },
+      {
+        title: 'ELF Circulating Supply Growth Chart',
+        path: '/chart/supply-growth',
+        key: 'supply-growth',
+      },
+      {
+        title: 'ELF Staked Chart',
+        path: '/chart/staked',
+        key: 'staked',
+      },
+      {
+        title: 'TVL Chart',
+        path: '/chart/tvl',
+        key: 'tvl',
+      },
+    ],
+  },
+  {
+    id: 'section-blockchain-data',
+    title: 'Blockchain Data',
+    charts: [
+      {
+        title: 'aelf Daily Transactions Chart',
+        path: '/chart/transactions',
+        key: 'transactions',
+      },
+      {
+        title: 'aelf Cumulative Addresses Chart',
+        path: '/chart/address',
+        key: 'address',
+      },
+      {
+        title: 'Monthly Active aelf Addresses',
+        path: '/chart/month-address',
+        key: 'month-address',
+      },
+      {
+        title: 'Daily Active aelf Addresses',
+        path: '/chart/active-address',
+        key: 'active-address',
+      },
+      {
+        title: 'ELF Holders',
+        path: '/chart/holders',
+        key: 'holders',
+      },
+      {
+        title: 'Daily ELF Burnt Chart',
+        path: '/chart/burnt',
+        key: 'burnt',
+      },
+      {
+        title: 'Average Transaction Fee',
+        path: '/chart/avg-txfee',
+        key: 'avg-txfee',
+      },
+      {
+        title: 'aelf Daily Transaction Fee',
+        path: '/chart/txfee',
+        key: 'txfee',
+      },
+      {
+        title: 'Average Block Size Chart',
+        path: '/chart/blocksize',
+        key: 'blocksize',
+      },
+      {
+        title: 'aelf Daily Block Rewards Chart',
+        path: '/chart/rewards',
+        key: 'rewards',
+      },
+    ],
+  },
+  {
+    id: 'section-network-data',
+    hiddenMulti: true,
+    title: 'Network Data',
+    charts: [
+      {
+        title: 'aelf Block Production Rate Chart',
+        path: '/chart/production-rate',
+        key: 'production-rate',
+      },
+      {
+        title: 'aelf Daily Cycle Count Chart',
+        path: '/chart/cycle-count',
+        key: 'cycle-count',
+      },
+      {
+        title: 'aelf AVG Block Duration Chart',
+        path: '/chart/avg-duration',
+        key: 'avg-duration',
+      },
+      {
+        title: 'aelf Block Producers',
+        path: '/chart/produce',
+        key: 'produce',
+      },
+    ],
+  },
+  {
+    id: 'section-contracts-data',
+    title: 'Contracts Data',
+    charts: [
+      {
+        title: 'aelf Deployed Contracts Chart',
+        path: '/chart/deployed-contracts',
+        key: 'deployed-contracts',
+      },
+      {
+        title: 'Contract Calls Chart',
+        path: '/chart/contract-calls',
+        key: 'contract-calls',
+      },
+    ],
+  },
+];
+
+export const chartItems = [
+  {
+    key: '1',
+    href: '#section-market-data',
+    title: 'Market Data',
+  },
+  {
+    key: '2',
+    href: '#section-blockchain-data',
+    title: 'Blockchain Data',
+  },
+  {
+    key: '3',
+    href: '#section-network-data',
+    title: 'Network Data',
+  },
+  {
+    key: '4',
+    href: '#section-contracts-data',
+    title: 'Contracts Data',
+  },
+];
