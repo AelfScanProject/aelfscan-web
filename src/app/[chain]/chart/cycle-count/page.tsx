@@ -1,6 +1,6 @@
 'use client';
 import Highcharts, { AlignValue } from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useEffect, useMemo } from 'react';
 import { ChartColors, IAelfDailyCycleCountData, IHIGHLIGHTDataItem } from '../type';
@@ -35,38 +35,18 @@ const getChartOption = (list): Highcharts.Options => {
     return acc;
   }, {});
 
-  return {
-    legend: { enabled: false },
-    colors: ChartColors,
-    chart: { type: 'line' },
-    rangeSelector: {
-      enabled: true,
-      buttonPosition: { align: 'left' as AlignValue, x: -30 },
-      selected: 3,
-      buttons: [
-        { type: 'month', count: 1, text: '1m', title: 'View 1 months' },
-        { type: 'month', count: 6, text: '6m', title: 'View 6 months' },
-        { type: 'year', count: 1, text: '1y', title: 'View 1 year' },
-        { type: 'all', text: 'All', title: 'View all' },
-      ],
-    },
-    navigator: { enabled: false },
-    title: { text: title, align: 'left' },
-    subtitle: { text: 'Click and drag in the plot area to zoom in', align: 'left' },
-    xAxis: { type: 'datetime', min: allData[0]?.[0], max: allData.at(-1)?.[0], startOnTick: false, endOnTick: false },
-    yAxis: { title: { text: 'Daily Cycle Count' } },
-    credits: { enabled: false },
-    tooltip: { shared: true, formatter: formatTooltip(customMap) },
+  const options = getChartOptions({
+    title: title,
+    legend: false,
+    yAxisTitle: 'Daily Cycle Count',
+    buttonPositionX: -30,
+    tooltipFormatter: formatTooltip(customMap),
+    minDate: allData[0]?.[0],
+    maxDate: allData.at(-1)?.[0],
     series: [{ name: 'Active Addresses', type: 'line', data: allData }],
-    exporting: {
-      enabled: true,
-      buttons: {
-        contextButton: {
-          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
-        },
-      },
-    },
-  };
+  });
+
+  return options;
 };
 
 export default function Page() {

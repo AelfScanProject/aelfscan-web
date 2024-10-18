@@ -1,8 +1,8 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import { useEffect, useMemo } from 'react';
-import { ChartColors, IDailyAddAddressData, IHIGHLIGHTDataItem } from '../type';
+import { IDailyAddAddressData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 import { exportToCSV } from '@_utils/urlUtils';
 import { fetchUniqueAddresses } from '@_api/fetchChart';
@@ -35,93 +35,30 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
-  return {
-    legend: {
-      enabled: multi,
-    },
-    colors: ChartColors,
-    chart: {
-      type: 'line',
-    },
-    rangeSelector: {
-      enabled: true,
-      selected: 3,
-      buttonPosition: {
-        align: 'left',
-        x: -25,
-      },
-      buttons: [
-        {
-          type: 'month',
-          count: 1,
-          text: '1m',
-          title: 'View 1 months',
-        },
-        {
-          type: 'month',
-          count: 6,
-          text: '6m',
-          title: 'View 6 months',
-        },
-        {
-          type: 'year',
-          count: 1,
-          text: '1y',
-          title: 'View 1 year',
-        },
-        {
-          type: 'all',
-          text: 'All',
-          title: 'View all',
-        },
-      ],
-    },
-    navigator: {
-      enabled: false,
-    },
-    title: {
-      text: title,
-      align: 'left',
-    },
-    subtitle: {
-      text: 'Click and drag in the plot area to zoom in',
-      align: 'left',
-    },
-    xAxis: {
-      type: 'datetime',
-      min: minDate,
-      max: maxDate,
-      startOnTick: false,
-      endOnTick: false,
-    },
-    yAxis: {
-      title: {
-        text: 'aelf Cumulative Address Growth',
-      },
-    },
-    credits: {
-      enabled: false,
-    },
-    tooltip: {
-      shared: true,
-      formatter: function () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const that: any = this;
-        const point = that.points[0] as any;
-        const date = point.x;
-        const { totalCount, mainData, sideData } = customMap[date];
+  const options = getChartOptions({
+    title: title,
+    legend: multi,
+    yAxisTitle: 'aelf Cumulative Address Growth',
+    buttonPositionX: -25,
+    tooltipFormatter: function () {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that: any = this;
+      const point = that.points[0] as any;
+      const date = point.x;
+      const { totalCount, mainData, sideData } = customMap[date];
 
-        if (multi) {
-          return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(totalCount)}</b><br/>MainChain Wallet Addresses: <b>${thousandsNumber(mainData)}</b><br/>SideChain Wallet Addresses: <b>${thousandsNumber(sideData)}</b><br/>
-        `;
-        } else {
-          return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(chain === 'AELF' ? mainData : sideData)}</b>
-        `;
-        }
-      },
+      if (multi) {
+        return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(totalCount)}</b><br/>MainChain Wallet Addresses: <b>${thousandsNumber(mainData)}</b><br/>SideChain Wallet Addresses: <b>${thousandsNumber(sideData)}</b><br/>
+      `;
+      } else {
+        return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(chain === 'AELF' ? mainData : sideData)}</b>
+      `;
+      }
     },
+    minDate,
+    maxDate,
     series: multi
       ? [
           {
@@ -147,15 +84,9 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
             data: chain === 'AELF' ? mainData : sideData,
           },
         ],
-    exporting: {
-      enabled: true,
-      buttons: {
-        contextButton: {
-          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
-        },
-      },
-    },
-  };
+  });
+
+  return options;
 };
 export default function Page() {
   const { data, loading, chartRef, chain } = useFetchChartData<IDailyAddAddressData>({

@@ -1,6 +1,6 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useEffect, useMemo } from 'react';
 import { ChartColors, IStakedData } from '../type';
@@ -22,6 +22,37 @@ const getOption = (list: any[]): Highcharts.Options => {
 
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
+
+  const options = getChartOptions({
+    title: title,
+    legend: false,
+    yAxisTitle: 'ELF Staked Amount',
+    buttonPositionX: -35,
+    tooltipFormatter: function () {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that: any = this;
+      const point = that.points[0] as any;
+      const date = point.x;
+      const value = point.y;
+      const bpStaked = customMap[date].bpStaked;
+      const voteStaked = customMap[date].voteStaked;
+      const stakingRate = customMap[date].stakingRate;
+      return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total ELF Staked</b>: <b>${thousandsNumber(value)}</b><br/>BP Staked: <b>${thousandsNumber(bpStaked)}</b><br/>Vote Staked: <b>${thousandsNumber(voteStaked)}</b><br/>Staking Rate: <b>${stakingRate}%</b><br/>
+      `;
+    },
+    minDate,
+    maxDate,
+    series: [
+      {
+        name: 'Total Supply',
+        type: 'line',
+        data: allData,
+      },
+    ],
+  });
+
+  return options;
 
   return {
     legend: {

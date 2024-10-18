@@ -1,6 +1,6 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import { useEffect, useMemo } from 'react';
 import { ChartColors, IBlockProductionRateData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
@@ -23,88 +23,25 @@ const getOption = (list: any[]): Highcharts.Options => {
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
-  return {
-    legend: {
-      enabled: false,
+  const options = getChartOptions({
+    title: title,
+    legend: false,
+    yAxisTitle: 'Block Production Rate',
+    buttonPositionX: -22,
+    tooltipFormatter: function () {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that: any = this;
+      const point = that.points[0] as any;
+      const date = point.x;
+      const value = point.y;
+      const blockCount = customMap[date].blockCount;
+      const missedBlockCount = customMap[date].missedBlockCount;
+      return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Block Production Rate</b>: <b>${thousandsNumber(value)}%</b><br/>Block Count: <b>${thousandsNumber(blockCount)}</b><br/>Missed Block Count: <b>${thousandsNumber(missedBlockCount)}</b><br/>
+      `;
     },
-    colors: ChartColors,
-    chart: {
-      type: 'line',
-    },
-    rangeSelector: {
-      enabled: true,
-      selected: 3,
-      buttonPosition: {
-        align: 'left',
-        x: -22,
-      },
-      buttons: [
-        {
-          type: 'month',
-          count: 1,
-          text: '1m',
-          title: 'View 1 months',
-        },
-        {
-          type: 'month',
-          count: 6,
-          text: '6m',
-          title: 'View 6 months',
-        },
-        {
-          type: 'year',
-          count: 1,
-          text: '1y',
-          title: 'View 1 year',
-        },
-        {
-          type: 'all',
-          text: 'All',
-          title: 'View all',
-        },
-      ],
-    },
-    navigator: {
-      enabled: false,
-    },
-    title: {
-      text: title,
-      align: 'left',
-    },
-    subtitle: {
-      text: 'Click and drag in the plot area to zoom in',
-      align: 'left',
-    },
-    xAxis: {
-      type: 'datetime',
-      min: minDate,
-      max: maxDate,
-      startOnTick: false,
-      endOnTick: false,
-    },
-    yAxis: {
-      title: {
-        text: 'Block Production Rate',
-      },
-    },
-    credits: {
-      enabled: false,
-    },
-    tooltip: {
-      shared: true,
-      formatter: function () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const that: any = this;
-        const point = that.points[0] as any;
-        const date = point.x;
-        const value = point.y;
-        const blockCount = customMap[date].blockCount;
-        const missedBlockCount = customMap[date].missedBlockCount;
-        return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Block Production Rate</b>: <b>${thousandsNumber(value)}%</b><br/>Block Count: <b>${thousandsNumber(blockCount)}</b><br/>Missed Block Count: <b>${thousandsNumber(missedBlockCount)}</b><br/>
-        `;
-      },
-    },
+    minDate,
+    maxDate,
     series: [
       {
         name: 'Active Addresses',
@@ -112,15 +49,9 @@ const getOption = (list: any[]): Highcharts.Options => {
         type: 'line',
       },
     ],
-    exporting: {
-      enabled: true,
-      buttons: {
-        contextButton: {
-          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
-        },
-      },
-    },
-  };
+  });
+
+  return options;
 };
 export default function Page() {
   const { data, loading, chartRef } = useFetchChartData<IBlockProductionRateData>({
