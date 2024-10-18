@@ -71,23 +71,24 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
     () => getColumns({ currentPage, pageSize, sort, ChangeOrder, chain, multi }),
     [ChangeOrder, chain, currentPage, multi, pageSize, sort],
   );
-  const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
     updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
   };
 
-  const pageSizeChange = (page, size) => {
-    setPageSize(size);
-    updateQueryParams({ p: page, ps: size, chain: selectChain });
-    setCurrentPage(page);
-  };
-
   const chainChange = (value) => {
     updateQueryParams({ p: 1, ps: pageSize, chain: value });
     setCurrentPage(1);
     setSelectChain(value);
+  };
+
+  const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
+
+  const pageSizeChange = (page, size) => {
+    setPageSize(size);
+    updateQueryParams({ p: page, ps: size, chain: selectChain });
+    setCurrentPage(page);
   };
 
   return (
