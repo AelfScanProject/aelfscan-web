@@ -1,42 +1,40 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
+import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IContractCalls, IHIGHLIGHTDataItem } from '../type';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
 import { fetchDailyContractCall } from '@_api/fetchChart';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import TopContract from './topContract';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 const title = 'Contract Calls Chart';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
   const customMap = {};
+
   list.forEach((item) => {
-    if (multi) {
-      allData.push([item.date, item.mergeCallCount]);
-      mainData.push([item.date, item.mainChainCallCount]);
-      sideData.push([item.date, item.sideChainCallCount]);
-      customMap[item.date] = {};
-      customMap[item.date].total = item.mergeCallCount;
-      customMap[item.date].main = item.mainChainCallCount;
-      customMap[item.date].side = item.sideChainCallCount;
-    } else {
-      allData.push([item.date, item.callCount]);
-      mainData.push([item.date, item.callCount]);
-      sideData.push([item.date, item.callCount]);
-      customMap[item.date] = {};
-      customMap[item.date].total = item.callCount;
-      customMap[item.date].main = item.callCount;
-      customMap[item.date].side = item.callCount;
-      customMap[item.date].callAddressCount = item.callAddressCount;
+    const date = item.date;
+    const callCount = multi ? item.mergeCallCount : item.callCount;
+    const mainCount = multi ? item.mainChainCallCount : callCount;
+    const sideCount = multi ? item.sideChainCallCount : callCount;
+
+    allData.push([date, callCount]);
+    mainData.push([date, mainCount]);
+    sideData.push([date, sideCount]);
+
+    customMap[date] = {
+      total: callCount,
+      main: mainCount,
+      side: sideCount,
+    };
+
+    if (!multi) {
+      customMap[date].callAddressCount = item.callAddressCount;
     }
   });
   const minDate = allData[0] && allData[0][0];
@@ -180,29 +178,15 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IContractCalls>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchDailyContractCall({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IContractCalls>({
+    fetchFunc: fetchDailyContractCall,
+    processData: (res) => res,
   });
   const multi = useMultiChain();
   const options = useMemo(() => {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -212,7 +196,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };

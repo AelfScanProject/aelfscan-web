@@ -1,43 +1,37 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
+import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IAvgTxFeeData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Average Transaction Fee';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
 import { fetchDailyAvgTransactionFee } from '@_api/fetchChart';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
   const customMap = {};
+
   list.forEach((item) => {
-    if (multi) {
-      allData.push([item.date, Number(item.mergeAvgFeeUsdt)]);
-      mainData.push([item.date, Number(item.mainChainAvgFeeUsdt)]);
-      sideData.push([item.date, Number(item.sideChainAvgFeeUsdt)]);
-      customMap[item.date] = {};
-      customMap[item.date].total = Number(item.mergeAvgFeeUsdt);
-      customMap[item.date].main = Number(item.mainChainAvgFeeUsdt);
-      customMap[item.date].side = Number(item.sideChainAvgFeeUsdt);
-      customMap[item.date].avgFeeElf = item.avgFeeElf;
-    } else {
-      allData.push([item.date, Number(item.avgFeeUsdt)]);
-      mainData.push([item.date, Number(item.avgFeeUsdt)]);
-      sideData.push([item.date, Number(item.avgFeeUsdt)]);
-      customMap[item.date] = {};
-      customMap[item.date].total = Number(item.avgFeeUsdt);
-      customMap[item.date].main = Number(item.avgFeeUsdt);
-      customMap[item.date].side = Number(item.avgFeeUsdt);
-      customMap[item.date].avgFeeElf = item.avgFeeElf;
-    }
+    const date = item.date;
+    const avgFeeUsdt = multi ? Number(item.mergeAvgFeeUsdt) : Number(item.avgFeeUsdt);
+    const mainAvgFeeUsdt = multi ? Number(item.mainChainAvgFeeUsdt) : avgFeeUsdt;
+    const sideAvgFeeUsdt = multi ? Number(item.sideChainAvgFeeUsdt) : avgFeeUsdt;
+
+    allData.push([date, avgFeeUsdt]);
+    mainData.push([date, mainAvgFeeUsdt]);
+    sideData.push([date, sideAvgFeeUsdt]);
+
+    customMap[date] = {
+      total: avgFeeUsdt,
+      main: mainAvgFeeUsdt,
+      side: sideAvgFeeUsdt,
+      avgFeeElf: item.avgFeeElf,
+    };
   });
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
@@ -164,22 +158,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IAvgTxFeeData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchDailyAvgTransactionFee({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IAvgTxFeeData>({
+    fetchFunc: fetchDailyAvgTransactionFee,
+    processData: (res) => res,
   });
 
   const multi = useMultiChain();
@@ -188,7 +169,6 @@ export default function Page() {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -198,7 +178,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };

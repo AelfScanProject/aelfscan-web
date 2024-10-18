@@ -1,17 +1,14 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { thousandsNumber } from '@_utils/formatter';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IDailyAddAddressData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useParams } from 'next/navigation';
 import { fetchUniqueAddresses } from '@_api/fetchChart';
-import { message } from 'antd';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Cumulative Addresses Chart';
 const getOption = (list: any[], multi, chain): Highcharts.Options => {
@@ -21,23 +18,19 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
   const customMap = {};
 
   list.forEach((item) => {
-    if (multi) {
-      allData.push([item.date, item.mergeTotalUniqueAddressees]);
-      mainData.push([item.date, item.mainChainTotalUniqueAddressees]);
-      sideData.push([item.date, item.sideChainTotalUniqueAddressees]);
-      customMap[item.date] = {};
-      customMap[item.date].totalCount = item.mergeTotalUniqueAddressees;
-      customMap[item.date].mainData = item.mainChainTotalUniqueAddressees;
-      customMap[item.date].sideData = item.sideChainTotalUniqueAddressees;
-    } else {
-      allData.push([item.date, item.ownerUniqueAddressees]);
-      mainData.push([item.date, item.ownerUniqueAddressees]);
-      sideData.push([item.date, item.ownerUniqueAddressees]);
-      customMap[item.date] = {};
-      customMap[item.date].totalCount = item.ownerUniqueAddressees;
-      customMap[item.date].mainData = item.ownerUniqueAddressees;
-      customMap[item.date].sideData = item.ownerUniqueAddressees;
-    }
+    const totalUniqueAddresses = multi ? item.mergeTotalUniqueAddressees : item.ownerUniqueAddressees;
+    const mainUniqueAddresses = multi ? item.mainChainTotalUniqueAddressees : item.ownerUniqueAddressees;
+    const sideUniqueAddresses = multi ? item.sideChainTotalUniqueAddressees : item.ownerUniqueAddressees;
+
+    allData.push([item.date, totalUniqueAddresses]);
+    mainData.push([item.date, mainUniqueAddresses]);
+    sideData.push([item.date, sideUniqueAddresses]);
+
+    customMap[item.date] = {
+      totalCount: totalUniqueAddresses,
+      mainData: mainUniqueAddresses,
+      sideData: sideUniqueAddresses,
+    };
   });
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
@@ -165,22 +158,9 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IDailyAddAddressData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchUniqueAddresses({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IDailyAddAddressData>({
+    fetchFunc: fetchUniqueAddresses,
+    processData: (res) => res,
   });
 
   const multi = useMultiChain();
@@ -189,7 +169,6 @@ export default function Page() {
     return getOption(data?.list || [], multi, chain);
   }, [data, multi, chain]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -199,7 +178,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
 
   const download = () => {
     exportToCSV(data?.list || [], title);

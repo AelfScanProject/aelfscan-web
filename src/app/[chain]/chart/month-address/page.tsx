@@ -1,44 +1,41 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
+import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IHIGHLIGHTDataItem, IMonthActiveAddressData } from '../type';
 const title = 'Monthly Active aelf Addresses';
 import { exportToCSV } from '@_utils/urlUtils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
 import { fetchMonthActiveAddresses } from '@_api/fetchChart';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
   const customMap = {};
+
   list.forEach((item) => {
     const date = dayjs.utc(item.dateMonth.toString(), 'YYYYMM').valueOf();
-    if (multi) {
-      allData.push([date, item.mergeAddressCount]);
-      mainData.push([date, item.mainChainAddressCount]);
-      sideData.push([date, item.sideChainAddressCount]);
-      customMap[date] = {};
-      customMap[date].total = item.mergeAddressCount;
-      customMap[date].main = item.mainChainAddressCount;
-      customMap[date].side = item.sideChainAddressCount;
-    } else {
-      allData.push([date, item.addressCount]);
-      mainData.push([date, item.addressCount]);
-      sideData.push([date, item.addressCount]);
-      customMap[date] = {};
-      customMap[date].total = item.addressCount;
-      customMap[date].main = item.addressCount;
-      customMap[date].side = item.addressCount;
+    const addressCount = multi ? item.mergeAddressCount : item.addressCount;
+    const mainChainCount = multi ? item.mainChainAddressCount : item.addressCount;
+    const sideChainCount = multi ? item.sideChainAddressCount : item.addressCount;
+
+    allData.push([date, addressCount]);
+    mainData.push([date, mainChainCount]);
+    sideData.push([date, sideChainCount]);
+
+    customMap[date] = {
+      total: addressCount,
+      main: mainChainCount,
+      side: sideChainCount,
+    };
+
+    if (!multi) {
       customMap[date].sendAddressCount = item.sendAddressCount;
       customMap[date].receiveAddressCount = item.receiveAddressCount;
     }
@@ -167,23 +164,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IMonthActiveAddressData>();
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchMonthActiveAddresses({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IMonthActiveAddressData>({
+    fetchFunc: fetchMonthActiveAddresses,
+    processData: (res) => res,
   });
 
   const multi = useMultiChain();
@@ -192,7 +175,6 @@ export default function Page() {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -202,7 +184,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
 
   const download = () => {
     exportToCSV(data?.list || [], title);

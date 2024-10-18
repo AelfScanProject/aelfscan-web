@@ -1,42 +1,36 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
+import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IAvgBlockSizeData } from '../type';
 const title = 'Average Block Size Chart';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
 import { fetchDailyAvgBlockSize } from '@_api/fetchChart';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
   const customMap = {};
+
   list.forEach((item) => {
-    if (multi) {
-      allData.push([item.date, Number(item.mergeAvgBlockSize)]);
-      mainData.push([item.date, Number(item.mainChainAvgBlockSize)]);
-      sideData.push([item.date, Number(item.sideChainAvgBlockSize)]);
-      customMap[item.date] = {};
-      customMap[item.date].total = Number(item.mergeAvgBlockSize);
-      customMap[item.date].main = Number(item.mainChainAvgBlockSize);
-      customMap[item.date].side = Number(item.sideChainAvgBlockSize);
-    } else {
-      const data = Number(item.avgBlockSize);
-      allData.push([item.date, data]);
-      mainData.push([item.date, data]);
-      sideData.push([item.date, data]);
-      customMap[item.date] = {};
-      customMap[item.date].total = data;
-      customMap[item.date].main = data;
-      customMap[item.date].side = data;
-    }
+    const date = item.date;
+    const avgBlockSize = multi ? Number(item.mergeAvgBlockSize) : Number(item.avgBlockSize);
+    const mainAvgBlockSize = multi ? Number(item.mainChainAvgBlockSize) : avgBlockSize;
+    const sideAvgBlockSize = multi ? Number(item.sideChainAvgBlockSize) : avgBlockSize;
+
+    allData.push([date, avgBlockSize]);
+    mainData.push([date, mainAvgBlockSize]);
+    sideData.push([date, sideAvgBlockSize]);
+
+    customMap[date] = {
+      total: avgBlockSize,
+      main: mainAvgBlockSize,
+      side: sideAvgBlockSize,
+    };
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -164,29 +158,16 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IAvgBlockSizeData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchDailyAvgBlockSize({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IAvgBlockSizeData>({
+    fetchFunc: fetchDailyAvgBlockSize,
+    processData: (res) => res,
   });
+
   const multi = useMultiChain();
   const options = useMemo(() => {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -196,7 +177,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
   const download = () => {
     exportToCSV(data?.list || [], title);
   };

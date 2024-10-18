@@ -19,6 +19,7 @@ import { useParams } from 'next/navigation';
 import { Spin } from 'antd';
 import { getChainId, getPageNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
+import { usePagination } from '@_hooks/usePagination';
 
 export enum pageType {
   first,
@@ -60,6 +61,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
       };
       setLoading(true);
       try {
+        updateQueryParams({ p: page, ps: size, chain: chain });
         const res: IBlocksResponse = await fetchBlocks(params);
         setTotal(res.total);
         setData(res.blocks);
@@ -68,7 +70,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
       }
       setLoading(false);
     },
-    [total],
+    [total, updateQueryParams],
   );
 
   const [timeFormat, setTimeFormat] = useState<string>('Age');
@@ -85,25 +87,14 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
   const pageMaxBlock = data[0]?.blockHeight;
   const pageMinBlock = data[data.length - 1]?.blockHeight;
 
-  const pageChange = (page: number) => {
-    setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
-    fetchData(page, pageSize, selectChain);
-  };
-
-  const pageSizeChange = (page: number, pageSize: number) => {
-    setPageSize(pageSize);
-    setCurrentPage(page);
-    updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
-    fetchData(page, pageSize, selectChain);
-  };
-
-  const chainChange = (value: string) => {
-    setSelectChain(value);
-    setCurrentPage(1);
-    updateQueryParams({ p: 1, ps: pageSize, chain: value });
-    fetchData(1, pageSize, value);
-  };
+  const { pageChange, pageSizeChange, chainChange } = usePagination({
+    setCurrentPage,
+    setPageSize,
+    fetchData,
+    setSelectChain,
+    selectChain,
+    pageSize,
+  });
 
   const multiTitle = useMemo(() => {
     return `Total of ${total} blocks`;

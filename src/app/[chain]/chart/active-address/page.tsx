@@ -1,42 +1,40 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
+import { thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IDailyActiveAddressData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Daily Active aelf Addresses';
 import { exportToCSV } from '@_utils/urlUtils';
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
 import { fetchDailyActiveAddresses } from '@_api/fetchChart';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
   const customMap = {};
+
   list.forEach((item) => {
-    if (multi) {
-      allData.push([item.date, item.mergeAddressCount]);
-      mainData.push([item.date, item.mainChainAddressCount]);
-      sideData.push([item.date, item.sideChainAddressCount]);
-      customMap[item.date] = {};
-      customMap[item.date].total = item.mergeAddressCount;
-      customMap[item.date].main = item.mainChainAddressCount;
-      customMap[item.date].side = item.sideChainAddressCount;
-    } else {
-      allData.push([item.date, item.addressCount]);
-      mainData.push([item.date, item.addressCount]);
-      sideData.push([item.date, item.addressCount]);
-      customMap[item.date] = {};
-      customMap[item.date].total = item.addressCount;
-      customMap[item.date].main = item.addressCount;
-      customMap[item.date].side = item.addressCount;
-      customMap[item.date].sendAddressCount = item.sendAddressCount;
-      customMap[item.date].receiveAddressCount = item.receiveAddressCount;
+    const { date, sendAddressCount, receiveAddressCount } = item;
+    const addressCount = multi ? item.mergeAddressCount : item.addressCount;
+    const mainChainCount = multi ? item.mainChainAddressCount : addressCount;
+    const sideChainCount = multi ? item.sideChainAddressCount : addressCount;
+
+    allData.push([date, addressCount]);
+    mainData.push([date, mainChainCount]);
+    sideData.push([date, sideChainCount]);
+
+    customMap[date] = {
+      total: addressCount,
+      main: mainChainCount,
+      side: sideChainCount,
+    };
+
+    if (!multi) {
+      customMap[date].sendAddressCount = sendAddressCount;
+      customMap[date].receiveAddressCount = receiveAddressCount;
     }
   });
   const minDate = allData[0] && allData[0][0];
@@ -166,30 +164,17 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IDailyActiveAddressData>();
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchDailyActiveAddresses({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IDailyActiveAddressData>({
+    fetchFunc: fetchDailyActiveAddresses,
+    processData: (res) => res,
   });
+
   const multi = useMultiChain();
+
   const options = useMemo(() => {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -199,7 +184,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
 
   const download = () => {
     exportToCSV(data?.list || [], title);

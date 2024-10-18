@@ -1,18 +1,15 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import '../index.css';
-import { getChainId, thousandsNumber } from '@_utils/formatter';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { thousandsNumber } from '@_utils/formatter';
+import { useEffect, useMemo } from 'react';
 import { ChartColors, IDailyTransactionsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyTransactions } from '@_api/fetchChart';
-import { useParams } from 'next/navigation';
-import { message } from 'antd';
-import { useEffectOnce } from 'react-use';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Daily Transactions Chart';
 const getOption = (list: any[], multi, chain): Highcharts.Options => {
@@ -21,25 +18,20 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
   const sideData: any[] = [];
   const blockDataMap = {};
   list.forEach((item) => {
-    if (multi) {
-      allData.push([item.date, item.mergeTransactionCount]);
-      mainData.push([item.date, item.mainChainTransactionCount]);
-      sideData.push([item.date, item.sideChainTransactionCount]);
-      blockDataMap[item.date] = {};
-      blockDataMap[item.date].blockCount = item.blockCount;
-      blockDataMap[item.date].total = item.mergeTransactionCount;
-      blockDataMap[item.date].main = item.mainChainTransactionCount;
-      blockDataMap[item.date].side = item.sideChainTransactionCount;
-    } else {
-      allData.push([item.date, item.transactionCount]);
-      mainData.push([item.date, item.transactionCount]);
-      sideData.push([item.date, item.transactionCount]);
-      blockDataMap[item.date] = {};
-      blockDataMap[item.date].blockCount = item.blockCount;
-      blockDataMap[item.date].total = item.transactionCount;
-      blockDataMap[item.date].main = item.transactionCount;
-      blockDataMap[item.date].side = item.transactionCount;
-    }
+    const transactionCount = multi ? item.mergeTransactionCount : item.transactionCount;
+    const mainChainCount = multi ? item.mainChainTransactionCount : transactionCount;
+    const sideChainCount = multi ? item.sideChainTransactionCount : transactionCount;
+
+    allData.push([item.date, transactionCount]);
+    mainData.push([item.date, mainChainCount]);
+    sideData.push([item.date, sideChainCount]);
+
+    blockDataMap[item.date] = {
+      blockCount: item.blockCount,
+      total: transactionCount,
+      main: mainChainCount,
+      side: sideChainCount,
+    };
   });
 
   const minDate = allData[0] && allData[0][0];
@@ -167,29 +159,15 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
   };
 };
 export default function Page() {
-  const { chain } = useParams<{ chain: string }>();
-  const [data, setData] = useState<IDailyTransactionsData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const fetData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetchDailyTransactions({ chainId: getChainId(chain) });
-      setData(res);
-    } catch (error) {
-      message.error(JSON.stringify(error));
-    } finally {
-      setLoading(false);
-    }
-  }, [chain]);
-  useEffectOnce(() => {
-    fetData();
+  const { data, loading, chartRef, chain } = useFetchChartData<IDailyTransactionsData>({
+    fetchFunc: fetchDailyTransactions,
+    processData: (res) => res,
   });
   const multi = useMultiChain();
   const options = useMemo(() => {
     return getOption(data?.list || [], multi, chain);
   }, [chain, data?.list, multi]);
 
-  const chartRef = useRef<HighchartsReactRefObject>(null);
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -199,7 +177,7 @@ export default function Page() {
         chart.xAxis[0].setExtremes(minDate, maxDate);
       }
     }
-  }, [data]);
+  }, [chartRef, data]);
 
   const download = () => {
     exportToCSV(data?.list || [], title);
