@@ -1,7 +1,7 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import '../index.css';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import { useEffect, useMemo } from 'react';
 import { ChartColors, IDailyTransactionsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
@@ -37,92 +37,29 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
-  return {
-    legend: {
-      enabled: multi,
+  const options = getChartOptions({
+    title: title,
+    legend: multi,
+    yAxisTitle: 'Transactions per Day',
+    buttonPositionX: -35,
+    tooltipFormatter: function () {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that: any = this;
+      const point = that.points[0] as any;
+      const date = point.x;
+      const { main, side, blockCount, total } = blockDataMap[date];
+      if (multi) {
+        return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Transactions: <b>${thousandsNumber(main)}</b><br/>SideChain Transactions: <b>${thousandsNumber(side)}</b><br/>
+      `;
+      } else {
+        return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Total Block Count: <b>${thousandsNumber(blockCount)}</b><br/>
+      `;
+      }
     },
-    colors: ChartColors,
-    chart: {
-      type: 'line',
-    },
-    rangeSelector: {
-      enabled: true,
-      selected: 3,
-      buttonPosition: {
-        align: 'left',
-        x: -35,
-      },
-      buttons: [
-        {
-          type: 'month',
-          count: 1,
-          text: '1m',
-          title: 'View 1 months',
-        },
-        {
-          type: 'month',
-          count: 6,
-          text: '6m',
-          title: 'View 6 months',
-        },
-        {
-          type: 'year',
-          count: 1,
-          text: '1y',
-          title: 'View 1 year',
-        },
-        {
-          type: 'all',
-          text: 'All',
-          title: 'View all',
-        },
-      ],
-    },
-    navigator: {
-      enabled: false,
-    },
-    title: {
-      text: 'aelf Daily Transactions Chart',
-      align: 'left',
-    },
-    subtitle: {
-      text: 'Click and drag in the plot area to zoom in',
-      align: 'left',
-    },
-    xAxis: {
-      type: 'datetime',
-      min: minDate,
-      max: maxDate,
-      startOnTick: false,
-      endOnTick: false,
-    },
-    yAxis: {
-      title: {
-        text: 'Transactions per Day',
-      },
-    },
-    credits: {
-      enabled: false,
-    },
-    tooltip: {
-      shared: true,
-      formatter: function () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const that: any = this;
-        const point = that.points[0] as any;
-        const date = point.x;
-        const { main, side, blockCount, total } = blockDataMap[date];
-        if (multi) {
-          return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Transactions: <b>${thousandsNumber(main)}</b><br/>SideChain Transactions: <b>${thousandsNumber(side)}</b><br/>
-        `;
-        } else {
-          return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Total Block Count: <b>${thousandsNumber(blockCount)}</b><br/>
-        `;
-        }
-      },
-    },
+    minDate,
+    maxDate,
     series: multi
       ? [
           {
@@ -148,15 +85,9 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
             data: chain === 'AELF' ? mainData : sideData,
           },
         ],
-    exporting: {
-      enabled: true,
-      buttons: {
-        contextButton: {
-          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
-        },
-      },
-    },
-  };
+  });
+
+  return options;
 };
 export default function Page() {
   const { data, loading, chartRef, chain } = useFetchChartData<IDailyTransactionsData>({

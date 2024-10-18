@@ -7,11 +7,14 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import Highcharts from 'highcharts/highstock';
 dayjs.extend(utc);
 import { MULTI_CHAIN, SYMBOL } from '@_utils/contant';
 import { v4 as uuidv4 } from 'uuid';
 import { PageTypeEnum } from '@_types';
 import { TChainID } from '@_api/type';
+import { ChartColors } from '@app/[chain]/chart/type';
+import { number } from 'echarts';
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss') => {
   if (typeof date === 'number') {
     if (type === 'Date Time (UTC)') {
@@ -187,4 +190,114 @@ export function getOrCreateUserId() {
 
 export const getChainId = (chainId: string): TChainID => {
   return (chainId === MULTI_CHAIN ? '' : chainId) as TChainID;
+};
+export const getChartOptions = ({
+  title,
+  minDate,
+  maxDate,
+  legend = false,
+  yAxisTitle,
+  tooltipFormatter,
+  series,
+  buttonPositionX = -30,
+  yAxis = {},
+  minRange,
+  xAxis,
+  XDateTimeLabelFormats,
+  buttons,
+}: {
+  title: string;
+  minDate: number | string;
+  maxDate: number | string;
+  legend: boolean;
+  yAxisTitle: string;
+  tooltipFormatter: (params: any) => string;
+  series: any[];
+  yAxis?: any;
+  xAxis?: any;
+  XDateTimeLabelFormats?: any;
+  buttonPositionX?: number;
+  minRange?: number;
+  buttons?: any[];
+}) => {
+  return {
+    legend: {
+      enabled: legend,
+    },
+    colors: ChartColors,
+    chart: {
+      type: 'line',
+    },
+    rangeSelector: {
+      enabled: true,
+      selected: 3,
+      buttonPosition: {
+        align: 'left',
+        x: buttonPositionX,
+      },
+      buttons: buttons || [
+        { type: 'month', count: 1, text: '1m', title: 'View 1 months' },
+        { type: 'month', count: 6, text: '6m', title: 'View 6 months' },
+        { type: 'year', count: 1, text: '1y', title: 'View 1 year' },
+        { type: 'all', text: 'All', title: 'View all' },
+      ],
+    },
+    navigator: {
+      enabled: false,
+    },
+    title: {
+      text: title,
+      align: 'left',
+    },
+    subtitle: {
+      text: 'Click and drag in the plot area to zoom in',
+      align: 'left',
+    },
+    xAxis: {
+      type: 'datetime',
+      min: minDate,
+      max: maxDate,
+      startOnTick: false,
+      endOnTick: false,
+      minRange: minRange,
+      ...xAxis,
+    },
+    yAxis: {
+      title: {
+        text: yAxisTitle,
+      },
+      labels: {
+        formatter: function () {
+          // eslint-disable-next-line @typescript-eslint/no-this-alias
+          const num = Number(this.value);
+          if (num >= 1e9) {
+            return (num / 1e9).toFixed(2) + 'B';
+          } else if (num >= 1e6) {
+            return (num / 1e6).toFixed(2) + 'M';
+          } else if (num >= 1e3) {
+            return (num / 1e3).toFixed(2) + 'K';
+          } else {
+            return num.toString();
+          }
+        },
+      },
+      ...yAxis,
+    },
+    credits: {
+      enabled: false,
+    },
+    tooltip: {
+      shared: true,
+      formatter: tooltipFormatter,
+    },
+    series,
+    exporting: {
+      enabled: true,
+      buttons: {
+        contextButton: {
+          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
+        },
+      },
+    },
+  } as Highcharts.Options;
 };

@@ -1,9 +1,9 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useEffect, useMemo } from 'react';
-import { ChartColors, IHIGHLIGHTDataItem, IMonthActiveAddressData } from '../type';
+import { IHIGHLIGHTDataItem, IMonthActiveAddressData } from '../type';
 const title = 'Monthly Active aelf Addresses';
 import { exportToCSV } from '@_utils/urlUtils';
 import dayjs from 'dayjs';
@@ -44,90 +44,54 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
-  return {
-    legend: {
-      enabled: multi,
-    },
-    colors: ChartColors,
-    chart: {
-      type: 'line',
-    },
-    rangeSelector: {
-      enabled: true,
-      selected: 3,
-      buttonPosition: {
-        align: 'left',
-        x: -25,
+  const options = getChartOptions({
+    title: title,
+    legend: multi,
+    yAxisTitle: 'Active Addresses',
+    buttons: [
+      {
+        type: 'month',
+        count: 6,
+        text: '6m',
+        title: 'View 6 months',
       },
-      buttons: [
-        {
-          type: 'month',
-          count: 6,
-          text: '6m',
-          title: 'View 6 months',
-        },
-        {
-          type: 'year',
-          count: 1,
-          text: '1y',
-          title: 'View 1 year',
-        },
-        {
-          type: 'all',
-          text: 'All',
-          title: 'View all',
-        },
-      ],
-    },
-    navigator: {
-      enabled: false,
-    },
-    title: {
-      text: title,
-      align: 'left',
-    },
-    subtitle: {
-      text: 'Click and drag in the plot area to zoom in',
-      align: 'left',
-    },
+      {
+        type: 'year',
+        count: 1,
+        text: '1y',
+        title: 'View 1 year',
+      },
+      {
+        type: 'all',
+        text: 'All',
+        title: 'View all',
+      },
+    ],
+    buttonPositionX: -25,
     xAxis: {
-      type: 'datetime',
-      min: minDate,
-      max: maxDate,
-      startOnTick: false,
-      endOnTick: false,
       minRange: 30 * 24 * 3600 * 1000, // Minimum range is 1 month
       dateTimeLabelFormats: {
         month: '%b %y', // Format x-axis labels as "Jan 2024"
       },
     },
-    yAxis: {
-      title: {
-        text: 'Active Addresses',
-      },
+    tooltipFormatter: function () {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that: any = this;
+      const point = that.points[0] as any;
+      const date = point.x;
+      const { total, main, side, sendAddressCount, receiveAddressCount } = customMap[date];
+      if (multi) {
+        return `
+        ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Total Active Addresses</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Active Addresses: <b>${thousandsNumber(main)}</b><br/>SideChain Active Addresses: <b>${thousandsNumber(side)}</b><br/>
+      `;
+      } else {
+        return `
+        ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Active Addresses</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Sender Address: <b>${thousandsNumber(sendAddressCount)}</b><br/>Receive Address: <b>${thousandsNumber(receiveAddressCount)}</b><br/>
+      `;
+      }
     },
-    credits: {
-      enabled: false,
-    },
-    tooltip: {
-      shared: true,
-      formatter: function () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const that: any = this;
-        const point = that.points[0] as any;
-        const date = point.x;
-        const { total, main, side, sendAddressCount, receiveAddressCount } = customMap[date];
-        if (multi) {
-          return `
-          ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Total Active Addresses</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Active Addresses: <b>${thousandsNumber(main)}</b><br/>SideChain Active Addresses: <b>${thousandsNumber(side)}</b><br/>
-        `;
-        } else {
-          return `
-          ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Active Addresses</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Sender Address: <b>${thousandsNumber(sendAddressCount)}</b><br/>Receive Address: <b>${thousandsNumber(receiveAddressCount)}</b><br/>
-        `;
-        }
-      },
-    },
+    minDate,
+    maxDate,
     series: multi
       ? [
           {
@@ -153,15 +117,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
             data: chain === 'AELF' ? mainData : sideData,
           },
         ],
-    exporting: {
-      enabled: true,
-      buttons: {
-        contextButton: {
-          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
-        },
-      },
-    },
-  };
+  });
+
+  return options;
 };
 export default function Page() {
   const { data, loading, chartRef, chain } = useFetchChartData<IMonthActiveAddressData>({

@@ -1,9 +1,9 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import '../index.css';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import { useEffect, useMemo } from 'react';
-import { ChartColors, IDeployedContractsData, IHIGHLIGHTDataItem } from '../type';
+import { IDeployedContractsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyDeployContract } from '@_api/fetchChart';
@@ -43,93 +43,30 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const minDate = allData[0] && allData[0][0];
   const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
-  return {
-    legend: {
-      enabled: multi,
+  const options = getChartOptions({
+    title: title,
+    legend: multi,
+    yAxisTitle: 'aelf Cumulative Contracts',
+    buttonPositionX: -25,
+    tooltipFormatter: function () {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that: any = this;
+      const point = that.points[0] as any;
+      const date = point.x;
+      const value = point.y;
+      const { total, main, side } = customMap[date];
+      if (multi) {
+        return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Deployed Contracts: <b>${thousandsNumber(main)}</b><br/>SideChain Deployed Contracts: <b>${thousandsNumber(side)}</b><br/>
+      `;
+      } else {
+        return `
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(value)}</b><br/>
+      `;
+      }
     },
-    colors: ChartColors,
-    chart: {
-      type: 'line',
-    },
-    rangeSelector: {
-      enabled: true,
-      selected: 3,
-      buttonPosition: {
-        align: 'left',
-        x: -25,
-      },
-      buttons: [
-        {
-          type: 'month',
-          count: 1,
-          text: '1m',
-          title: 'View 1 month',
-        },
-        {
-          type: 'month',
-          count: 6,
-          text: '6m',
-          title: 'View 6 months',
-        },
-        {
-          type: 'year',
-          count: 1,
-          text: '1y',
-          title: 'View 1 year',
-        },
-        {
-          type: 'all',
-          text: 'All',
-          title: 'View all',
-        },
-      ],
-    },
-    navigator: {
-      enabled: false,
-    },
-    title: {
-      text: title,
-      align: 'left',
-    },
-    subtitle: {
-      text: 'Click and drag in the plot area to zoom in',
-      align: 'left',
-    },
-    xAxis: {
-      type: 'datetime',
-      min: minDate,
-      max: maxDate,
-      startOnTick: false,
-      endOnTick: false,
-    },
-    yAxis: {
-      title: {
-        text: 'aelf Cumulative Contracts',
-      },
-    },
-    credits: {
-      enabled: false,
-    },
-    tooltip: {
-      shared: true,
-      formatter: function () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const that: any = this;
-        const point = that.points[0] as any;
-        const date = point.x;
-        const value = point.y;
-        const { total, main, side } = customMap[date];
-        if (multi) {
-          return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Deployed Contracts: <b>${thousandsNumber(main)}</b><br/>SideChain Deployed Contracts: <b>${thousandsNumber(side)}</b><br/>
-        `;
-        } else {
-          return `
-          ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(value)}</b><br/>
-        `;
-        }
-      },
-    },
+    minDate,
+    maxDate,
     series: multi
       ? [
           {
@@ -155,15 +92,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
             data: chain === 'AELF' ? mainData : sideData,
           },
         ],
-    exporting: {
-      enabled: true,
-      buttons: {
-        contextButton: {
-          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
-        },
-      },
-    },
-  };
+  });
+
+  return options;
 };
 
 export default function Page() {

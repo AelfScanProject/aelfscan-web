@@ -1,6 +1,6 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
-import { thousandsNumber } from '@_utils/formatter';
+import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
 import { useEffect, useMemo } from 'react';
 import { ChartColors, IDailyPriceDData } from '../type';
@@ -26,38 +26,18 @@ const getChartSeries = (list) => list.map((item) => [item.date, Number(item.pric
 const getOption = (list: any[]): Highcharts.Options => {
   const allData = getChartSeries(list);
 
-  return {
-    legend: { enabled: false },
-    colors: ChartColors,
-    chart: { type: 'line' },
-    rangeSelector: {
-      enabled: true,
-      selected: 3,
-      buttonPosition: { align: 'left', x: -25 },
-      buttons: [
-        { type: 'month', count: 1, text: '1m', title: 'View 1 months' },
-        { type: 'month', count: 6, text: '6m', title: 'View 6 months' },
-        { type: 'year', count: 1, text: '1y', title: 'View 1 year' },
-        { type: 'all', text: 'All', title: 'View all' },
-      ],
-    },
-    navigator: { enabled: false },
-    title: { text: title, align: 'left' },
-    subtitle: { text: 'Click and drag in the plot area to zoom in', align: 'left' },
-    xAxis: { type: 'datetime', min: allData[0]?.[0], max: allData.at(-1)?.[0], startOnTick: false, endOnTick: false },
-    yAxis: { title: { text: 'ELF Price (USD)' } },
-    credits: { enabled: false },
-    tooltip: { shared: true, formatter: formatTooltip },
+  const options = getChartOptions({
+    title: title,
+    legend: false,
+    yAxisTitle: 'ELF Price (USD)',
+    buttonPositionX: -25,
+    tooltipFormatter: formatTooltip,
+    minDate: allData[0]?.[0],
+    maxDate: allData.at(-1)?.[0],
     series: [{ name: title, type: 'line', data: allData }],
-    exporting: {
-      enabled: true,
-      buttons: {
-        contextButton: {
-          menuItems: ['viewFullscreen', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'],
-        },
-      },
-    },
-  };
+  });
+
+  return options;
 };
 
 export default function Page() {
