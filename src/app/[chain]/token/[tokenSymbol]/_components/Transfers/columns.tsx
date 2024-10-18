@@ -11,7 +11,92 @@ import Link from 'next/link';
 import { ITransferItem } from '../../type';
 import ChainTags from '@_components/ChainTags';
 
+const renderTransactionsView = (record) => <TransactionsView record={record} custom={true} />;
+
+const renderTransactionId = (text, record, chain) => (
+  <div className="flex items-center">
+    {record.status === TTransactionStatus.fail && <IconFont className="ml-1" type="question-circle-error" />}
+    <EPTooltip title={text} mode="dark">
+      <Link
+        className="block w-[120px] truncate text-link"
+        href={`/${(record.chainIds && record.chainIds[0]) || chain}/tx/${text}`}>
+        {text}
+      </Link>
+    </EPTooltip>
+    <Copy value={text} />
+  </div>
+);
+
+const renderContractToken = (data, record, chain) => (
+  <ContractToken
+    address={data.address || ''}
+    type={data.addressType}
+    chainId={(record.chainIds && record.chainIds[0]) || chain}
+    chainIds={record.chainIds}
+  />
+);
+
+const renderQuantity = (text) => thousandsNumber(text);
+
 export default function getColumns({ timeFormat, handleTimeChange, chain, multi }): ColumnsType<ITransferItem> {
+  const commonColumns = [
+    {
+      title: 'Txn Hash',
+      dataIndex: 'transactionId',
+      key: 'transactionId',
+      render: (text, record) => renderTransactionId(text, record, chain),
+    },
+    {
+      title: (
+        <div className="cursor-pointer font-medium">
+          <span>Method</span>
+          <EPTooltip mode="dark" title="Function executed based on input data.">
+            <IconFont className="ml-1" type="question-circle" />
+          </EPTooltip>
+        </div>
+      ),
+      dataIndex: 'method',
+      key: 'method',
+      render: (text) => <Method text={text} tip={text} />,
+    },
+    {
+      title: (
+        <div
+          className="time cursor-pointer font-medium text-link"
+          onClick={handleTimeChange}
+          onKeyDown={handleTimeChange}>
+          {timeFormat}
+        </div>
+      ),
+      dataIndex: 'blockTime',
+      key: 'blockTime',
+      render: (text) => <div>{formatDate(text, timeFormat)}</div>,
+    },
+    {
+      title: 'From',
+      dataIndex: 'from',
+      key: 'from',
+      render: (data, record) => renderContractToken(data, record, chain),
+    },
+    {
+      title: '',
+      key: 'from_to',
+      render: () => <IconFont className="text-[24px]" type="fromto" />,
+    },
+    {
+      title: 'To',
+      dataIndex: 'to',
+      key: 'to',
+      render: (data, record) => renderContractToken(data, record, chain),
+    },
+    {
+      title: 'Quantity',
+      key: 'quantity',
+      dataIndex: 'quantity',
+      render: renderQuantity,
+    },
+  ];
+
   return multi
     ? [
         {
@@ -23,7 +108,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chain, multi 
           width: 40,
           dataIndex: '',
           key: 'view',
-          render: (record) => <TransactionsView record={record} custom={true} />,
+          render: renderTransactionsView,
         },
         {
           title: 'Chain',
@@ -32,112 +117,13 @@ export default function getColumns({ timeFormat, handleTimeChange, chain, multi 
           key: 'chainIds',
           render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
         },
-        {
-          title: (
-            <div className="cursor-pointer font-medium">
-              <span>Txn Hash</span>
-              <EPTooltip
-                mode="dark"
-                title="A TxHash or transaction hash is a unique 64 character identifier that is generated whenever a transaction is executed.">
-                <IconFont className="ml-1" type="question-circle" />
-              </EPTooltip>
-            </div>
-          ),
-          width: 224,
-          dataIndex: 'transactionId',
-          key: 'transactionId',
-          render: (text, record) => (
-            <div className="flex items-center">
-              {record.status === TTransactionStatus.fail && <IconFont className="ml-1" type="question-circle-error" />}
-              <EPTooltip title={text} mode="dark">
-                <Link
-                  className="block w-[120px] truncate text-link"
-                  href={`/${(record.chainIds && record.chainIds[0]) || chain}/tx/${text}`}>
-                  {text}
-                </Link>
-              </EPTooltip>
-              <Copy value={text} />
-            </div>
-          ),
-        },
-        {
-          title: (
-            <div className="cursor-pointer font-medium">
-              <span>Method</span>
-              <EPTooltip mode="dark" title="Function executed based on input data.">
-                <IconFont className="ml-1" type="question-circle" />
-              </EPTooltip>
-            </div>
-          ),
-          width: 176,
-          dataIndex: 'method',
-          key: 'method',
-          render: (text) => <Method text={text} tip={text} />,
-        },
-        {
-          title: (
-            <div
-              className="time cursor-pointer font-medium text-link"
-              onClick={handleTimeChange}
-              onKeyDown={handleTimeChange}>
-              {timeFormat}
-            </div>
-          ),
-          width: 176,
-          dataIndex: 'blockTime',
-          key: 'blockTime',
-          render: (text) => {
-            return <div>{formatDate(text, timeFormat)}</div>;
-          },
-        },
-        {
-          title: 'From',
-          width: 196,
-          dataIndex: 'from',
-          key: 'from',
-          render: (data, record) => {
-            const { address, addressType } = data;
-            return (
-              <ContractToken
-                address={address}
-                type={addressType}
-                chainId={(record.chainIds && record.chainIds[0]) || chain}
-                chainIds={record.chainIds}
-              />
-            );
-          },
-        },
-        {
-          title: '',
-          width: 40,
-          dataIndex: '',
-          key: 'from_to',
-          render: () => <IconFont className="text-[24px]" type="fromto" />,
-        },
-        {
-          title: 'To',
-          dataIndex: 'to',
-          key: 'to',
-          width: 196,
-          render: (data, record) => {
-            const { address, addressType } = data;
-            return (
-              <ContractToken
-                address={address || ''}
-                type={addressType}
-                chainId={(record.chainIds && record.chainIds[0]) || chain}
-                chainIds={record.chainIds}
-              />
-            );
-          },
-        },
-        {
-          title: 'Quantity',
-          key: 'quantity',
-          dataIndex: 'quantity',
-          width: 152,
-          render: (text) => thousandsNumber(text),
-        },
+        { ...commonColumns[0], width: 224 },
+        { ...commonColumns[1], width: 176 },
+        { ...commonColumns[2], width: 176 },
+        { ...commonColumns[3], width: 196 },
+        { ...commonColumns[4], width: 40 },
+        { ...commonColumns[5], width: 196 },
+        { ...commonColumns[6], width: 152 },
       ]
     : [
         {
@@ -149,101 +135,14 @@ export default function getColumns({ timeFormat, handleTimeChange, chain, multi 
           width: 72,
           dataIndex: '',
           key: 'view',
-          render: (record) => <TransactionsView record={record} custom={true} />,
+          render: renderTransactionsView,
         },
-        {
-          title: (
-            <div className="cursor-pointer font-medium">
-              <span>Txn Hash</span>
-              <EPTooltip
-                mode="dark"
-                title="A TxHash or transaction hash is a unique 64 character identifier that is generated whenever a transaction is executed.">
-                <IconFont className="ml-1" type="question-circle" />
-              </EPTooltip>
-            </div>
-          ),
-          width: 208,
-          dataIndex: 'transactionId',
-          key: 'transactionId',
-          render: (text, record) => (
-            <div className="flex items-center">
-              {record.status === TTransactionStatus.fail && <IconFont className="ml-1" type="question-circle-error" />}
-              <EPTooltip title={text} mode="dark">
-                <Link
-                  className="block w-[120px] truncate text-link"
-                  href={`/${(record.chainIds && record.chainIds[0]) || chain}/tx/${text}`}>
-                  {text}
-                </Link>
-              </EPTooltip>
-              <Copy value={text} />
-            </div>
-          ),
-        },
-        {
-          title: (
-            <div className="cursor-pointer font-medium">
-              <span>Method</span>
-              <EPTooltip mode="dark" title="Function executed based on input data.">
-                <IconFont className="ml-1" type="question-circle" />
-              </EPTooltip>
-            </div>
-          ),
-          width: 168,
-          dataIndex: 'method',
-          key: 'method',
-          render: (text) => <Method text={text} tip={text} />,
-        },
-        {
-          title: (
-            <div
-              className="time cursor-pointer font-medium text-link"
-              onClick={handleTimeChange}
-              onKeyDown={handleTimeChange}>
-              {timeFormat}
-            </div>
-          ),
-          width: 208,
-          dataIndex: 'blockTime',
-          key: 'blockTime',
-          render: (text) => {
-            return <div>{formatDate(text, timeFormat)}</div>;
-          },
-        },
-        {
-          title: 'From',
-          width: 180,
-          dataIndex: 'from',
-          key: 'from',
-          render: (data, record) => {
-            const { address, addressType } = data;
-            return <ContractToken address={address} type={addressType} chainId={chain} chainIds={record.chainIds} />;
-          },
-        },
-        {
-          title: '',
-          width: 40,
-          dataIndex: '',
-          key: 'from_to',
-          render: () => <IconFont className="text-[24px]" type="fromto" />,
-        },
-        {
-          title: 'To',
-          dataIndex: 'to',
-          key: 'to',
-          width: 180,
-          render: (data, record) => {
-            const { address, addressType } = data;
-            return (
-              <ContractToken address={address || ''} type={addressType} chainId={chain} chainIds={record.chainIds} />
-            );
-          },
-        },
-        {
-          title: 'Quantity',
-          key: 'quantity',
-          dataIndex: 'quantity',
-          width: 224,
-          render: (text) => thousandsNumber(text),
-        },
+        { ...commonColumns[0], width: 208 },
+        { ...commonColumns[1], width: 168 },
+        { ...commonColumns[2], width: 208 },
+        { ...commonColumns[3], width: 180 },
+        { ...commonColumns[4], width: 40 },
+        { ...commonColumns[5], width: 180 },
+        { ...commonColumns[6], width: 224 },
       ];
 }

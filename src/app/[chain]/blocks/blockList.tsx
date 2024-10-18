@@ -78,7 +78,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
-      chianId: chain,
+      chainId: chain,
     });
   }, [chain, timeFormat]);
 
