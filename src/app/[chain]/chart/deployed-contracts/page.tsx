@@ -10,7 +10,7 @@ import { fetchDailyDeployContract } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import dayjs from 'dayjs';
 import { useMultiChain } from '@_hooks/useSelectChain';
-import { useFetchChartData } from '@_hooks/useFetchChartData';
+import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Deployed Contracts Chart';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
@@ -98,31 +98,16 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
 };
 
 export default function Page() {
-  const { data, loading, chartRef, chain } = useFetchChartData<IDeployedContractsData>({
+  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDeployedContractsData>({
     fetchFunc: fetchDailyDeployContract,
     processData: (res) => res,
   });
-
-  const multi = useMultiChain();
 
   const options = useMemo(() => {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  useEffect(() => {
-    if (data) {
-      const chart = chartRef.current?.chart;
-      if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
-        chart.xAxis[0].setExtremes(minDate, maxDate);
-      }
-    }
-  }, [chartRef, data]);
-
-  const download = () => {
-    exportToCSV(data?.list || [], title);
-  };
+  const { download } = useChartDownloadData(data, chartRef, title);
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     return data

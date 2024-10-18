@@ -9,7 +9,7 @@ import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyBlockReward } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useMultiChain } from '@_hooks/useSelectChain';
-import { useFetchChartData } from '@_hooks/useFetchChartData';
+import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
@@ -59,29 +59,17 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain } = useFetchChartData<IDailyBlockRewardsData>({
+  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDailyBlockRewardsData>({
     fetchFunc: fetchDailyBlockReward,
     processData: (res) => res,
   });
 
-  const multi = useMultiChain();
   const options = useMemo(() => {
     return getOption(data?.list || [], chain, multi);
   }, [chain, data?.list, multi]);
 
-  useEffect(() => {
-    if (data) {
-      const chart = chartRef.current?.chart;
-      if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list[data.list.length - 1]?.date;
-        chart.xAxis[0].setExtremes(minDate, maxDate);
-      }
-    }
-  }, [chartRef, data]);
-  const download = () => {
-    exportToCSV(data?.list || [], title);
-  };
+  const { download } = useChartDownloadData(data, chartRef, title);
+
   const highlightData = [];
   return loading ? (
     <PageLoadingSkeleton />

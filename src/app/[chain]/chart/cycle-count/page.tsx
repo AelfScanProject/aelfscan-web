@@ -7,7 +7,7 @@ import { ChartColors, IAelfDailyCycleCountData, IHIGHLIGHTDataItem } from '../ty
 import { exportToCSV } from '@_utils/urlUtils';
 import { fetchCycleCount } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useFetchChartData } from '@_hooks/useFetchChartData';
+import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Daily Cycle Count Chart';
 
@@ -57,18 +57,7 @@ export default function Page() {
 
   const options = useMemo(() => getChartOption(data?.list || []), [data]);
 
-  useEffect(() => {
-    if (data) {
-      const chart = chartRef.current?.chart;
-      if (chart) {
-        const minDate = data.list[0]?.date;
-        const maxDate = data.list.at(-1)?.date;
-        chart.xAxis[0].setExtremes(minDate, maxDate);
-      }
-    }
-  }, [chartRef, data]);
-
-  const download = () => exportToCSV(data?.list || [], title);
+  const { download } = useChartDownloadData(data, chartRef, title);
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(
     () =>
