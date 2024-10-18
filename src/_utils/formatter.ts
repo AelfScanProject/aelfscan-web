@@ -193,8 +193,6 @@ export const getChainId = (chainId: string): TChainID => {
 };
 export const getChartOptions = ({
   title,
-  minDate,
-  maxDate,
   legend = false,
   yAxisTitle,
   tooltipFormatter,
@@ -203,18 +201,17 @@ export const getChartOptions = ({
   yAxis = {},
   minRange,
   xAxis,
-  XDateTimeLabelFormats,
+  data,
   buttons,
 }: {
   title: string;
-  minDate: number | string;
-  maxDate: number | string;
   legend: boolean;
   yAxisTitle: string;
   tooltipFormatter: (params: any) => string;
   series: any[];
   yAxis?: any;
   xAxis?: any;
+  data: any[];
   XDateTimeLabelFormats?: any;
   buttonPositionX?: number;
   minRange?: number;
@@ -255,8 +252,8 @@ export const getChartOptions = ({
     },
     xAxis: {
       type: 'datetime',
-      min: minDate,
-      max: maxDate,
+      min: data[0]?.[0],
+      max: data.at(-1)?.[0],
       startOnTick: false,
       endOnTick: false,
       minRange: minRange,

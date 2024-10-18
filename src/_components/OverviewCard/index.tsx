@@ -6,6 +6,7 @@ import { useCallback, useMemo } from 'react';
 import './index.css';
 import { IOverviewCardProps, IOverviewItem } from './type';
 import { useMD } from '@_hooks/useResponsive';
+import { useRenderItem } from './useRenderItem';
 
 const { Text } = Typography;
 
@@ -19,35 +20,8 @@ export default function OverviewCard({ items, dataSource, breakIndex }: IOvervie
 
   const isMobile = useMD();
 
-  const renderItem = useCallback(
-    (item: IOverviewItem, index: number) => {
-      const { label, key, tooltip, format, render } = item;
-      return (
-        <Flex key={key} vertical>
-          <Flex gap={4} align="center">
-            <Text size="small" style={{ color: '#858585' }}>
-              {label}
-            </Text>
-            {tooltip && (
-              <EPTooltip title={tooltip} mode="dark">
-                <IconFont className="text-xs" type="question-circle" />
-              </EPTooltip>
-            )}
-          </Flex>
-          <Flex>
-            <div className="min-h-[22px]">
-              {render ? (
-                render(dataSource[key], dataSource, index)
-              ) : (
-                <Text>{format ? format(dataSource[key]) : dataSource[key]}</Text>
-              )}
-            </div>
-          </Flex>
-        </Flex>
-      );
-    },
-    [dataSource],
-  );
+  const renderItem = useRenderItem(dataSource);
+
   return (
     <Flex className="overview-card" vertical>
       <Flex className="mb-5">

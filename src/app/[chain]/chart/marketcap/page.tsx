@@ -18,8 +18,6 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date].fdv = item.fdv;
     customMap[item.date].price = item.price;
   });
-  const minDate = allData[0] && allData[0][0];
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   const options = getChartOptions({
     title: title,
@@ -38,8 +36,7 @@ const getOption = (list: any[]): Highcharts.Options => {
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Market Cap</b>: <b>${unitConverter(value)}</b><br/>FDV: <b>${unitConverter(fdv)}</b><br/>ELF Price(USD): <b>${thousandsNumber(price)}</b><br/>
       `;
     },
-    minDate,
-    maxDate,
+    data: allData,
     series: [
       {
         name: 'Total Supply',

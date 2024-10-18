@@ -41,8 +41,7 @@ const getChartOption = (list): Highcharts.Options => {
     yAxisTitle: 'Daily Cycle Count',
     buttonPositionX: -30,
     tooltipFormatter: formatTooltip(customMap),
-    minDate: allData[0]?.[0],
-    maxDate: allData.at(-1)?.[0],
+    data: allData,
     series: [{ name: 'Active Addresses', type: 'line', data: allData }],
   });
 

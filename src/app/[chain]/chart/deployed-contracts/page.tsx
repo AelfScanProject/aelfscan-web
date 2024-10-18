@@ -40,9 +40,6 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
     };
   });
 
-  const minDate = allData[0] && allData[0][0];
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
-
   const options = getChartOptions({
     title: title,
     legend: multi,
@@ -65,8 +62,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       `;
       }
     },
-    minDate,
-    maxDate,
+    data: allData,
     series: multi
       ? [
           {

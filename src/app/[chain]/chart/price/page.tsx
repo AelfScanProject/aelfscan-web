@@ -32,8 +32,7 @@ const getOption = (list: any[]): Highcharts.Options => {
     yAxisTitle: 'ELF Price (USD)',
     buttonPositionX: -25,
     tooltipFormatter: formatTooltip,
-    minDate: allData[0]?.[0],
-    maxDate: allData.at(-1)?.[0],
+    data: allData,
     series: [{ name: title, type: 'line', data: allData }],
   });
 

@@ -20,9 +20,6 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date].stakingRate = item.rate;
   });
 
-  const minDate = allData[0] && allData[0][0];
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
-
   const options = getChartOptions({
     title: title,
     legend: false,
@@ -41,8 +38,7 @@ const getOption = (list: any[]): Highcharts.Options => {
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total ELF Staked</b>: <b>${thousandsNumber(value)}</b><br/>BP Staked: <b>${thousandsNumber(bpStaked)}</b><br/>Vote Staked: <b>${thousandsNumber(voteStaked)}</b><br/>Staking Rate: <b>${stakingRate}%</b><br/>
       `;
     },
-    minDate,
-    maxDate,
+    data: allData,
     series: [
       {
         name: 'Total Supply',

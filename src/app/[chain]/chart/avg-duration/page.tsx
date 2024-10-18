@@ -18,8 +18,6 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date].longestBlockDuration = item.longestBlockDuration;
     customMap[item.date].shortestBlockDuration = item.shortestBlockDuration;
   });
-  const minDate = allData[0] && allData[0][0];
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   const options = getChartOptions({
     title: title,
@@ -37,8 +35,7 @@ const getOption = (list: any[]): Highcharts.Options => {
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>AVG Block Duration</b>: <b>${thousandsNumber(value)}s</b><br/>Longest block duration: <b>${thousandsNumber(longestBlockDuration)}s</b><br/>Shortest block duration: <b>${thousandsNumber(shortestBlockDuration)}s</b><br/>
       `;
     },
-    minDate,
-    maxDate,
+    data: allData,
     series: [
       {
         name: 'Active Addresses',

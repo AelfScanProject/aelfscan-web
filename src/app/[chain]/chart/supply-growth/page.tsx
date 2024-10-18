@@ -23,9 +23,6 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date].totalUnReceived = item.totalUnReceived;
   });
 
-  const minDate = allData[0] && allData[0][0];
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
-
   const options = getChartOptions({
     title: title,
     legend: false,
@@ -46,8 +43,7 @@ const getOption = (list: any[]): Highcharts.Options => {
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Circulating Supply</b>: <b>${thousandsNumber(value)}</b><br/>+ Daily ELF rewards: <b>${thousandsNumber(reward)}</b><br/>+ Organization Unlock: <b>${thousandsNumber(organizationUnlock)}</b><br/>- MainChain burnt: <b>${thousandsNumber(burnt)}</b><br/>- SideChain burnt: <b>${thousandsNumber(sideChainBurnt)}</b><br/>- Unreceived: <b>${thousandsNumber(totalUnReceived)}</b><br/>
       `;
     },
-    minDate,
-    maxDate,
+    data: allData,
     series: [
       {
         name: 'Total Supply',
