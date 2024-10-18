@@ -82,6 +82,12 @@ export default function Holder() {
     return getColumns(currentPage, pageSize, chain, multi);
   }, [chain, currentPage, pageSize, multi]);
 
+  const pageSizeChange = (page, size) => {
+    setPageSize(size);
+    setCurrentPage(page);
+    setPageType(PageTypeEnum.NEXT);
+  };
+
   const pageChange = (page: number) => {
     if (page > currentPage) {
       setPageType(PageTypeEnum.NEXT);
@@ -91,11 +97,6 @@ export default function Holder() {
     setCurrentPage(page);
   };
 
-  const pageSizeChange = (page, size) => {
-    setPageSize(size);
-    setCurrentPage(page);
-    setPageType(PageTypeEnum.NEXT);
-  };
   const chainChange = (value) => {
     setSelectChain(value);
     setCurrentPage(1);

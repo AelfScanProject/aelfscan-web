@@ -21,9 +21,6 @@ const getOption = (list: any[]): Highcharts.Options => {
     Awaken.push([item.date, Number(item.awakenLocked)]);
   });
 
-  const minDate = allData[0] && allData[0][0];
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
-
   const options = getChartOptions({
     title: title,
     legend: false,
@@ -42,8 +39,7 @@ const getOption = (list: any[]): Highcharts.Options => {
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>TVL</b>: <b>$${thousandsNumber(value)}</b><br/>BP Locked: <b>$${thousandsNumber(bp)}</b><br/>Vote Locked: <b>$${thousandsNumber(vote)}</b><br/>Awaken: <b>$${thousandsNumber(awaken)}</b><br/>
       `;
     },
-    minDate,
-    maxDate,
+    data: allData,
     series: [
       {
         name: 'TVL',

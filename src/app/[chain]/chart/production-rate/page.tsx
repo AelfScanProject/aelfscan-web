@@ -20,9 +20,6 @@ const getOption = (list: any[]): Highcharts.Options => {
     customMap[item.date].missedBlockCount = item.missedBlockCount;
   });
 
-  const minDate = allData[0] && allData[0][0];
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
-
   const options = getChartOptions({
     title: title,
     legend: false,
@@ -40,8 +37,7 @@ const getOption = (list: any[]): Highcharts.Options => {
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Block Production Rate</b>: <b>${thousandsNumber(value)}%</b><br/>Block Count: <b>${thousandsNumber(blockCount)}</b><br/>Missed Block Count: <b>${thousandsNumber(missedBlockCount)}</b><br/>
       `;
     },
-    minDate,
-    maxDate,
+    data: allData,
     series: [
       {
         name: 'Active Addresses',

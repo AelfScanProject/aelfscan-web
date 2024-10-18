@@ -32,14 +32,10 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
       sideData: sideUniqueAddresses,
     };
   });
-  const minDate = allData[0] && allData[0][0];
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   const options = getChartOptions({
     title: title,
     legend: multi,
-    yAxisTitle: 'aelf Cumulative Address Growth',
-    buttonPositionX: -25,
     tooltipFormatter: function () {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that: any = this;
@@ -57,8 +53,9 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
       `;
       }
     },
-    minDate,
-    maxDate,
+    yAxisTitle: 'aelf Cumulative Address Growth',
+    buttonPositionX: -25,
+    data: allData,
     series: multi
       ? [
           {

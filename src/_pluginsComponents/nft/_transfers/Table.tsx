@@ -27,10 +27,10 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
   const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
     useSearchAfterParams(50, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
-  const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<CollectionTransfer[]>([]);
+  const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
   const mountRef = useRef(false);
   const updateQueryParams = useUpdateQueryParams();
@@ -125,13 +125,10 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
     });
   }, [chain, timeFormat, multi]);
 
-  const pageChange = (page: number) => {
-    if (page > currentPage) {
-      setPageType(PageTypeEnum.NEXT);
-    } else {
-      setPageType(PageTypeEnum.PREV);
-    }
-    setCurrentPage(page);
+  const chainChange = (value) => {
+    setSelectChain(value);
+    setCurrentPage(1);
+    setPageType(PageTypeEnum.NEXT);
   };
 
   const pageSizeChange = (page, size) => {
@@ -140,10 +137,13 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
     setPageType(PageTypeEnum.NEXT);
   };
 
-  const chainChange = (value) => {
-    setSelectChain(value);
-    setCurrentPage(1);
-    setPageType(PageTypeEnum.NEXT);
+  const pageChange = (page: number) => {
+    if (page > currentPage) {
+      setPageType(PageTypeEnum.NEXT);
+    } else {
+      setPageType(PageTypeEnum.PREV);
+    }
+    setCurrentPage(page);
   };
 
   useEffect(() => {

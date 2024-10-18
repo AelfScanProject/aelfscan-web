@@ -37,16 +37,11 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       customMap[date].receiveAddressCount = receiveAddressCount;
     }
   });
-  const minDate = allData[0] && allData[0][0];
-
-  const maxDate = allData[allData.length - 1] && allData[allData.length - 1][0];
 
   const options = getChartOptions({
     title: title,
     legend: multi,
     yAxisTitle: 'Active Addresses',
-    buttonPositionX: -25,
-    minRange: 24 * 3600 * 1000,
     tooltipFormatter: function () {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that: any = this;
@@ -63,8 +58,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
     `;
       }
     },
-    minDate,
-    maxDate,
+    data: allData,
+    buttonPositionX: -25,
+    minRange: 24 * 3600 * 1000,
     series: multi
       ? [
           {
