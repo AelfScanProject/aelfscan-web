@@ -1,17 +1,21 @@
 'use client';
 import { Select } from 'antd';
-import { useAppDispatch, useAppSelector } from '@_store';
-import { setDefaultChain } from '@_store/features/chainIdSlice';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useAppSelector } from '@_store';
+import { useParams, useSearchParams } from 'next/navigation';
 const { Option } = Select;
 import './index.css';
 import { useMemo } from 'react';
-import { DEFAULT_CHAIN } from '@_utils/contant';
+import { MenuItem } from '@_types';
+import useChainSelect from '@_hooks/useChainSelect';
 
-export default function ChainSelect({ setCurrent }) {
+export default function ChainSelect({
+  setCurrent,
+  headerList,
+}: {
+  headerList: MenuItem[];
+  setCurrent: (key: string) => void;
+}) {
   const { chainArr, defaultChain } = useAppSelector((state) => state.getChainId);
-  const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const { chain } = useParams();
   const chainId = useSearchParams().get('chainId');
@@ -19,16 +23,7 @@ export default function ChainSelect({ setCurrent }) {
     return chainId || (chain as string) || defaultChain;
   }, [chain, chainId, defaultChain]);
 
-  const onChangeHandler = (value: string) => {
-    dispatch(setDefaultChain(value));
-    if (value === DEFAULT_CHAIN) {
-      router.push('/');
-    } else {
-      router.push(`/${value}`);
-    }
-    setCurrent('/');
-  };
-
+  const onChangeHandler = useChainSelect(headerList, setCurrent);
   return (
     <div className="chain-select-container" id="chain-select-container">
       {chainArr && chainArr.length > 0 && (

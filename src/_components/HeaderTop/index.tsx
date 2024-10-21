@@ -120,7 +120,7 @@ export default function HeaderTop({ setCurrent, selectedKey, networkList, header
           )}
 
           <div className="flex items-center">
-            {!isMobile && <ChainSelect setCurrent={setCurrent} />}
+            {!isMobile && <ChainSelect headerList={headerMenuList} setCurrent={setCurrent} />}
             <Dropdown trigger={['click']} overlayClassName="network-drop w-[180px]" menu={{ items }}>
               <div className={clsx(`${clsPrefix}-right`)}>
                 <div className={clsx(`${clsPrefix}-explorer-change`)}>

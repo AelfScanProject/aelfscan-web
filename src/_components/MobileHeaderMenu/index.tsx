@@ -3,11 +3,10 @@ import IconFont from '@_components/IconFont';
 import { MenuItem, NetworkItem } from '@_types';
 import { Drawer, Menu, MenuProps } from 'antd';
 import Link from 'next/link';
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { useParams, usePathname, useSearchParams } from 'next/navigation';
+import { useMemo, useState } from 'react';
 import './index.css';
-import { useAppDispatch, useAppSelector } from '@_store';
-import { setDefaultChain } from '@_store/features/chainIdSlice';
+import { useAppSelector } from '@_store';
 import { getPathnameFirstSlash, isURL } from '@_utils/urlUtils';
 import { useEnvContext } from 'next-runtime-env';
 import { checkMainNet } from '@_utils/isMainNet';
@@ -19,6 +18,7 @@ import { homePath } from '@_components/Main';
 import { DEFAULT_CHAIN, TG_BOT_LINK } from '@_utils/contant';
 const ChangeIcoTest = '/image/aelf-header-top-test-change.svg';
 import { TelegramPlatform } from '@portkey/did-ui-react';
+import useChainSelect from '@_hooks/useChainSelect';
 
 interface IProps {
   headerMenuList: MenuItem[];
@@ -38,7 +38,6 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
     setShowMobileMenu(!showMobileMenu);
   };
 
-  console.log(chainArr, 'chainArr');
   const onClick: MenuProps['onClick'] = (e) => {
     if (!e.key.startsWith('http')) {
       setCurrent(e.key);
@@ -47,7 +46,6 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
   };
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
   const isMainNet = checkMainNet(NEXT_PUBLIC_NETWORK_TYPE);
-  const router = useRouter();
   function getItem(label: React.ReactNode, key: React.Key, children?: AntdMenuItem[], type?: 'group'): AntdMenuItem {
     return {
       key,
@@ -84,21 +82,11 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
       return getItem(label, path, convertMenuItems(children));
     });
   };
-  const dispatch = useAppDispatch();
-  const onSelectHandler = useCallback(
-    (value: string) => {
-      dispatch(setDefaultChain(value));
-      if (value === DEFAULT_CHAIN) {
-        router.push('/');
-      } else {
-        router.push(`/${value}`);
-      }
-      setCurrent('/');
-    },
-    [dispatch, router, setCurrent],
-  );
 
   const pathname = usePathname();
+
+  const onSelectHandler = useChainSelect(headerMenuList, setCurrent);
+
   const origin = typeof window !== 'undefined' && window.location.origin;
 
   const { chain } = useParams();
@@ -165,7 +153,7 @@ export default function MobileHeaderMenu({ headerMenuList, setCurrent, selectedK
       },
       ...chainList,
     ];
-  }, [chainArr, networkList, onSelectHandler, origin, selectChain]);
+  }, [chainArr, isTg, networkList, onSelectHandler, origin, selectChain]);
 
   const items: MenuProps['items'] = [...convertMenuItems(headerMenuList)];
 
