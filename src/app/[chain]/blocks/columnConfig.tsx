@@ -4,15 +4,32 @@ import Link from 'next/link';
 import Copy from '@_components/Copy';
 import { MULTI_CHAIN } from '@_utils/contant';
 import ChainTags from '@_components/ChainTags';
+import EPTooltip from '@_components/EPToolTip';
 
-const getAddressLink = (address, chainId, record) => (
-  <Link
-    className="block text-sm leading-[22px] text-link"
-    title={addressFormat(address, chainId)}
-    href={`/${record.chainIds ? record.chainIds[0] : chainId}/address/${addressFormat(address, record.chainIds ? record.chainIds[0] : chainId)}`}>
-    {record.producerName || addressFormat(hiddenAddress(address, 4, 4), record.chainIds ? record.chainIds[0] : chainId)}
-  </Link>
-);
+const getAddressLink = (address, chainId, record) => {
+  const chain = record.chainIds ? record.chainIds[0] : chainId;
+  return (
+    <EPTooltip
+      title={
+        record.producerName ? (
+          <div>
+            <div>Producer Name: {record.producerName}</div>
+            <div>({addressFormat(address, chain)})</div>
+          </div>
+        ) : (
+          addressFormat(address || '', chain)
+        )
+      }
+      mode="dark"
+      pointAtCenter={false}>
+      <Link
+        className="block text-sm leading-[22px] text-link"
+        href={`/${chain}/address/${addressFormat(address, chain)}`}>
+        {record.producerName || addressFormat(hiddenAddress(address, 4, 4), chain)}
+      </Link>
+    </EPTooltip>
+  );
+};
 
 const getBlockLink = (text, chainId, record) => (
   <Link
@@ -72,7 +89,7 @@ const getColumnsConfig = (chainId, isMultiChain, handleTimeChange, timeFormat) =
       render: (address, record) => (
         <div className="flex items-center">
           {getAddressLink(address, chainId, record)}
-          <Copy value={addressFormat(address, chainId)} />
+          <Copy value={addressFormat(address, record.chainIds ? record.chainIds[0] : chainId)} />
         </div>
       ),
     },
