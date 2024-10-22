@@ -25,7 +25,7 @@ const renderToken = (token, record, chain) => {
 
 const renderCollection = (collection, record, chain) =>
   collection && (
-    <Link href={`/${record.chainIds ? record.chainIds[0] : chain}/token/${collection.symbol}`}>
+    <Link href={`/nft?chainId=${record.chainIds ? record.chainIds[0] : chain}&&collectionSymbol=${collection.symbol}`}>
       <div className="flex items-center">
         <EPTooltip mode="dark" title={collection.name}>
           <span className="mx-1 inline-block max-w-[194px] truncate text-link">{collection.name}</span>
