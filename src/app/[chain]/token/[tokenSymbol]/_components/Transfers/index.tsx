@@ -154,12 +154,12 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
   const title = useMemo(() => `A total of ${total} records found`, [total]);
 
   const searchByHolder: DescriptionsProps['items'] = useMemo(
-    () => getSearchByHolderItems(address, isMobile, searchData),
-    [address, isMobile, searchData],
+    () => getSearchByHolderItems(address, isMobile, chain as string, searchData),
+    [address, chain, isMobile, searchData],
   );
   const searchByHash: DescriptionsProps['items'] = useMemo(
-    () => getSearchByHashItems(address, isMobile, chain, data[0]?.blockHeight),
-    [address, chain, data, isMobile],
+    () => getSearchByHashItems(address, isMobile, data[0]?.chainIds[0]),
+    [address, data, isMobile],
   );
 
   return (
