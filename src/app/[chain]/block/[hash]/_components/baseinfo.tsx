@@ -53,7 +53,7 @@ export default function BaseInfo({ data, tabChange, jump }) {
           <div className="value-timestamp">
             <IconFont className="mr-1 !text-sm !leading-[22px]" type="Time" />
             <span>
-              {formatDate(data.timestamp, 'age')}({dayjs.unix(data.timestamp).format('MMM-DD-YYYY hh:mm:ss Z')})
+              {formatDate(data.timestamp, 'age')}({formatDate(data.timestamp, 'Date Time (UTC)')})
             </span>
           </div>
         ),
