@@ -7,8 +7,8 @@ import ChainTags from '@_components/ChainTags';
 const renderIndex = (currentPage, pageSize) => (text, record, index) => (currentPage - 1) * pageSize + index + 1;
 
 const renderAddress = (chain, data) => {
-  const { address, addressType } = data;
-  return <ContractToken address={address} type={addressType} chainId={chain} />;
+  const { address, addressType, name } = data;
+  return <ContractToken address={address} name={name} type={addressType} chainId={chain} />;
 };
 
 const renderQuantity = (text) => thousandsNumber(text);
