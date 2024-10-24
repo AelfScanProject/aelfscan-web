@@ -4,7 +4,6 @@ import { IOverviewItem } from '@_components/OverviewCard/type';
 import { thousandsNumber } from '@_utils/formatter';
 import { ITokenDetail } from '../../type';
 import NumberPercentGroup from '../NumberPercentGroup';
-import { AddressType } from '@_types/common';
 import { useParams } from 'next/navigation';
 import { usePad } from '@_hooks/useResponsive';
 import clsx from 'clsx';
@@ -47,11 +46,16 @@ const TokenDetail = (chain): IOverviewItem[] => {
       ),
     },
     {
-      key: 'tokenContractAddress',
+      key: 'contractAddress',
       label: 'CONTRACT',
       tooltip:
         'This is the MultiToken contract that defines a common implementation for fungible and non-fungible tokens.',
-      render: (text) => (text ? <ContractToken address={text} type={AddressType.address} chainId={chain} /> : '--'),
+      render: (text) =>
+        text?.address ? (
+          <ContractToken address={text.address} name={text.name} type={text.addressType} chainId={chain} />
+        ) : (
+          '--'
+        ),
     },
     {
       key: 'token',
