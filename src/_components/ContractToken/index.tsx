@@ -63,8 +63,8 @@ export default function ContractToken({
       </EPTooltip>
       <EPTooltip
         title={
-          <div>
-            <div>Contract Name:{name}</div>
+          <div className="break-all">
+            <div className="break-all">Contract Name: {name}</div>
             <div>({addressFormat(address, chainId)})</div>
           </div>
         }
