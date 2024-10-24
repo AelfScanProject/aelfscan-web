@@ -18,7 +18,7 @@ export interface IToken {
 export interface IAddress {
   name: string;
   address: string;
-  addressType: TAddressType;
+  addressType: AddressType;
   isManager: false;
   isProducer: true;
 }

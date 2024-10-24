@@ -1,9 +1,6 @@
 import React from 'react';
 import { ILogsProps } from './type';
 import DetailContainer from '@_components/DetailContainer';
-import Link from 'next/link';
-import addressFormat from '@_utils/urlUtils';
-import Copy from '@_components/Copy';
 import LogItems from './logItems';
 import { useParams } from 'next/navigation';
 import ContractToken from '@_components/ContractToken';
