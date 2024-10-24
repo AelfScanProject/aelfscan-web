@@ -4,7 +4,6 @@ import { CollectionDetailData } from '../type';
 
 import '../detail.css';
 import ContractToken from '@_components/ContractToken';
-import { AddressType } from '@_types/common';
 import { useSearchParams } from 'next/navigation';
 import { TChainID } from '@_api/type';
 import { addSymbol, thousandsNumber } from '@_utils/formatter';
@@ -208,10 +207,10 @@ export default function OverView(props: OverViewProps) {
                     </span>
                   </div>
                   <div className="desc item-center flex">
-                    <IconFont className="mr-1 text-sm" type="Contract" />
                     <ContractToken
-                      address={overview.tokenContractAddress}
-                      type={AddressType.address}
+                      address={overview.contractAddress?.address}
+                      name={overview.contractAddress?.name}
+                      type={overview.contractAddress?.addressType}
                       chainId={chain as TChainID}
                     />
                   </div>

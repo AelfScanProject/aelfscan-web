@@ -1,5 +1,5 @@
 import { IFromInfo, TChainID, TransactionStatus } from '@_api/type';
-import { IToken } from '@_types/common';
+import { IAddress, IToken } from '@_types/common';
 import { ISearchProps } from 'aelf-design';
 
 // Collection detail api return type
@@ -13,6 +13,7 @@ export interface CollectionDetailData {
   mergeHolders: number;
   floorPrice: number;
   tokenContractAddress: string;
+  contractAddress: IAddress;
   mainChainFloorPrice: number;
   sideChainFloorPrice: number;
   mainChainFloorPriceOfUsd: number;
