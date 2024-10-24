@@ -1,5 +1,5 @@
 import { ILogsProps } from '@_components/LogsContainer/type';
-import { AddressType, SortEnum } from '@_types/common';
+import { AddressType, IAddress, SortEnum } from '@_types/common';
 
 export type TChainID = 'AELF' | 'tDVV' | 'tDVW' | '' | 'multiChain';
 
@@ -413,6 +413,7 @@ export interface CollectionDetailData {
   floorPriceOfUsd: number;
   floorPrice: number;
   tokenContractAddress: string;
+  contractAddress: IAddress;
   mainChainFloorPrice: number;
   sideChainFloorPrice: number;
   mainChainFloorPriceOfUsd: number;
