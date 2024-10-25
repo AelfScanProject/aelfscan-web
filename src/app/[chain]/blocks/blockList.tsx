@@ -84,8 +84,8 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
     });
   }, [chain, timeFormat]);
 
-  const pageMaxBlock = data[0]?.blockHeight;
-  const pageMinBlock = data[data.length - 1]?.blockHeight;
+  const pageMaxBlock = data && data[0]?.blockHeight;
+  const pageMinBlock = data && data[data.length - 1]?.blockHeight;
 
   const { pageChange, pageSizeChange, chainChange } = usePagination({
     setCurrentPage,
