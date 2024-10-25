@@ -6,6 +6,7 @@ import Link from 'next/link';
 import EPTooltip from '@_components/EPToolTip';
 import EPSortIcon from '@_components/EPSortIcon';
 import ChainTags from '@_components/ChainTags';
+import dayjs from 'dayjs';
 
 const renderToken = (token, record, chain) => {
   if (!token) return null;
@@ -39,6 +40,11 @@ const renderCollection = (collection, record, chain) =>
     </Link>
   );
 
+const trimmedDateString = (originalDateString) => {
+  const result = originalDateString.replace(/\.\d+Z$/, 'Z');
+  return dayjs(result).unix();
+};
+
 const getSortOrder = (sortedInfo, columnKey) => (sortedInfo?.columnKey === columnKey ? sortedInfo.order : null);
 
 const renderQuantity = (text) => (
@@ -46,7 +52,7 @@ const renderQuantity = (text) => (
 );
 
 const renderDate = (text) => (
-  <span className="mx-1 inline-block text-base-100">{formatDate(text, 'Date Time (UTC)')}</span>
+  <span className="mx-1 inline-block text-base-100">{formatDate(trimmedDateString(text), 'Date Time (UTC)')}</span>
 );
 
 export default function getColumns(chain, sortedInfo, multi): ColumnsType<NftsItemType> {
