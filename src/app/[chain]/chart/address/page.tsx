@@ -1,13 +1,11 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { IDailyAddAddressData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchUniqueAddresses } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Cumulative Addresses Chart';
@@ -18,9 +16,9 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
   const customMap = {};
 
   list.forEach((item) => {
-    const totalUniqueAddresses = multi ? item.mergeTotalUniqueAddressees : item.ownerUniqueAddressees;
-    const mainUniqueAddresses = multi ? item.mainChainTotalUniqueAddressees : item.ownerUniqueAddressees;
-    const sideUniqueAddresses = multi ? item.sideChainTotalUniqueAddressees : item.ownerUniqueAddressees;
+    const totalUniqueAddresses = item.mergeTotalUniqueAddressees;
+    const mainUniqueAddresses = item.mainChainTotalUniqueAddressees;
+    const sideUniqueAddresses = item.sideChainTotalUniqueAddressees;
 
     allData.push([item.date, totalUniqueAddresses]);
     mainData.push([item.date, mainUniqueAddresses]);
@@ -95,10 +93,28 @@ export default function Page() {
     return getOption(data?.list || [], multi, chain);
   }, [data, multi, chain]);
 
+  const Highest = useMemo(() => {
+    if (multi) {
+      return data?.highestIncrease;
+    } else if (chain === 'AELF') {
+      const result = data?.list || [];
+      const maxMainChainAddressCountItem = result.reduce((maxItem, currentItem) => {
+        return currentItem.mainChainAddressCount > maxItem.mainChainAddressCount ? currentItem : maxItem;
+      }, result[0]);
+      return maxMainChainAddressCountItem;
+    } else {
+      const result = data?.list || [];
+      const maxMainChainAddressCountItem = result.reduce((maxItem, currentItem) => {
+        return currentItem.sideChainAddressCount > maxItem.sideChainAddressCount ? currentItem : maxItem;
+      }, result[0]);
+      return maxMainChainAddressCountItem;
+    }
+  }, [multi, chain, data]);
+
   const { download } = useChartDownloadData(data, chartRef, title);
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
-    const key = multi ? 'mergeAddressCount' : 'addressCount';
+    const key = multi ? 'mergeAddressCount' : chain === 'AELF' ? 'mainChainAddressCount' : 'sideChainAddressCount';
     return data
       ? [
           {
@@ -107,15 +123,15 @@ export default function Page() {
             text: (
               <span>
                 Highest increase of
-                <span className="px-1 font-bold">{thousandsNumber(data.highestIncrease[key])}</span>
+                <span className="px-1 font-bold">{thousandsNumber((Highest && Highest[key]) || 0)}</span>
                 addresses was recorded on
-                <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', data.highestIncrease.date)}</span>
+                <span className="pl-1">{Highcharts.dateFormat('%A, %B %e, %Y', Highest?.date || 0)}</span>
               </span>
             ),
           },
         ]
       : [];
-  }, [data, multi]);
+  }, [Highest, chain, data, multi]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (
