@@ -31,6 +31,7 @@ const renderContractToken = (data, record, chain) => (
   <ContractToken
     address={data.address || ''}
     type={data.addressType}
+    name={data.name}
     chainId={(record.chainIds && record.chainIds[0]) || chain}
     chainIds={record.chainIds}
   />

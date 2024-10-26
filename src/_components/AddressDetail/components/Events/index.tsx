@@ -48,7 +48,7 @@ export default function Events() {
         chainId: chain as TChainID,
         skipCount: getPageNumber(page, pageSize),
         maxResultCount: pageSize,
-        blockHeight: search || null,
+        blockHeight: !isNaN(Number(search)) ? Number(search) : search || null,
         contractAddress: address && getAddress(address as string),
       };
       setLoading(true);
@@ -163,7 +163,11 @@ export default function Events() {
           value: searchText,
           placeholder: 'Search blockNo',
           onChange: ({ currentTarget }) => {
-            setSearchText(currentTarget.value);
+            const { value: inputValue } = currentTarget;
+            const reg = /^-?\d*(\.\d*)?$/;
+            if (reg.test(inputValue) || inputValue === '' || inputValue === '-') {
+              setSearchText(inputValue);
+            }
           },
           onSearchChange: () => {
             // searchChange();

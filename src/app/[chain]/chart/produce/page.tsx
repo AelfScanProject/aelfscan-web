@@ -12,6 +12,7 @@ import useBpProduce from '@_hooks/useBpProduce';
 let highlightElement;
 let centerElement;
 import List from './list';
+import addressFormat from '@_utils/urlUtils';
 
 const gbColors = [
   'rgba(144, 171, 240, 0.3)',
@@ -112,7 +113,7 @@ const drawHighlight = (chart: any, highlightIndex: number, totalCategories: numb
     .add();
 };
 
-const getOption = (list: any[]): Highcharts.Options => {
+const getOption = (list: any[], chain): Highcharts.Options => {
   const length = list.length;
   const allData: any[] = Array.from({ length }, () => {
     return 83;
@@ -120,15 +121,15 @@ const getOption = (list: any[]): Highcharts.Options => {
   const categories: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    categories.push(item.producerName || item.producerAddress);
-    const key = item.producerName || item.producerAddress;
-    customMap[key] = {};
-    customMap[key].missedCount = item.missedCount;
-    customMap[key].blockCount = item.blockCount;
+    const name = item.producerName || addressFormat(item.producerAddress, chain);
+    categories.push(name);
+    customMap[name] = {};
+    customMap[name].missedCount = item.missedCount;
+    customMap[name].blockCount = item.blockCount;
   });
 
   const highlightIndex = list.findIndex((item) => item.isMinning);
-  console.log(highlightIndex, 'highlightIndex');
+
   const totalCategories = categories.length;
   return {
     chart: {
@@ -248,8 +249,8 @@ export default function Page() {
   const { chain } = useParams<{ chain: TChainID }>();
   const { loading, produces } = useBpProduce(chain);
   const options = useMemo(() => {
-    return getOption(produces || []);
-  }, [produces]);
+    return getOption(produces || [], chain);
+  }, [chain, produces]);
 
   const chartRef = useRef<HighchartsReactRefObject>(null);
 

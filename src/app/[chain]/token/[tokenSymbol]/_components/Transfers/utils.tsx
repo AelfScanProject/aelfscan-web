@@ -1,5 +1,5 @@
 import AddressWithCopy from '@_components/AddressWithCopy';
-import { thousandsNumber } from '@_utils/formatter';
+import { addSymbol, thousandsNumber } from '@_utils/formatter';
 import { DescriptionsProps } from 'antd';
 import Link from 'next/link';
 import { TTransferSearchData } from '../../type';
@@ -7,6 +7,7 @@ import { TTransferSearchData } from '../../type';
 export function getSearchByHolderItems(
   address: string,
   isMobile: boolean,
+  chain: string,
   sourceData?: TTransferSearchData,
 ): DescriptionsProps['items'] {
   const spanWith2col = isMobile ? 4 : 2;
@@ -16,7 +17,7 @@ export function getSearchByHolderItems(
     {
       key: 'desc',
       label: 'Filtered by Token Holder',
-      children: <AddressWithCopy address={address} />,
+      children: <AddressWithCopy address={address} chain={chain} />,
       labelStyle: {
         color: '#252525',
         fontWeight: 500,
@@ -26,7 +27,7 @@ export function getSearchByHolderItems(
     {
       key: 'balance',
       label: 'BALANCE',
-      children: thousandsNumber(sourceData?.balance as number),
+      children: addSymbol(thousandsNumber(sourceData?.balance as number)),
       labelStyle: {
         marginTop,
       },
@@ -35,7 +36,7 @@ export function getSearchByHolderItems(
     {
       key: 'value',
       label: 'VALUE',
-      children: thousandsNumber(sourceData?.value as number),
+      children: '$' + thousandsNumber(sourceData?.value as number),
       labelStyle: {
         marginTop,
       },
@@ -44,12 +45,7 @@ export function getSearchByHolderItems(
   ];
 }
 
-export function getSearchByHashItems(
-  address: string,
-  isMobile: boolean,
-  chain,
-  blockHeight,
-): DescriptionsProps['items'] {
+export function getSearchByHashItems(address: string, isMobile: boolean, chain): DescriptionsProps['items'] {
   const spanWith2col = isMobile ? 4 : 2;
   return [
     {

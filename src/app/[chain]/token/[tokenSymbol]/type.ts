@@ -1,5 +1,5 @@
 import { IFromInfo, TChainID } from '@_api/type';
-import { IToken } from '@_types/common';
+import { IAddress, IToken } from '@_types/common';
 
 export interface ITransferItem {
   transactionId: string;
@@ -55,6 +55,7 @@ export interface ITokenDetail {
   transferCount: number;
   pricePercentChange24h: number;
   tokenContractAddress: string;
+  contractAddress: IAddress;
   decimals: number;
   // multi
   mainChainCirculatingSupply: number;

@@ -34,9 +34,12 @@ export default function NFTAssets() {
         maxResultCount: pageSize,
         chainId: getChainId(selectChain),
         address: getAddress(address as string),
-        orderBy: sortedInfo.order ? (sortedInfo.columnKey as string) : undefined,
-        sort: sortedInfo.order ? SortEnum[TableSortEnum[sortedInfo.order]] : undefined,
+        // orderBy: sortedInfo.order ? (sortedInfo.columnKey as string) : undefined,
+        // sort: sortedInfo.order ? SortEnum[TableSortEnum[sortedInfo.order]] : undefined,
         search: SearchFetchText,
+        orderInfos: sortedInfo.order
+          ? [{ orderBy: sortedInfo.columnKey as string, sort: SortEnum[TableSortEnum[sortedInfo.order]] }]
+          : [],
       };
       setLoading(true);
       const data = await fetchAccountsDetailNFTAssets(params);
