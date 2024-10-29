@@ -46,7 +46,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const { total, main, side } = customMap[date];
       if (multi) {
         return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Daily ELF Burnt</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Daily ELF Burnt: <b>${thousandsNumber(main)}</b><br/>SideChain Daily ELF Burnt: <b>${thousandsNumber(side)}</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Daily ELF Burnt</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Daily ELF Burnt: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Daily ELF Burnt: <b>${thousandsNumber(side)}</b><br/>
       `;
       } else {
         return `
@@ -63,12 +63,12 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
             data: allData,
           },
           {
-            name: 'MainChain',
+            name: 'aelf MainChain',
             type: 'line',
             data: mainData,
           },
           {
-            name: 'SideChain',
+            name: 'aelf dAppChain',
             type: 'line',
             data: sideData,
           },

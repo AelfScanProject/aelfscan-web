@@ -167,7 +167,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
             <div className="flex items-center">
               <Link className="h-[22px]" href={`/${chainId}/address/${addressFormat(getAddress(address), chainId)}}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
-                  {chain !== 'AELF' ? 'MainChain' : `SideChain ${chainId}`}
+                  {chain !== 'AELF' ? 'aelf MainChain' : 'aelf dAppChain'}
                 </span>
               </Link>
               <span className="ml-1 inline-block text-base-100">
@@ -317,7 +317,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       [
         {
           key: 'mainValue',
-          label: 'MainChain Value',
+          label: 'aelf MainChain Value',
           render: (text, record) => (
             <div className="text-sm font-medium leading-[22px] text-base-100">
               ${data?.mainChain?.usdValue}
@@ -329,7 +329,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         },
         {
           key: 'mainToken',
-          label: 'MainChain Token',
+          label: 'aelf MainChain Token',
           render: (text, record) => (
             <div className="text-sm font-medium leading-[22px] text-base-100">{data?.mainChain?.count} Tokens</div>
           ),
@@ -338,7 +338,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       [
         {
           key: 'sideValue',
-          label: 'SideChain Value',
+          label: 'aelf dAppChain Value',
           render: (text, record) => (
             <div className="text-sm font-medium leading-[22px] text-base-100">
               ${data?.sideChain?.usdValue}
@@ -350,7 +350,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
         },
         {
           key: 'sideToken',
-          label: 'SideChain Token',
+          label: 'aelf dAppChain Token',
           render: (text, record) => (
             <div className="text-sm font-medium leading-[22px] text-base-100">{data?.sideChain?.count} Tokens</div>
           ),

@@ -106,7 +106,7 @@ export default function getColumns({
         { ...commonColumns[1], width: '400px' },
         {
           title: 'Chain',
-          width: 224,
+          width: 234,
           dataIndex: 'chainIds',
           key: 'chainIds',
           render: (chainIds) => <ChainTags chainIds={chainIds || []} />,

@@ -77,12 +77,12 @@ export default function getColumns({
         { ...commonColumns[1], width: 480 },
         {
           title: 'Chain',
-          width: 224,
+          width: 234,
           dataIndex: 'chainIds',
           key: 'chainIds',
           render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
         },
-        { ...commonColumns[2], width: 304 },
+        { ...commonColumns[2], width: 294 },
         { ...commonColumns[3], width: 224 },
       ]
     : [

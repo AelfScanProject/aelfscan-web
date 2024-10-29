@@ -10,7 +10,7 @@
     }
   }
   .latest-all {
-    @apply w-full flex min-[993px]:flex-row mt-4 gap-4 box-border flex-col flex-wrap min-[993px]:min-w-[200px] max-w-[1440px] ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
+    @apply w-full flex min-[1100px]:flex-row mt-4 gap-4 box-border flex-col flex-wrap min-[1100px]:min-w-[200px] max-w-[1440px] ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
     > .home-latest {
       @apply min-[993px]:w-[50%] flex-1 w-full;
     }

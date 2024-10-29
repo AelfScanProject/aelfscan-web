@@ -2,10 +2,8 @@
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useEffect, useMemo } from 'react';
-import { ChartColors, ISupplyGrowthData } from '../type';
-import { exportToCSV } from '@_utils/urlUtils';
-import { message } from 'antd';
+import { useMemo } from 'react';
+import { ISupplyGrowthData } from '../type';
 import { fetchDailySupplyGrowth } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
@@ -40,7 +38,7 @@ const getOption = (list: any[]): Highcharts.Options => {
       const organizationUnlock = customMap[date].organizationUnlock;
       const totalUnReceived = customMap[date].totalUnReceived;
       return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Circulating Supply</b>: <b>${thousandsNumber(value)}</b><br/>+ Daily ELF rewards: <b>${thousandsNumber(reward)}</b><br/>+ Organization Unlock: <b>${thousandsNumber(organizationUnlock)}</b><br/>- MainChain burnt: <b>${thousandsNumber(burnt)}</b><br/>- SideChain burnt: <b>${thousandsNumber(sideChainBurnt)}</b><br/>- Unreceived: <b>${thousandsNumber(totalUnReceived)}</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Circulating Supply</b>: <b>${thousandsNumber(value)}</b><br/>+ Daily ELF rewards: <b>${thousandsNumber(reward)}</b><br/>+ Organization Unlock: <b>${thousandsNumber(organizationUnlock)}</b><br/>- aelf MainChain burnt: <b>${thousandsNumber(burnt)}</b><br/>- aelf dAppChain burnt: <b>${thousandsNumber(sideChainBurnt)}</b><br/>- Unreceived: <b>${thousandsNumber(totalUnReceived)}</b><br/>
       `;
     },
     data: allData,

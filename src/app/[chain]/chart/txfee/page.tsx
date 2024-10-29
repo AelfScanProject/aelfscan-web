@@ -46,7 +46,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const { total, main, side } = customMap[date];
       if (multi) {
         return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transaction Fees</b>: <b>${thousandsNumber(total)} ELF</b><br/>MainChain Transaction Fees: <b>${thousandsNumber(main)} ELF</b><br/>SideChain Transaction Fees: <b>${thousandsNumber(side)} ELF</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transaction Fees</b>: <b>${thousandsNumber(total)} ELF</b><br/>aelf MainChain Transaction Fees: <b>${thousandsNumber(main)} ELF</b><br/>aelf dAppChain Transaction Fees: <b>${thousandsNumber(side)} ELF</b><br/>
       `;
       } else {
         return `
@@ -63,12 +63,12 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
             data: allData,
           },
           {
-            name: 'MainChain',
+            name: 'aelf MainChain',
             type: 'line',
             data: mainData,
           },
           {
-            name: 'SideChain',
+            name: 'aelf dAppChain',
             type: 'line',
             data: sideData,
           },

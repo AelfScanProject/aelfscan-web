@@ -54,7 +54,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const { total, main, side } = customMap[date];
       if (multi) {
         return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Deployed Contracts: <b>${thousandsNumber(main)}</b><br/>SideChain Deployed Contracts: <b>${thousandsNumber(side)}</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Deployed Contracts: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Deployed Contracts: <b>${thousandsNumber(side)}</b><br/>
       `;
       } else {
         return `
@@ -71,12 +71,12 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
             data: allData,
           },
           {
-            name: 'MainChain',
+            name: 'aelf MainChain',
             type: 'line',
             data: mainData,
           },
           {
-            name: 'SideChain',
+            name: 'aelf dAppChain',
             type: 'line',
             data: sideData,
           },
