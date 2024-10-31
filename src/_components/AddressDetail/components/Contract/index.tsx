@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { fetchContractCode } from '@_api/fetchContact';
+import { fetchContractCode, uploadContractCode } from '@_api/fetchContact';
 import { TChainID } from '@_api/type';
 import { getAddress } from '@_utils/formatter';
-import { Skeleton } from 'antd';
+import { Button, Skeleton, Upload, UploadProps } from 'antd';
 import { useMobileContext } from '@app/pageProvider';
 import { getAElf, getContractInstance } from '@_utils/deserializeLog';
 import { getContractMethods } from '@portkey/contracts';
@@ -101,13 +101,38 @@ export default function Contract() {
     try {
       const data = await fetchContractCode({
         chainId: chain,
-        address: getAddress(address),
+        // address: getAddress(address),
+        address: 'test',
       });
       setContractInfo(data);
     } finally {
       setLoading(false);
     }
   }, [address, chain]);
+
+  const uploadContract = useCallback(
+    async (file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      const data = await uploadContractCode(
+        {
+          chainId: chain,
+          contractAddress: 'test',
+        },
+        formData,
+      );
+      console.log(data, 'data222');
+    },
+    [chain],
+  );
+
+  const customUpload: UploadProps['customRequest'] = async ({ file, onSuccess, onError }) => {
+    try {
+      const uploadFile = await uploadContract(file as File);
+    } catch (error) {
+      onError?.(error as Error);
+    }
+  };
 
   const searchParams = useSearchParams();
   const defaultKey = searchParams.get('type');
@@ -186,6 +211,14 @@ export default function Contract() {
     </div>
   ) : (
     <div className="contract-container px-4">
+      <div>
+        <Upload
+          customRequest={customUpload}
+          // directory
+          multiple>
+          <Button>Click to Upload</Button>
+        </Upload>
+      </div>
       <div className="pb-5">
         <ul className="contract-button-container flex gap-[9px]">
           {items.map((item) => {
