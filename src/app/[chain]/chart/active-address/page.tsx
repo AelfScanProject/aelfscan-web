@@ -2,13 +2,11 @@
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useEffect, useMemo } from 'react';
-import { ChartColors, IDailyActiveAddressData, IHIGHLIGHTDataItem } from '../type';
+import { useMemo } from 'react';
+import { IDailyActiveAddressData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Daily Active aelf Addresses';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyActiveAddresses } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 const getOption = (list: any[], chain, multi): Highcharts.Options => {
   const allData: any[] = [];
@@ -50,7 +48,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const { total, main, side, sendAddressCount, receiveAddressCount } = customMap[date];
       if (multi) {
         return `
-        ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Total Active Addresses</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Active Addresses: <b>${thousandsNumber(main)}</b><br/>SideChain Active Addresses: <b>${thousandsNumber(side)}</b><br/>
+        ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Total Active Addresses</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Active Addresses: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Active Addresses: <b>${thousandsNumber(side)}</b><br/>
       `;
       } else {
         return `
@@ -69,12 +67,12 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
             data: allData,
           },
           {
-            name: 'MainChain',
+            name: 'aelf MainChain',
             type: 'line',
             data: mainData,
           },
           {
-            name: 'SideChain',
+            name: 'aelf dAppChain',
             type: 'line',
             data: sideData,
           },

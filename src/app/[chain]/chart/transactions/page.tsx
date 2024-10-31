@@ -2,13 +2,11 @@
 import Highcharts from 'highcharts/highstock';
 import '../index.css';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
-import { useEffect, useMemo } from 'react';
-import { ChartColors, IDailyTransactionsData, IHIGHLIGHTDataItem } from '../type';
+import { useMemo } from 'react';
+import { IDailyTransactionsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyTransactions } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Daily Transactions Chart';
@@ -47,7 +45,7 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
       const { main, side, blockCount, total } = blockDataMap[date];
       if (multi) {
         return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Transactions: <b>${thousandsNumber(main)}</b><br/>SideChain Transactions: <b>${thousandsNumber(side)}</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Transactions: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Transactions: <b>${thousandsNumber(side)}</b><br/>
       `;
       } else {
         return `
@@ -64,12 +62,12 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
             data: allData,
           },
           {
-            name: 'MainChain',
+            name: 'aelf MainChain',
             type: 'line',
             data: mainData,
           },
           {
-            name: 'SideChain',
+            name: 'aelf dAppChain',
             type: 'line',
             data: sideData,
           },

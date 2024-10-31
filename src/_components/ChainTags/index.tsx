@@ -8,7 +8,7 @@ export default function ChainTags({ chainIds = [], className }: { chainIds: TCha
       {[...chainIds].sort().map((chain) => {
         return (
           <Tag className={clsx('px-2 py-[2px]', className)} key={chain}>
-            {chain === 'AELF' ? 'MainChain' : `SideChain(${chain})`}
+            {chain === 'AELF' ? 'aelf MainChain' : 'aelf dAppChain'}
           </Tag>
         );
       })}

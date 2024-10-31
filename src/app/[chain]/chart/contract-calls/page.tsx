@@ -52,7 +52,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const callAddressCount = customMap[date].callAddressCount;
       if (multi) {
         return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Number of Calls</b>: <b>${thousandsNumber(total)}</b><br/>MainChain Number of Calls: <b>${thousandsNumber(main)}</b><br/>SideChain Number of Calls: <b>${thousandsNumber(side)}</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Number of Calls</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Number of Calls: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Number of Calls: <b>${thousandsNumber(side)}</b><br/>
       `;
       } else {
         return `
@@ -69,12 +69,12 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
             data: allData,
           },
           {
-            name: 'MainChain',
+            name: 'aelf MainChain',
             type: 'line',
             data: mainData,
           },
           {
-            name: 'SideChain',
+            name: 'aelf dAppChain',
             type: 'line',
             data: sideData,
           },

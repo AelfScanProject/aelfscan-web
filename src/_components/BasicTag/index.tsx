@@ -18,7 +18,7 @@ export default function BasicTag({
               'rounded border border-[#EAECEF] px-1 text-[10px] leading-[18px] text-base-200',
               size === 'small' && 'text-xs leading-5',
             )}>
-            {item === 'AELF' ? 'MainChain' : `SideChain(${item})`}
+            {item === 'AELF' ? 'aelf MainChain' : 'aelf dAppChain'}
           </div>
         );
       })}

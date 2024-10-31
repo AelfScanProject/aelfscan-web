@@ -53,14 +53,14 @@ export default function HeadTitle({
           {mainLink && (
             <Link href={mainLink}>
               <Button className="!h-7 !px-2" size="small" ghost type="primary">
-                View on MainChain
+                View on aelf MainChain
               </Button>
             </Link>
           )}
           {sideLink && (
             <Link href={sideLink}>
               <Button className="!h-7 !px-2" size="small" ghost type="primary">
-                View on SideChain({sideChain})
+                View on aelf dAppChain
               </Button>
             </Link>
           )}

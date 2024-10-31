@@ -43,7 +43,7 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
 
       if (multi) {
         return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(totalCount)}</b><br/>MainChain Wallet Addresses: <b>${thousandsNumber(mainData)}</b><br/>SideChain Wallet Addresses: <b>${thousandsNumber(sideData)}</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(totalCount)}</b><br/>aelf MainChain Wallet Addresses: <b>${thousandsNumber(mainData)}</b><br/>aelf dAppChain Wallet Addresses: <b>${thousandsNumber(sideData)}</b><br/>
       `;
       } else {
         return `
@@ -62,12 +62,12 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
             data: allData,
           },
           {
-            name: 'MainChain Wallet',
+            name: 'aelf MainChain Wallet',
             type: 'line',
             data: mainData,
           },
           {
-            name: 'MainChain Wallet',
+            name: 'aelf dAppChain Wallet',
             type: 'line',
             data: sideData,
           },

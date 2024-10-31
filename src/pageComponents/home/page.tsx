@@ -82,7 +82,7 @@ function Home() {
           <Spin spinning={transactions.loading}>
             <Latest
               iconType="latest-tx"
-              tips={`The most recent transactions on the network, providing real-time data on the latest activity across the MainChain and SideChain.`}
+              tips={`The most recent transactions on the network, providing real-time data on the latest activity across the aelf MainChain and aelf dAppChain.`}
               title="Latest Transactions"
               isBlocks={false}
               data={transactions.data}></Latest>
@@ -98,11 +98,9 @@ function Home() {
       return 'AELF Explorer';
     }
     if (isMainNet) {
-      return defaultChain === 'AELF' ? 'AELF MainChain Explorer' : `AELF SideChain (${defaultChain}) Explorer `;
+      return defaultChain === 'AELF' ? 'aelf MainChain Explorer' : `aelf dAppChain Explorer `;
     } else {
-      return defaultChain === 'AELF'
-        ? 'AELF MainChain Testnet Explorer'
-        : `AELF SideChain (${defaultChain}) Testnet Explorer `;
+      return defaultChain === 'AELF' ? 'aelf MainChain Testnet Explorer' : `aelf dAppChain Testnet Explorer `;
     }
   }, [isMainNet, defaultChain]);
 
@@ -114,7 +112,7 @@ function Home() {
             <h2 className={`${!isMainNet && '!text-base-100'}`}>{title}</h2>
             {multi && (
               <h3 className={`${!isMainNet && '!text-base-100'} text-sm leading-[22px]`}>
-                Supporting MainChain and SideChain({isMainNet ? 'tDVV' : 'tDVW'})
+                Supporting aelf MainChain and aelf dAppChain
               </h3>
             )}
             <div className="search-section my-4 min-[996px]:mb-10">

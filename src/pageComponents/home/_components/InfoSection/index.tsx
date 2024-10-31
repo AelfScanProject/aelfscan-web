@@ -8,14 +8,12 @@ import { useAppSelector } from '@_store';
 import { Dropdown, Skeleton } from 'antd';
 import useResponsive, { useMD } from '@_hooks/useResponsive';
 import { useMemo } from 'react';
-import { useSideChain } from '@_hooks/useSelectChain';
 import EPTooltip from '@_components/EPToolTip';
 const clsPrefix = 'home-info-section';
 
 const MultiDown = ({
   mainCount,
   sideCount,
-  tps,
 }: {
   mainCount?: number;
   sideCount?: number;
@@ -24,7 +22,6 @@ const MultiDown = ({
     side?: string;
   };
 }) => {
-  const sideChain = useSideChain();
   const isMd = useMD();
   const items = [
     {
@@ -32,9 +29,8 @@ const MultiDown = ({
       label: (
         <div className="flex items-center">
           <IconFont type="mainchain"></IconFont>
-          <div className="ml-1 mr-2 text-sm leading-[22px] text-base-100">MainChain</div>
+          <div className="ml-1 mr-2 text-sm leading-[22px] text-base-100">aelf MainChain</div>
           <div className="text-sm leading-[22px] text-base-200">{thousandsNumber(mainCount || 0)}</div>
-          {/* {tps && <span className="text-sm leading-[22px] text-base-200">({tps?.main} TPS)</span>} */}
         </div>
       ),
     },
@@ -43,9 +39,8 @@ const MultiDown = ({
       label: (
         <div className="flex items-center">
           <IconFont type="sidechain"></IconFont>
-          <div className="ml-1 mr-2 text-sm leading-[22px] text-base-100">SideChain({sideChain})</div>
+          <div className="ml-1 mr-2 text-sm leading-[22px] text-base-100">aelf dAppChain</div>
           <div className="text-sm leading-[22px] text-base-200">{thousandsNumber(sideCount || 0)}</div>
-          {/* {tps && <span className="text-sm leading-[22px] text-base-200">({tps?.side} TPS)</span>} */}
         </div>
       ),
     },
@@ -74,7 +69,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
               Transactions
               <EPTooltip
                 placement={isMD ? 'top' : 'topLeft'}
-                title={`The total number of transactions that have occurred on the MainChain and SideChain since the mainnet launch, showcasing the network's overall activity and usage.`}
+                title={`The total number of transactions that have occurred on the aelf MainChain and aelf dAppChain since the mainnet launch, showcasing the network's overall activity and usage.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
               </EPTooltip>
@@ -169,7 +164,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
               {multi ? 'Total Account' : 'Accounts'}
               <EPTooltip
                 placement={isMD ? 'top' : 'topLeft'}
-                title={`The total number of addresses that have conducted at least one transaction on the MainChain or SideChain, representing active participation in the network.`}
+                title={`The total number of addresses that have conducted at least one transaction on the aelf MainChain or aelf dAppChain, representing active participation in the network.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
               </EPTooltip>
@@ -207,7 +202,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
               Tokens
               <EPTooltip
                 placement={isMD ? 'top' : 'topLeft'}
-                title={`The total number of tokens issued on the MainChain and SideChain, reflecting the diversity of assets created within the aelf ecosystem.`}
+                title={`The total number of tokens issued on the aelf MainChain and aelf dAppChain, reflecting the diversity of assets created within the aelf ecosystem.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
               </EPTooltip>
@@ -232,7 +227,7 @@ const InfoSection = ({ multi }: { multi: boolean }) => {
               NFTs
               <EPTooltip
                 placement={isMD ? 'top' : 'topLeft'}
-                title={`The total number of NFTs issued on the MainChain and SideChain, indicating the scope of non-fungible assets and digital collectibles within the network.`}
+                title={`The total number of NFTs issued on the aelf MainChain and aelf dAppChain, indicating the scope of non-fungible assets and digital collectibles within the network.`}
                 mode="dark">
                 {multi && <IconFont className="question text-xs" type="question-circle" />}
               </EPTooltip>

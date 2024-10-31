@@ -92,12 +92,12 @@ const multiTokenDetail = (): IOverviewItem[][] => {
       },
       {
         key: 'mainChainCirculatingSupply',
-        label: 'MainChain CIRCULATING SUPPLY',
+        label: 'aelf MainChain CIRCULATING SUPPLY',
         format: thousandsNumber,
       },
       {
         key: 'sideChainCirculatingSupply',
-        label: 'SideChain CIRCULATING SUPPLY',
+        label: 'aelf dAppChain CIRCULATING SUPPLY',
         format: thousandsNumber,
       },
     ],
@@ -109,12 +109,12 @@ const multiTokenDetail = (): IOverviewItem[][] => {
       },
       {
         key: 'mainChainHolders',
-        label: 'MainChain HOLDERS',
+        label: 'aelf MainChain HOLDERS',
         format: thousandsNumber,
       },
       {
         key: 'sideChainHolders',
-        label: 'SideChain HOLDERS',
+        label: 'aelf dAppChain HOLDERS',
         format: thousandsNumber,
       },
     ],
@@ -126,12 +126,12 @@ const multiTokenDetail = (): IOverviewItem[][] => {
       },
       {
         key: 'mainChainTransferCount',
-        label: 'MainChain TRANSFERS',
+        label: 'aelf MainChain TRANSFERS',
         format: thousandsNumber,
       },
       {
         key: 'sideChainTransferCount',
-        label: 'SideChain TRANSFERS',
+        label: 'aelf dAppChain TRANSFERS',
         format: thousandsNumber,
       },
     ],
@@ -163,7 +163,7 @@ export default function OverView({ data = {} }: IDetailProps) {
             <div className="flex items-center">
               <Link className="h-[22px]" href={`/${chainId}/token/${tokenSymbol}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
-                  {chain !== 'AELF' ? 'MainChain' : `SideChain ${chainId}`}
+                  {chain !== 'AELF' ? 'aelf MainChain' : 'aelf dAppChain'}
                 </span>
               </Link>
               <span className="ml-1 inline-block text-base-100">

@@ -53,10 +53,10 @@ export default function getColumns(currentPage, pageSize, chain, multi): Columns
   if (multi) {
     return [
       { ...commonColumns[0], width: 128 },
-      { ...commonColumns[1], width: 384, render: (data: Address) => renderAddress(chain, data) },
+      { ...commonColumns[1], width: 374, render: (data: Address) => renderAddress(chain, data) },
       {
         title: 'Chain',
-        width: 224,
+        width: 234,
         dataIndex: 'chainIds',
         key: 'chainIds',
         render: (chainIds) => <ChainTags chainIds={chainIds || []} />,

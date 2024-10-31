@@ -95,11 +95,11 @@ export default function Events() {
     getData(page, pageSize, searchText);
   };
 
-  const pageSizeChange = async (size) => {
+  const pageSizeChange = async (page, size) => {
     setLoading(true);
     setPageSize(size);
-    setCurrentPage(1);
-    getData(1, size, searchText);
+    setCurrentPage(page);
+    getData(page, size, searchText);
   };
   const searchChange = async (value) => {
     if (value) {

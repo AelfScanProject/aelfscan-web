@@ -36,7 +36,7 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
       },
       {
         key: 'mainChainFloorPrice',
-        label: 'MainChain FLOOR PRICE',
+        label: 'aelf MainChain FLOOR PRICE',
         render: (text, record) =>
           record.mainChainFloorPrice !== -1 ? (
             <div className="text-sm leading-[22px] text-base-100">
@@ -51,7 +51,7 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
       },
       {
         key: 'sideChainFloorPrice',
-        label: 'SideChain FLOOR PRICE',
+        label: 'aelf dAppChain FLOOR PRICE',
         render: (text, record) =>
           record.sideChainFloorPrice !== -1 ? (
             <div className="text-sm leading-[22px] text-base-100">
@@ -73,13 +73,13 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
       },
       {
         key: 'mainChainHolders',
-        label: 'MainChain HOLDERS',
+        label: 'aelf MainChain HOLDERS',
         format: thousandsNumber,
       },
       {
         key: 'sideChainHolders',
         format: thousandsNumber,
-        label: 'SideChain HOLDERS',
+        label: 'aelf dAppChain HOLDERS',
       },
     ],
     [
@@ -90,12 +90,12 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
       },
       {
         key: 'mainChainTransferCount',
-        label: 'MainChain TRANSFERS',
+        label: 'aelf MainChain TRANSFERS',
         format: thousandsNumber,
       },
       {
         key: 'sideChainTransferCount',
-        label: 'SideChain TRANSFERS',
+        label: 'aelf dAppChain TRANSFERS',
         format: thousandsNumber,
       },
     ],
@@ -124,7 +124,7 @@ export default function OverView(props: OverViewProps) {
             <div className="flex items-center">
               <Link className="h-[22px]" href={`/nft?chainId=${chainId}&&collectionSymbol=${collectionSymbol}`}>
                 <span className="inline-block max-w-[120px] truncate text-sm leading-[22px] text-link">
-                  {chain !== 'AELF' ? 'MainChain' : `SideChain ${chainId}`}
+                  {chain !== 'AELF' ? 'aelf MainChain' : 'aelf dAppChain'}
                 </span>
               </Link>
               <span className="ml-1 inline-block text-base-100">

@@ -55,12 +55,12 @@ export default function getColumns({ currentPage, pageSize, chain, multi }): Col
         { ...commonColumns[1], width: 320 },
         {
           title: 'Chain',
-          width: 224,
+          width: 234,
           dataIndex: 'chainIds',
           key: 'chainIds',
           render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
         },
-        { ...commonColumns[2], width: 256 },
+        { ...commonColumns[2], width: 246 },
         { ...commonColumns[3], width: 208 },
         { ...commonColumns[4], width: 208 },
       ]
