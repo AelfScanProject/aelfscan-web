@@ -21,7 +21,7 @@ const nextConfig = {
   },
   reactStrictMode: false,
   experimental: {
-    proxyTimeout: 30000,
+    proxyTimeout: 300000,
     staleTimes: {
       dynamic: 1,
       static: 1,

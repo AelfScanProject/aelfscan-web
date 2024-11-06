@@ -2,7 +2,7 @@ export type RequestWithParams = {
   params?: any;
 } & RequestInit;
 
-const DEFAULT_FETCH_TIMEOUT = 300000;
+const DEFAULT_FETCH_TIMEOUT = 3000000;
 const myServer = new Function();
 const timeoutPromise = (delay: number) => {
   return new Promise<{ type: string }>((resolve) => {
