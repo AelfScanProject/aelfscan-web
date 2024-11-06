@@ -210,7 +210,7 @@ export default function Contract({ setIsVerify, isVerify }) {
           />
           <span className="inline-block">
             Are you the contract creator?{' '}
-            <Link className="!inline" href={`/${chain}/source-code`}>
+            <Link className="!inline" href={`/${chain}/source-code/${address}`}>
               Verify and Publish
             </Link>{' '}
             your contract source code today!
