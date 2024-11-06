@@ -2,11 +2,11 @@
 
 import IconFont from '@_components/IconFont';
 import { Button, Input, Modal, Upload } from 'aelf-design';
-import { Form, FormProps, Select } from 'antd';
+import { Form, FormProps, Select, Spin } from 'antd';
 import Link from 'next/link';
 import './index.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSideChain } from '../../../_hooks/useSelectChain';
+import { useSideChain } from '../../../../_hooks/useSelectChain';
 import { uploadContractCode } from '@_api/fetchContact';
 import { useParams } from 'next/navigation';
 import { getAddress } from '@_utils/formatter';
@@ -38,11 +38,20 @@ const NET_VERSION = [
 ];
 
 export default function SourceCodePage() {
+  const { address } = useParams();
   const [form] = Form.useForm<FieldType>();
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const isFile = Form.useWatch('file', form);
+
+  useEffect(() => {
+    if (address) {
+      form.setFieldsValue({
+        contractAddress: address as string,
+      });
+    }
+  }, [address, form]);
 
   const handleSubmit = () => {
     form.submit();
@@ -260,7 +269,7 @@ export default function SourceCodePage() {
         </div>
       </div>
 
-      <Modal open={open} title="" footer={null} closable={false}>
+      <Modal centered open={open} title="" footer={null} closable={false}>
         <div className="flex flex-col items-center justify-center">
           <Image alt="" src={type === 'success' ? SuccessIcon : FailedIcon} width={48} height={48}></Image>
           <div className="py-2 text-xl font-medium text-base-100">
@@ -276,6 +285,23 @@ export default function SourceCodePage() {
               Got it
             </Button>
           </div>
+        </div>
+      </Modal>
+      <Modal centered open={uploadLoading} title="" footer={null} closable={false}>
+        <div className="flex flex-col items-center justify-center">
+          {/* <Image alt="" src={type === 'success' ? SuccessIcon : FailedIcon} width={48} height={48}></Image> */}
+          <div className="py-2 text-xl font-medium text-base-100">Verifying Contract</div>
+          <div className="pb-6 text-center text-sm text-base-100">
+            Contract verification in progress and is expected to take about 1 minute.
+          </div>
+          <div className="flex justify-center">
+            <Spin />
+          </div>
+          {/* <div>
+            <Button style={{ width: '214px' }} type="primary" onClick={handleGot}>
+              Got it
+            </Button>
+          </div> */}
         </div>
       </Modal>
     </div>
