@@ -30,3 +30,11 @@ type Chain = 'AELF' | 'tDVV' | 'tDVW' | 'multiChain';
 type TSearchParamsForTransactionDetail = {
   blockHeight: number;
 };
+
+declare global {
+  interface Window {
+    turnstileCallback: (token: string) => void;
+    handleTurnstileError?: () => void;
+    handleTurnstileExpired?: () => void;
+  }
+}

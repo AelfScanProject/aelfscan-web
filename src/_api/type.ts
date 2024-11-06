@@ -611,4 +611,6 @@ export interface ITopTokensItem {
 export interface IUploadContractCode extends RequestInit {
   chainId: string;
   contractAddress: string;
+  csprojPath: string;
+  dotnetVersion: string;
 }

@@ -57,7 +57,7 @@ const ADDRESS_API_LIST = {
   getContractHistory: `${BASE_API}/app/address/contract/history`,
   getContractEvents: `${BASE_API}/app/address/contract/events`,
   getContractCode: `${BASE_API}/app/address/contract/file`,
-  uploadContractCode: `${BASE_API}/app/contract/upload?`,
+  uploadContractCode: `${BASE_API}/contractfile/upload`,
   getServerTopAccounts: `${SERVER_BASE_API}/app/address/accounts`,
   getServerAccountDetail: `${SERVER_BASE_API}/app/address/detail`,
 };

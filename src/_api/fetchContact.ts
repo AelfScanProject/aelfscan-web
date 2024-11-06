@@ -99,7 +99,7 @@ export async function uploadContractCode(
 ): Promise<{
   fileKey: string;
   message: string;
-  result: string;
+  result: number;
 }> {
   const result = await request.address.uploadContractCode({
     params: params,

@@ -35,6 +35,9 @@ import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 import OverviewThreeCard from '@_components/OverviewCard/three';
 import { IOverviewItem } from '@_components/OverviewCard/type';
 import NFTAssets from './components/Tokens/NFTAssets';
+import Image from 'next/image';
+import ContractSuccessIcon from 'public/image/contract-success.svg';
+import { ITabsProps } from 'aelf-design';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -209,10 +212,12 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
 
   let defaultTab = (Search.get('tab') as string) || '';
 
+  const [isVerify, setIsVerify] = useState(false);
+
   const onTabClick = (key) => {
     tabRef.current?.setActiveKey(key);
   };
-  const items = [
+  const items: ITabsProps['items'] = [
     {
       key: '',
       label: 'Tokens',
@@ -265,8 +270,20 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     items.push(
       {
         key: 'contract',
-        label: 'Contract',
-        children: <Contract />,
+        label: (
+          <div className="contract-title relative">
+            <span>Contract</span>
+            {isVerify && (
+              <Image
+                alt=""
+                className="contract-icon absolute right-[-12px] top-[-3px]"
+                src={ContractSuccessIcon}
+                width={14}
+                height={14}></Image>
+            )}
+          </div>
+        ),
+        children: <Contract isVerify={isVerify} setIsVerify={setIsVerify} />,
       },
       {
         key: 'events',
