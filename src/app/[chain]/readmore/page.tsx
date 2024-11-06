@@ -2,8 +2,9 @@
 import IconFont from '@_components/IconFont';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import ReadMoreImg from 'public/image/readmore-test.png';
 import CodeImg from 'public/image/code.png';
+import CodeImg1 from 'public/image/code1.jpeg';
+import CodeImg2 from 'public/image/code2.jpeg';
 
 const moreList = [
   {
@@ -14,13 +15,13 @@ const moreList = [
   },
   {
     title: '2. Verify and Publish',
-    img: ReadMoreImg,
+    img: CodeImg1,
     subTitle:
       'Under the contract address page, you will be able to find the “Contract” tab. Then click on “Verify And Publish.”',
   },
   {
     title: '3. Enter contract verification details',
-    img: ReadMoreImg,
+    img: CodeImg2,
     subTitle:
       'Please enter the required information, including the contract, and upload your code as a .zip format archive',
   },

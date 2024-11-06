@@ -194,6 +194,7 @@ export default function SourceCodePage() {
             <Form.Item<FieldType>
               label="Please enter the Contract Address you would like to verify"
               name="contractAddress"
+              required
               rules={[
                 {
                   validator: (_, value) => {
