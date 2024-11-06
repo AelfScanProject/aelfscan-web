@@ -95,7 +95,7 @@ export default function SourceCodePage() {
             chainId: chain,
             contractAddress: getAddress(params.contractAddress),
             dotnetVersion: params.version,
-            csprojPath: params.csprojPath, // 'contract/Portkey.Contracts.CA/Portkey.Contracts.CA.csproj'
+            csprojPath: params.csprojPath,
           },
           formData,
         );
@@ -121,8 +121,6 @@ export default function SourceCodePage() {
       Router.back();
     } else {
       setOpen(false);
-      form.resetFields();
-      setIsSubmitDisabled(true);
     }
   };
 
@@ -176,7 +174,6 @@ export default function SourceCodePage() {
               label="Please enter the Contract Address you would like to verify"
               name="contractAddress"
               rules={[
-                { required: true, message: 'Please enter the Contract Address you would like to verify' },
                 {
                   validator: (_, value) => {
                     const addressRegex = /^ELF.*(AELF|tDVV|tDVW)$/;
