@@ -14,6 +14,7 @@ import SuccessIcon from 'public/image/success.svg';
 import FailedIcon from 'public/image/failed.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import addressFormat from '@_utils/urlUtils';
 
 type FieldType = {
   contractAddress: string;
@@ -38,7 +39,7 @@ const NET_VERSION = [
 ];
 
 export default function SourceCodePage() {
-  const { address } = useParams();
+  const { address, chain } = useParams();
   const [form] = Form.useForm<FieldType>();
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
@@ -48,10 +49,10 @@ export default function SourceCodePage() {
   useEffect(() => {
     if (address) {
       form.setFieldsValue({
-        contractAddress: address as string,
+        contractAddress: addressFormat(getAddress(address as string), chain as string),
       });
     }
-  }, [address, form]);
+  }, [address, chain, form]);
 
   const handleSubmit = () => {
     form.submit();
@@ -61,8 +62,6 @@ export default function SourceCodePage() {
     form.resetFields();
     setIsSubmitDisabled(true);
   };
-
-  const { chain } = useParams<{ chain: string }>();
 
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<'success' | 'failed'>('success');
@@ -130,7 +129,7 @@ export default function SourceCodePage() {
       try {
         const data = await uploadContractCode(
           {
-            chainId: chain,
+            chainId: chain as string,
             contractAddress: getAddress(params.contractAddress),
             dotnetVersion: params.version,
             csprojPath: params.csprojPath,
@@ -150,6 +149,11 @@ export default function SourceCodePage() {
         }
         setUploadLoading(false);
         setOpen(true);
+      } catch (error) {
+        setErrorMessage('Verification failed Contract code mismatch. Please re-upload.');
+        form.resetFields(['file']);
+        form.validateFields(['file']);
+        setType('failed');
       } finally {
         setUploadLoading(false);
       }
