@@ -243,7 +243,7 @@ export default function SourceCodePage() {
                   },
                 },
               ]}>
-              <Input style={{ width: '100%' }} />
+              <Input placeholder="ELF_" style={{ width: '100%' }} />
             </Form.Item>
 
             <Form.Item<FieldType>
@@ -259,7 +259,7 @@ export default function SourceCodePage() {
               name="csprojPath"
               label="Project File Path"
               rules={[{ required: true, message: 'Project File Path' }]}>
-              <Input></Input>
+              <Input placeholder="e.g., ../example/project.csproj"></Input>
             </Form.Item>
 
             <Form.Item<FieldType>
