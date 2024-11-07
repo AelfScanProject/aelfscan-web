@@ -1,7 +1,7 @@
 'use client';
 import IconFont from '@_components/IconFont';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import CodeImg from 'public/image/code.png';
 import CodeImg1 from 'public/image/code1.jpeg';
 import CodeImg2 from 'public/image/code2.jpeg';
@@ -34,13 +34,14 @@ const moreList = [
 
 export default function ReadMore() {
   const Router = useRouter();
+  const { chain, address } = useParams();
   return (
     <div className="contract-code flex w-full justify-center">
       <div className="max-w-[720px]">
         <div
           className="flex cursor-pointer items-center gap-2 py-4 pb-6 text-sm leading-[22px] text-base-100 min-[769px]:pb-4"
           onClick={() => {
-            Router.back();
+            Router.push(`/${chain}/address/${address}`);
           }}>
           <IconFont className="mr-1 rotate-180" type="right-arrow-dfna6beo" />
           Back

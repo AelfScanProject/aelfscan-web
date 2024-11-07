@@ -154,6 +154,7 @@ export default function SourceCodePage() {
         form.resetFields(['file']);
         form.validateFields(['file']);
         setType('failed');
+        setOpen(true);
       } finally {
         setUploadLoading(false);
       }
@@ -164,7 +165,7 @@ export default function SourceCodePage() {
   const handleGot = () => {
     if (type === 'success') {
       setOpen(false);
-      Router.back();
+      Router.push(`/${chain}/address/${address}`);
     } else {
       setOpen(false);
     }
@@ -189,7 +190,7 @@ export default function SourceCodePage() {
         <div
           className="flex cursor-pointer items-center gap-2 py-4 pb-6 text-sm leading-[22px] text-base-100 min-[769px]:pb-4"
           onClick={() => {
-            Router.back();
+            Router.push(`/${chain}/address/${address}`);
           }}>
           <IconFont className="mr-1 rotate-180" type="right-arrow-dfna6beo" />
           Back
@@ -202,7 +203,10 @@ export default function SourceCodePage() {
             <span>
               Source code verification provides transparency for users intteracting with smart contracts. By uploading
               the source code, aelfscan will match the comppiled code with that on the blockchain.{' '}
-              <Link href={`/${chain}/readmore`}> Read more</Link>
+              <Link target="_blank" href={`/${chain}/readmore/${address}`}>
+                {' '}
+                Read more
+              </Link>
             </span>
           </div>
           <Form
@@ -269,12 +273,17 @@ export default function SourceCodePage() {
                       return Promise.reject(new Error('Please select the file to upload'));
                     }
 
+                    const isLt10M = value?.file.size / 1024 / 1024 < 10;
+                    if (!isLt10M) {
+                      return Promise.reject(new Error('File size must be less than 10MB.'));
+                    }
+
                     return Promise.resolve();
                   },
                 },
               ]}>
               <Upload
-                tips="Supported file type: .zip"
+                tips="Support file type: .zip (Max 10M)"
                 uploadText="Choose source code file to upload"
                 accept=".zip"
                 maxCount={1}
@@ -289,7 +298,11 @@ export default function SourceCodePage() {
         <div className="mt-6 flex w-full items-center justify-center gap-3">
           <Button
             type="primary"
-            disabled={isSubmitDisabled || !token || !(uploadFile && uploadFile?.fileList?.length > 0)}
+            disabled={
+              isSubmitDisabled ||
+              !token ||
+              !(uploadFile && uploadFile?.fileList?.length > 0 && uploadFile?.file.size / 1024 / 1024 < 10)
+            }
             loading={uploadLoading}
             onClick={handleSubmit}>
             Verify and Publish
