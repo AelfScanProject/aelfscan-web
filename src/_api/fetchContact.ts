@@ -100,6 +100,7 @@ export async function uploadContractCode(
   fileKey: string;
   message: string;
   result: number;
+  errCode: number;
 }> {
   const result = await request.address.uploadContractCode({
     params: params,
