@@ -44,7 +44,6 @@ export default function SourceCodePage() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const uploadFile = Form.useWatch('file', form);
-  console.log(uploadFile, 'file');
 
   useEffect(() => {
     if (address) {
@@ -84,6 +83,14 @@ export default function SourceCodePage() {
           callback: function (token) {
             console.log('Turnstile token:', token);
             setToken(token);
+          },
+          'expired-callback': function () {
+            console.warn('Turnstile token expired.');
+            setToken('');
+          },
+          'error-callback': function (error) {
+            console.error('Turnstile encountered an error:', error);
+            setToken('');
           },
         });
       }
@@ -135,6 +142,10 @@ export default function SourceCodePage() {
           setType('success');
         } else {
           setErrorMessage(data.message);
+          if (data.errCode === 0) {
+            form.resetFields(['file']);
+            form.validateFields(['file']);
+          }
           setType('failed');
         }
         setUploadLoading(false);
@@ -143,7 +154,7 @@ export default function SourceCodePage() {
         setUploadLoading(false);
       }
     },
-    [chain],
+    [chain, form],
   );
 
   const handleGot = () => {
@@ -248,7 +259,6 @@ export default function SourceCodePage() {
               name="file"
               required
               rules={[
-                { required: true, message: 'Please select the file to upload' },
                 {
                   validator: (_, value) => {
                     if (!value || value.fileList?.length === 0) {
