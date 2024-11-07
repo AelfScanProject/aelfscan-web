@@ -23,7 +23,6 @@ interface IProps {
 const clsPrefix = 'header-menu-container';
 export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList }: IProps) {
   const { defaultChain } = useAppSelector((state) => state.getChainId);
-  console.log(defaultChain, 'defaultChain');
 
   // TODO: use cms
   const items: MenuProps['items'] = useMemo(() => {

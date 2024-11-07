@@ -38,7 +38,6 @@ const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChan
     }
   }, [selectKey]);
 
-  console.log(activeKey, 'activeKey');
   const tabChange = (activeKey) => {
     onTabChange?.(activeKey);
     window.location.hash = '';

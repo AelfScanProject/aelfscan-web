@@ -39,7 +39,6 @@ const tabItems: { key: string }[] = [
 
 export default function NFTDetails(props: NFTDetailsProps) {
   const { overview } = props;
-  console.log(overview, 'collection detail');
   const tabRef = useRef<EPTabsRef>(null);
   const [tabList] = useState(tabItems);
 

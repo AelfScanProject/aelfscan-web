@@ -56,8 +56,6 @@ async function service(url: string, options: RequestWithParams) {
     }
   }
 
-  console.log(url, options, 'url-----------');
-
   try {
     const response = await fetch(url, {
       ...options,
@@ -93,10 +91,8 @@ myServer.prototype.parseRouter = function (name: string, urlObj: any) {
 myServer.prototype.send = async function (url: string, options: RequestWithParams) {
   const rs = await Promise.race([service(url, options), timeoutPromise(DEFAULT_FETCH_TIMEOUT)]);
   if (rs?.type === 'timeout') {
-    // console.error('timeout');
     throw new Error('fetch timeout');
   } else if (rs?.type === 'error') {
-    // console.error('error');
     throw new Error(rs.message);
   } else if (rs.code && rs.code !== '20000') {
     throw new Error(rs.message);

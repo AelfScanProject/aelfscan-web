@@ -43,7 +43,8 @@ export default function SourceCodePage() {
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
-  const isFile = Form.useWatch('file', form);
+  const uploadFile = Form.useWatch('file', form);
+  console.log(uploadFile, 'file');
 
   useEffect(() => {
     if (address) {
@@ -245,13 +246,25 @@ export default function SourceCodePage() {
             <Form.Item<FieldType>
               label="Please select the file to upload"
               name="file"
-              rules={[{ required: true, message: 'Please select the file to upload' }]}>
+              required
+              rules={[
+                { required: true, message: 'Please select the file to upload' },
+                {
+                  validator: (_, value) => {
+                    if (!value || value.fileList?.length === 0) {
+                      return Promise.reject(new Error('Please select the file to upload'));
+                    }
+
+                    return Promise.resolve();
+                  },
+                },
+              ]}>
               <Upload
                 tips="Supported file type: .zip"
                 uploadText="Choose source code file to upload"
                 accept=".zip"
                 maxCount={1}
-                showUploadButton={!isFile}
+                showUploadButton={!(uploadFile && uploadFile?.fileList?.length > 0)}
               />
             </Form.Item>
           </Form>
@@ -260,7 +273,11 @@ export default function SourceCodePage() {
           <div className="cf-turnstile" ref={turnstileElementRef}></div>
         </div>
         <div className="mt-6 flex w-full items-center justify-center gap-3">
-          <Button type="primary" disabled={isSubmitDisabled || !token} loading={uploadLoading} onClick={handleSubmit}>
+          <Button
+            type="primary"
+            disabled={isSubmitDisabled || !token || !(uploadFile && uploadFile?.fileList?.length > 0)}
+            loading={uploadLoading}
+            onClick={handleSubmit}>
             Verify and Publish
           </Button>
           <Button htmlType="reset" onClick={handleReset}>
@@ -289,7 +306,6 @@ export default function SourceCodePage() {
       </Modal>
       <Modal centered open={uploadLoading} title="" footer={null} closable={false}>
         <div className="flex flex-col items-center justify-center">
-          {/* <Image alt="" src={type === 'success' ? SuccessIcon : FailedIcon} width={48} height={48}></Image> */}
           <div className="py-2 text-xl font-medium text-base-100">Verifying Contract</div>
           <div className="pb-6 text-center text-sm text-base-100">
             Contract verification in progress and is expected to take about 1 minute.
@@ -297,11 +313,6 @@ export default function SourceCodePage() {
           <div className="flex justify-center">
             <Spin />
           </div>
-          {/* <div>
-            <Button style={{ width: '214px' }} type="primary" onClick={handleGot}>
-              Got it
-            </Button>
-          </div> */}
         </div>
       </Modal>
     </div>

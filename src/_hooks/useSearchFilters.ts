@@ -14,7 +14,6 @@ const useSearchFilter = () => {
     try {
       setLoading(true);
       const res = await fetchSearchFilters();
-      console.log(res, 'filterres');
       setOptions(res?.filterTypes);
       dispatch(setHomeFilters(res?.filterTypes || []));
     } finally {

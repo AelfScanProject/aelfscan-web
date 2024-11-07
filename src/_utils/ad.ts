@@ -14,7 +14,6 @@ export class AdTracker {
 
   sendAdTrack(event: AdEvent, payload: any) {
     try {
-      console.log('=====this.gtm', event);
       this.gtm.push({ event, ...payload });
     } catch (error) {
       console.error('track error:', error);

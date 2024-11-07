@@ -20,7 +20,6 @@ const useBlockchainOverview = (chain: TChainID) => {
   const [produces, setProduces] = useState<IProduces[]>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  console.log('signalR----------refresh');
   const [socket, setSocket] = useState<SignalR | null>(null);
 
   useEffect(() => {
@@ -44,7 +43,6 @@ const useBlockchainOverview = (chain: TChainID) => {
         return;
       }
       socket.registerHandler('ReceiveBpProduce', (data) => {
-        console.log(data, 'ReceiveBpProduce');
         setProduces(data?.list || {});
         setLoading(false);
       });
@@ -55,7 +53,6 @@ const useBlockchainOverview = (chain: TChainID) => {
     fetchAndReceiveWs();
 
     return () => {
-      console.log('signalR----destroy');
       socket?.sendEvent('UnsubscribeBpProduce', { chainId: chain });
       socket?.destroy();
     };

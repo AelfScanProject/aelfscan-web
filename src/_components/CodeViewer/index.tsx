@@ -26,7 +26,6 @@ const CodeViewer = ({ data, height = '350px', name }) => {
     // here is the editor instance
     // you can store it in `useRef` for further usage
     editorRef.current = editor;
-    console.log(editorRef.current);
   }
   useEffect(() => {
     const lang = getLanguage(name);
