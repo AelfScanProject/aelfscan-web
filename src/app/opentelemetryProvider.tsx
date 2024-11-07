@@ -40,7 +40,6 @@ export const OpentelemetryProvider = ({ children, config }: Props) => {
   useEffect(() => {
     const _webTracerWithZone = initWebTracerWithZone(APP_SETTINGS.openTelemetry);
     setWebTracerWithZone(_webTracerWithZone);
-    console.log('getWebTracerWithZone done');
   }, [APP_SETTINGS.openTelemetry]);
 
   return <OpentelemetryContext.Provider value={webTracerWithZone}>{children}</OpentelemetryContext.Provider>;

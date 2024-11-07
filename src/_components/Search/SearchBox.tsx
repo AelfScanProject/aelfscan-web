@@ -153,7 +153,6 @@ const Search = ({
 
   const handleJump = useCallback(
     (e: MouseEvent<HTMLElement>) => {
-      console.log('link');
       AdTracker.trackEvent('ads-click', {
         date: dayjs(new Date()).format('YYYY-MM-DD'),
         pageName: label,
@@ -191,7 +190,6 @@ const Search = ({
             setHasFocus(false);
           }}
           onChange={(e) => {
-            console.log(e, ' eenter');
             dispatch(setQuery(e.target.value));
           }}
           onKeyDown={keyDownDebounce}

@@ -61,7 +61,6 @@ const FileTree = (props: IFileTreeProps) => {
     };
   }, [files]);
 
-  console.log(firstFileKey, 'firstKey');
   const onSelect = (_, e) => {
     setSelectKeys([e.node.key]);
     onChange(e.node.key.split('#'));

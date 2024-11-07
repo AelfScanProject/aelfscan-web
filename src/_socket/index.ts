@@ -19,7 +19,6 @@ class SignalRManager {
       try {
         await signalR.initAndStart();
         this.socket = signalR;
-        console.log('SignalR initialized successfully.');
       } catch (e) {
         console.error('Error initializing SignalR:', e);
         this.socket = null; // Ensure that the socket remains null in case of failure

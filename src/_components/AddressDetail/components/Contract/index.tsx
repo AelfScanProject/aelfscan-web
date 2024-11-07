@@ -98,7 +98,6 @@ export default function Contract({ setIsVerify, isVerify }) {
     const { readMethods, writeMethods } = await transferMethods(methods);
     setWriteMethods(writeMethods);
     setReadMethods(readMethods);
-    console.log(methods, 'methods', readMethods, writeMethods);
   }, [RPC_URL, address, aelfInstance, transferMethods]);
   const fetchData = useCallback(async () => {
     setLoading(true);

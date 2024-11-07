@@ -103,7 +103,6 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
 
   const handleMenuClick: MenuProps['onClick'] = useCallback((e) => {
     if (e.key !== 'input') {
-      console.log('clickMenuProps2', e);
       const [, log] = e.key.split(',');
       setValue(1 + '0'.repeat(log));
       setCustomValueView(log);

@@ -44,7 +44,6 @@ export async function deserializeLog(log, rpc) {
     try {
       const root = Root as any;
       dataType = root.VirtualTransactionCreated;
-      console.log(Root, dataType, 'Root');
     } catch (e) {
       // if normal contract has a method called VirtualTransactionCreated
       dataType = proto.lookupType(Name);

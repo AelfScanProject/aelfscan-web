@@ -27,7 +27,6 @@ export interface IContractSourceCode {
 
 function getDefaultFile(files: any[] = [], names: string[] = [], index = 0, path = '') {
   const filtered = files.filter((v) => v.name === names[index]);
-  console.log(filtered, 'filtered');
   if (filtered.length === 0) {
     return {};
   }
@@ -130,7 +129,6 @@ export default function SourceCode({ contractInfo }: { contractInfo: IContractSo
 
   const onFileChange = (names) => {
     const selectedFile = getDefaultFile(files, names);
-    console.log(selectedFile, 'selectedFile');
     if (Object.keys(selectedFile).length > 0) {
       setViewerConfig({
         ...selectedFile,

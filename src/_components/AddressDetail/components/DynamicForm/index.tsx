@@ -40,7 +40,6 @@ export default function DynamicForm({
       const rs = await connectWallet();
     } catch (e: any) {
       console.log(e.message, 'e.message');
-      // console.log(did, 'diddiddid');
       message.error(e.message);
     }
   };

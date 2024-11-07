@@ -42,7 +42,6 @@ export function updateQueryParams(params: { [K in string]: any }) {
       url.searchParams.set(key, params[key]);
     }
   }
-  console.log(window, url.toString(), 'windowsdfsad');
   window.history.replaceState(null, '', url.toString());
 }
 
