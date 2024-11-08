@@ -5,7 +5,6 @@ import { FC, useMemo } from 'react';
 
 const HomePage: FC = () => {
   const pathname = usePathname().slice(1);
-  console.log(pathname, 'pathname');
   const Plugin = useMemo(() => {
     return dynamic(
       () => {

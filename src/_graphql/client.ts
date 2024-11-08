@@ -4,7 +4,6 @@ let client: ApolloClient<NormalizedCacheObject> | null = null;
 
 const { NEXT_PUBLIC_APP_ENV } = process.env;
 const graphqlUrlPrefix = NEXT_PUBLIC_APP_ENV === 'production' ? 'https://inscription-dapp.eforest.finance' : '';
-console.log(graphqlUrlPrefix, 'graphqlUrlPrefix');
 
 export const graphQLClientProvider = (
   graphqlUrl = `${graphqlUrlPrefix}/AElfIndexer_Inscription/InscriptionIndexerSchema/graphql`,

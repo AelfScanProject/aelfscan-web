@@ -13,7 +13,6 @@ const useBlockchainOverview = (chain: TChainID) => {
   const [BlockchainOverview, setBlockchainOverview] = useState<IBlockchainOverviewResponse>();
   const [overviewLoading, setOverviewLoading] = useState<boolean>(true);
 
-  console.log('signalR----------refresh');
   const [socket, setSocket] = useState<SignalR | null>(null);
 
   useEffect(() => {
@@ -40,7 +39,6 @@ const useBlockchainOverview = (chain: TChainID) => {
         return;
       }
       socket.registerHandler('ReceiveBlockchainOverview', (data) => {
-        console.log(data, 'useBlockchainOverview');
         setBlockchainOverview(data || {});
         dispatch(setTokenInfo(data));
         setOverviewLoading(false);
@@ -52,7 +50,6 @@ const useBlockchainOverview = (chain: TChainID) => {
     fetchAndReceiveWs();
 
     return () => {
-      console.log('signalR----destroy');
       socket?.sendEvent('UnsubscribeBlockchainOverview', { chainId: selectChain });
       socket?.destroy();
     };

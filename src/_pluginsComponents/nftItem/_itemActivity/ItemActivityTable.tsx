@@ -109,7 +109,6 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
-        // rowKey="transactionId"
         total={total}
         options={[10, 25, 50]}
         pageSize={pageSize}

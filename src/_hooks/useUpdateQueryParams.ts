@@ -32,9 +32,7 @@ export const useDeleteQueryParam = () => {
   const deleteQueryParam = (params: string[], updateData?: any) => {
     const currentUrl = new URL(window.location.href);
     const newSearchParams = new URLSearchParams(currentUrl.search);
-    console.log(newSearchParams, 'newSearchParams');
     params.forEach((item) => {
-      console.log(newSearchParams.get(item), 'newSearchParams.get(item)');
       if (newSearchParams.get(item)) {
         newSearchParams.delete(item);
       }
@@ -44,8 +42,6 @@ export const useDeleteQueryParam = () => {
         newSearchParams.set(key, updateData[key]);
       });
     }
-
-    console.log(`${currentUrl.pathname}?${newSearchParams.toString()}`, 'newSearchParams.toString()');
 
     // Construct the new URL with updated query params and hash
     const newUrl = `${currentUrl.pathname}?${newSearchParams.toString()}`;

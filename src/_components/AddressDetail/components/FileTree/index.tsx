@@ -51,16 +51,16 @@ export interface IFileTreeProps {
 const FileTree = (props: IFileTreeProps) => {
   const { files = [], onChange } = props;
   const [selectedKeys, setSelectKeys] = useState<string[]>([]);
-  const { filesWithKey, firstFileKey, firstDirectory } = useMemo(() => {
+  const { filesWithKey, firstFileKey } = useMemo(() => {
     const filesHandled = addKeyForTree(files);
     const firstKey = getFirstFile(filesHandled);
     setSelectKeys([firstKey]);
     return {
       filesWithKey: filesHandled,
       firstFileKey: [firstKey],
-      firstDirectory: [filesHandled[0]?.key],
     };
   }, [files]);
+
   const onSelect = (_, e) => {
     setSelectKeys([e.node.key]);
     onChange(e.node.key.split('#'));
@@ -72,7 +72,7 @@ const FileTree = (props: IFileTreeProps) => {
       autoExpandParent
       height={800}
       defaultSelectedKeys={firstFileKey}
-      defaultExpandedKeys={firstDirectory}
+      defaultExpandedKeys={firstFileKey}
       selectedKeys={selectedKeys}
       onSelect={onSelect}
       className="contract-viewer-file-tree w-[250px] overflow-x-auto"

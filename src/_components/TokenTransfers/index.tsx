@@ -139,9 +139,6 @@ export default function List() {
         options={[10, 25, 50]}
         isMobile={isMobile}
         showLast={false}
-        rowKey={(record) => {
-          return record.transactionId + record.method;
-        }}
         total={total}
         pageSize={pageSize}
         pageNum={currentPage}

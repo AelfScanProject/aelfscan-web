@@ -3,3 +3,11 @@
     @apply pt-0;
   }
 }
+
+.explorer-tabs-dropdown-menu-item {
+  .contract-title {
+    .contract-icon {
+      @apply !left-[52px];
+    }
+  }
+}

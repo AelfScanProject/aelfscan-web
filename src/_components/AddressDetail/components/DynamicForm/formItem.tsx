@@ -48,7 +48,6 @@ export default function FormItem({
     setLoading(true);
     // get all fileds value with param true
     const filedsValue = form.getFieldsValue();
-    console.log(filedsValue, 'filedsValue');
     try {
       const result =
         filedsValue && Object.keys(filedsValue).length

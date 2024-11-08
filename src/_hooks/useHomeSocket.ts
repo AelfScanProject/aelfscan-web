@@ -105,7 +105,6 @@ const useHomeSocket = (chain: TChainID) => {
     fetchAndReceiveWs();
 
     return () => {
-      console.log('signalR----destroy');
       socket?.sendEvent('UnsubscribeTransactionDataChart', { chainId: selectChain });
       socket?.sendEvent('UnsubscribeMergeBlockInfo', { chainId: selectChain });
       socket?.destroy();

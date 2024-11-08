@@ -59,9 +59,7 @@ export default function useTableData<T, U>({
     async (params) => {
       setLoading(true);
       try {
-        console.log(fetchDataRef.current, 'fetchDataRef.current');
         const res = await fetchDataRef.current({ ...params, ...filterParams });
-        console.log(res, 'res');
         if (disposeRef.current) {
           const result = disposeRef.current(res);
           setData(result.list);
@@ -92,7 +90,6 @@ export default function useTableData<T, U>({
     setPageSize(defaultPageSize);
   };
   useEffect(() => {
-    console.log(mounted.current, 'mounted.current');
     if (!mountedRequest && mounted.current) {
       mounted.current = false;
       return;

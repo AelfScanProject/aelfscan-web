@@ -21,6 +21,7 @@ interface CustomEditor extends Ace.Editor {
 export interface IContractSourceCode {
   contractName: string;
   contractVersion: string;
+  isVerify: boolean;
   contractSourceCode: any[];
 }
 
@@ -29,24 +30,58 @@ function getDefaultFile(files: any[] = [], names: string[] = [], index = 0, path
   if (filtered.length === 0) {
     return {};
   }
-  const newPath = `${path}${filtered[0].name}/`;
+  const selectFile = filtered[0];
+  const newPath = `${path}${selectFile.name}/`;
+  // if (index === names.length - 1) {
+  //   if (Array.isArray(selectFile.files) && selectFile.files.length > 0) {
+  //     return {
+  //       ...selectFile.files[0],
+  //       path: `${newPath}${selectFile.files[0].name}`,
+  //     };
+  //   }
+  //   return {
+  //     ...selectFile,
+  //     path: `${path}${selectFile.name}`,
+  //   };
+  // }
+
   if (index === names.length - 1) {
-    if (Array.isArray(filtered[0].files) && filtered[0].files.length > 0) {
-      return {
-        ...filtered[0].files[0],
-        path: `${newPath}${filtered[0].files[0].name}`,
-      };
+    const findFileWithContent = (files: any[], currentPath: string): any => {
+      for (const file of files) {
+        const filePath = `${currentPath}${file.name}`;
+        if (file.content) {
+          return {
+            ...file,
+            path: filePath,
+          };
+        }
+        if (Array.isArray(file.files) && file.files.length > 0) {
+          const foundFile = findFileWithContent(file.files, `${filePath}/`);
+          if (foundFile) {
+            return foundFile;
+          }
+        }
+      }
+      return null;
+    };
+
+    if (Array.isArray(selectFile.files) && selectFile.files.length > 0) {
+      const fileWithContent = findFileWithContent(selectFile.files, newPath);
+      if (fileWithContent) {
+        return fileWithContent;
+      }
     }
+
     return {
-      ...filtered[0],
-      path: `${path}${filtered[0].name}`,
+      ...selectFile,
+      path: `${path}${selectFile.name}`,
     };
   }
-  if (Array.isArray(filtered[0].files)) {
-    return getDefaultFile(filtered[0].files, names, index + 1, newPath);
+  if (Array.isArray(selectFile.files)) {
+    return getDefaultFile(selectFile.files, names, index + 1, newPath);
   }
   return {
-    ...filtered[0],
+    ...selectFile,
     path: newPath,
   };
 }

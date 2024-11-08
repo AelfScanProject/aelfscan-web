@@ -213,7 +213,6 @@ const Transfers = ({ search, searchText, searchType, onSearchChange, onSearchInp
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
-        rowKey="transactionHash"
         total={total}
         showLast={false}
         pageSize={pageSize}

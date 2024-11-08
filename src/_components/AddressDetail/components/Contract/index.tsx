@@ -13,6 +13,10 @@ import { getContractMethods } from '@portkey/contracts';
 import { useEffectOnce } from 'react-use';
 import DynamicForm from '../DynamicForm';
 import './index.css';
+import Link from 'next/link';
+import ContractInfoIcon from 'public/image/contract-info.svg';
+import Image from 'next/image';
+import ContractSuccessIcon from 'public/image/contract-success.svg';
 
 export interface IInputItem {
   name: string;
@@ -31,7 +35,7 @@ export interface IMethod {
 
 export const contractKey = ['ReadContract', 'WriteContract'];
 
-export default function Contract() {
+export default function Contract({ setIsVerify, isVerify }) {
   const isMobile = useMobileAll();
   const { config } = useMobileContext();
   const { chain, address } = useParams<{ chain: TChainID; address: string }>();
@@ -94,7 +98,6 @@ export default function Contract() {
     const { readMethods, writeMethods } = await transferMethods(methods);
     setWriteMethods(writeMethods);
     setReadMethods(readMethods);
-    console.log(methods, 'methods', readMethods, writeMethods);
   }, [RPC_URL, address, aelfInstance, transferMethods]);
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -103,11 +106,14 @@ export default function Contract() {
         chainId: chain,
         address: getAddress(address),
       });
+
       setContractInfo(data);
+
+      setIsVerify(data.isVerify);
     } finally {
       setLoading(false);
     }
-  }, [address, chain]);
+  }, [address, chain, setIsVerify]);
 
   const searchParams = useSearchParams();
   const defaultKey = searchParams.get('type');
@@ -125,6 +131,12 @@ export default function Contract() {
         label: 'Code',
         children: (
           <div className="contract-container">
+            {isVerify && (
+              <div className="code-title mb-4 flex items-center gap-1 text-sm font-medium leading-[22px] text-base-100">
+                <Image alt="" src={ContractSuccessIcon} width={16} height={16}></Image>Contract Source Code Verified
+                <span className="font-normal text-base-200">(Exact Match)</span>
+              </div>
+            )}
             <div
               className={clsx(isMobile && 'flex-col', 'contract-header mx-4 flex border-b border-color-divider pb-4')}>
               <div className="list-items mr-4 min-w-[197px] pr-4">
@@ -170,7 +182,7 @@ export default function Contract() {
         ),
       },
     ];
-  }, [address, chain, contract, contractInfo, isMobile, readMethods, writeMethods, activeKey]);
+  }, [isVerify, isMobile, contractInfo, activeKey, readMethods, contract, chain, address, writeMethods]);
 
   useEffect(() => {
     fetchData();
@@ -186,6 +198,24 @@ export default function Contract() {
     </div>
   ) : (
     <div className="contract-container px-4">
+      {!isVerify && (
+        <div className="title mb-2 flex items-start   gap-1 text-sm font-medium leading-[22px] text-base-100 min-[769px]:items-center">
+          <Image
+            alt=""
+            className="mt-[3px] align-middle min-[769px]:mt-0"
+            src={ContractInfoIcon}
+            width={16}
+            height={16}
+          />
+          <span className="inline-block">
+            Are you the contract creator?{' '}
+            <Link className="!inline" href={`/${chain}/source-code/${address}`}>
+              Verify and Publish
+            </Link>{' '}
+            your contract source code today!
+          </span>
+        </div>
+      )}
       <div className="pb-5">
         <ul className="contract-button-container flex gap-[9px]">
           {items.map((item) => {

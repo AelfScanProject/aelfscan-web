@@ -607,3 +607,10 @@ export interface ITopTokensItem {
   transfers: number;
   holder: number;
 }
+
+export interface IUploadContractCode extends RequestInit {
+  chainId: string;
+  contractAddress: string;
+  csprojPath: string;
+  dotnetVersion: string;
+}

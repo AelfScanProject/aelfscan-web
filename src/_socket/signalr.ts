@@ -42,10 +42,8 @@ export default class SignalR {
 
   initAndStart = () => {
     this.connection?.onclose((err) => {
-      console.log('signalR---onclose', err);
       if (this.retryCount < this.maxRetryCount) {
         this.retryCount++;
-        console.log(`Retrying to connect... Attempt ${this.retryCount}`);
         this.initAndStart();
       } else {
         console.log('Max retry attempts reached.');
@@ -57,10 +55,8 @@ export default class SignalR {
     });
 
     this.connection?.onreconnected(() => {
-      console.log('signalR---onreconnected');
       this.retryCount = 0;
     });
-    console.log('signalR---initAndStart');
     this.listen();
 
     return new Promise((resolve, reject) => {
