@@ -12,14 +12,14 @@ import { RefObject, useEffect, useMemo, useState } from 'react';
 import animateScrollTo from 'animated-scroll-to';
 import { useDebounce } from 'react-use';
 import { fetchSearchData } from '@_api/fetchSearch';
-import { useAppSelector } from '@_store';
-import { TChainID } from '@_api/type';
 import { getAddress, getChainId } from '@_utils/formatter';
+import { useCurrentPageChain } from './useSelectChain';
 export const useUpdateDataByQuery = () => {
   const { state, dispatch } = useSearchContext();
   const { query, filterType } = state;
   const [loading, setLoading] = useState<boolean>(false);
-  const { defaultChain } = useAppSelector((state) => state.getChainId);
+  const [searchChain, setSearchChain] = useState<string>('');
+  const defaultChain = useCurrentPageChain();
   useDebounce(
     () => {
       if (!query) {
@@ -58,6 +58,7 @@ export const useUpdateDataByQuery = () => {
         };
         const res = await fetchSearchData(params);
         const result = formatData(res);
+        setSearchChain(defaultChain);
         setLoading(false);
         dispatch(setQueryResult(result));
       };
@@ -77,8 +78,9 @@ export const useUpdateDataByQuery = () => {
   return useMemo(() => {
     return {
       loading,
+      searchChain,
     };
-  }, [loading]);
+  }, [loading, searchChain]);
 };
 
 export const useSelected = (selectedItem: Partial<TSingle>, inputRef: RefObject<HTMLInputElement>) => {

@@ -95,6 +95,7 @@ export type TSearchValidator = Array<TValidator>;
 export type TSearchPanelProps = {
   id: string;
   loading: boolean;
+  defaultChain: string;
   searchHandler: () => void;
   children?: ReactNode;
 };

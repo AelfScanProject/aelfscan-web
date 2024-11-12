@@ -10,7 +10,7 @@ import { useKeyEvent } from '@_hooks/useSearch';
 import { useThrottleFn } from 'ahooks';
 import IconFont from '@_components/IconFont';
 import { Spin } from 'antd';
-function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
+function Panel({ id, searchHandler, children, loading, defaultChain }: TSearchPanelProps) {
   // Global state from context
   const { state } = useSearchContext();
   const { query, queryResultData } = state;
@@ -100,6 +100,7 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
                 key={`item${'transaction'}`}
                 searchType={'transaction' as TType}
                 index={1}
+                defaultChain={defaultChain}
                 item={dataWithOrderIdx?.transaction}
               />
             </div>
@@ -151,6 +152,7 @@ function Panel({ id, searchHandler, children, loading }: TSearchPanelProps) {
                   {searchData.map((item: Partial<TSingle>, index: number) => (
                     <Item
                       key={`item${index}`}
+                      defaultChain={defaultChain}
                       searchType={searchType as TType}
                       index={item.sortIdx as number}
                       item={item}

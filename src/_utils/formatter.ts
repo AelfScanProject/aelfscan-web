@@ -189,6 +189,9 @@ export function getOrCreateUserId() {
 }
 
 export const getChainId = (chainId: string): TChainID => {
+  if (!chainId) {
+    return '';
+  }
   return (chainId === MULTI_CHAIN ? '' : chainId) as TChainID;
 };
 export const getChartOptions = ({

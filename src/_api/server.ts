@@ -56,6 +56,8 @@ async function service(url: string, options: RequestWithParams) {
     }
   }
 
+  console.log(url, 'url');
+
   try {
     const response = await fetch(url, {
       ...options,

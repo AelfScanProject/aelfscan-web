@@ -17,8 +17,7 @@ import { useSearchContext } from './SearchProvider';
 import { setQuery, setClear } from './action';
 import { Button } from 'aelf-design';
 import IconFont from '@_components/IconFont';
-import { useAppSelector } from '@_store';
-import { IPageAdsDetail, TChainID } from '@_api/type';
+import { IPageAdsDetail } from '@_api/type';
 import { fetchAdsDetail, fetchSearchData } from '@_api/fetchSearch';
 import { useRouter } from 'next/navigation';
 import addressFormat from '@_utils/urlUtils';
@@ -27,6 +26,7 @@ import { AdTracker } from '@_utils/ad';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useDebounceFn } from 'ahooks';
+import { useCurrentPageChain } from '@_hooks/useSelectChain';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -49,7 +49,9 @@ const Search = ({
 
   // Component state
   const [hasFocus, setHasFocus] = useState<boolean>(false);
-  const { defaultChain } = useAppSelector((state) => state.getChainId);
+  // const { defaultChain } = useAppSelector((state) => state.getChainId);
+  // const defaultChain = useCurrentPageChain();
+
   // DOM references
   const queryInput = useRef<HTMLInputElement>(null);
   const { dataWithOrderIdx } = queryResultData;
@@ -73,7 +75,7 @@ const Search = ({
   const hasClearButton = !!query && deleteIcon;
   const hasEnterButton = !!query && enterIcon;
 
-  const { loading } = useUpdateDataByQuery();
+  const { loading, searchChain: defaultChain } = useUpdateDataByQuery();
   useSelected(selectedItem, queryInput);
   // useHighlight(highLight, queryInput);
 
@@ -207,7 +209,7 @@ const Search = ({
       </div>
       {renderButton()}
       {isExpanded && (
-        <Panel id={randomId()} loading={loading} searchHandler={onSearchHandler}>
+        <Panel id={randomId()} loading={loading} defaultChain={defaultChain} searchHandler={onSearchHandler}>
           {adsDetail?.adsId && (
             <div className={`flex border-b border-solid border-color-divider p-4`}>
               <div className="text-sm font-medium leading-[22px] text-base-100">

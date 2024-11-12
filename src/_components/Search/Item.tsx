@@ -4,7 +4,6 @@ import { TSingle, TType } from './type';
 import clsx from 'clsx';
 import IconFont from '@_components/IconFont';
 import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
-import { useAppSelector } from '@_store';
 import EPTooltip from '@_components/EPToolTip';
 import addressFormat from '@_utils/urlUtils';
 import Link from 'next/link';
@@ -12,11 +11,20 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import BasicTag from '@_components/BasicTag';
 
-const Item = ({ index, item, searchType }: { index: number; searchType: TType; item: Partial<TSingle> }) => {
+const Item = ({
+  index,
+  item,
+  searchType,
+  defaultChain,
+}: {
+  index: number;
+  searchType: TType;
+  item: Partial<TSingle>;
+  defaultChain: string;
+}) => {
   const { state, dispatch } = useSearchContext();
   const { highLight } = state;
   const isHighlighted = highLight && index === highLight.idx;
-  const { defaultChain } = useAppSelector((state) => state.getChainId);
   const router = useRouter();
 
   function itemMouseEnterHandler() {

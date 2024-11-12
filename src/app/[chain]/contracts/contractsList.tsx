@@ -13,6 +13,7 @@ import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { usePagination } from '@_hooks/usePagination';
 export default function List({ SSRData, defaultPage, defaultPageSize, defaultChain }) {
+  console.log(SSRData, 'SSRData');
   const isMobile = useMobileAll();
 
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
