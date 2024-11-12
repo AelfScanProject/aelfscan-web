@@ -14,6 +14,7 @@ import { useDebounce } from 'react-use';
 import { fetchSearchData } from '@_api/fetchSearch';
 import { getAddress, getChainId } from '@_utils/formatter';
 import { useCurrentPageChain } from './useSelectChain';
+import { MULTI_CHAIN } from '@_utils/contant';
 export const useUpdateDataByQuery = () => {
   const { state, dispatch } = useSearchContext();
   const { query, filterType } = state;
@@ -58,7 +59,7 @@ export const useUpdateDataByQuery = () => {
         };
         const res = await fetchSearchData(params);
         const result = formatData(res);
-        setSearchChain(defaultChain);
+        setSearchChain(defaultChain || MULTI_CHAIN);
         setLoading(false);
         dispatch(setQueryResult(result));
       };
