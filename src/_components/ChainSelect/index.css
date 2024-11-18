@@ -12,7 +12,7 @@
       }
     }
     .explorer-select-selection-item {
-      @apply text-primary text-sm font-medium !h-[21px] !leading-6 !pr-[21px];
+      @apply text-primary text-sm flex items-center font-medium !h-[21px] !leading-6 !pr-[21px];
     }
 
     &:hover {

@@ -19,10 +19,19 @@
     }
   }
   .explorer-table {
+    @apply !bg-transparent;
+    .explorer-table-content {
+      @apply bg-none bg-transparent;
+
+      background: transparent;
+    }
     .explorer-table-cell {
-      @apply py-3 px-4 bg-white border-none;
+      @apply py-3 px-4 bg-transparent border-none;
 
       box-shadow: 0 -1px 0 0 #e2e8f0 inset;
+    }
+    .explorer-table-row {
+      @apply bg-transparent;
     }
     .explorer-table-cell:first-child {
       @apply pl-4  !important;
@@ -38,7 +47,10 @@
         @apply rounded-none !important;
       }
       .explorer-table-cell {
-        @apply py-3 px-4 text-sm leading-6 bg-white border-none text-foreground font-bold !important;
+        @apply py-3 px-4 text-sm leading-6 bg-transparent border-none text-foreground font-bold !important;
+      }
+      .from_to-col {
+        @apply !px-0;
       }
       .header-top {
         @apply flex items-center !important;
