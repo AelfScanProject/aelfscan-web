@@ -35,13 +35,16 @@
         @apply mr-2;
       }
       .explorer-menu-title-content {
-        @apply text-sm font-medium;
+        @apply text-sm font-medium leading-[48px];
       }
       .submenu-right-arrow {
         svg {
           @apply w-4 h-4;
         }
       }
+    }
+    .explorer-menu-submenu-title {
+      @apply h-full leading-[48px];
     }
   }
 

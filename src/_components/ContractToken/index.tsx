@@ -56,7 +56,7 @@ export default function ContractToken({
       '-'
     )
   ) : name ? (
-    <div className="address w-full truncate">
+    <div className="address flex w-full truncate">
       <EPTooltip mode="dark" title="Contract">
         <IconFont className="mr-1 text-base" type="ContractIcon" />
       </EPTooltip>
@@ -69,7 +69,10 @@ export default function ContractToken({
         }
         mode="dark"
         pointAtCenter={false}>
-        <Link prefetch={false} className="" href={`/${MULTI_CHAIN}/address/${addressFormat(address, showChain)}`}>
+        <Link
+          prefetch={false}
+          className="max-w-full truncate"
+          href={`/${MULTI_CHAIN}/address/${addressFormat(address, showChain)}`}>
           {name}
         </Link>
       </EPTooltip>

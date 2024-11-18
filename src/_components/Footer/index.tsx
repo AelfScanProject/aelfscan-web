@@ -48,13 +48,13 @@ export default function Footer({ footerMenuList }: IProps) {
               <Image width={20} height={20} src="/image/X.svg" alt="twitter"></Image>
             </a>
             <a href="https://t.me/aelfblockchain" target="_blank" rel="noopener noreferrer">
-              <Image width={20} height={20} src="/image/Telegram.svg" alt="telegram"></Image>
+              <Image width={20} height={20} src="/image/telegram.svg" alt="telegram"></Image>
             </a>
             <a href="https://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
-              <Image width={20} height={14.2} src="/image/Youtube.svg" alt="youtube"></Image>
+              <Image width={20} height={14.2} src="/image/youtube.svg" alt="youtube"></Image>
             </a>
             <a href="https://discord.gg/bgysa9xjvD" target="_blank" rel="noopener noreferrer">
-              <Image width={20} height={20} src="/image/Discord.svg" alt="discord"></Image>
+              <Image width={20} height={20} src="/image/discord.svg" alt="discord"></Image>
             </a>
           </div>
           <BackToTopButton isDark={true}></BackToTopButton>

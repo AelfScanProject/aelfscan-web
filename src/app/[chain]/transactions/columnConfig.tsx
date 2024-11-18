@@ -27,8 +27,9 @@ const renderContractToken = (data, records, chainId) => (
   <ContractToken
     address={data.address}
     name={data.name}
-    chainId={(records?.chainIds && records?.chainIds[0]) || chainId}
+    chainIds={records?.chainIds && records?.chainIds.length > 0 ? records?.chainIds : [chainId]}
     type={data.addressType}
+    showChainId={false}
   />
 );
 
@@ -106,9 +107,10 @@ const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId) =>
     },
     {
       title: '',
-      width: 40,
+      width: '24px',
       dataIndex: '',
       key: 'from_to',
+      className: 'from_to-col',
       render: () => <IconFont className="text-[24px]" type="From-To" />,
     },
     {
