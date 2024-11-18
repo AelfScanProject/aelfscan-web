@@ -103,9 +103,8 @@ export default function List({
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
       type: 'tx',
-      chainId: chain as string,
     });
-  }, [chain, timeFormat]);
+  }, [timeFormat]);
 
   const multiTitle = useMemo(() => {
     return `More than > ${total} transactions found`;

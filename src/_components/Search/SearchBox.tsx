@@ -20,13 +20,12 @@ import IconFont from '@_components/IconFont';
 import { IPageAdsDetail } from '@_api/type';
 import { fetchAdsDetail, fetchSearchData } from '@_api/fetchSearch';
 import { useRouter } from 'next/navigation';
-import addressFormat from '@_utils/urlUtils';
 import { getAddress, getChainId } from '@_utils/formatter';
 import { AdTracker } from '@_utils/ad';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useDebounceFn } from 'ahooks';
-import { useCurrentPageChain } from '@_hooks/useSelectChain';
+import { MULTI_CHAIN } from '@_utils/contant';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -75,7 +74,7 @@ const Search = ({
   const hasClearButton = !!query && deleteIcon;
   const hasEnterButton = !!query && enterIcon;
 
-  const { loading, searchChain: defaultChain } = useUpdateDataByQuery();
+  const { loading } = useUpdateDataByQuery();
   useSelected(selectedItem, queryInput);
   // useHighlight(highLight, queryInput);
 
@@ -95,34 +94,32 @@ const Search = ({
     } else {
       const params = {
         filterType: filterType?.filterType,
-        chainId: getChainId(defaultChain || ''),
+        chainId: getChainId(MULTI_CHAIN || ''),
         keyword: getAddress(query.trim()),
         searchType: 0,
       };
       const res = await fetchSearchData(params);
       const { tokens, nfts, accounts, contracts, blocks } = res;
       if (tokens.length) {
-        router.push(`/${defaultChain}/token/${tokens[0].symbol}`);
+        router.push(`/${MULTI_CHAIN}/token/${tokens[0].symbol}`);
       } else if (nfts.length) {
         if (nfts[0]?.type === 2) {
           // collection
-          router.push(`/nft?chainId=${defaultChain}&&collectionSymbol=${nfts[0].symbol}`);
+          router.push(`/nft?chainId=${MULTI_CHAIN}&&collectionSymbol=${nfts[0].symbol}`);
         } else {
-          return `/nftItem?chainId=${defaultChain}&&itemSymbol=${nfts[0].symbol}`;
+          return `/nftItem?chainId=${MULTI_CHAIN}&&itemSymbol=${nfts[0].symbol}`;
         }
       } else if (accounts.length) {
-        router.push(`/${defaultChain}/address/${addressFormat((accounts[0].address as string) || '', defaultChain)}`);
+        router.push(`/${MULTI_CHAIN}/address/${accounts[0].address}`);
       } else if (contracts.length) {
-        router.push(
-          `/${contracts[0]?.chainIds && contracts[0]?.chainIds[0]}/address/${addressFormat(contracts[0].address || '', defaultChain)}`,
-        );
+        router.push(`/${MULTI_CHAIN}/address/${contracts[0].address}`);
       } else if (blocks.length) {
         router.push(`/${blocks[0]?.chainIds && blocks[0]?.chainIds[0]}/block/${blocks[0].blockHeight}`);
       } else {
-        router.push(`/${defaultChain}/search/${query.trim()}`);
+        router.push(`/${MULTI_CHAIN}/search/${query.trim()}`);
       }
     }
-  }, [dataWithOrderIdx, defaultChain, filterType, query, router]);
+  }, [dataWithOrderIdx, filterType, query, router]);
 
   const keyDown = useCallback(
     (e) => {
@@ -173,15 +170,17 @@ const Search = ({
     <div
       className={clsx('searchbox-wrap', searchWrapClassNames, lightMode && 'searchbox-wrap-light')}
       aria-expanded={isExpanded}>
-      <SearchSelect searchValidator={searchValidator} />
-      <div className="search-input-wrap">
+      <div className="h-full">
+        <SearchSelect searchValidator={searchValidator} />
+      </div>
+      <div className={clsx('search-input-wrap', searchInputClassNames, !searchValidator && '!rounded-md')}>
         {searchIcon && (
           <div className="search-input-query-icon">
             <IconFont type="search" />
           </div>
         )}
         <input
-          className={clsx('search-input', searchInputClassNames, isMobile && 'search-input-mobile')}
+          className={clsx('search-input', isMobile && 'search-input-mobile')}
           ref={queryInput}
           placeholder={placeholder}
           onFocus={() => {
@@ -209,26 +208,30 @@ const Search = ({
       </div>
       {renderButton()}
       {isExpanded && (
-        <Panel id={randomId()} loading={loading} defaultChain={defaultChain} searchHandler={onSearchHandler}>
+        <Panel
+          id={randomId()}
+          loading={loading}
+          classNames={`${searchButton && '!w-[calc(100%-48px)]'}`}
+          searchHandler={onSearchHandler}>
           {adsDetail?.adsId && (
-            <div className={`flex border-b border-solid border-color-divider p-4`}>
+            <div className={`flex border-b border-solid border-white p-4 ${query && '!border-border'}`}>
               <div className="text-sm font-medium leading-[22px] text-base-100">
                 <Image
                   src={adsDetail.logo}
-                  width={24}
-                  height={24}
-                  className="mr-2 inline-block size-6 rounded-full"
+                  width={20}
+                  height={20}
+                  className="mr-2 inline-block size-5 rounded-full"
                   alt=""
                 />
                 <a
-                  className="mr-2 text-sm font-medium leading-[22px] !text-base-100"
+                  className="mr-2 text-sm font-medium !text-muted-foreground"
                   href={adsDetail.clickLink}
                   target="_blank"
                   onMouseDown={handleJump}
                   rel="noreferrer">
                   {adsDetail.adsText}
                 </a>
-                <span className="inline-block rounded bg-ECEEF2 px-2 text-xs  font-medium leading-5 text-base-100">
+                <span className="inline-block rounded bg-secondary px-1 py-[2px] text-xs text-secondary-foreground">
                   Sponsored
                 </span>
               </div>

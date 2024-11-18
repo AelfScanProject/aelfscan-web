@@ -48,8 +48,8 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultCha
   );
 
   const columns = useMemo<ColumnsType<IContractDataItem>>(() => {
-    return getColumns(chain);
-  }, [chain]);
+    return getColumns();
+  }, []);
 
   const { pageChange, pageSizeChange, chainChange } = usePagination({
     setCurrentPage,

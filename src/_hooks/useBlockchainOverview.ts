@@ -9,7 +9,7 @@ interface IIntervalData {
   overviewLoading: boolean;
   BlockchainOverview: IBlockchainOverviewResponse | undefined;
 }
-const useBlockchainOverview = (chain: TChainID) => {
+const useBlockchainOverview = () => {
   const [BlockchainOverview, setBlockchainOverview] = useState<IBlockchainOverviewResponse>();
   const [overviewLoading, setOverviewLoading] = useState<boolean>(true);
 
@@ -33,9 +33,9 @@ const useBlockchainOverview = (chain: TChainID) => {
   }, [BlockchainOverview, overviewLoading]);
 
   useEffect(() => {
-    const selectChain = chain === MULTI_CHAIN ? '' : chain;
+    const selectChain = '';
     function fetchAndReceiveWs() {
-      if (!socket || !chain) {
+      if (!socket) {
         return;
       }
       socket.registerHandler('ReceiveBlockchainOverview', (data) => {
@@ -53,7 +53,7 @@ const useBlockchainOverview = (chain: TChainID) => {
       socket?.sendEvent('UnsubscribeBlockchainOverview', { chainId: selectChain });
       socket?.destroy();
     };
-  }, [chain, socket]);
+  }, [socket]);
 
   return data;
 };

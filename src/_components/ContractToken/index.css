@@ -1,0 +1,28 @@
+.multiChain-drop {
+  .explorer-dropdown-menu {
+    @apply !p-0 border border-border;
+    .explorer-dropdown-menu-item {
+      @apply !p-0;
+    }
+    .explorer-dropdown-menu-title-content {
+      @apply w-full;
+    }
+  }
+}
+
+.multiChain-drop-container {
+  .explorer-dropdown-open {
+    svg {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.qr-code-modal {
+  .explorer-modal-title {
+    @apply text-lg text-foreground font-semibold;
+  }
+  .explorer-modal-header {
+    @apply mb-6;
+  }
+}

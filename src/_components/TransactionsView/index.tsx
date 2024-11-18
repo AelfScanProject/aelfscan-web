@@ -12,7 +12,7 @@ export default function TransactionsView({ record, custom = false }) {
     return (
       <div className="preview-view">
         <div className="header flex items-center justify-between p-2">
-          <div className="title text-sm leading-[22px] text-base-100">Preview</div>
+          <div className="title text-sm leading-[22px] ">Preview</div>
           <div className="more text-xs leading-5">
             <Link className="inline-block text-xs leading-5" href={`/${chain}/tx/${record.transactionId}`}>
               See More Details
@@ -26,7 +26,7 @@ export default function TransactionsView({ record, custom = false }) {
           </div>
           <div className="fee">
             <div className="label">Transaction Fee :</div>
-            <div className="value text-xs leading-5 text-base-100">
+            <div className="value text-xs leading-5 ">
               {!custom ? (
                 <span>{record.transactionFee ? addSymbol(divDecimals(record.transactionFee)) : '--'}</span>
               ) : (
@@ -50,7 +50,7 @@ export default function TransactionsView({ record, custom = false }) {
       trigger="click"
       pointAtCenter={false}>
       <div tabIndex={0} className="transaction-view">
-        <IconFont type="view" />
+        <IconFont type="eye" />
       </div>
     </EPTooltip>
   );

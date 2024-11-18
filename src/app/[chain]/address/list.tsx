@@ -31,10 +31,9 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
   const [totalBalance, setTotalBalance] = useState<number>(SSRData.totalBalance);
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
 
-  const [selectChain, setSelectChain] = useState(defaultChain);
+  const [selectChain, setSelectChain] = useState(defaultChain || MULTI_CHAIN);
 
   const updateQueryParams = useUpdateQueryParams();
-  const { chain } = useParams<{ chain: TChainID }>();
   const fetchData = useCallback(
     async (page, size, data, pageType, chain) => {
       const sort = getSort(pageType, page);
@@ -63,22 +62,13 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
     [updateQueryParams],
   );
 
-  const multi = useMultiChain();
-
   const multiTitle = useMemo(() => {
-    if (multi) {
-      return `Displaying only the top 10,000 accounts (${totalBalance} ELF)`;
-    } else {
-      return `A total of ${thousandsNumber(total)} accounts found (${totalBalance} ELF)`;
-    }
-  }, [multi, total, totalBalance]);
+    return `Showing the top ${thousandsNumber(total)} accounts (${thousandsNumber(totalBalance)} ELF)`;
+  }, [total, totalBalance]);
 
-  const multiTitleDesc = useMemo(() => {
-    return '(Showing the top 10,000 accounts only)';
-  }, []);
   const columns = useMemo<ColumnsType<IAccountsItem>>(() => {
-    return getColumns(currentPage, pageSize, chain);
-  }, [currentPage, pageSize, chain]);
+    return getColumns(currentPage, pageSize);
+  }, [currentPage, pageSize]);
 
   const pageChange = (page: number) => {
     let pageType;
@@ -101,6 +91,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
   };
 
   const chainChange = (value: string) => {
+    console.log(value, 'value');
     setSelectChain(value);
     setCurrentPage(1);
     setPageType(PageTypeEnum.NEXT);
@@ -112,12 +103,11 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
       <HeadTitle content="Top Accounts by ELF Balance" adPage="topaccount"></HeadTitle>
       <Table
         headerTitle={{
-          multi: {
+          single: {
             title: multiTitle,
-            desc: total > 10000 ? multiTitleDesc : '',
           },
         }}
-        showMultiChain={chain === MULTI_CHAIN}
+        showMultiChain={true}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

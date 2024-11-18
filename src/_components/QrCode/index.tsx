@@ -9,8 +9,8 @@ export default function QrCode({ value }) {
       <QRCode
         value={value}
         style={{
-          height: 148,
-          width: 148,
+          height: 235,
+          width: 235,
         }}
       />
       <p className="code-txt">{value}</p>

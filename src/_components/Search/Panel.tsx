@@ -10,7 +10,7 @@ import { useKeyEvent } from '@_hooks/useSearch';
 import { useThrottleFn } from 'ahooks';
 import IconFont from '@_components/IconFont';
 import { Spin } from 'antd';
-function Panel({ id, searchHandler, children, loading, defaultChain }: TSearchPanelProps) {
+function Panel({ id, searchHandler, children, loading, classNames }: TSearchPanelProps) {
   // Global state from context
   const { state } = useSearchContext();
   const { query, queryResultData } = state;
@@ -90,7 +90,7 @@ function Panel({ id, searchHandler, children, loading, defaultChain }: TSearchPa
 
   if (dataWithOrderIdx?.transaction && query) {
     return (
-      <div className="search-result-panel">
+      <div className={clsx('search-result-panel', classNames)}>
         <div>{children}</div>
         <Spin spinning={loading}>
           <ul className="search-result-ul">
@@ -100,7 +100,6 @@ function Panel({ id, searchHandler, children, loading, defaultChain }: TSearchPa
                 key={`item${'transaction'}`}
                 searchType={'transaction' as TType}
                 index={1}
-                defaultChain={defaultChain}
                 item={dataWithOrderIdx?.transaction}
               />
             </div>
@@ -112,7 +111,7 @@ function Panel({ id, searchHandler, children, loading, defaultChain }: TSearchPa
 
   if (allList.length === 0 && !loading) {
     return (
-      <div className="search-result-panel">
+      <div className={clsx('search-result-panel', classNames)}>
         <div>{children}</div>
         {query && !dataWithOrderIdx?.transaction && (
           <div className="search-result-empty">
@@ -125,20 +124,20 @@ function Panel({ id, searchHandler, children, loading, defaultChain }: TSearchPa
   }
 
   return (
-    <div id={id} className="search-result-panel">
+    <div id={id} className={clsx('search-result-panel', classNames)}>
       <div>{children}</div>
       {query && (
         <Spin spinning={loading}>
           <div className="border-b border-color-divider">
-            <div className="flex gap-2 p-4">
+            <div className="flex gap-2 overflow-auto p-4">
               {previewData.map(([searchType, list], idx) => {
                 return (
                   <div
                     className={clsx('search-result-panel-anchor', activeTabIdx === idx && 'selected')}
                     key={searchType + idx}
                     onMouseDown={(e) => tabMouseDownHandler(e, idx)}>
-                    <span>{searchType}</span>
-                    <span>{`(${list?.length})`}</span>
+                    <span className="text-xs">{searchType}</span>
+                    <span className="text-xs">{`(${list?.length})`}</span>
                   </div>
                 );
               })}
@@ -152,7 +151,6 @@ function Panel({ id, searchHandler, children, loading, defaultChain }: TSearchPa
                   {searchData.map((item: Partial<TSingle>, index: number) => (
                     <Item
                       key={`item${index}`}
-                      defaultChain={defaultChain}
                       searchType={searchType as TType}
                       index={item.sortIdx as number}
                       item={item}

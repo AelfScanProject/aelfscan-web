@@ -14,26 +14,31 @@ export default function ExtensionInfo({ data }: { data: IBlocksDetailData }) {
     return [
       {
         label: 'Hash ',
+        ellipsis: true,
         tip: 'The hash of the block header of the current block.',
         value: data.blockHash,
       },
       {
         label: 'Previous Hash ',
+        ellipsis: true,
         tip: 'The hash of the block after which this block was generated, also known as its previous block.',
-        value: <span className="text-link">{data.previousBlockHash}</span>,
+        value: <span className="text-primary">{data.previousBlockHash}</span>,
       },
       {
         label: 'Merkle Tree Root OF Transactions ',
+        ellipsis: true,
         tip: 'The merkle root of the transaction data.',
         value: data.merkleTreeRootOfTransactions,
       },
       {
         label: 'Merkle Tree Root OF World State ',
+        ellipsis: true,
         tip: 'The merkle root of the transaction result.',
         value: data.merkleTreeRootOfWorldState,
       },
       {
         label: 'Merkle Tree Root OF Transaction State ',
+        ellipsis: true,
         tip: 'The merkle root of the transaction state.',
         value: data.merkleTreeRootOfTransactionState,
       },

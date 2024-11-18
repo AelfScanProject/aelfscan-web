@@ -1,6 +1,6 @@
 import { fetchServerBlocks } from '@_api/fetchBlocks';
 import BlockList from './blockList';
-import { getChainId, getPageNumber } from '@_utils/formatter';
+import { getPageNumber } from '@_utils/formatter';
 import { TablePageSize } from '@_types/common';
 
 export default async function BlocksPage({ params, searchParams }) {
@@ -8,7 +8,7 @@ export default async function BlocksPage({ params, searchParams }) {
   const ps = searchParams['ps'] || TablePageSize.mini;
   const defaultChain = searchParams['chain'] || params.chain;
   const data = await fetchServerBlocks({
-    chainId: getChainId(defaultChain),
+    chainId: '',
     maxResultCount: ps,
     skipCount: getPageNumber(Number(p), ps),
     cache: 'no-store',

@@ -1,7 +1,7 @@
 import EPSearch from '@_components/EPSearch';
 import IconFont from '@_components/IconFont';
 import { isReactNode } from '@_utils/typeUtils';
-import { ISearchProps, ITableProps, Pagination, Table } from 'aelf-design';
+import { ISearchProps, ITableProps, Table } from 'aelf-design';
 import { SortOrder } from 'antd/es/table/interface';
 import clsx from 'clsx';
 import React, { ReactNode, useMemo } from 'react';
@@ -10,7 +10,8 @@ import './index.css';
 import EPTooltip from '@_components/EPToolTip';
 import MultiChainSelect from '@_components/ChainSelect/multiCain';
 import { SelectProps } from 'antd';
-import { usePad } from '@_hooks/useResponsive';
+import { useMD, usePad } from '@_hooks/useResponsive';
+import Pagination from './pagination';
 
 export interface ITableSearch extends Omit<ISearchProps, 'onPressEnter'> {
   value?: string;
@@ -35,6 +36,7 @@ export interface ICommonTableProps<T> extends ITableProps<T> {
   pageSize?: number;
   isMobile?: boolean;
   showTopSearch?: boolean;
+  bordered?: boolean;
   hiddenPagination?: boolean;
   hiddenTitle?: boolean;
   headerTitle?: IHeaderTitleProps | ReactNode;
@@ -75,15 +77,15 @@ function HeaderTitle(props: IHeaderTitleProps): ReactNode {
   if (props.multi) {
     return (
       <>
-        <div className="total-text text-sm font-normal leading-22 text-base-100">{props.multi.title}</div>
-        <div className="bottom-text max-w-[600px] text-xs font-normal leading-5 text-base-200">{props.multi.desc}</div>
+        <div className="total-text text-sm font-medium text-foreground">{props.multi.title}</div>
+        <div className="bottom-text max-w-[600px] text-xs font-normal text-muted-foreground">{props.multi.desc}</div>
       </>
     );
   } else {
     return (
-      <div className="single align-center flex">
-        <IconFont className="text-xs" type="Rank" />
-        <div className="total-tex ml-1 text-sm font-normal leading-22  text-base-100">{props.single?.title}</div>
+      <div className="single align-center flex ">
+        {/* <IconFont className="text-xs" type="Rank" /> */}
+        <div className="ml-1 text-sm font-medium text-foreground">{props.single?.title}</div>
       </div>
     );
   }
@@ -107,6 +109,7 @@ export default function TableApp({
   showLast = true,
   hideOnSinglePage,
   emptyText,
+  bordered = true,
   headerLeftNode,
   MultiChainSelectProps = {},
   ...params
@@ -120,13 +123,15 @@ export default function TableApp({
 
   const isPad = usePad();
 
+  const isMd = useMD();
   return (
-    <div className={clsx('ep-table rounded-lg bg-white shadow-table', !showLast && 'ep-table-hidden-page')}>
+    <div className={clsx('ep-table', !showLast && 'ep-table-hidden-page')}>
       <div
         className={clsx(
           'ep-table-header',
-          showTopSearch ? 'py-4' : 'p-4',
-          `ep-table-header-${isPad ? 'mobile' : 'pc'}`,
+          !bordered && 'px-4',
+          showTopSearch ? 'py-4' : 'pb-4 pt-3',
+          `ep-table-header-${isMd ? 'mobile' : 'pc'}`,
         )}>
         <div className="header-left mr-4 flex flex-1 flex-col justify-between lg:flex-row lg:items-center">
           {!hiddenTitle && <div>{isReactNode(headerTitle) ? headerTitle : <HeaderTitle {...headerTitle} />}</div>}
@@ -173,6 +178,7 @@ export default function TableApp({
                 defaultCurrent={defaultCurrent}
                 showSizeChanger={false}
                 showLast={showLast}
+                showPageAndSize={!isMd}
                 hideOnSinglePage={hideOnSinglePage}
                 pageChange={pageChange}
                 pageSizeChange={pageSizeChange}
@@ -181,9 +187,11 @@ export default function TableApp({
           </div>
         )}
       </div>
-      <MemoTable scroll={scroll} locale={locale} {...params} />
+      <div className={clsx('table-container', !bordered && 'table-container-noBorder')}>
+        <MemoTable scroll={scroll} locale={locale} {...params} />
+      </div>
       {!hiddenPagination && (
-        <div className="p-4">
+        <div className={clsx('pt-4', !bordered && 'px-4 pb-4')}>
           <Pagination
             current={pageNum}
             options={options}

@@ -21,7 +21,7 @@ import EPTabs from '@_components/EPTabs';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { IBlocksDetailData, ITransactionsResponseItem, TChainID } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { JumpTypes } from '@_components/JumpButton';
 import { fetchBlocksDetail } from '@_api/fetchBlocks';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
@@ -36,7 +36,7 @@ export default function Detail({ SSRData }) {
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { chain, hash } = useParams();
+  const { chain } = useParams();
   const jump = useCallback(
     async (type: JumpTypes) => {
       let blockHeight;
@@ -66,21 +66,19 @@ export default function Detail({ SSRData }) {
     [chain, detailData],
   );
 
-  console.log(hash, 'hash');
+  console.log(SSRData, 'SSRData');
   const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
     return getColumns({
       timeFormat,
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
-      chainId: chain as string,
       type: 'block',
+      chainId: chain as string,
     });
   }, [chain, timeFormat]);
 
-  const multiTitle = `More than > ${total} transactions found`;
-
-  const multiTitleDesc = `Showing the last 500k records`;
+  const multiTitle = `${total} transactions found`;
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
@@ -91,7 +89,10 @@ export default function Detail({ SSRData }) {
     setPageSize(size);
   };
 
-  const [activeKey, setActiveKey] = useState<string>('');
+  const params = useSearchParams();
+  const tabName = params.get('tab');
+
+  const [activeKey, setActiveKey] = useState<string>(tabName || '');
 
   const tabChange = (key) => {
     setActiveKey(key);
@@ -117,8 +118,6 @@ export default function Detail({ SSRData }) {
       ) : (
         <div className="overview-container pb-4">
           <BaseInfo data={detailData} tabChange={tabChange} jump={jump} />
-          {showMore && <ExtensionInfo data={detailData} />}
-          <MoreContainer showMore={showMore} onChange={moreChange} />
         </div>
       ),
     },
@@ -128,9 +127,8 @@ export default function Detail({ SSRData }) {
       children: (
         <Table
           headerTitle={{
-            multi: {
+            single: {
               title: multiTitle,
-              desc: multiTitleDesc,
             },
           }}
           dataSource={tableData}
@@ -139,6 +137,7 @@ export default function Detail({ SSRData }) {
           options={pageSizeOption}
           rowKey="transactionId"
           total={total}
+          bordered={false}
           loading={loading}
           pageSize={pageSize}
           pageNum={currentPage}
@@ -151,11 +150,17 @@ export default function Detail({ SSRData }) {
   return (
     <div className={clsx('token-detail-container')}>
       <HeadTitle content="Blocks" adPage="blockdetail">
-        <span className="ml-2 block text-sm leading-[22px] text-base-200">#{detailData?.blockHeight}</span>
+        <span className="ml-2 block text-sm text-muted-foreground">#{detailData?.blockHeight}</span>
       </HeadTitle>
 
-      <div className="detail-table">
+      <div className="detail-table mt-3">
         <EPTabs selectKey={activeKey} items={items} onTabChange={tabChange} />
+        {activeKey !== 'transactions' && (
+          <div className="mt-[10px] rounded-lg border border-border bg-white py-3 shadow-card_box">
+            {showMore && <ExtensionInfo data={detailData} />}
+            <MoreContainer showMore={showMore} onChange={moreChange} />
+          </div>
+        )}
       </div>
     </div>
   );

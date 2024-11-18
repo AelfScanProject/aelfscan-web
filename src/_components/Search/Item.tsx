@@ -9,19 +9,9 @@ import addressFormat from '@_utils/urlUtils';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import BasicTag from '@_components/BasicTag';
+import { MULTI_CHAIN } from '@_utils/contant';
 
-const Item = ({
-  index,
-  item,
-  searchType,
-  defaultChain,
-}: {
-  index: number;
-  searchType: TType;
-  item: Partial<TSingle>;
-  defaultChain: string;
-}) => {
+const Item = ({ index, item, searchType }: { index: number; searchType: TType; item: Partial<TSingle> }) => {
   const { state, dispatch } = useSearchContext();
   const { highLight } = state;
   const isHighlighted = highLight && index === highLight.idx;
@@ -40,27 +30,27 @@ const Item = ({
     } else if (searchType === 'nfts') {
       if (item.type === 2) {
         // collection
-        return `/nft/?chainId=${defaultChain}&&collectionSymbol=${item.symbol}`;
+        return `/nft/?chainId=${MULTI_CHAIN}&&collectionSymbol=${item.symbol}`;
       } else {
-        return `/nftItem?chainId=${defaultChain}&&itemSymbol=${item.symbol}`;
+        return `/nftItem?chainId=${MULTI_CHAIN}&&itemSymbol=${item.symbol}`;
       }
     } else if (searchType === 'tokens') {
-      return `/${defaultChain}/token/${item.symbol}`;
+      return `/${MULTI_CHAIN}/token/${item.symbol}`;
     } else if (searchType === 'contracts') {
-      return `/${chainIds && chainIds[0]}/address/${addressFormat(item.address || '', defaultChain)}`;
+      return `/${MULTI_CHAIN}/address/${item.address}`;
     } else if (searchType === 'accounts') {
-      return `/${defaultChain}/address/${addressFormat(item.address || '', defaultChain)}`;
+      return `/${MULTI_CHAIN}/address/${item.address}`;
     }
 
     return '';
-  }, [searchType, item, defaultChain]);
+  }, [searchType, item]);
   function itemMouseDownHandler() {
     dispatch(selectItem(item));
     router.push(url);
   }
 
   return (
-    <Link className="text-base-100" href={url}>
+    <Link href={url}>
       <li
         onMouseDown={itemMouseDownHandler}
         onMouseMove={itemMouseEnterHandler}
@@ -71,7 +61,7 @@ const Item = ({
             {item.address && <span className="search-result-ul-item-circle">C</span>}
             <span className="size-6">
               <TokenImage
-                className="!rounded"
+                className="!rounded-[50%] !border-border"
                 token={{
                   symbol: item.symbol,
                   imageUrl: item.image,
@@ -79,32 +69,31 @@ const Item = ({
               />
             </span>
             <EPTooltip mode="dark" title={item.name}>
-              <span>{item.name && item.name?.length > 10 ? item.name?.slice(0, 10) + '...' : item.name}</span>
+              <span className="inline-block w-full flex-1 truncate text-sm text-foreground">{item.name}</span>
             </EPTooltip>
-            <span className="search-result-ul-item-gray">({item.symbol})</span>
+            <span className="search-result-ul-item-gray ">({item.symbol})</span>
             <span className="search-result-ul-item-button">
               <span>$</span>
               <span>{item.price || 0.0}</span>
             </span>
           </div>
         ) : searchType === 'contracts' ? (
-          <div className="flex-1 flex-col">
-            <div className="leading-20">Name : {item.name || 'Unknown'}</div>
-            <div className="search-result-ul-item-gray leading-20">
-              <IconFont type="Contract" className="mr-1 size-3" />
-              <span>{addressFormat(item.address || '', defaultChain)}</span>
+          <div className="flex-1 flex-col truncate">
+            <div className="text-sm text-foreground">Name : {item.name || 'Unknown'}</div>
+            <div className="search-result-ul-item-gray w-full flex-1 truncate leading-20">
+              <IconFont type="ContractIcon" className="mr-1 size-4" />
+              <span>{addressFormat(item.address || '', item.chainIds?.sort()[0])}</span>
             </div>
           </div>
         ) : (
-          <div className="max-w-full flex-1 break-words text-sm leading-[22px] text-base-100">
+          <div className="max-w-full flex-1 truncate text-sm text-foreground">
             {searchType === 'transaction'
               ? item?.transactionId
               : searchType === 'blocks'
                 ? item.blockHeight
-                : addressFormat(item.address || '', defaultChain)}
+                : addressFormat(item.address || '', item.chainIds?.sort()[0])}
           </div>
         )}
-        <BasicTag chainIds={item.chainIds || []} />
       </li>
     </Link>
   );

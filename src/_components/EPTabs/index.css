@@ -1,9 +1,14 @@
 .tab-container {
   @apply bg-white rounded-lg;
   .explorer-tabs {
-    @apply bg-white rounded-lg shadow-table;
+    @apply bg-white rounded-lg border border-border shadow-table;
+
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
     .explorer-tabs-tab {
-      @apply py-[14px] px-4 !m-0;
+      @apply py-[14px] px-4 pt-[16px] !m-0;
+    }
+    .explorer-tabs-ink-bar {
+      @apply !bg-primary;
     }
     .explorer-tabs-nav {
       @apply shadow-title_bot;
@@ -15,11 +20,14 @@
       @apply bg-white;
     }
     .explorer-tabs-tab-btn {
-      @apply font-medium text-sm leading-[22px] hover:text-link;
+      @apply font-semibold text-muted-foreground text-sm hover:text-foreground;
+    }
+    .explorer-tabs-nav-wrap {
+      @apply border-border;
     }
     .explorer-tabs-tab-active {
       .explorer-tabs-tab-btn {
-        @apply font-medium text-sm leading-[22px] text-link;
+        @apply font-semibold text-sm text-foreground;
       }
     }
     .explorer-tabs-nav .explorer-tabs-nav-wrap::after {

@@ -4,13 +4,13 @@ import { fetchServerTopAccounts } from '@_api/fetchContact';
 import { TablePageSize } from '@_types/common';
 import { PageTypeEnum } from '@_types';
 
-export default async function AccountsPage({ params, searchParams }) {
+export default async function AccountsPage({ searchParams }) {
   const p = searchParams['p'] || 1;
   const ps = searchParams['ps'] || TablePageSize.mini;
   const defaultPageType = Number(searchParams['pageType'] || PageTypeEnum.NEXT) as unknown as PageTypeEnum;
   const defaultSearchAfter = searchParams['searchAfter'];
   const sort = getSort(defaultPageType, p);
-  const defaultChain = searchParams['chain'] || params.chain;
+  const defaultChain = searchParams['chain'];
   const data = await fetchServerTopAccounts({
     chainId: getChainId(defaultChain),
     maxResultCount: ps,
@@ -27,7 +27,7 @@ export default async function AccountsPage({ params, searchParams }) {
       defaultPage={Number(p)}
       defaultPageSize={Number(ps)}
       defaultPageType={defaultPageType}
-      defaultChain={defaultChain}
+      defaultChain={defaultChain || ''}
     />
   );
 }

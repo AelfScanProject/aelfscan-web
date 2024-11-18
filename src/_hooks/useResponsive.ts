@@ -16,7 +16,7 @@ export default function useResponsive() {
     return width < 993;
   }, [width]);
   const isLG = useMemo(() => {
-    return width < 1024;
+    return width < 1025;
   }, [width]);
   const isXL = useMemo(() => {
     return width < 1280;

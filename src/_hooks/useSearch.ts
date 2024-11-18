@@ -13,14 +13,12 @@ import animateScrollTo from 'animated-scroll-to';
 import { useDebounce } from 'react-use';
 import { fetchSearchData } from '@_api/fetchSearch';
 import { getAddress, getChainId } from '@_utils/formatter';
-import { useCurrentPageChain } from './useSelectChain';
 import { MULTI_CHAIN } from '@_utils/contant';
 export const useUpdateDataByQuery = () => {
   const { state, dispatch } = useSearchContext();
   const { query, filterType } = state;
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchChain, setSearchChain] = useState<string>('');
-  const defaultChain = useCurrentPageChain();
+
   useDebounce(
     () => {
       if (!query) {
@@ -53,13 +51,12 @@ export const useUpdateDataByQuery = () => {
         setLoading(true);
         const params = {
           filterType: filterType?.filterType,
-          chainId: getChainId(defaultChain || ''),
+          chainId: getChainId(MULTI_CHAIN || ''),
           keyword: getAddress(query.trim()),
           searchType: 0,
         };
         const res = await fetchSearchData(params);
         const result = formatData(res);
-        setSearchChain(defaultChain || MULTI_CHAIN);
         setLoading(false);
         dispatch(setQueryResult(result));
       };
@@ -79,9 +76,8 @@ export const useUpdateDataByQuery = () => {
   return useMemo(() => {
     return {
       loading,
-      searchChain,
     };
-  }, [loading, searchChain]);
+  }, [loading]);
 };
 
 export const useSelected = (selectedItem: Partial<TSingle>, inputRef: RefObject<HTMLInputElement>) => {

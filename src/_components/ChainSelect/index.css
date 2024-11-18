@@ -1,15 +1,18 @@
 .chain-select-container {
   @apply py-2;
+  .explorer-select {
+    @apply !w-[108px] !h-[38px];
+  }
   .explorer-select-selector {
-    @apply  !px-2 !py-[5px] h-8 flex justify-center align-middle;
+    @apply  !px-2 !py-[6px] !h-[38px] flex justify-center align-middle !border-border;
     .explorer-select-selection-search {
-      @apply !h-[22px] !text-[14px] !leading-[22px] text-base-100 font-medium;
+      @apply !h-[24px] !text-[14px] !leading-[24px] font-medium;
       input {
-        @apply !h-[22px] !leading-[22px];
+        @apply !h-[24px] !leading-[24px];
       }
     }
     .explorer-select-selection-item {
-      @apply text-base-100 font-medium !h-[22px] !leading-[22px] !pr-[21px];
+      @apply text-primary text-sm font-medium !h-[21px] !leading-6 !pr-[21px];
     }
 
     &:hover {
@@ -17,13 +20,11 @@
     }
   }
   .explorer-select-arrow {
-    svg {
-      @apply text-base-100;
-    }
+    @apply text-base;
   }
   .explorer-select-single.explorer-select-open {
     .explorer-select-selection-item {
-      @apply text-base-100 font-medium;
+      @apply font-medium;
     }
     .explorer-select-selector {
       @apply !bg-[#F7F8FA] !border-[#EAECEF];
@@ -47,7 +48,7 @@
     }
   }
   .explorer-select-item-option-selected {
-    @apply !bg-transparent !font-[400] !text-link;
+    @apply !bg-transparent !font-[400] !text-primary;
   }
   .explorer-select-item-option-active {
     @apply !bg-[#F7F8FA];

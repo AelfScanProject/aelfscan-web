@@ -1,7 +1,10 @@
 .home-container {
   @apply w-full flex align-middle flex-col m-auto;
+  .header-section {
+    @apply h-[56px] w-full flex justify-between items-center px-2 box-border ml-auto mr-auto min-[993px]:min-w-[200px] max-w-[1440px] min-769:px-5;
+  }
   .banner-section {
-    @apply w-full items-start flex justify-start pb-[72px] min-[993px]:pb-12 gap-4 py-10 min-[993px]:min-w-[200px] max-w-[1440px] box-border ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
+    @apply w-full items-start flex justify-start min-[993px]:min-w-[200px] max-w-[1440px] box-border ml-auto mr-auto px-2 min-769:px-5;
     h2 {
       @apply text-left text-[24px] font-bold leading-8 text-white;
     }
@@ -10,7 +13,7 @@
     }
   }
   .latest-all {
-    @apply w-full flex min-[1100px]:flex-row mt-4 gap-4 box-border flex-col flex-wrap min-[1100px]:min-w-[200px] max-w-[1440px] ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
+    @apply w-full flex min-[1100px]:flex-row mt-4 gap-4 box-border flex-col flex-wrap min-[1100px]:min-w-[200px] max-w-[1440px] ml-auto mr-auto px-2 min-769:px-5;
     > .home-latest {
       @apply min-[993px]:w-[50%] flex-1 w-full;
     }
@@ -21,19 +24,32 @@
     }
   }
   .search-section {
-    @apply flex items-center justify-start w-full;
+    @apply flex items-center justify-center w-full;
+  }
+
+  .banner-title {
+    transition: color 0.8s ease-in-out;
   }
 }
 
 .banner-section-container {
-  background-image: url('/image/home-bg-main.png');
+  transition: background-color 0.8s ease-in-out;
+
+  /* background-image: url('/image/home-bg-main.png');
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: cover;
+  background-size: cover; */
 }
 
+.banner-bg {
+  /* @apply !bg-contain min-769:!bg-cover; */
+  background-image: url('/image/home-banner-bg.png');
 
-.banner-section-container-test {
-  background-image: url('/image/home-bg-test.png');
-  background-color: rgb(248 249 250);
+  /* background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; */
+
+  /* background: url('/image/home-bg.png')  cover no-repeat;
+  /* background: url(<path-to-image>) lightgray 50% / contain no-repeat;
+  mix-blend-mode: multiply; */
 }

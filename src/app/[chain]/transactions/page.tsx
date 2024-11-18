@@ -8,7 +8,7 @@
 
 import { fetchServerTransactionList } from '@_api/fetchTransactions';
 import TransactionsList from './list';
-import { getChainId, getSort } from '@_utils/formatter';
+import { getSort } from '@_utils/formatter';
 import { TablePageSize } from '@_types/common';
 import { PageTypeEnum } from '@_types';
 export default async function BlocksPage({ params, searchParams }) {
@@ -20,7 +20,7 @@ export default async function BlocksPage({ params, searchParams }) {
   const defaultSearchAfter = searchParams['searchAfter'];
   const sort = getSort(defaultPageType, p);
   const data = await fetchServerTransactionList({
-    chainId: getChainId(defaultChain),
+    chainId: '',
     searchAfter: defaultSearchAfter && JSON.parse(defaultSearchAfter),
     maxResultCount: ps,
     orderInfos: [

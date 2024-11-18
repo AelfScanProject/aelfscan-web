@@ -1,5 +1,5 @@
 .main-container {
-  @apply  min-[993px]:pt-[104px] pt-[56px] pb-10 min-[993px]:min-w-[200px] max-w-[1440px] box-border ml-auto mr-auto px-4 min-[769px]:px-6 min-[993px]:px-10;
+  @apply min-[993px]:min-w-[200px] max-w-[1440px] box-border ml-auto mr-auto px-2 min-[769px]:px-5;
 
   margin-left: auto;
   margin-right: auto;

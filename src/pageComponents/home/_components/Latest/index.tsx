@@ -3,20 +3,14 @@ import './index.css';
 
 import IconFont from '@_components/IconFont';
 import Link from 'next/link';
-import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
 import clsx from 'clsx';
 import EPTooltip from '@_components/EPToolTip';
 import { IBlocksResponseItem, ITopTokensItem, ITransactionsResponseItem } from '@_api/type';
-import { divDecimals, formatDate, thousandsNumber } from '@_utils/formatter';
-import { useAppSelector } from '@_store';
+import { divDecimals, formatDate } from '@_utils/formatter';
 import ContractToken from '@_components/ContractToken';
 import { useMD } from '@_hooks/useResponsive';
-import { memo, useMemo } from 'react';
-import BasicTag from '@_components/BasicTag';
+import { memo } from 'react';
 import { MULTI_CHAIN } from '@_utils/contant';
-import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
-import TokenTableCell from '@_components/TokenTableCell';
-import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
 
 interface IProps {
   isBlocks: boolean;
@@ -28,20 +22,8 @@ interface IProps {
 
 function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
   const isMD = useMD();
-  const { defaultChain } = useAppSelector((state) => state.getChainId);
-
-  const multi = useMemo(() => {
-    return defaultChain === MULTI_CHAIN;
-  }, [defaultChain]);
   const RewrdInfo = (ele) => {
-    return multi && iconType === 'latest-tokens' ? (
-      <div className="middle">
-        <div>
-          <div className="text-sm text-base-100">{thousandsNumber(ele.holder)}</div>
-          <div className="text-xs text-base-200">Holders</div>
-        </div>
-      </div>
-    ) : (
+    return (
       <span className="button">
         {ele.reward || ele.transactionFee ? (
           <>
@@ -57,150 +39,124 @@ function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
 
   return (
     <div className={clsx(clsPrefix, isMD && `${clsPrefix}-mobile`)}>
-      <div className="title">
-        {title}
-        <EPTooltip title={tips} mode="dark">
-          {multi && <IconFont className="question text-base" type="question-circle" />}
-        </EPTooltip>
-      </div>
+      <div className="title">{title}</div>
       <div className="content">
         {data?.map((ele) => {
-          return (
-            <div className="item" key={ele.transactionId || ele.blockHeight || ele.symbol}>
-              {multi && iconType === 'latest-tokens' ? (
-                <div className="left">
+          return isMD && !isBlocks ? (
+            <div className="flex items-center gap-4 border-b border-border py-4">
+              <div className="flex items-center">
+                <IconFont
+                  className="text-[40px]"
+                  type={ele.chainIds[0] === 'AELF' ? 'mainChainLogo' : 'dappChainLogo'}></IconFont>
+              </div>
+              <div className="text-sm">
+                <EPTooltip title={ele.transactionId} mode="dark" pointAtCenter={false}>
                   <Link
                     prefetch={false}
-                    href={
-                      ele.type === TokenTypeEnum.nft
-                        ? `/nftItem?chainId=${defaultChain}&itemSymbol=${ele.symbol}`
-                        : `/${defaultChain}/token/${ele.symbol}`
-                    }>
-                    <TokenTableCell
-                      token={{
-                        ...ele,
-                        name: ele.tokenName,
-                      }}
-                      subtitle={<BasicTag chainIds={ele.chainIds} />}>
-                      <TokenImage className="!size-7" width="28px" height="28px" token={ele} />
-                    </TokenTableCell>
+                    className="mb-2 hidden w-[140px] truncate !text-primary"
+                    href={`/${ele.chainIds[0]}/tx/${ele.transactionId}`}>
+                    {ele.transactionId}
                   </Link>
+                </EPTooltip>
+                <div className="from mb-1 flex items-center">
+                  <span className="mr-1 font-medium">From:</span>
+                  <ContractToken
+                    address={ele?.from?.address}
+                    showCopy={false}
+                    type={ele.from?.addressType}
+                    name={ele.from?.name}
+                    chainIds={ele.chainIds}
+                  />
                 </div>
-              ) : (
-                <div className="left">
-                  <IconFont type={iconType}></IconFont>
-                  <div className="text">
-                    <span className="height">
-                      {isBlocks ? (
-                        <Link prefetch={false} href={`/${defaultChain}/block/${ele.blockHeight}`}>
-                          {ele.blockHeight}
+                <div className="to mb-1 flex items-center">
+                  <span className="mr-1 font-medium">To:</span>
+                  <ContractToken
+                    address={ele.to?.address}
+                    type={ele.to?.addressType}
+                    name={ele.to?.name}
+                    showCopy={false}
+                    chainIds={ele.chainIds}
+                  />
+                </div>
+                <div className="time mb-2 text-muted-foreground">{formatDate(ele.timestamp, 'Age')}</div>
+                {RewrdInfo(ele)}
+              </div>
+            </div>
+          ) : (
+            <div className="item" key={ele.transactionId || ele.blockHeight || ele.symbol}>
+              <div className="left">
+                <IconFont type={ele.chainIds[0] === 'AELF' ? 'mainChainLogo' : 'dappChainLogo'}></IconFont>
+                <div className="text">
+                  <span className="height">
+                    {isBlocks ? (
+                      <Link prefetch={false} href={`/${ele.chainIds[0]}/block/${ele.blockHeight}`}>
+                        {ele.blockHeight}
+                      </Link>
+                    ) : (
+                      <EPTooltip title={ele.transactionId} mode="dark" pointAtCenter={false}>
+                        <Link
+                          prefetch={false}
+                          className="!text-primary"
+                          href={`/${ele.chainIds[0]}/tx/${ele.transactionId}`}>
+                          {ele.transactionId}
                         </Link>
-                      ) : (
-                        <EPTooltip title={ele.transactionId} mode="dark" pointAtCenter={false}>
-                          <Link prefetch={false} href={`/${ele.chainIds[0]}/tx/${ele.transactionId}`}>
-                            {ele.transactionId}
-                          </Link>
-                        </EPTooltip>
-                      )}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <span className="time">{formatDate(ele.timestamp, 'Age')}</span>
-                      {multi && <BasicTag chainIds={ele.chainIds} />}
-                    </div>
+                      </EPTooltip>
+                    )}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className="time">{formatDate(ele.timestamp, 'Age')}</span>
                   </div>
+                </div>
+              </div>
+
+              {isBlocks ? null : (
+                <div className={clsx('middle')}>
+                  <span className="from">
+                    <span className="mr-1 font-medium">From:</span>
+                    <ContractToken
+                      address={ele?.from?.address}
+                      showCopy={false}
+                      type={ele.from?.addressType}
+                      name={ele.from?.name}
+                      chainIds={ele.chainIds}
+                    />
+                  </span>
+                  <span className="to">
+                    <span className="mr-1 font-medium">To:</span>
+                    <ContractToken
+                      address={ele.to?.address}
+                      type={ele.to?.addressType}
+                      name={ele.to?.name}
+                      showCopy={false}
+                      chainIds={ele.chainIds}
+                    />
+                    {isMD && RewrdInfo(ele)}
+                  </span>
                 </div>
               )}
-              {multi && iconType === 'latest-tokens' ? (
-                isMD ? (
-                  <div className="mt-1 flex w-full items-center">
-                    <div className="flex flex-1 items-center gap-2">
-                      <div className="text-xs text-base-200">Transfers</div>
-                      <div className="text-sm text-base-100">{thousandsNumber(ele.transfers)}</div>
-                    </div>
-                    <div className="flex flex-1 items-center gap-2">
-                      <div className="text-xs text-base-200">Holders</div>
-                      <div className="text-sm text-base-100">{thousandsNumber(ele.holder)}</div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="middle !flex-row !items-start !justify-start">
-                    <div>
-                      <div className="text-sm text-base-100">{thousandsNumber(ele.transfers)}</div>
-                      <div className="text-xs text-base-200">Transfers</div>
-                    </div>
-                  </div>
-                )
-              ) : (
-                <div className="middle">
+
+              {(!isMD || isBlocks) && (
+                <div className={clsx('right', isMD && '!w-auto !flex-auto')}>
                   {isBlocks ? (
-                    <>
-                      <span className="producer inline-block truncate">
-                        <span className="mr-1">Producer</span>
-                        <EPTooltip title={ele.producerName} mode="dark" pointAtCenter={false}>
-                          <Link
-                            prefetch={false}
-                            className="truncate"
-                            href={`${defaultChain}/address/${addressFormat(ele.producerAddress, defaultChain)}`}>
-                            {ele.producerName
-                              ? ele.producerName
-                              : `${addressFormat(hiddenAddress(ele.producerAddress || '', 4, 4), defaultChain)}`}
-                          </Link>
-                        </EPTooltip>
-                      </span>
-                      <span className="txns">
-                        <Link prefetch={false} href={`/${defaultChain}/block/${ele.blockHeight}?tab=transactions`}>
-                          {ele.transactionCount} txns
-                        </Link>
-                        <span className="time">in {formatDate(ele.timestamp, 'Age')}</span>
-                        {isMD && RewrdInfo(ele)}
-                      </span>
-                    </>
+                    <Link
+                      prefetch={false}
+                      className="text-base text-primary"
+                      href={`/${ele.chainIds[0]}/block/${ele.blockHeight}?tab=transactions`}>
+                      {ele.transactionCount} Txns
+                    </Link>
                   ) : (
-                    <>
-                      <span className="from">
-                        <span className="mr-1">From</span>
-                        <ContractToken
-                          address={ele?.from?.address}
-                          showCopy={false}
-                          type={ele.from?.addressType}
-                          name={ele.from?.name}
-                          chainId={(ele.chainIds && ele.chainIds[0]) || (defaultChain as string)}
-                        />
-                      </span>
-                      <span className="to">
-                        <span className="mr-1">To</span>
-                        <ContractToken
-                          address={ele.to?.address}
-                          type={ele.to?.addressType}
-                          name={ele.to?.name}
-                          showCopy={false}
-                          chainId={(ele.chainIds && ele.chainIds[0]) || (defaultChain as string)}
-                        />
-                        {isMD && RewrdInfo(ele)}
-                      </span>
-                    </>
+                    RewrdInfo(ele)
                   )}
                 </div>
-              )}
-              {!isMD && (
-                <div className={`right ${iconType === 'latest-tokens' && '!items-start'}`}>{RewrdInfo(ele)}</div>
               )}
             </div>
           );
         })}
       </div>
-      <div className="link">
-        <Link
-          href={
-            multi && iconType === 'latest-tokens'
-              ? `/${defaultChain}/tokens`
-              : isBlocks
-                ? `/${defaultChain}/blocks`
-                : `/${defaultChain}/transactions`
-          }
-          prefetch={false}>
-          View All {multi && iconType === 'latest-tokens' ? 'Tokens' : isBlocks ? 'Blocks' : 'Transactions'}
-          <IconFont type="right-arrow-2"></IconFont>
+      <div className={clsx('link', isMD && !isBlocks && 'mt-6')}>
+        <Link href={isBlocks ? `/${MULTI_CHAIN}/blocks` : `/${MULTI_CHAIN}/transactions`} prefetch={false}>
+          <span className="px-1">View all {isBlocks ? 'blocks' : 'transactions'}</span>
+          <IconFont className="text-base" type="arrow-right"></IconFont>
         </Link>
       </div>
     </div>
