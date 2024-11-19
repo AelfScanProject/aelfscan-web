@@ -10077,6 +10077,11 @@ react-dom@^18.0.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
+react-easy-marquee@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.npmjs.org/react-easy-marquee/-/react-easy-marquee-1.2.4.tgz#4667f6e7879788706ae672c2e6436a7e16a1be28"
+  integrity sha512-xp0pfCnvcGxniuUZSSFxU3Kf4IVBxTG1FpCuNf0+h0qo01zwrDtVJj4QoxjkPfQulX1K1PdH7SeyIYcZQdMDIg==
+
 react-fast-compare@^3.2.2:
   version "3.2.2"
   resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"

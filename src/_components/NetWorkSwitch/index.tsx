@@ -15,7 +15,7 @@ export default function NetWorkSwitch({
   const origin = typeof window !== 'undefined' && window.location.origin;
   const selectNet = useMemo(() => {
     return networkList.find((item) => item.path === 'https://testnet.aelfscan.io');
-  }, [networkList, origin]);
+  }, [networkList]);
 
   const items: MenuProps['items'] = useMemo(() => {
     return networkList.map((item) => {
@@ -24,7 +24,7 @@ export default function NetWorkSwitch({
         label: (
           <a
             target="_blank"
-            className={`text-sm leading-[22px] ${origin === item?.path ? '!text-link' : '!text-base-100'}`}
+            className={`text-sm leading-[22px] ${origin === item?.path ? '!text-primary' : '!text-foreground'}`}
             href={item?.path}
             rel="noopener noreferrer">
             {item?.label}
@@ -40,11 +40,11 @@ export default function NetWorkSwitch({
           <div className="flex w-[140px] cursor-pointer items-center justify-center gap-1 rounded-md border border-border bg-white px-2 py-[6px]">
             <IconFont className="text-base" type={selectNet?.key || ''} />
             <div className="text-sm leading-6 text-primary">{selectNet?.label}</div>
-            <IconFont className="text-base" type="chevron-down" />
+            <IconFont className="down text-base" type="chevron-down" />
           </div>
         ) : (
-          <div className="flex items-center justify-center rounded-lg border border-border bg-white p-3">
-            <IconFont className="text-base" type="mainChainLogo" />
+          <div className="flex cursor-pointer items-center justify-center rounded-lg border border-border bg-white p-3">
+            <IconFont className="text-base" type={selectNet?.key || ''} />
           </div>
         )}
       </Dropdown>

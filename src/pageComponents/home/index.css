@@ -1,7 +1,7 @@
 .home-container {
   @apply w-full flex align-middle flex-col m-auto;
   .header-section {
-    @apply h-[56px] w-full flex justify-between items-center px-2 box-border ml-auto mr-auto min-[993px]:min-w-[200px] max-w-[1440px] min-769:px-5;
+    @apply relative z-[300] h-[56px] w-full flex justify-between items-center px-2 box-border ml-auto mr-auto min-[993px]:min-w-[200px] max-w-[1440px] min-769:px-5;
   }
   .banner-section {
     @apply w-full items-start flex justify-start min-[993px]:min-w-[200px] max-w-[1440px] box-border ml-auto mr-auto px-2 min-769:px-5;

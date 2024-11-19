@@ -27,8 +27,6 @@ function Home() {
     return <InfoSection></InfoSection>;
   }, []);
 
-  console.log(33333333333);
-
   return (
     <main className={clsx(`${clsPrefix}`, mobile && `${clsPrefix}-mobile`, 'relative')}>
       <BannerContainer />
