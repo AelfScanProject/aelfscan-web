@@ -41,6 +41,7 @@ export default function getColumns({ currentPage, pageSize, ChangeOrder, sort })
     {
       dataIndex: 'rank',
       key: 'rank',
+      title: '#',
       width: 100,
       render: renderRank(currentPage, pageSize),
     },
