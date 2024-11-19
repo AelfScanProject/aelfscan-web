@@ -13,7 +13,9 @@ import { useMD } from '@_hooks/useResponsive';
 
 export default function DetailContainer({
   infoList,
+  className,
 }: {
+  className?: string;
   infoList: {
     label: string;
     value: React.ReactNode | string;
@@ -25,7 +27,7 @@ export default function DetailContainer({
 }) {
   const isMobile = useMD();
   return (
-    <div className="wrap basic px-4">
+    <div className={clsx('wrap basic px-4', className)}>
       {infoList.map((item) => {
         return !item.hidden ? (
           item.value === 'divider' ? (

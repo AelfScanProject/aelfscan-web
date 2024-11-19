@@ -10,11 +10,10 @@ import { fetchServerNFTSList } from '@_api/fetchNFTS';
 import { SortEnum, TablePageSize } from '@_types/common';
 import List from './list';
 import { getChainId, getPageNumber } from '@_utils/formatter';
-export default async function Nfts({ params, searchParams }) {
+export default async function Nfts({ searchParams }) {
   const p = searchParams['p'] || 1;
   const ps = searchParams['ps'] || TablePageSize.small;
-  const { chain } = params;
-  const defaultChain = searchParams['chain'] || chain;
+  const defaultChain = searchParams['chain'];
   const data = await fetchServerNFTSList({
     skipCount: getPageNumber(Number(p), ps),
     maxResultCount: ps,

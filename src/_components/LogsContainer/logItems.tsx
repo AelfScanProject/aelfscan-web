@@ -56,7 +56,7 @@ function LogItems({ data }: { data: ILogsProps }) {
       {
         <>
           <CodeBlock value={hasDecoded ? JSON.stringify(result, null, 2) : code} />
-          <Button type="primary" className="log-button mt-2 text-xs leading-5" loading={loading} onClick={decode}>
+          <Button ghost className="log-button" loading={loading} onClick={decode}>
             {hasDecoded ? 'Encode' : 'Decode'}
           </Button>
         </>

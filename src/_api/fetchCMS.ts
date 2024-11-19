@@ -10,3 +10,9 @@ export async function fetchLatestTwitter() {
   const { data } = result;
   return data;
 }
+
+export async function fetchAdsDetailList() {
+  const result = await request.common.getAdsDetailList({ params: { cache: 'no-store', size: 5 } });
+  const { data } = result;
+  return data;
+}

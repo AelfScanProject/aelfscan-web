@@ -5,11 +5,18 @@ import clsx from 'clsx';
 interface ITokenImageProps {
   token: Partial<IToken>;
   className?: string;
+  textClassName?: string;
   width?: string;
   height?: string;
 }
 
-export default function TokenImage({ token, className, width = '24px', height = '24px' }: ITokenImageProps) {
+export default function TokenImage({
+  token,
+  className,
+  width = '24px',
+  height = '24px',
+  textClassName,
+}: ITokenImageProps) {
   return (
     <>
       {token?.imageUrl ? (
@@ -26,7 +33,9 @@ export default function TokenImage({ token, className, width = '24px', height = 
             'flex size-6 items-center justify-center rounded-xl border border-solid border-D0 bg-white',
             className,
           )}>
-          <div className="text-sm font-semibold text-muted-foreground">{token?.symbol?.[0] || '--'}</div>
+          <div className={clsx('text-sm font-semibold text-muted-foreground', textClassName)}>
+            {token?.symbol?.[0] || '--'}
+          </div>
         </div>
       )}
     </>

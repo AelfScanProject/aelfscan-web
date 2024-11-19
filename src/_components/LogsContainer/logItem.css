@@ -1,8 +1,5 @@
 .log-item {
   .log-button {
-    @apply bg-link px-8 border-none h-8 hover:bg-32;
-  }
-  .log-button:active {
-    @apply bg-button_active;
+    @apply bg-white px-2 border-border border h-[38px] box-border text-primary mt-4 flex items-center text-center w-[75px] !important;
   }
 }

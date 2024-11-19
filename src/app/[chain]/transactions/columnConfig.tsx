@@ -44,7 +44,9 @@ const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId) =>
       width: 60,
       dataIndex: '',
       key: 'view',
-      render: (record) => <TransactionsView record={record} />,
+      render: (record) => (
+        <TransactionsView record={record} jumpChain={(record?.chainIds && record?.chainIds[0]) || chainId} />
+      ),
     },
     {
       title: 'Chain',
@@ -76,7 +78,7 @@ const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId) =>
     },
     {
       title: 'Block',
-      width: 140,
+      width: 136,
       dataIndex: 'blockHeight',
       hidden: type === 'block',
       key: 'blockHeight',
