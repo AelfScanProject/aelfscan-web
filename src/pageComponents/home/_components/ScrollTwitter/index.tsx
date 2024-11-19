@@ -1,32 +1,16 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import './index.css';
-import Marquee from 'react-fast-marquee';
 import IconFont from '../../../../_components/IconFont/index';
 import Link from 'next/link';
+import Marquee from 'react-easy-marquee';
 import Image from 'next/image';
+import { fetchLatestTwitter } from '@_api/fetchCMS';
+import { Skeleton } from 'antd';
 
-const data = [
-  {
-    id: '1856912338970157565',
-    text: 'RT @aelfblockchain: Welcome to aelf—where we power a diverse range of products from #DeFi to #gaming and #NFT, all built on our robust Layer...',
-  },
-  {
-    id: '1855901066132648374',
-    text: "📢New on aelfscan: Contract Verification is LIVE! Upload your smart contract source code and we'll match it against the #blockchain for transparency.🌐🔍",
-  },
-  {
-    id: '1855898689015042072',
-    text: 'RT @aelfblockchain: dAppChain powered over half a billion transactions as tracked on @aelfscan, new highs in swap volumes...',
-  },
-  {
-    id: '1855898674267861198',
-    text: "RT @aelfblockchain: 🚨(CHAIN)GE IS HERE: Introducing aelf's dAppChain! With over half a billion transactions and leading #Web3 on @Telegram...",
-  },
-  {
-    id: '1853712148566008300',
-    text: 'Since the start of 2024, @aelfblockchain has seen 7x growth in addresses, now exceeding 896,000 addresses as of 4 Nov 2024.🙌',
-  },
-];
+interface ITwitterItem {
+  id: string;
+  text: string;
+}
 
 const truncateText = (text, maxLength = 60) => {
   if (text.length > maxLength) {
@@ -36,22 +20,43 @@ const truncateText = (text, maxLength = 60) => {
 };
 
 const AelfUpdatesCarousel = () => {
-  const renderData = useMemo(() => {
-    return data.map((item) => {
-      item.text = truncateText(item.text);
-      return item;
-    });
+  const [data, setData] = useState<ITwitterItem[]>();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const res = await fetchLatestTwitter();
+      setLoading(false);
+      setData(res);
+    };
+
+    fetchData();
   }, []);
-  return (
+
+  const renderData = useMemo(() => {
+    return (
+      data?.map((item) => {
+        item.text = truncateText(item.text);
+        return item;
+      }) || []
+    );
+  }, [data]);
+
+  return loading ? (
+    <div className="w-full">
+      <Skeleton.Input className="!h-[38px] !w-full" active />
+    </div>
+  ) : (
     <div className="aelf-updates-container flex max-w-full items-center overflow-hidden rounded-lg border bg-white">
-      <div className="flex shrink-0 items-center justify-center gap-1 bg-border p-2">
+      <div className="flex h-[38px] shrink-0 items-center justify-center gap-1 bg-border p-2">
         <Image width={16} height={16} alt="" src="/image/Megaphone.svg" />
         <div className="text-sm font-semibold">aelf updates</div>
       </div>
-      <div>
-        <Marquee pauseOnHover={true} speed={50} loop={0} gradient={false}>
+      <div className="w-full">
+        <Marquee pauseOnHover={true} duration={40000} reverse={true} align="center" height="38px">
           {[...renderData].map((item, index) => (
-            <div key={index} className="mx-4 flex items-center gap-1 truncate text-sm text-foreground">
+            <div key={index} className="mx-4 flex items-center gap-1 text-sm text-foreground">
               <IconFont type="ELF-f6dioc4d" />
               <span>[LIVE] </span>
               <span>{item.text}</span>
