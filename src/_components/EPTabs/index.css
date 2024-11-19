@@ -20,14 +20,14 @@
       @apply bg-white;
     }
     .explorer-tabs-tab-btn {
-      @apply font-semibold text-muted-foreground text-sm hover:text-foreground;
+      @apply font-semibold !text-muted-foreground text-sm hover:text-foreground;
     }
     .explorer-tabs-nav-wrap {
       @apply border-border;
     }
     .explorer-tabs-tab-active {
       .explorer-tabs-tab-btn {
-        @apply font-semibold text-sm text-foreground;
+        @apply font-semibold text-sm !text-foreground;
       }
     }
     .explorer-tabs-nav .explorer-tabs-nav-wrap::after {

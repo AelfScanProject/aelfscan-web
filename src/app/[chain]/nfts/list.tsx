@@ -34,7 +34,6 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
 
   const mountRef = useRef(true);
 
-  const { chain } = useParams();
   const fetchData = useCallback(async () => {
     const params = {
       skipCount: getPageNumber(currentPage, pageSize),
@@ -51,16 +50,14 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
     return data;
   }, [selectChain, currentPage, pageSize, sort]);
 
-  const multi = useMultiChain();
-
   const ChangeOrder = useCallback(() => {
     if (loading) return;
     setSort(sort === SortEnum.desc ? SortEnum.asc : SortEnum.desc);
   }, [loading, sort]);
 
   const columns = useMemo(
-    () => getColumns({ currentPage, pageSize, ChangeOrder, sort, chain, multi }),
-    [ChangeOrder, chain, currentPage, multi, pageSize, sort],
+    () => getColumns({ currentPage, pageSize, ChangeOrder, sort }),
+    [ChangeOrder, currentPage, pageSize, sort],
   );
 
   const pageChange = (page: number) => {
@@ -88,7 +85,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
     fetchData();
   }, [fetchData]);
 
-  const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'collection' : 'collections'} found`, [total]);
+  const title = useMemo(() => `Total ${total} collections found`, [total]);
 
   return (
     <div>
@@ -102,7 +99,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
         loading={loading}
         dataSource={data}
         columns={columns}
-        showMultiChain={multi}
+        showMultiChain={true}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

@@ -11,27 +11,31 @@ interface ITokenCellProps extends React.PropsWithChildren {
   token: Partial<IToken>;
   showSymbol?: boolean;
   length?: number;
+  className?: string;
   subtitle?: ReactNode;
 }
 
-export default function TokenCell({ token, children, showSymbol = true, length = 25, subtitle }: ITokenCellProps) {
+export default function TokenCell({
+  token,
+  children,
+  showSymbol = true,
+  length = 25,
+  subtitle,
+  className,
+}: ITokenCellProps) {
   const symbol = useMemo(() => stringToDotString(token?.symbol, length) || '--', [length, token?.symbol]);
   const name = useMemo(() => stringToDotString(token?.name, length) || '--', [length, token?.name]);
 
   return !subtitle ? (
-    <Flex gap={4} align="center">
+    <Flex gap={4} align="center" className={className}>
       {children}
-      <Text size="normal" fontWeight={FontWeightEnum.Medium}>
-        <EPTooltip mode="dark" title={token?.name}>
-          <span className="text-black">{name}</span>
-        </EPTooltip>
-      </Text>
+      <EPTooltip mode="dark" title={token?.name}>
+        <div className="text-sm text-foreground">{name}</div>
+      </EPTooltip>
       {symbol && showSymbol && (
-        <Text className="!text-[#858585]" size="normal" fontWeight={FontWeightEnum.Medium}>
-          <EPTooltip mode="dark" title={token?.symbol}>
-            {`(${symbol})`}
-          </EPTooltip>
-        </Text>
+        <EPTooltip mode="dark" title={token?.symbol}>
+          <div className="w-full truncate text-sm text-muted-foreground">{`(${symbol})`}</div>
+        </EPTooltip>
       )}
     </Flex>
   ) : (

@@ -4,8 +4,9 @@ import DetailContainer from '@_components/DetailContainer';
 import LogItems from './logItems';
 import { useParams } from 'next/navigation';
 import ContractToken from '@_components/ContractToken';
+import { TChainID } from '@_api/type';
 function LogsContainer({ Logs = [] }: { Logs: ILogsProps[] }) {
-  const { chain } = useParams();
+  const { chain } = useParams<{ chain: TChainID }>();
   return (
     <div className="log-container">
       <div className="log-list">
@@ -21,7 +22,8 @@ function LogsContainer({ Logs = [] }: { Logs: ILogsProps[] }) {
                         address={item.contractInfo.address}
                         name={item.contractInfo.name}
                         type={item.contractInfo.addressType}
-                        chainId={chain as string}
+                        chainIds={[chain]}
+                        showChainId={false}
                       />
                     </div>
                   ),
@@ -29,12 +31,13 @@ function LogsContainer({ Logs = [] }: { Logs: ILogsProps[] }) {
               ]}
             />
             <DetailContainer
+              className={`${index === Logs.length - 1 && 'pb-6'}`}
               infoList={[
                 {
                   label: 'Name',
                   value: (
                     <div className="name-container">
-                      <div className="mb-2">{item.eventName}</div>
+                      <div className="mb-4">{item.eventName}</div>
                       <LogItems data={item} />
                     </div>
                   ),

@@ -1,6 +1,5 @@
 import DetailContainer from '@_components/DetailContainer';
 import { useMemo } from 'react';
-import { divDecimals } from '@_utils/formatter';
 import DollarCurrencyRate from '@_components/DollarCurrencyRate';
 import Link from 'next/link';
 import CodeBlock from '@_components/CodeBlock';
@@ -26,10 +25,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
                   return (
                     <div
                       key={idx}
-                      className={clsx(
-                        'flex items-center',
-                        idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider',
-                      )}>
+                      className={clsx('flex items-center', idx !== 0 && !isMobile && 'border-0 border-l bg-border')}>
                       <span>{transactionFee.amountString}</span>
                       <span>{transactionFee.symbol}</span>
                       <DollarCurrencyRate nowPrice={transactionFee.nowPrice} tradePrice={transactionFee.tradePrice} />
@@ -61,10 +57,7 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
                   return (
                     <div
                       key={idx}
-                      className={clsx(
-                        'flex items-center',
-                        idx !== 0 && !isMobile && 'border-0 border-l bg-color-divider',
-                      )}>
+                      className={clsx('flex items-center', idx !== 0 && !isMobile && 'border-0 border-l bg-border')}>
                       <span>{burntFee.amountString}</span>
                       <span>{burntFee.symbol}</span>
                       <DollarCurrencyRate nowPrice={burntFee.nowPrice} tradePrice={burntFee.tradePrice} />
@@ -113,6 +106,10 @@ export default function ExtensionInfo({ data }: { data: ITransactionDetailData }
         label: 'Transaction Size ',
         tip: 'The size of the transaction.',
         value: <SizeBytes size={Number(data.transactionSize)} />,
+      },
+      {
+        label: 'divider3',
+        value: 'divider',
       },
     ];
   }, [data, isMobile, chain]);
