@@ -24,6 +24,7 @@ export default function HeaderTop({ networkList }: IProps) {
           <div className="hidden min-[769px]:block">
             <TokenPrice />
           </div>
+
           <div className="flex w-full items-center gap-2 min-[769px]:w-auto">
             <div
               className={clsx(
