@@ -58,7 +58,7 @@
   .link {
     @apply rounded-md px-3 py-2 flex justify-center align-middle bg-secondary hover:text-primary;
     a {
-      @apply text-sm font-medium;
+      @apply flex items-center text-sm font-medium;
     }
   }
 }

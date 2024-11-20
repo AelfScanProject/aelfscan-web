@@ -12,7 +12,6 @@ import { pageSizeOption } from '@_utils/contant';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { useMultiChain } from '@_hooks/useSelectChain';
-
 interface TokensListProps {
   SSRData: INFTsTableData;
   defaultPage: string | number;
