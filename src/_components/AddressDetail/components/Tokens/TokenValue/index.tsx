@@ -26,10 +26,10 @@ export default function TokensValue({
       {loading ? (
         <Skeleton.Input active />
       ) : chainIds.length < 2 ? (
-        <div>{total}</div>
+        <div className="text-xl font-semibold">{total}</div>
       ) : (
         <MultiDown mainCount={main} sideCount={side}>
-          <div className="text-xl font-semibold text-primary">
+          <div className="cursor-pointer text-xl font-semibold text-primary">
             {thousandsNumber(total)} {suffix}
           </div>
         </MultiDown>

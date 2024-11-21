@@ -3,10 +3,11 @@ import QrCode from '../QrCode/index';
 import { Modal } from 'antd';
 import { useState } from 'react';
 import './index.css';
-export default function QrCodeModal({ address }) {
+import clsx from 'clsx';
+export default function QrCodeModal({ address, className = '' }) {
   const [visible, setVisible] = useState(false);
   return (
-    <div>
+    <>
       <Modal
         title="Address QR Code"
         open={visible}
@@ -19,7 +20,7 @@ export default function QrCodeModal({ address }) {
         </div>
       </Modal>
 
-      <IconFont onClick={() => setVisible(true)} className="text-base" type="qr-code-f6b8kmba" />
-    </div>
+      <IconFont onClick={() => setVisible(true)} className={clsx('text-base', className)} type="qr-code-f6b8kmba" />
+    </>
   );
 }
