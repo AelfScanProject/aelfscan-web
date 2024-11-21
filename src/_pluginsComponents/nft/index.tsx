@@ -11,19 +11,18 @@ import { getChainId } from '@_utils/formatter';
 
 export default function NFTDetailsPage() {
   const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
   const collectionSymbol: string = searchParams.get('collectionSymbol') || '';
   const [overviewData, setOverviewData] = useState<CollectionDetailData>();
   const [loading, setLoading] = useState(true);
   const fetchData = useCallback(async () => {
     setLoading(true);
     const data = await getCollectionDetail({
-      chainId: getChainId(chain || ''),
+      chainId: getChainId(''),
       collectionSymbol,
     });
     setOverviewData(data);
     setLoading(false);
-  }, [chain, collectionSymbol]);
+  }, [collectionSymbol]);
 
   useEffect(() => {
     fetchData();

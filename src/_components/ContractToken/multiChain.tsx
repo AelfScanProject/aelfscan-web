@@ -14,11 +14,13 @@ export default function MultiChain({
   showChainId = true,
   breakAll = false,
   hidden = true,
+  onlyCopy,
 }: {
   address: string;
   chainIds?: TChainID[];
   showChainId?: boolean;
   breakAll?: boolean;
+  onlyCopy?: boolean;
   hidden?: boolean;
 }) {
   const showChain = useMemo(() => {
@@ -55,6 +57,10 @@ export default function MultiChain({
       };
     });
   }, [address, chainIds, hidden]);
+
+  if (onlyCopy) {
+    return <Copy value={addressFormat(address, chainIds[0])} />;
+  }
 
   if (breakAll) {
     return (

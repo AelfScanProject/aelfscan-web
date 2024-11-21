@@ -10,8 +10,6 @@ import Transfers, { ITransfersRef } from './_components/Transfers';
 import './index.css';
 import { ITokenDetail, SearchType } from './type';
 import { formatSearchValue, getSearchType } from './utils';
-import { useParams } from 'next/navigation';
-import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
 
 const { Title } = Typography;
 
@@ -47,6 +45,7 @@ export default function Detail({ tokenDetail }: IDetailProps) {
           ref={transfersRef}
           search={search}
           searchText={searchText}
+          token={tokenDetail.token}
           searchType={searchType}
           // SSRData={transfersList}
           onSearchChange={onSearchChange}
@@ -73,20 +72,11 @@ export default function Detail({ tokenDetail }: IDetailProps) {
     }
 
     return [transfersItem, holdersItem];
-  }, [onSearchChange, onSearchInputChange, search, searchText, searchType]);
-
-  const { tokenSymbol } = useParams();
-  const sideChain = useSideChain();
-
-  const multi = useMultiChain();
+  }, [onSearchChange, onSearchInputChange, search, searchText, searchType, tokenDetail.token]);
 
   return (
     <div className="token-detail">
-      <HeadTitle
-        content={`${tokenDetail?.token?.name || '--'}`}
-        adPage="tokendetail"
-        mainLink={multi && tokenDetail?.chainIds?.includes('AELF') ? `/AELF/token/${tokenSymbol}` : ''}
-        sideLink={multi && tokenDetail?.chainIds?.includes(sideChain) ? `/${sideChain}/token/${tokenSymbol}` : ''}>
+      <HeadTitle content={`${tokenDetail?.token?.name || '--'}`} adPage="tokendetail">
         <Title
           level={6}
           fontWeight={FontWeightEnum.Bold}

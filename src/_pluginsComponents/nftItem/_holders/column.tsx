@@ -9,11 +9,11 @@ function renderRank(currentPage, pageSize) {
   return (text, record, index) => (currentPage - 1) * pageSize + index + 1;
 }
 
-function renderAddress(chain, data: Address) {
+function renderAddress(data: Address, record) {
   const { name, addressType, address } = data;
   return (
     <div className="address flex items-center">
-      <ContractToken name={name} type={addressType} address={address} chainId={chain} />
+      <ContractToken name={name} type={addressType} address={address} chainIds={record.chainIds} onlyCopy />
     </div>
   );
 }
@@ -28,27 +28,38 @@ function renderPercentage(percentage) {
   return <span>{percentage}%</span>;
 }
 
-export default function getColumns(currentPage, pageSize, chain, multi): ColumnsType<HolderItem> {
+export default function getColumns(currentPage, pageSize): ColumnsType<HolderItem> {
   const commonColumns = [
     {
       title: <span>#</span>,
       dataIndex: '',
+      width: 100,
       key: 'rank',
       render: renderRank(currentPage, pageSize),
     },
     {
       dataIndex: 'address',
       key: 'address',
+      width: 393,
       title: (
         <div>
           <span>Address</span>
         </div>
       ),
-      render: (data: Address) => renderAddress(chain, data),
+      render: (data: Address, record) => renderAddress(data, record),
+    },
+    {
+      title: 'Chain',
+      width: 120,
+
+      dataIndex: 'chainIds',
+      key: 'chainIds',
+      render: (chainIds) => <ChainTags showIcon chainIds={chainIds || []} />,
     },
     {
       title: <span>Quantity</span>,
       dataIndex: 'quantity',
+      width: 393,
       key: 'quantity',
       render: renderQuantity,
     },
@@ -56,30 +67,10 @@ export default function getColumns(currentPage, pageSize, chain, multi): Columns
       title: <span>Percentage</span>,
       dataIndex: 'percentage',
       key: 'percentage',
+      width: 391,
       render: renderPercentage,
     },
   ];
 
-  if (multi) {
-    return [
-      { ...commonColumns[0], width: 128 },
-      { ...commonColumns[1], width: 374 },
-      {
-        title: 'Chain',
-        width: 234,
-        dataIndex: 'chainIds',
-        key: 'chainIds',
-        render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
-      },
-      { ...commonColumns[2], width: 304 },
-      { ...commonColumns[3], width: 304 },
-    ];
-  }
-
-  return [
-    { ...commonColumns[0], width: 144 },
-    { ...commonColumns[1], width: 448 },
-    { ...commonColumns[2], width: 384 },
-    { ...commonColumns[3], width: 384 },
-  ];
+  return commonColumns;
 }

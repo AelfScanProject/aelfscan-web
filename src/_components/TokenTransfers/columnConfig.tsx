@@ -82,7 +82,7 @@ export default function getColumns({
       width: 60,
       dataIndex: '',
       key: 'view',
-      render: (record) => <TransactionsView record={record} custom />,
+      render: (record) => <TransactionsView record={record} custom jumpChain={record.chainIds[0]} />,
     },
     multi && {
       title: 'Chain',

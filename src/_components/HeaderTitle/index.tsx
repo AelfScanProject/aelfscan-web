@@ -19,6 +19,7 @@ export default function HeadTitle({
   content,
   children,
   className,
+  rootClassName,
   adPage,
   mainLink,
   hiddenAds,
@@ -27,6 +28,7 @@ export default function HeadTitle({
   content: string;
   children?: React.ReactNode;
   className?: string;
+  rootClassName?: string;
   mainLink?: string;
   sideLink?: string;
   adPage: string;
@@ -42,7 +44,12 @@ export default function HeadTitle({
 
   return (
     <>
-      <div className={clsx('header-title flex flex-wrap items-center gap-4 bg-inherit pb-3 pt-8', !multi && '!gap-2')}>
+      <div
+        className={clsx(
+          'header-title flex flex-wrap items-center gap-4 bg-inherit pb-3 pt-8',
+          !multi && '!gap-2',
+          rootClassName,
+        )}>
         <div className={clsx('flex items-end text-xl font-bold not-italic text-foreground', className)}>
           {content}
           {children}

@@ -29,7 +29,7 @@ export default function TokenCell({
   return !subtitle ? (
     <Flex gap={4} align="center" className={className}>
       {children}
-      <EPTooltip mode="dark" title={`${token?.name} (${symbol})`}>
+      <EPTooltip mode="dark" title={`${token?.name}`}>
         <div className="shrink-0 text-sm text-foreground">{name}</div>
       </EPTooltip>
       {symbol && showSymbol && (

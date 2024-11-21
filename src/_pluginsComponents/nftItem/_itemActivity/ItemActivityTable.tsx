@@ -8,10 +8,9 @@ import { IActivityTableData, ItemSymbolDetailOverview } from '../type';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchNFTItemActivity } from '@_api/fetchNFTS';
 import { useSearchParams } from 'next/navigation';
-import { getChainId, getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber, thousandsNumber } from '@_utils/formatter';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-import { useMultiChain } from '@_hooks/useSelectChain';
 const TAB_NAME = '';
 export default function ItemActivityTable({ detailData }: { detailData: ItemSymbolDetailOverview }) {
   const isMobile = useMobileAll();
@@ -23,7 +22,6 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
   const [data, setData] = useState<IActivityTableData[]>([]);
   const mountRef = useRef(false);
   const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
   const itemSymbol: string = searchParams.get('itemSymbol') || '';
 
   const updateQueryParams = useUpdateQueryParams();
@@ -59,8 +57,6 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
     }
   }, [selectChain, itemSymbol, currentPage, pageSize, updateQueryParams]);
 
-  const multi = useMultiChain();
-
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const columns = useMemo<ColumnsType<IActivityTableData>>(() => {
     return getColumns({
@@ -68,11 +64,9 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
-      chainId: chain,
       detailData,
-      multi,
     });
-  }, [chain, detailData, timeFormat, multi]);
+  }, [detailData, timeFormat]);
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
@@ -96,11 +90,12 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
       <Table
         headerTitle={{
           multi: {
-            title: `A total of ${total} records found`,
+            title: `Total ${thousandsNumber(total)} transactions found`,
             desc: '',
           },
         }}
-        showMultiChain={multi}
+        showMultiChain={true}
+        bordered={false}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

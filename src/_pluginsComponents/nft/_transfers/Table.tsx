@@ -7,7 +7,7 @@ import { ColumnsType } from 'antd/es/table';
 import { CollectionTransfer } from '../type';
 import { useSearchParams } from 'next/navigation';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { getAddress, getChainId, getSort, getBlockTimeSearchAfter } from '@_utils/formatter';
+import { getChainId, getSort, getBlockTimeSearchAfter, thousandsNumber } from '@_utils/formatter';
 import { fetchNFTTransfers } from '@_api/fetchNFTS';
 import { PageTypeEnum } from '@_types';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
@@ -21,7 +21,6 @@ export interface ItemActivityTableProps {
 const TAB_NAME = 'transfers';
 export default function ItemActivityTable(props: ItemActivityTableProps) {
   const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
   const collectionSymbol: string = searchParams.get('collectionSymbol') || '';
   const isMobile = useMobileAll();
   const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
@@ -36,37 +35,6 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
   const updateQueryParams = useUpdateQueryParams();
 
   const [selectChain, setSelectChain] = useState(defaultChain);
-
-  const [text, setSearchText] = useState<string>('');
-
-  const [searchVal, setSearchVal] = useState<string>(props.search || '');
-
-  // only trigger when onPress / onClear
-  const handleSearchChange = (val) => {
-    setCurrentPage(1);
-    setPageType(PageTypeEnum.NEXT);
-    setSearchVal(val);
-  };
-
-  const handleClear = () => {
-    setCurrentPage(1);
-    setPageType(PageTypeEnum.NEXT);
-    setSearchVal('');
-  };
-  const onChange = ({ currentTarget }) => {
-    setSearchText(currentTarget.value);
-    if (!currentTarget.value.trim()) {
-      handleClear();
-    }
-  };
-  const topSearchProps = {
-    value: text,
-    onChange,
-    disabledTooltip: false,
-    onSearchChange: handleSearchChange,
-    onClear: handleClear,
-    placeholder: 'Filter Address / Txn Hash', // Token Symbol
-  };
 
   const fetchTableData = useCallback(async () => {
     setLoading(true);
@@ -90,7 +58,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
       }
       const res = await fetchNFTTransfers({
         maxResultCount: pageSize,
-        search: getAddress(searchVal ?? ''),
+        search: '',
         collectionSymbol: collectionSymbol,
         chainId: getChainId(selectChain),
         orderInfos: [
@@ -108,7 +76,7 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
       setLoading(false);
       mountRef.current = true;
     }
-  }, [pageType, currentPage, pageSize, searchVal, collectionSymbol, selectChain]);
+  }, [pageType, currentPage, pageSize, collectionSymbol, selectChain]);
 
   const [timeFormat, setTimeFormat] = useState<string>('Age');
 
@@ -120,10 +88,8 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
-      chainId: chain,
-      multi,
     });
-  }, [chain, timeFormat, multi]);
+  }, [timeFormat]);
 
   const chainChange = (value) => {
     setSelectChain(value);
@@ -155,16 +121,15 @@ export default function ItemActivityTable(props: ItemActivityTableProps) {
       <Table
         headerTitle={{
           single: {
-            title: `A total of ${total} records found`,
+            title: `Total ${thousandsNumber(total)} transactions found`,
           },
         }}
-        showTopSearch={true}
         showMultiChain={multi}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
         }}
-        topSearchProps={{ ...topSearchProps }}
+        bordered={false}
         loading={loading}
         dataSource={data}
         columns={columns}

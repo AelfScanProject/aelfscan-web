@@ -10,16 +10,21 @@ import { ColumnsType } from 'antd/es/table';
 import Link from 'next/link';
 import { ITransferItem } from '../../type';
 import ChainTags from '@_components/ChainTags';
+import { MULTI_CHAIN } from '@_utils/contant';
+import TokenTableCell from '@_components/TokenTableCell';
+import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
 
-const renderTransactionsView = (record) => <TransactionsView record={record} custom={true} />;
+const renderTransactionsView = (record) => (
+  <TransactionsView record={record} custom={true} jumpChain={record.chainIds[0]} />
+);
 
-const renderTransactionId = (text, record, chain) => (
+const renderTransactionId = (text, record) => (
   <div className="flex items-center">
     {record.status === TTransactionStatus.fail && <IconFont className="ml-1" type="question-circle-error" />}
     <EPTooltip title={text} mode="dark">
       <Link
-        className="block w-[120px] truncate text-link"
-        href={`/${(record.chainIds && record.chainIds[0]) || chain}/tx/${text}`}>
+        className="block w-[120px] truncate text-primary"
+        href={`/${record.chainIds && record.chainIds[0]}/tx/${text}`}>
         {text}
       </Link>
     </EPTooltip>
@@ -27,45 +32,61 @@ const renderTransactionId = (text, record, chain) => (
   </div>
 );
 
-const renderContractToken = (data, record, chain) => (
+const renderContractToken = (data, record) => (
   <ContractToken
     address={data.address || ''}
     type={data.addressType}
     name={data.name}
-    chainId={(record.chainIds && record.chainIds[0]) || chain}
     chainIds={record.chainIds}
+    showChainId={false}
+    className="max-w-[148px]"
   />
 );
 
-const renderQuantity = (text) => thousandsNumber(text);
-
-export default function getColumns({ timeFormat, handleTimeChange, chain, multi }): ColumnsType<ITransferItem> {
+export default function getColumns({ timeFormat, handleTimeChange, token }): ColumnsType<ITransferItem> {
   const commonColumns = [
+    {
+      title: (
+        <EPTooltip mode="dark" title="See preview of the transaction details.">
+          <IconFont className="ml-[6px] text-base" type="circle-help" />
+        </EPTooltip>
+      ),
+      width: 60,
+      dataIndex: '',
+      key: 'view',
+      render: renderTransactionsView,
+    },
+    {
+      title: 'Chain',
+      width: 140,
+      dataIndex: 'chainIds',
+      key: 'chainIds',
+      render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
+    },
     {
       title: 'Txn Hash',
       dataIndex: 'transactionId',
       key: 'transactionId',
-      render: (text, record) => renderTransactionId(text, record, chain),
+      width: 177,
+      render: (text, record) => renderTransactionId(text, record),
     },
     {
       title: (
-        <div className="cursor-pointer font-medium">
+        <div className="cursor-pointer">
           <span>Method</span>
           <EPTooltip mode="dark" title="Function executed based on input data.">
-            <IconFont className="ml-1" type="question-circle" />
+            <IconFont className="ml-1 text-base" type="circle-help" />
           </EPTooltip>
         </div>
       ),
+      width: 130,
       dataIndex: 'method',
       key: 'method',
       render: (text) => <Method text={text} tip={text} />,
     },
     {
       title: (
-        <div
-          className="time cursor-pointer font-medium text-link"
-          onClick={handleTimeChange}
-          onKeyDown={handleTimeChange}>
+        <div className="time cursor-pointer text-primary" onClick={handleTimeChange} onKeyDown={handleTimeChange}>
           {timeFormat}
         </div>
       ),
@@ -76,74 +97,62 @@ export default function getColumns({ timeFormat, handleTimeChange, chain, multi 
     {
       title: 'From',
       dataIndex: 'from',
+      width: 200,
       key: 'from',
-      render: (data, record) => renderContractToken(data, record, chain),
+      render: (data, record) => renderContractToken(data, record),
     },
     {
       title: '',
       key: 'from_to',
-      render: () => <IconFont className="text-[24px]" type="fromto" />,
+      width: 24,
+      className: 'from_to-col',
+      render: () => <IconFont className="text-[24px]" type="From-To" />,
     },
     {
       title: 'To',
       dataIndex: 'to',
+      width: 200,
       key: 'to',
-      render: (data, record) => renderContractToken(data, record, chain),
+      render: (data, record) => renderContractToken(data, record),
     },
     {
-      title: 'Quantity',
+      title: 'Amount',
       key: 'quantity',
+      width: 177,
       dataIndex: 'quantity',
-      render: renderQuantity,
+      render: (text) => thousandsNumber(text) + ' ' + token.symbol,
+    },
+    {
+      title: 'Token',
+      width: 175,
+      key: 'token',
+      dataIndex: 'token',
+      render: () => {
+        const { imageUrl, name, symbol } = token;
+        return (
+          <div className="flex items-center">
+            <Link href={`/${MULTI_CHAIN}/token/${symbol}`}>
+              <TokenTableCell
+                token={{
+                  name: name,
+                  symbol,
+                }}>
+                <div className="flex shrink-0 items-center">
+                  <TokenImage
+                    token={{
+                      name: name,
+                      imageUrl: imageUrl,
+                      symbol,
+                    }}
+                  />
+                </div>
+              </TokenTableCell>
+            </Link>
+          </div>
+        );
+      },
     },
   ];
 
-  return multi
-    ? [
-        {
-          title: (
-            <EPTooltip mode="dark" title="See preview of the transaction details.">
-              <IconFont className="ml-[6px] text-xs" type="question-circle" />
-            </EPTooltip>
-          ),
-          width: 40,
-          dataIndex: '',
-          key: 'view',
-          render: renderTransactionsView,
-        },
-        {
-          title: 'Chain',
-          width: 144,
-          dataIndex: 'chainIds',
-          key: 'chainIds',
-          render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
-        },
-        { ...commonColumns[0], width: 224 },
-        { ...commonColumns[1], width: 176 },
-        { ...commonColumns[2], width: 176 },
-        { ...commonColumns[3], width: 196 },
-        { ...commonColumns[4], width: 40 },
-        { ...commonColumns[5], width: 196 },
-        { ...commonColumns[6], width: 152 },
-      ]
-    : [
-        {
-          title: (
-            <EPTooltip mode="dark" title="See preview of the transaction details.">
-              <IconFont className="ml-[6px] text-xs" type="question-circle" />
-            </EPTooltip>
-          ),
-          width: 72,
-          dataIndex: '',
-          key: 'view',
-          render: renderTransactionsView,
-        },
-        { ...commonColumns[0], width: 208 },
-        { ...commonColumns[1], width: 168 },
-        { ...commonColumns[2], width: 208 },
-        { ...commonColumns[3], width: 180 },
-        { ...commonColumns[4], width: 40 },
-        { ...commonColumns[5], width: 180 },
-        { ...commonColumns[6], width: 224 },
-      ];
+  return commonColumns;
 }
