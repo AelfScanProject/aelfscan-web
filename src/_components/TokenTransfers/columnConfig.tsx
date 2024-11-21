@@ -13,14 +13,15 @@ import TokenTableCell from '@_components/TokenTableCell';
 import TokenImage from '@app/[chain]/tokens/_components/TokenImage';
 import ChainTags from '@_components/ChainTags';
 import './index.css';
+import { MULTI_CHAIN } from '@_utils/contant';
 
 const renderTransactionId = (text, records) => {
   const { chainId } = records;
   return (
     <div className="flex items-center">
-      {records.status === TransactionStatus.Failed && <IconFont className="mr-1" type="question-circle-error" />}
+      {records.status === TransactionStatus.Failed && <IconFont className="mr-1" type="circle-help" />}
       <EPTooltip title={text} mode="dark">
-        <Link className="block w-[120px] truncate text-link" href={`/${chainId}/tx/${text}`}>
+        <Link className="block w-[120px] truncate text-primary" href={`/${chainId}/tx/${text}`}>
           {text}
         </Link>
       </EPTooltip>
@@ -30,35 +31,34 @@ const renderTransactionId = (text, records) => {
 };
 
 const renderTokenOrItem = (text, record, columnType) => {
-  const { chainId, symbol, symbolImageUrl, symbolName } = record;
+  const { symbol, symbolImageUrl, symbolName } = record;
   return columnType === 'Token' ? (
     <div className="flex items-center">
-      <Link href={`/${chainId}/token/${symbol}`}>
+      <Link href={`/${MULTI_CHAIN}/token/${symbol}`}>
         <TokenTableCell
           token={{
             name: symbolName,
             symbol,
-          }}
-          length={7}>
-          <TokenImage
-            token={{
-              name: symbolName,
-              imageUrl: symbolImageUrl,
-              symbol,
-            }}
-          />
+          }}>
+          <div className="flex shrink-0 items-center">
+            <TokenImage
+              token={{
+                name: symbolName,
+                imageUrl: symbolImageUrl,
+                symbol,
+              }}
+            />
+          </div>
         </TokenTableCell>
       </Link>
     </div>
   ) : (
     <div className="item-container flex items-center">
-      <TokenImage token={{ name: symbolName, imageUrl: symbolImageUrl, symbol }} />
+      <TokenImage width="40px" height="40px" token={{ name: symbolName, imageUrl: symbolImageUrl, symbol }} />
       <div className="info ml-1">
-        <div className="name max-w-[139px] truncate text-xs leading-5 text-black">{symbolName}</div>
+        <div className="name max-w-[139px] truncate text-sm">{symbolName}</div>
         <div className="message flex items-center leading-[18px]">
-          <span className="font10px inline-block max-w-[149.39759px] truncate leading-[18px] text-base-200">
-            {symbol}
-          </span>
+          <span className="inline-block max-w-[149.39759px] truncate text-sm  text-muted-foreground">{symbol}</span>
         </div>
       </div>
     </div>
@@ -76,24 +76,24 @@ export default function getColumns({
     {
       title: (
         <EPTooltip title="See preview of the transaction details." mode="dark">
-          <IconFont className="ml-[6px] cursor-pointer text-xs" type="question-circle" />
+          <IconFont className="ml-[6px] cursor-pointer text-base" type="circle-help" />
         </EPTooltip>
       ),
-      width: 72,
+      width: 60,
       dataIndex: '',
       key: 'view',
       render: (record) => <TransactionsView record={record} custom />,
     },
     multi && {
       title: 'Chain',
-      width: 144,
+      width: 140,
       dataIndex: 'chainIds',
       key: 'chainIds',
       render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
     },
     {
       dataIndex: 'transactionId',
-      width: 168,
+      width: 177,
       key: 'transactionId',
       title: 'Txn Hash',
       render: renderTransactionId,
@@ -103,11 +103,11 @@ export default function getColumns({
         <div className="cursor-pointer font-medium">
           <span>Method</span>
           <EPTooltip title="Function executed based on input data. " mode="dark">
-            <IconFont className="ml-1 text-xs" type="question-circle" />
+            <IconFont className="ml-1 text-base" type="circle-help" />
           </EPTooltip>
         </div>
       ),
-      width: 128,
+      width: 130,
       dataIndex: 'method',
       key: 'method',
       render: (text) => <Method text={text} tip={text} />,
@@ -115,13 +115,12 @@ export default function getColumns({
     {
       title: (
         <div
-          className="time cursor-pointer font-medium text-link"
+          className="time cursor-pointer font-medium text-primary"
           onClick={handleTimeChange}
           onKeyDown={handleTimeChange}>
           {timeFormat}
         </div>
       ),
-      width: 164,
       dataIndex: 'blockTime',
       key: 'blockTime',
       render: (text) => <div>{formatDate(text, timeFormat)}</div>,
@@ -129,18 +128,24 @@ export default function getColumns({
     {
       dataIndex: 'from',
       title: 'From',
-      width: 196,
+      width: 200,
       render: (fromData, record) => {
         if (!fromData) return null;
         const { address } = fromData;
         return (
-          <ContractToken address={address} name={fromData.name} chainId={record.chainId} type={fromData.addressType} />
+          <ContractToken
+            address={address}
+            name={fromData.name}
+            chainIds={record.chainIds}
+            showChainId={false}
+            type={fromData.addressType}
+          />
         );
       },
     },
     {
       title: '',
-      width: 52,
+      width: 50,
       dataIndex: 'transferStatus',
       key: 'transferStatus',
       render: (text, record) => (
@@ -156,25 +161,31 @@ export default function getColumns({
     {
       dataIndex: 'to',
       title: 'To',
-      width: 196,
+      width: 200,
       render: (toData, record) => {
         if (!toData) return null;
         const { address } = toData;
         return (
-          <ContractToken address={address} name={toData.name} chainId={record.chainId} type={toData.addressType} />
+          <ContractToken
+            address={address}
+            showChainId={false}
+            name={toData.name}
+            chainIds={record.chainIds}
+            type={toData.addressType}
+          />
         );
       },
     },
     {
       title: 'Amount',
-      width: 172,
+      width: 164,
       key: 'quantity',
       dataIndex: 'quantity',
-      render: (text) => <span className="text-base-100">{numberFormatter(text, '')}</span>,
+      render: (text) => <span>{numberFormatter(text, '')}</span>,
     },
     {
       title: columnType === 'Token' ? 'Token' : 'Item',
-      width: 204,
+      width: 164,
       key: columnType === 'Token' ? 'token' : 'item',
       dataIndex: columnType === 'Token' ? 'token' : 'item',
       render: (text, record) => renderTokenOrItem(text, record, columnType),

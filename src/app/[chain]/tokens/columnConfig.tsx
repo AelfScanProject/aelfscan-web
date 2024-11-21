@@ -31,7 +31,7 @@ const renderToken = (text, record) => (
         : `/${MULTI_CHAIN}/token/${text.symbol}`
     }>
     <TokenTableCell token={text} className="max-w-[263px] flex-nowrap truncate">
-      <div className="shrink-0">
+      <div className="flex shrink-0 items-center">
         <TokenImage token={text} className="bg-muted" textClassName="text-xs font-normal" />
       </div>
     </TokenTableCell>
@@ -63,10 +63,13 @@ const renderHolderChange = (record) => {
 
 const getSortableHeader = (sort, ChangeOrder) => (
   <div className="flex cursor-pointer" onClick={ChangeOrder}>
-    <IconFont className={`mr-1 text-xs ${sort === SortEnum.asc ? '-scale-y-100' : ''}`} type="Rank" />
     <EPTooltip mode="dark" title="Sorted in descending order Click for ascending order">
-      <div className="text-link">Holder</div>
+      <div className="text-primary">Holder</div>
     </EPTooltip>
+    <IconFont
+      className="ml-1 text-base"
+      type={sort === SortEnum.asc ? 'arrow-up-wide-narrow' : 'arrow-down-wide-narrow-f6kehlin'}
+    />
   </div>
 );
 

@@ -110,7 +110,7 @@ export default function ValueFormItem({ data, form, type }: { data: IInputItem; 
   }, []);
   const label = useMemo(() => {
     return (
-      <div className="menu-container flex items-center gap-2">
+      <div className="menu-container flex items-center gap-2 text-sm">
         <span>
           {data.name} ({type})
         </span>

@@ -12,10 +12,14 @@ export default function MultiChain({
   address,
   chainIds = [],
   showChainId = true,
+  breakAll = false,
+  hidden = true,
 }: {
   address: string;
   chainIds?: TChainID[];
   showChainId?: boolean;
+  breakAll?: boolean;
+  hidden?: boolean;
 }) {
   const showChain = useMemo(() => {
     return chainIds?.length > 1 ? 'Multichain' : chainIds[0] === 'AELF' ? 'MainChain' : 'dAppChain';
@@ -37,10 +41,12 @@ export default function MultiChain({
               <div className="flex items-center px-2">
                 <IconFont className="text-base" type={item === 'AELF' ? 'mainChainLogo' : 'dappChainLogo'} />
               </div>
-              <div className="text-sm">{item === 'AELF' ? 'aelf MainChain' : 'aelf dAppChain'}</div>
+              <div className="shrink-0 text-sm">{item === 'AELF' ? 'aelf MainChain' : 'aelf dAppChain'}</div>
             </div>
-            <div className="ml-8 flex gap-2 py-[2px]">
-              <div className="text-xs text-muted-foreground">{addressFormat(hiddenAddress(address), item)}</div>
+            <div className="ml-8 flex items-center gap-2 py-[2px] pr-2">
+              <div className="break-all text-xs text-muted-foreground">
+                {hidden ? addressFormat(hiddenAddress(address), item) : addressFormat(address, item)}
+              </div>
               <Copy value={addressFormat(address, item)} />
               <QrCodeModal address={addressFormat(address, item)} />
             </div>
@@ -48,11 +54,36 @@ export default function MultiChain({
         ),
       };
     });
-  }, [address, chainIds]);
+  }, [address, chainIds, hidden]);
+
+  if (breakAll) {
+    return (
+      <>
+        <div className="ml-1 inline-block h-[22px] shrink-0 whitespace-nowrap rounded-[9px] border border-border px-[10px] py-[2px]  text-xs leading-4">
+          {showChain}
+        </div>
+        {multi ? (
+          <Dropdown
+            trigger={['click']}
+            overlayClassName="multiChain-drop min-w-[240px] max-w-[395px]"
+            menu={{ items: items }}>
+            <IconFont className="text-base" type="chevron-down1" />
+          </Dropdown>
+        ) : (
+          <span className="relative inline-block">
+            <Copy className="absolute -top-[13px]" value={addressFormat(address, chainIds[0])} />
+          </span>
+        )}
+      </>
+    );
+  }
+
   return (
-    <div className="multiChain-drop-container flex items-center">
+    <div className="multiChain-drop-container flex items-center whitespace-nowrap">
       {showChainId && (
-        <div className="ml-1 rounded-[9px] border border-border px-[10px] py-[2px] text-xs">{showChain}</div>
+        <div className="ml-1 shrink-0 whitespace-nowrap rounded-[9px] border border-border px-[10px] py-[2px] text-xs">
+          {showChain}
+        </div>
       )}
       {multi ? (
         <Dropdown trigger={['click']} overlayClassName="multiChain-drop w-[240px]" menu={{ items }}>

@@ -1,13 +1,12 @@
 import Detail from '@_components/AddressDetail';
 import { HashParams } from 'global';
 import { fetchServerAccountDetail } from '@_api/fetchContact';
-import { getAddress, getChainId } from '@_utils/formatter';
+import { getAddress } from '@_utils/formatter';
 export default async function AddressDetails({ params }: { params: HashParams }) {
-  const { chain, addressType, address } = params;
+  const { address } = params;
   const data = await fetchServerAccountDetail({
-    chainId: getChainId(chain),
+    chainId: '',
     address: getAddress(address),
-    addressType: addressType,
     cache: 'no-store',
   });
   return <Detail SSRData={data} />;

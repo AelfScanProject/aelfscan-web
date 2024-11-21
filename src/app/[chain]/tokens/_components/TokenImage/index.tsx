@@ -21,7 +21,7 @@ export default function TokenImage({
     <>
       {token?.imageUrl ? (
         <NFTImage
-          className={clsx('size-6 rounded-xl', className)}
+          className={clsx('size-6 rounded-lg', className)}
           src={token.imageUrl}
           alt="logo"
           width={width}
@@ -30,7 +30,7 @@ export default function TokenImage({
       ) : (
         <div
           className={clsx(
-            'flex size-6 items-center justify-center rounded-xl border border-solid border-D0 bg-white',
+            'flex size-6 items-center justify-center rounded-xl border border-solid border-border bg-white',
             className,
           )}>
           <div className={clsx('text-sm font-semibold text-muted-foreground', textClassName)}>

@@ -28,6 +28,7 @@ module.exports = {
         'accent-pink': '#BE185D',
         border: '#E2E8F0',
         success: '#16A34A',
+        warning: '#CA8A04',
         destructive: '#DC2626',
         primary: '#2563EB',
         secondary: '#EFF6FF',
@@ -55,7 +56,6 @@ module.exports = {
         scorpion: '#595959',
         positive: '#00A186',
         'yellow-stroke': '#FADEAB',
-        warning: '#FAAD14',
         'yellow-fill': '#FEF6E7',
       },
       boxShadow: {

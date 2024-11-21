@@ -29,11 +29,11 @@ export default function TokenCell({
   return !subtitle ? (
     <Flex gap={4} align="center" className={className}>
       {children}
-      <EPTooltip mode="dark" title={token?.name}>
-        <div className="text-sm text-foreground">{name}</div>
+      <EPTooltip mode="dark" title={`${token?.name} (${symbol})`}>
+        <div className="shrink-0 text-sm text-foreground">{name}</div>
       </EPTooltip>
       {symbol && showSymbol && (
-        <EPTooltip mode="dark" title={token?.symbol}>
+        <EPTooltip mode="dark" pointAtCenter={false} title={token?.symbol}>
           <div className="w-full truncate text-sm text-muted-foreground">{`(${symbol})`}</div>
         </EPTooltip>
       )}
@@ -44,13 +44,13 @@ export default function TokenCell({
       <div>
         <div>
           <Text size="normal" fontWeight={FontWeightEnum.Medium}>
-            <EPTooltip mode="dark" title={token?.name}>
+            <EPTooltip mode="dark" title={`${token?.name} (${symbol})`}>
               <span className="text-base-100">{name}</span>
             </EPTooltip>
           </Text>
           {symbol && showSymbol && (
             <Text className="!text-[#858585]" size="normal" fontWeight={FontWeightEnum.Medium}>
-              <EPTooltip mode="dark" title={token?.symbol}>
+              <EPTooltip mode="dark" placement="leftTop" title={token?.symbol}>
                 {`(${symbol})`}
               </EPTooltip>
             </Text>

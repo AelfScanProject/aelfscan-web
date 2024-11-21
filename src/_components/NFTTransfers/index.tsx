@@ -139,6 +139,7 @@ export default function List({ showHeader = true }) {
           value: selectChain,
           onChange: chainChange,
         }}
+        bordered={false}
         loading={loading}
         dataSource={data}
         columns={columns}

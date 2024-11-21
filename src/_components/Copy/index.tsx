@@ -9,7 +9,7 @@ import IconFont from '@_components/IconFont';
 import copy from 'copy-to-clipboard';
 import { message } from 'antd';
 import clsx from 'clsx';
-export default function Copy({ value, className }: { value: string; className?: string }) {
+export default function Copy({ value, className, type }: { value: string; className?: string; type?: string }) {
   const handleCopy = () => {
     message.destroy();
     try {
@@ -19,5 +19,11 @@ export default function Copy({ value, className }: { value: string; className?: 
       message.error('Copy failed, please copy by yourself.');
     }
   };
-  return <IconFont className={clsx(className, 'copy-btn ml-1 text-base')} type="CopyButton" onClick={handleCopy} />;
+  return (
+    <IconFont
+      className={clsx(className, 'copy-btn ml-1 text-base')}
+      type={type ? type : 'CopyButton'}
+      onClick={handleCopy}
+    />
+  );
 }

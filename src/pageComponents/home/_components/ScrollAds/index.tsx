@@ -38,7 +38,7 @@ const AdsCarousel = () => {
             <div key={index} className="mx-4 flex items-center gap-1 text-sm text-foreground">
               <Image src={item.logo} width={20} height={20} className="mx-2 inline-block size-6 rounded-full" alt="" />
               <span className="text-sm text-muted-foreground">{item.adsText}</span>
-              <Link target="_blank" href={item.clickLink} className="font-medium text-primary">
+              <Link target="_blank" href={item.clickLink} className="cursor-pointer font-medium text-primary">
                 {item.clickText}
               </Link>
             </div>

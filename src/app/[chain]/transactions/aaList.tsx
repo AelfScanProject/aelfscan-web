@@ -70,6 +70,7 @@ export default function List() {
       },
       chainId: chain as string,
       type: 'tx',
+      showHeader: false,
     });
   }, [chain, timeFormat]);
 

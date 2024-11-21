@@ -319,7 +319,6 @@ export interface IAccountDetailRequestParams extends RequestInit {
   chainId: TChainID;
   address: string;
   maxResultCount?: number;
-  addressType: AddressType;
 }
 
 export interface IAccountTokensRequestParams extends RequestInit {

@@ -47,23 +47,6 @@ export default function HeadTitle({
           {content}
           {children}
         </div>
-        <div className="flex items-center gap-2">
-          {/* {!multi && <ChainTags chainIds={chainIds} className="border-D0 leading-[18px]" />} */}
-          {mainLink && (
-            <Link href={mainLink}>
-              <Button className="!h-7 !px-2" size="small" ghost type="primary">
-                View on aelf MainChain
-              </Button>
-            </Link>
-          )}
-          {sideLink && (
-            <Link href={sideLink}>
-              <Button className="!h-7 !px-2" size="small" ghost type="primary">
-                View on aelf dAppChain
-              </Button>
-            </Link>
-          )}
-        </div>
       </div>
       {!hiddenAds && <PageAd adPage={adPage} />}
     </>
