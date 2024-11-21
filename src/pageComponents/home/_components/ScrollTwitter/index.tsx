@@ -63,7 +63,7 @@ const AelfUpdatesCarousel = () => {
               <Link
                 target="_blank"
                 href={`https://twitter.com/aelfblockchain/status/${item.id}`}
-                className="text-primary">
+                className="cursor-pointer text-primary">
                 Learn More
               </Link>
             </div>

@@ -60,6 +60,7 @@ const ADDRESS_API_LIST = {
   uploadContractCode: `${BASE_API}/contractfile/upload`,
   getServerTopAccounts: `${SERVER_BASE_API}/app/address/accounts`,
   getServerAccountDetail: `${SERVER_BASE_API}/app/address/detail`,
+  getAccountDetail: `${BASE_API}/app/address/detail`,
 };
 
 const Common_API_List = {

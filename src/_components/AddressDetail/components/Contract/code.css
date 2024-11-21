@@ -46,6 +46,15 @@
   }
 
   .code-viewer-container {
-    min-width: 910px;
+    min-width: 310px;
+  }
+}
+
+
+.view-button {
+  @apply border-border p-[6px] rounded-md !important;
+  
+  &:hover {
+    @apply bg-white border-primary !important;
   }
 }

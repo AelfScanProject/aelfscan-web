@@ -10,13 +10,14 @@ import Link from 'next/link';
 import EPTooltip from '@_components/EPToolTip';
 import ChainTags from '@_components/ChainTags';
 import { TokenTypeEnum } from '@app/[chain]/token/[tokenSymbol]/type';
+import { MULTI_CHAIN } from '@_utils/contant';
 
 const renderTokenLink = (record, chain) => (
   <Link
     href={
       record.type === TokenTypeEnum.nft
-        ? `/nftItem?chainId=${record.chainIds ? record.chainIds[0] : chain}&itemSymbol=${record.token.symbol}`
-        : `/${record.chainIds ? record.chainIds[0] : chain}/token/${record.token.symbol}`
+        ? `/nftItem?chainId=${MULTI_CHAIN}&itemSymbol=${record.token.symbol}`
+        : `/${MULTI_CHAIN}/token/${record.token.symbol}`
     }>
     <TokenTableCell showSymbol={false} token={record.token}>
       <TokenImage token={record.token} />
@@ -25,12 +26,12 @@ const renderTokenLink = (record, chain) => (
 );
 
 const renderSymbol = (text, record) => (
-  <span className="inline-block max-w-[181px] truncate leading-5 text-base-100">{record.token?.symbol}</span>
+  <span className="inline-block max-w-[181px] truncate leading-5">{record.token?.symbol}</span>
 );
 
 const renderQuantity = (text) => (
   <EPTooltip mode="dark" title={thousandsNumber(text)}>
-    <span className="inline-block max-w-[124px] truncate leading-5 text-base-100">{thousandsNumber(text)}</span>
+    <span className="inline-block max-w-[192px] truncate leading-5">{thousandsNumber(text)}</span>
   </EPTooltip>
 );
 
@@ -41,22 +42,33 @@ const renderValue = (text, record, showELF) =>
   showELF ? <span>{numberFormatter(record.valueOfElf)}</span> : <span>${thousandsNumber(text)}</span>;
 
 const renderChange24h = (text) => (
-  <span className={clsx(text >= 0 ? 'text-positive' : 'text-rise-red')}>
+  <span className={clsx(text >= 0 ? 'text-success' : 'text-destructive')}>
     <IconFont className={clsx(text >= 0 && 'rotate-180', 'mr-1 text-xs')} type="down-aa9i0lma" />
     {text}%
   </span>
 );
 
-const getColumns = (sortedInfo, chain, showELF, multi): ColumnsType<TokensListItemType> => {
+const getColumns = (sortedInfo, chain, showELF): ColumnsType<TokensListItemType> => {
   const commonColumns = [
     {
+      title: 'Chain',
+      width: 140,
+      dataIndex: 'chainIds',
+      key: 'chainIds',
+      render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
+    },
+    {
+      title: 'Token Name',
       dataIndex: 'token',
       key: 'token',
+      width: 224,
       render: (text, record) => renderTokenLink(record, chain),
     },
     {
       title: 'Symbol',
       dataIndex: 'symbol',
+      width: 224,
+      className: 'sort-title-cell',
       key: 'Symbol',
       sorter: true,
       sortIcon: ({ sortOrder }) => <EPSortIcon sortOrder={sortOrder} />,
@@ -68,6 +80,8 @@ const getColumns = (sortedInfo, chain, showELF, multi): ColumnsType<TokensListIt
       dataIndex: 'quantity',
       key: 'FormatAmount',
       sorter: true,
+      className: 'sort-title-cell',
+      width: 224,
       sortIcon: ({ sortOrder }) => <EPSortIcon sortOrder={sortOrder} />,
       sortOrder: sortedInfo?.columnKey === 'FormatAmount' ? sortedInfo.order : null,
       render: renderQuantity,
@@ -76,10 +90,12 @@ const getColumns = (sortedInfo, chain, showELF, multi): ColumnsType<TokensListIt
       title: 'Price',
       dataIndex: 'priceOfUsd',
       key: 'priceOfUsd',
+      width: 224,
       render: (text, record) => renderPrice(text, record, showELF),
     },
     {
       title: 'Change(24H)',
+      width: 140,
       dataIndex: 'priceOfUsdPercentChange24h',
       key: 'priceOfUsdPercentChange24h',
       render: renderChange24h,
@@ -87,35 +103,13 @@ const getColumns = (sortedInfo, chain, showELF, multi): ColumnsType<TokensListIt
     {
       title: 'Value',
       dataIndex: 'valueOfUsd',
+      width: 222,
       key: 'valueOfUsd',
       render: (text, record) => renderValue(text, record, showELF),
     },
   ];
 
-  return multi
-    ? [
-        {
-          title: 'Chain',
-          width: 144,
-          dataIndex: 'chainIds',
-          key: 'chainIds',
-          render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
-        },
-        { ...commonColumns[0], width: 240, title: 'Token Name' },
-        { ...commonColumns[1], width: 176 },
-        { ...commonColumns[2], width: 208 },
-        { ...commonColumns[3], width: 240 },
-        { ...commonColumns[4], width: 108 },
-        { ...commonColumns[5], width: 196 },
-      ]
-    : [
-        { ...commonColumns[0], width: 369, title: 'Token Name' },
-        { ...commonColumns[1], width: 218 },
-        { ...commonColumns[2], width: 219 },
-        { ...commonColumns[3], width: 174 },
-        { ...commonColumns[4], width: 108 },
-        { ...commonColumns[5], width: 224 },
-      ];
+  return commonColumns;
 };
 
 export default getColumns;

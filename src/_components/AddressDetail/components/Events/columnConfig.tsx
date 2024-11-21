@@ -8,11 +8,11 @@ import LogItems from '@_components/LogsContainer/logItems';
 import EPTooltip from '@_components/EPToolTip';
 import Copy from '@_components/Copy';
 
-export default function getColumns({ timeFormat, handleTimeChange, chainId }): ColumnsType<IEvents> {
+export default function getColumns({ timeFormat, handleTimeChange }): ColumnsType<IEvents> {
   return [
     {
       dataIndex: 'transactionId',
-      width: 208,
+      width: 177,
       key: 'transactionId',
       title: (
         <div className="flex items-center font-medium">
@@ -23,7 +23,7 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
         return (
           <div className="flex items-center">
             <EPTooltip title={text} mode="dark">
-              <Link className="block w-[120px] truncate text-link" href={`/${chainId}/tx/${text}`}>
+              <Link className="block w-[120px] truncate text-primary" href={`/${records.chainId}/tx/${text}`}>
                 {text}
               </Link>
             </EPTooltip>
@@ -34,11 +34,11 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
     },
     {
       title: 'Block',
-      width: 128,
+      width: 140,
       dataIndex: 'blockHeight',
       key: 'blockHeight',
-      render: (text) => (
-        <Link className="block  text-link" href={`/${chainId}/block/${text}`}>
+      render: (text, records) => (
+        <Link className="block  text-primary" href={`/${records.chainId}/block/${text}`}>
           {text}
         </Link>
       ),
@@ -46,14 +46,13 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
     {
       title: (
         <div
-          className="time flex cursor-pointer items-center font-medium text-link"
+          className="time flex cursor-pointer items-center font-medium text-primary"
           onClick={handleTimeChange}
           onKeyDown={handleTimeChange}>
-          <IconFont className="mr-1 text-xs" type="Rank" />
           {timeFormat}
         </div>
       ),
-      width: 208,
+      width: 168,
       dataIndex: 'timeStamp',
       key: 'timeStamp',
       render: (text) => {
@@ -61,19 +60,14 @@ export default function getColumns({ timeFormat, handleTimeChange, chainId }): C
       },
     },
     {
-      title: 'Log Event',
-      width: 128,
+      title: 'Method',
+      width: 200,
       dataIndex: 'methodName',
       key: 'methodName',
       render: (text) => <Method text={text} tip={text} />,
     },
     {
-      title: (
-        <div>
-          <IconFont className="mr-1 " type="log" />
-          <span>Logs</span>
-        </div>
-      ),
+      title: 'Logs',
       width: 672,
       dataIndex: 'logs',
       key: 'logs',

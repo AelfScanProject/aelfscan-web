@@ -55,6 +55,7 @@ export interface ICommonTableProps<T> extends ITableProps<T> {
   pageSizeChange?: (page: number, pageSize: number) => void;
   emptyPic?: string;
   showLast?: boolean;
+  tokenPage?: boolean;
   headerLeftNode?: ReactNode;
 }
 
@@ -104,6 +105,7 @@ export default function TableApp({
   options,
   headerTitle,
   hiddenTitle,
+  tokenPage,
   hiddenPagination,
   showMultiChain,
   showLast = true,
@@ -133,22 +135,50 @@ export default function TableApp({
           showTopSearch ? 'py-4' : 'pb-4 pt-3',
           `ep-table-header-${isMd ? 'mobile' : 'pc'}`,
         )}>
-        <div className="header-left mr-4 flex flex-1 flex-col justify-between lg:flex-row lg:items-center">
+        <div
+          className={clsx(
+            'header-left mr-4 flex flex-1 flex-col justify-between lg:flex-row lg:items-center',
+            tokenPage && 'w-full',
+          )}>
           {!hiddenTitle && <div>{isReactNode(headerTitle) ? headerTitle : <HeaderTitle {...headerTitle} />}</div>}
-          {headerLeftNode}
+          {tokenPage && isMd ? (
+            <EPTooltip
+              title={disabledTooltip ? '' : topSearchProps?.placeholder}
+              placement="topLeft"
+              trigger={['focus']}
+              pointAtCenter={false}
+              mode="dark">
+              <EPSearch
+                {...searchProps}
+                className={`${topSearchProps?.className} w-auto flex-1 ${tokenPage && isMd && 'table-full-search mt-2 !w-full'}`}
+                onPressEnter={({ currentTarget }) => {
+                  onSearchChange?.(currentTarget.value);
+                  topSearchProps?.onPressEnter?.(currentTarget.value);
+                }}
+                onClear={() => {
+                  topSearchProps?.onSearchChange('');
+                  topSearchProps?.onClear?.();
+                }}
+              />
+            </EPTooltip>
+          ) : (
+            headerLeftNode
+          )}
         </div>
         {!hiddenPagination && (
           <div
             className={clsx(
               'header-pagination flex w-full flex-col items-start gap-3 min-[769px]:w-auto  min-[769px]:flex-row min-[769px]:items-center',
-              showTopSearch && '!flex-row gap-3 min-[769px]:!w-full min-[769px]:flex-row min-[993px]:!w-auto',
+              showTopSearch && '!flex-row gap-3 min-[769px]:flex-row min-[993px]:!w-auto',
+              tokenPage && isMd && '!items-center',
             )}>
+            {tokenPage && isMd && headerLeftNode}
             {showMultiChain && (
-              <div className="min-w-[120px] max-w-[160px] min-[769px]:w-auto">
+              <div className={clsx('min-w-[120px] max-w-[160px] min-[769px]:w-auto')}>
                 <MultiChainSelect props={MultiChainSelectProps} className="min-w-[120px]" />
               </div>
             )}
-            {showTopSearch ? (
+            {showTopSearch && !(tokenPage && isMd) ? (
               <EPTooltip
                 title={disabledTooltip ? '' : topSearchProps?.placeholder}
                 placement="topLeft"

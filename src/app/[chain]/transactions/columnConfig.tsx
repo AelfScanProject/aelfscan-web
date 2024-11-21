@@ -14,7 +14,7 @@ const renderTransactionId = (text, records, chainId) => (
     {records.status === TransactionStatus.Failed && <IconFont className="mr-1" type="question-circle-error" />}
     <EPTooltip title={text} mode="dark">
       <Link
-        className="block w-[120px] truncate text-link"
+        className="block w-[120px] truncate text-primary"
         href={`/${(records?.chainIds && records?.chainIds[0]) || chainId}/tx/${text}`}>
         {text}
       </Link>
@@ -33,7 +33,7 @@ const renderContractToken = (data, records, chainId) => (
   />
 );
 
-const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId) =>
+const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId, showHeader) =>
   [
     {
       title: (
@@ -84,7 +84,7 @@ const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId) =>
       key: 'blockHeight',
       render: (text, records) => (
         <Link
-          className="block text-link"
+          className="block text-primary"
           href={`/${(records?.chainIds && records?.chainIds[0]) || records.chainId}/block/${text}`}>
           {text}
         </Link>
@@ -96,7 +96,6 @@ const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId) =>
           {timeFormat}
         </div>
       ),
-      width: 116,
       dataIndex: 'timestamp',
       key: 'timestamp',
       render: (text) => <div>{formatDate(text, timeFormat)}</div>,
@@ -104,7 +103,7 @@ const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId) =>
     {
       dataIndex: 'from',
       title: 'From',
-      width: type === 'block' ? 200 : 220,
+      width: type === 'block' || !showHeader ? 200 : 220,
       render: (fromData, records) => renderContractToken(fromData, records, chainId),
     },
     {
@@ -118,28 +117,26 @@ const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId) =>
     {
       dataIndex: 'to',
       title: 'To',
-      width: type === 'block' ? 200 : 293,
+      width: type === 'block' || !showHeader ? 200 : 293,
       render: (toData, records) => renderContractToken(toData, records, chainId),
     },
     {
-      title: type === 'block' ? 'Amount' : 'Value',
-      width: type === 'block' ? 177 : 100,
+      title: type === 'block' || !showHeader ? 'Amount' : 'Value',
+      width: !showHeader ? 106.5 : type === 'block' ? 177 : 100,
       key: 'transactionValue',
       dataIndex: 'transactionValue',
-      render: (text) => (
-        <span className="break-all text-base-100">{text || text === 0 ? addSymbol(divDecimals(text)) : '-'}</span>
-      ),
+      render: (text) => <span className="break-all">{text || text === 0 ? addSymbol(divDecimals(text)) : '-'}</span>,
     },
     {
       title: 'Txn Fee',
-      width: type === 'block' ? 177 : 108,
+      width: !showHeader ? 106.5 : type === 'block' ? 177 : 108,
       key: 'transactionFee',
-      hidden: type !== 'block',
+      hidden: showHeader && type !== 'block',
       dataIndex: 'transactionFee',
       render: (text) => <span className="break-all">{addSymbol(divDecimals(text))}</span>,
     },
   ].filter(Boolean);
 
-export default function getColumns({ timeFormat, handleTimeChange, type, chainId = 'AELF' }) {
-  return getColumnsConfig(timeFormat, handleTimeChange, type, chainId);
+export default function getColumns({ timeFormat, handleTimeChange, type, chainId = 'AELF', showHeader = true }) {
+  return getColumnsConfig(timeFormat, handleTimeChange, type, chainId, showHeader);
 }

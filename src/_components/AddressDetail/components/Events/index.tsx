@@ -2,11 +2,11 @@ import Table from '@_components/Table';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { IEvents } from './type';
 import { ColumnsType } from 'antd/es/table';
-import { Descriptions, DescriptionsProps } from 'antd';
+import { Descriptions } from 'antd';
 
 import getColumns from './columnConfig';
 import './index.css';
-import { useDebounce, useEffectOnce } from 'react-use';
+import { useEffectOnce } from 'react-use';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchContractEvents } from '@_api/fetchContact';
 import { getAddress, getPageNumber } from '@_utils/formatter';
@@ -16,18 +16,18 @@ import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import Link from 'next/link';
 const labelStyle: React.CSSProperties = {
-  color: '#858585',
+  color: '#64748B',
   fontSize: '14px',
   lineHeight: '22px',
 };
 
 const contentStyle: React.CSSProperties = {
-  color: '#252525',
+  color: '#020617',
   fontSize: '14px',
   lineHeight: '22px',
 };
 
-export default function Events() {
+export default function Events({ chainIds }: { chainIds: TChainID[] }) {
   const { defaultPage, defaultPageSize } = useSearchAfterParams(10, 'events');
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
@@ -36,7 +36,7 @@ export default function Events() {
   const [data, setData] = useState<IEvents[]>();
   const [timeFormat, setTimeFormat] = useState<string>('Date Time (UTC)');
   const [searchText, setSearchText] = useState<string>();
-  const { chain, address } = useParams();
+  const { address } = useParams();
   const mountRef = useRef(false);
   const updateQueryParams = useUpdateQueryParams();
 
@@ -45,7 +45,7 @@ export default function Events() {
   const getData = useCallback(
     async (page: number, pageSize: number, search) => {
       const params = {
-        chainId: chain as TChainID,
+        chainId: chainIds[0],
         skipCount: getPageNumber(page, pageSize),
         maxResultCount: pageSize,
         blockHeight: !isNaN(Number(search)) ? Number(search) : search || null,
@@ -72,7 +72,7 @@ export default function Events() {
         setLoading(false);
       }
     },
-    [address, chain],
+    [address, chainIds],
   );
 
   useEffectOnce(() => {
@@ -85,9 +85,8 @@ export default function Events() {
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
-      chainId: chain,
     });
-  }, [chain, timeFormat]);
+  }, [timeFormat]);
 
   const pageChange = async (page: number) => {
     setLoading(true);
@@ -121,23 +120,23 @@ export default function Events() {
         key: 'desc',
         label: 'Filtered by BlockNo',
         labelStyle: {
-          color: '#252525',
+          color: '#020617',
           fontWeight: 500,
         },
         children: (
-          <Link className="block w-[400px] truncate text-link" href={`/${chain}/block/${searchText}`}>
+          <Link className="block w-[400px] truncate text-primary" href={`/${chainIds[0]}/block/${searchText}`}>
             {searchText}
           </Link>
         ),
         span: spanWith2col,
       },
     ];
-  }, [chain, isMobile, searchText]);
+  }, [chainIds, isMobile, searchText]);
 
   return (
     <div className="event-container">
       {searchType === 'block' && data?.length !== 0 && searchText && !loading && (
-        <div className="mx-4 mb-2 border-b border-b-[#e6e6e6] pb-4">
+        <div className="mx-4 mb-2 border-b border-b-border pb-4">
           <Descriptions
             contentStyle={contentStyle}
             labelStyle={labelStyle}
@@ -179,6 +178,7 @@ export default function Events() {
             searchChange(null);
           },
         }}
+        bordered={false}
         showTopSearch
         dataSource={data}
         columns={columns}

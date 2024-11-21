@@ -103,7 +103,7 @@ export default function FormItem({
               <Button
                 type="primary"
                 size="small"
-                className="mr-3 bg-link"
+                className="mr-3 !border-border !bg-white !px-2 !py-[6px] text-sm !text-primary disabled:!border"
                 disabled={!submittable && !!input.length}
                 loading={loading}
                 onClick={query}>
@@ -113,7 +113,7 @@ export default function FormItem({
             {type === 'write' && (
               <Button
                 size="small"
-                className="bg-link"
+                className="!border-border !bg-white !px-2 !py-[6px] text-sm !text-primary disabled:!border"
                 disabled={!isConnected || (!submittable && !!input.length)}
                 loading={writeLoading}
                 type="primary"
@@ -127,8 +127,7 @@ export default function FormItem({
 
       {res && (
         <>
-          <Divider dashed />
-          <div>Response Body</div>
+          <div className="border-t border-border pt-4 text-sm text-foreground">Result</div>
           <div className="overflow-x-auto">
             <ReactJson src={res} />
           </div>

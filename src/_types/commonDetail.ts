@@ -110,9 +110,16 @@ interface IPortfolioItem {
 }
 
 export interface IPortfolio {
-  mainChain?: IPortfolioItem;
-  sideChain?: IPortfolioItem;
-  total: IPortfolioItem;
+  mainNftCount: number;
+  mainTokenCount: number;
+  mainTokenValue: number;
+  sideNftCount: number;
+  sideTokenCount: number;
+  sideTokenValue: number;
+  totalNftCount: number;
+  totalTokenCount: number;
+  totalTokenValue: number;
+  totalTokenValueOfElf: number;
 }
 
 export interface IAddressResponse extends IAddressTokensDetail {
@@ -137,7 +144,7 @@ export interface IAddressResponse extends IAddressTokensDetail {
   elfBalanceOfUsd: number;
   elfBalance: number;
   elfPriceInUsd: number;
-  portfolio?: IPortfolio;
+  portfolio: IPortfolio;
 }
 
 export enum TitleEnum {

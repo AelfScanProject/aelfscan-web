@@ -7,19 +7,19 @@
 
 .contract-collapse-container{
   .explorer-collapse {
-    @apply !border-color-divider bg-F7;
+    @apply !border-border bg-muted;
   }
   .explorer-collapse-item {
-    @apply !border-color-divider;
+    @apply !border-border;
   }
   .explorer-collapse-header {
-    @apply  !px-3 !py-1 !items-center;
+    @apply  !px-3 !py-[6px] !items-center;
   }
   .explorer-collapse-header-text {
-    @apply text-xs leading-5 text-base-100 flex-1 min-w-0 mr-1;
+    @apply text-sm text-foreground flex-1 min-w-0 mr-1;
   }
   .explorer-collapse-content {
-    @apply !border-color-divider;
+    @apply !border-border;
   }
   .explorer-collapse-expand-icon {
     padding-inline-start: 16px;
@@ -29,6 +29,14 @@
   }
   .explorer-collapse-content-box {
     @apply px-3 pt-2 pb-4;
+  }
+
+  .explorer-form-item .explorer-form-item-label >label {
+    @apply text-foreground text-sm !important;
+  }
+
+  .explorer-input-outlined {
+    @apply border-border rounded-md !important;
   }
 }
 

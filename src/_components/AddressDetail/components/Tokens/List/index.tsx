@@ -10,13 +10,12 @@ import { fetchAccountsDetailTokens } from '@_api/fetchContact';
 import { TableProps } from 'antd';
 import { Switch } from 'aelf-design';
 import { SortEnum, TableSortEnum } from '@_types/common';
-import { useMultiChain } from '@_hooks/useSelectChain';
 
 type OnChange = NonNullable<TableProps<TokensListItemType>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
 type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
-export default function TokensList() {
+export default function TokensList({ totalTokenValue, totalTokenValueOfElf }) {
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(20);
@@ -26,8 +25,6 @@ export default function TokensList() {
   const [data, setData] = useState<TokensListItemType[]>([]);
   const [searchText, setSearchText] = useState<string>('');
   const [SearchFetchText, setSearchFetchText] = useState<string>('');
-  const [assetInUsd, setAssetInUsd] = useState<number>();
-  const [assetInElf, setAssetInElf] = useState<number>();
   const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
   const { chain, address } = useParams();
@@ -50,16 +47,12 @@ export default function TokensList() {
       setTotal(data.total);
       setData(data.list);
       setLoading(false);
-      setAssetInUsd(data.assetInUsd);
-      setAssetInElf(data.assetInElf);
     } finally {
       setLoading(false);
     }
   }, [SearchFetchText, address, selectChain, currentPage, pageSize, sortedInfo.columnKey, sortedInfo.order]);
 
-  const multi = useMultiChain();
-
-  const columns = getColumns(sortedInfo, chain, showELF, multi);
+  const columns = getColumns(sortedInfo, chain, showELF);
 
   const pageChange = (page: number) => {
     setCurrentPage(page);
@@ -86,11 +79,11 @@ export default function TokensList() {
   }, [fetchData]);
 
   const desc = useMemo(() => {
-    return `Total Value : ${showELF ? numberFormatter(assetInElf || '-') : `$${assetInUsd}`}`;
-  }, [assetInElf, assetInUsd, showELF]);
+    return `Total Value : ${showELF ? numberFormatter(totalTokenValueOfElf || '-') : `$${totalTokenValue}`}`;
+  }, [showELF, totalTokenValue, totalTokenValueOfElf]);
 
   return (
-    <div className="token-list px-4">
+    <div className="token-list pb-2">
       <div className="table-container">
         <Table
           showTopSearch
@@ -100,14 +93,15 @@ export default function TokensList() {
               desc: desc,
             },
           }}
-          showMultiChain={multi}
+          bordered={false}
+          showMultiChain={true}
           MultiChainSelectProps={{
             value: selectChain,
             onChange: chainChange,
           }}
           topSearchProps={{
             value: searchText,
-            placeholder: 'Search Token Name  Token Symbol',
+            placeholder: 'Search by Name/Symbol',
             className: '!w-auto !min-w-[176px]',
             onChange: ({ currentTarget }) => {
               setSearchText(currentTarget.value);
@@ -116,9 +110,10 @@ export default function TokensList() {
               searchChange(value);
             },
           }}
+          tokenPage
           headerLeftNode={
             <div className="flex items-center">
-              <span className="mr-2 text-xs leading-5 text-base-100">Show/Hide value in ELF</span>
+              <span className="mr-2 text-xs leading-5 text-base-100">Show value in ELF</span>
               <Switch checked={showELF} onChange={setShowELF} />
             </div>
           }
