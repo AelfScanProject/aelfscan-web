@@ -73,6 +73,7 @@ export default function getColumns({ timeFormat, handleTimeChange }): ColumnsTyp
       key: 'logs',
       render: (text, record) => (
         <LogItems
+          chain={record.chainId}
           data={{
             address: record.contractAddress,
             eventName: record.eventName,

@@ -38,7 +38,7 @@ function LogsContainer({ Logs = [] }: { Logs: ILogsProps[] }) {
                   value: (
                     <div className="name-container">
                       <div className="mb-4">{item.eventName}</div>
-                      <LogItems data={item} />
+                      <LogItems data={item} chain={chain} />
                     </div>
                   ),
                 },
