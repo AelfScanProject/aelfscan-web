@@ -70,9 +70,14 @@ export default function MultiChain({
             <IconFont className="text-base" type="chevron-down1" />
           </Dropdown>
         ) : (
-          <span className="relative inline-block">
-            <Copy className="absolute -top-[13px]" value={addressFormat(address, chainIds[0])} />
-          </span>
+          <>
+            <span className="relative mr-1 inline-block w-5">
+              <Copy className="absolute -top-[12px]" value={addressFormat(address, chainIds[0])} />
+            </span>
+            <span className="relative inline-block">
+              <QrCodeModal className="absolute -top-[12px]" address={addressFormat(address, chainIds[0])} />
+            </span>
+          </>
         )}
       </>
     );
