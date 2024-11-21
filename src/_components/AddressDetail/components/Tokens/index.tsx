@@ -37,7 +37,7 @@ export default function Tokens({ portfolio, chainIds }: { portfolio: IPortfolio;
           total={totalTokenCount}
           main={mainTokenCount}
           side={sideTokenCount}
-          title="Total Value"
+          title="Total token"
           suffix="Tokens"
           chainIds={chainIds}
           loading={loading}

@@ -19,7 +19,7 @@ const TAB_NAME = 'holders';
 export default function Holders({ search, onSearchChange, onSearchInputChange }: HoldersProps) {
   const isMobile = useMobileAll();
 
-  const { chain, tokenSymbol } = useParams();
+  const { tokenSymbol } = useParams();
   const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
     useSearchAfterParams(50, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
@@ -72,7 +72,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
       setLoading(false);
       mountRef.current = true;
     }
-  }, [chain, tokenSymbol, pageSize, pageType, currentPage, selectChain]);
+  }, [tokenSymbol, pageSize, pageType, currentPage, selectChain]);
 
   const pageChange = (page: number) => {
     if (page > currentPage) {
@@ -98,12 +98,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
     fetchData();
   }, [fetchData]);
 
-  const multi = useMultiChain();
-
-  const columns = useMemo(
-    () => getColumns({ currentPage, pageSize, chain, multi }),
-    [currentPage, pageSize, chain, multi],
-  );
+  const columns = useMemo(() => getColumns({ currentPage, pageSize }), [currentPage, pageSize]);
   const title = useMemo(() => `A total of ${total} holders found`, [total]);
 
   return (
@@ -114,19 +109,12 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
             title,
           },
         }}
-        topSearchProps={{
-          value: search || '',
-          onChange: ({ currentTarget }) => {
-            onSearchInputChange(currentTarget.value);
-          },
-          onSearchChange,
-        }}
-        showMultiChain={multi}
+        showMultiChain={true}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
         }}
-        // showTopSearch
+        bordered={false}
         loading={loading}
         dataSource={data}
         columns={columns}

@@ -9,7 +9,7 @@ import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { getChainId } from '@_utils/formatter';
 export default async function NFTDetailsPage() {
   const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
+
   const itemSymbol: string = searchParams.get('itemSymbol') || '';
   const [overviewData, setOverviewData] = useState<ItemSymbolDetailOverview>();
   const [loading, setLoading] = useState(true);
@@ -17,14 +17,14 @@ export default async function NFTDetailsPage() {
     setLoading(true);
     const [overview] = await Promise.all([
       fetchCollectionItemDetail({
-        chainId: getChainId(chain || ''),
+        chainId: getChainId(''),
         symbol: itemSymbol,
         cache: 'no-store',
       }),
     ]);
     setLoading(false);
     setOverviewData(overview);
-  }, [chain, itemSymbol]);
+  }, [itemSymbol]);
 
   useEffect(() => {
     fetchData();

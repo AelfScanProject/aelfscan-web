@@ -9,7 +9,7 @@ import NFTImage from '@_components/NFTImage';
 import { Typography } from 'antd';
 import { useSearchParams } from 'next/navigation';
 import HeadTitle from '@_components/HeaderTitle';
-import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
+import MultiChain from '@_components/ContractToken/multiChain';
 
 const { Paragraph } = Typography;
 
@@ -21,8 +21,6 @@ export interface OverViewProps {
 export default function OverView(props: OverViewProps) {
   const { overview, onHolderClick } = props;
   const { description, properties } = overview;
-  const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
   const collapseItems: CollapseProps['items'] = [
     {
       key: '1',
@@ -30,11 +28,11 @@ export default function OverView(props: OverViewProps) {
       label: (
         <div className="nft-detail-label">
           <div className="nft-detail-label-left">
-            <IconFont type="document" />
-            <span>Details</span>
+            <IconFont className="text-base" type="list" />
+            <div className="text-base">Details</div>
           </div>
           <div className="nft-detail-label-right">
-            <IconFont type="Down" />
+            <IconFont className="text-base" type="chevron-down-f731al7b" />
           </div>
         </div>
       ),
@@ -82,10 +80,6 @@ export default function OverView(props: OverViewProps) {
       ),
     });
   }
-  const multi = useMultiChain();
-  const sideChain = useSideChain();
-
-  const itemSymbol = searchParams.get('itemSymbol') || '';
 
   return (
     <div className="ntf-overview-wrap">
@@ -97,15 +91,8 @@ export default function OverView(props: OverViewProps) {
           {/* <h1 className="nft-title">{overview.item?.name}</h1> */}
           <HeadTitle
             content={overview.item?.name}
+            rootClassName="!pt-0 !pb-4"
             hiddenAds
-            mainLink={
-              multi && overview.chainIds?.includes('AELF') ? `/nftItem?chainId=AELF&&itemSymbol=${itemSymbol}` : ''
-            }
-            sideLink={
-              multi && overview.chainIds?.includes(sideChain)
-                ? `/nftItem?chainId=${sideChain}&&itemSymbol=${itemSymbol}`
-                : ''
-            }
             adPage="collectionItemDetail"
           />
           <div className="nft-thumb">
@@ -113,8 +100,8 @@ export default function OverView(props: OverViewProps) {
               <NFTImage className="aspect-square w-full object-cover" src={overview.nftCollection?.imageUrl} />
             </div>
             <Link
-              href={`/nft?chainId=${chain}&&collectionSymbol=${overview.nftCollection?.symbol}`}
-              className="text-link">
+              href={`/nft?chainId=${MultiChain}&&collectionSymbol=${overview.nftCollection?.symbol}`}
+              className="text-sm text-primary">
               {overview.nftCollection?.name}
             </Link>
           </div>

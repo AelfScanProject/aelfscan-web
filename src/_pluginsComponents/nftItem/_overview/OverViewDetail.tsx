@@ -4,7 +4,6 @@ import { Tooltip } from 'aelf-design';
 import { Dropdown } from 'antd';
 import { ItemSymbolDetailOverview } from '../type';
 import { checkMainNet } from '@_utils/isMainNet';
-import { useSearchParams } from 'next/navigation';
 import { useEnvContext } from 'next-runtime-env';
 import { formatDate, thousandsNumber } from '@_utils/formatter';
 import EPTooltip from '@_components/EPToolTip';
@@ -18,8 +17,6 @@ export interface OverViewDetailProps {
 }
 
 export default function OverViewDetail(props: OverViewDetailProps) {
-  const searchParams = useSearchParams();
-  const chain: string = searchParams.get('chainId') || '';
   const { overview, onHolderClick } = props;
   const { issuer, owner } = overview;
   const { NEXT_PUBLIC_NETWORK_TYPE } = useEnvContext();
@@ -29,7 +26,7 @@ export default function OverViewDetail(props: OverViewDetailProps) {
       <li className="nft-detail-item">
         <div className="nft-detail-item-left">
           <EPTooltip mode="dark" title="Current holders of this NFT">
-            <IconFont type="question-circle" />
+            <IconFont className="text-base" type="circle-help" />
           </EPTooltip>
           <span>Holders:</span>
         </div>
@@ -40,14 +37,14 @@ export default function OverViewDetail(props: OverViewDetailProps) {
       <li className="nft-detail-item">
         <div className="nft-detail-item-left">
           <EPTooltip mode="dark" title="Accounts that are permitted to create this NFT">
-            <IconFont type="question-circle" />
+            <IconFont className="text-base" type="circle-help" />
           </EPTooltip>
           <span>Owners:</span>
         </div>
         <div className="nft-detail-item-right">
           {owner?.length === 1 && (
             <span>
-              <ContractToken address={owner[0]} type={AddressType.address} chainId={chain} />
+              <ContractToken address={owner[0]} type={AddressType.address} chainIds={overview.chainIds} onlyCopy />
             </span>
           )}
           {owner?.length > 1 && (
@@ -57,8 +54,13 @@ export default function OverViewDetail(props: OverViewDetailProps) {
                   return {
                     key: item,
                     label: (
-                      <div className="address flex items-center text-link">
-                        <ContractToken address={item} type={AddressType.address} chainId={chain} />
+                      <div className="address flex items-center text-primary">
+                        <ContractToken
+                          address={item}
+                          type={AddressType.address}
+                          chainIds={overview.chainIds}
+                          onlyCopy
+                        />
                       </div>
                     ),
                   };
@@ -67,7 +69,7 @@ export default function OverViewDetail(props: OverViewDetailProps) {
               overlayClassName="nft-detail-dropdown"
               trigger={['click']}>
               <span>
-                {owner.length}Owners <IconFont type="Down" />
+                {owner.length}Owners <IconFont className="text-base" type="chevron-down-f731al7b" />
               </span>
             </Dropdown>
           )}
@@ -76,14 +78,14 @@ export default function OverViewDetail(props: OverViewDetailProps) {
       <li className="nft-detail-item">
         <div className="nft-detail-item-left">
           <EPTooltip mode="dark" title="The issuers of this NFT">
-            <IconFont type="question-circle" />
+            <IconFont className="text-base" type="circle-help" />
           </EPTooltip>
           <span>Issuer:</span>
         </div>
         <div className="nft-detail-item-right">
           {issuer?.length === 1 && (
             <span>
-              <ContractToken address={issuer[0]} type={AddressType.address} chainId={chain} />
+              <ContractToken address={issuer[0]} type={AddressType.address} chainIds={overview.chainIds} onlyCopy />
             </span>
           )}
           {issuer?.length > 1 && (
@@ -94,7 +96,12 @@ export default function OverViewDetail(props: OverViewDetailProps) {
                     key: item,
                     label: (
                       <div className="address flex items-center text-link">
-                        <ContractToken address={item} type={AddressType.address} chainId={chain} />
+                        <ContractToken
+                          address={item}
+                          type={AddressType.address}
+                          chainIds={overview.chainIds}
+                          onlyCopy
+                        />
                       </div>
                     ),
                   };
@@ -112,7 +119,7 @@ export default function OverViewDetail(props: OverViewDetailProps) {
       <li className="nft-detail-item">
         <div className="nft-detail-item-left">
           <EPTooltip mode="dark" title="The NFT‘s unique token symbol">
-            <IconFont type="question-circle" />
+            <IconFont className="text-base" type="circle-help" />
           </EPTooltip>
           <span>Token Symbol:</span>
         </div>
@@ -121,7 +128,7 @@ export default function OverViewDetail(props: OverViewDetailProps) {
       <li className="nft-detail-item">
         <div className="nft-detail-item-left">
           <EPTooltip mode="dark" title="Current quantity of this NFT">
-            <IconFont type="question-circle" />
+            <IconFont className="text-base" type="circle-help" />
           </EPTooltip>
           <span>Quantity:</span>
         </div>
@@ -131,7 +138,7 @@ export default function OverViewDetail(props: OverViewDetailProps) {
         <li className="nft-detail-item">
           <div className="nft-detail-item-left">
             <EPTooltip mode="dark" title="Symbol to Create">
-              <IconFont type="question-circle" />
+              <IconFont className="text-base" type="circle-help" />
             </EPTooltip>
             <span>Symbol to Create:</span>
           </div>
@@ -142,7 +149,7 @@ export default function OverViewDetail(props: OverViewDetailProps) {
         <li className="nft-detail-item">
           <div className="nft-detail-item-left">
             <EPTooltip mode="dark" title="Expires">
-              <IconFont type="question-circle" />
+              <IconFont className="text-base" type="circle-help" />
             </EPTooltip>
             <span>Expires:</span>
           </div>
@@ -153,7 +160,7 @@ export default function OverViewDetail(props: OverViewDetailProps) {
         <li className="nft-detail-item">
           <div className="nft-detail-item-left">
             <EPTooltip mode="dark" title="Marketplaces trading this NFT">
-              <IconFont type="question-circle" />
+              <IconFont className="text-base" type="circle-help" />
             </EPTooltip>
             <span>Marketplaces:</span>
           </div>

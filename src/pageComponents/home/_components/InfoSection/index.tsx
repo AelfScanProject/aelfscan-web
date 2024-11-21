@@ -14,9 +14,11 @@ export const MultiDown = ({
   mainCount,
   sideCount,
   children,
+  dolar,
 }: {
-  mainCount?: number;
-  sideCount?: number;
+  mainCount?: number | string;
+  sideCount?: number | string;
+  dolar?: boolean;
   children: React.ReactNode;
 }) => {
   const isMd = useMD();
@@ -29,7 +31,10 @@ export const MultiDown = ({
             <IconFont className="text-base" type="mainChainLogo"></IconFont>
             <div className="text-sm">aelf MainChain</div>
           </div>
-          <div className="text-sm  text-muted-foreground">{thousandsNumber(mainCount || 0)}</div>
+          <div className="text-sm  text-muted-foreground">
+            {dolar && '$'}
+            {thousandsNumber(mainCount || 0)}
+          </div>
         </div>
       ),
     },
@@ -41,7 +46,9 @@ export const MultiDown = ({
             <IconFont className="text-base" type="dappChainLogo"></IconFont>
             <div className="mx-1 text-sm">aelf dAppChain</div>
           </div>
-          <div className="text-sm text-muted-foreground">{thousandsNumber(sideCount || 0)}</div>
+          <div className="text-sm text-muted-foreground">
+            {dolar && '$'} {thousandsNumber(sideCount || 0)}
+          </div>
         </div>
       ),
     },

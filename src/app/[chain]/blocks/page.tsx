@@ -3,10 +3,10 @@ import BlockList from './blockList';
 import { getPageNumber } from '@_utils/formatter';
 import { TablePageSize } from '@_types/common';
 
-export default async function BlocksPage({ params, searchParams }) {
+export default async function BlocksPage({ searchParams }) {
   const p = searchParams['p'] || 1;
   const ps = searchParams['ps'] || TablePageSize.mini;
-  const defaultChain = searchParams['chain'] || params.chain;
+  const defaultChain = searchParams['chain'];
   const data = await fetchServerBlocks({
     chainId: '',
     maxResultCount: ps,

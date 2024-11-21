@@ -11,20 +11,24 @@ import { useMemo } from 'react';
 export default function ContractToken({
   address,
   name,
+  className,
   type,
   chainId,
   showCopy = true,
   showChainId = true,
   chainIds = [],
   count = 4,
+  onlyCopy,
   showContractAddress = false,
 }: {
   address: string;
   name?: string;
+  className?: string;
   count?: number;
   chainIds?: TChainID[];
   type: AddressType;
   chainId?: string;
+  onlyCopy?: boolean;
   showCopy?: boolean;
   showChainId?: boolean;
   showContractAddress?: boolean;
@@ -49,7 +53,7 @@ export default function ContractToken({
             {addressFormat(hiddenAddress(address || ''), showChain)}
           </Link>
         </EPTooltip>
-        {showCopy && <MultiChain showChainId={showChainId} address={address} chainIds={chainIds} />}
+        {showCopy && <MultiChain showChainId={showChainId} address={address} onlyCopy={onlyCopy} chainIds={chainIds} />}
         <div className="flex items-center"></div>
       </div>
     ) : (
@@ -71,12 +75,12 @@ export default function ContractToken({
         pointAtCenter={false}>
         <Link
           prefetch={false}
-          className="max-w-full truncate"
+          className={`max-w-full truncate ${className}`}
           href={`/${MULTI_CHAIN}/address/${addressFormat(address, showChain)}`}>
           {name}
         </Link>
       </EPTooltip>
-      {showCopy && <MultiChain showChainId={showChainId} address={address} chainIds={chainIds} />}
+      {showCopy && <MultiChain showChainId={showChainId} onlyCopy={onlyCopy} address={address} chainIds={chainIds} />}
     </div>
   ) : (
     '-'

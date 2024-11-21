@@ -5,7 +5,7 @@ import { InventoryItem } from '../type';
 import { useSearchParams } from 'next/navigation';
 import { ITableSearch } from '@_components/Table';
 import { fetchNFTInventory } from '@_api/fetchNFTS';
-import { getAddress, getChainId } from '@_utils/formatter';
+import { getAddress, getChainId, thousandsNumber } from '@_utils/formatter';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 export interface InventoryProps {
@@ -53,7 +53,7 @@ export default function Inventory(props: InventoryProps) {
     disabledTooltip: false,
     onSearchChange: handleSearchChange,
     onClear: handleClear,
-    placeholder: 'Filter Token Symbol',
+    placeholder: 'Search by Token Symbol',
   };
 
   const fetchInventoryListWrap = useCallback(async () => {
@@ -106,7 +106,7 @@ export default function Inventory(props: InventoryProps) {
         total={total}
         headerTitle={{
           single: {
-            title: `A total of ${total} records found`,
+            title: `Total of ${thousandsNumber(total)} records found`,
           },
         }}
         loading={loading}

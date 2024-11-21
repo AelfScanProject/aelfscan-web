@@ -188,7 +188,7 @@ export default function SourceCode({ contractInfo }: { contractInfo: IContractSo
           />
           <Button
             className="view-button"
-            icon={<IconFont className="!text-base" type={!codeAuto ? 'fullscreen' : 'fullscreen'} />}
+            icon={<IconFont className="!text-base" type={codeAuto ? 'minimize-2-f78beccb' : 'fullscreen'} />}
             onClick={viewChange}
           />
         </div>

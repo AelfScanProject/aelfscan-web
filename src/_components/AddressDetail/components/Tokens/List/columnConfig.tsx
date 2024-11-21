@@ -42,8 +42,8 @@ const renderValue = (text, record, showELF) =>
   showELF ? <span>{numberFormatter(record.valueOfElf)}</span> : <span>${thousandsNumber(text)}</span>;
 
 const renderChange24h = (text) => (
-  <span className={clsx(text >= 0 ? 'text-success' : 'text-destructive')}>
-    <IconFont className={clsx(text >= 0 && 'rotate-180', 'mr-1 text-xs')} type="down-aa9i0lma" />
+  <span className={clsx(text >= 0 ? 'text-success' : 'text-destructive', 'flex items-center')}>
+    <IconFont className={clsx('mr-1 text-base')} type={text >= 0 ? 'arrow-up' : 'arrow-down-red'} />
     {text}%
   </span>
 );
