@@ -1,8 +1,8 @@
 'use client';
 
 import IconFont from '@_components/IconFont';
-import { Button, Input, Modal, Upload } from 'aelf-design';
-import { Form, FormProps, Select, Spin } from 'antd';
+import { Input, Modal } from 'aelf-design';
+import { Form, FormProps, Select, Spin, Button } from 'antd';
 import Link from 'next/link';
 import './index.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -15,6 +15,8 @@ import FailedIcon from 'public/image/failed.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import addressFormat from '@_utils/urlUtils';
+import { MULTI_CHAIN } from '@_utils/contant';
+import UploadButton from '../components/upload';
 
 type FieldType = {
   contractAddress: string;
@@ -45,6 +47,7 @@ export default function SourceCodePage() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const uploadFile = Form.useWatch('file', form);
+  console.log(uploadFile, 'uploadFile');
 
   useEffect(() => {
     if (address) {
@@ -123,8 +126,9 @@ export default function SourceCodePage() {
 
   const uploadContract = useCallback(
     async (params: FieldType) => {
+      console.log(params, 'params');
       const formData = new FormData();
-      formData.append('file', params.file?.file?.originFileObj);
+      formData.append('file', params.file[0]?.originFileObj);
       setUploadLoading(true);
       try {
         const data = await uploadContractCode(
@@ -165,7 +169,7 @@ export default function SourceCodePage() {
   const handleGot = () => {
     if (type === 'success') {
       setOpen(false);
-      Router.push(`/${chain}/address/${address}`);
+      Router.push(`/${MULTI_CHAIN}/address/${address}`);
     } else {
       setOpen(false);
     }
@@ -188,22 +192,20 @@ export default function SourceCodePage() {
     <div className="contract-code flex w-full justify-center">
       <div className="max-w-[720px]">
         <div
-          className="flex cursor-pointer items-center gap-2 py-4 pb-6 text-sm leading-[22px] text-base-100 min-[769px]:pb-4"
+          className="flex cursor-pointer items-center gap-1 pb-[10px] pt-6 text-sm font-medium"
           onClick={() => {
-            Router.push(`/${chain}/address/${address}`);
+            Router.push(`/${MULTI_CHAIN}/address/${address}`);
           }}>
-          <IconFont className="mr-1 rotate-180" type="right-arrow-dfna6beo" />
-          Back
+          <IconFont className="rotate-180 text-base" type="arrow-right" />
+          <span className="text-primary">Back</span>
         </div>
-        <div className="min-[769px]:rounded-lg min-[769px]:border min-[769px]:border-solid min-[769px]:border-[#EAECEF] min-[769px]:bg-white min-[769px]:px-4 min-[769px]:py-6">
-          <div className="mb-2 text-center text-xl font-medium text-base-100">
-            Verify & Publish Contract Source Code
-          </div>
-          <div className="mb-10 text-center text-sm leading-[22px] text-base-100">
+        <div className="rounded-lg border border-solid border-border bg-white p-6">
+          <div className="mb-[6px] text-center text-2xl font-semibold">Verify & Publish Contract Source Code</div>
+          <div className="mb-6 text-start text-sm text-muted-foreground">
             <span>
               Source code verification provides transparency for users intteracting with smart contracts. By uploading
               the source code, aelfscan will match the comppiled code with that on the blockchain.{' '}
-              <Link target="_blank" href={`/${chain}/readmore/${address}`}>
+              <Link target="_blank" href={`/${MULTI_CHAIN}/readmore/${address}`}>
                 {' '}
                 Read more
               </Link>
@@ -216,6 +218,7 @@ export default function SourceCodePage() {
             wrapperCol={{ span: 16 }}
             style={{ width: '100%' }}
             layout="vertical"
+            requiredMark={false}
             onValuesChange={handleValuesChange}
             initialValues={{ remember: true }}
             onFinish={onFinish}
@@ -243,23 +246,24 @@ export default function SourceCodePage() {
                   },
                 },
               ]}>
-              <Input placeholder="ELF_" style={{ width: '100%' }} />
+              <Input size="small" placeholder="ELF_" style={{ width: '100%' }} />
             </Form.Item>
 
             <Form.Item<FieldType>
               name="version"
               label="Please select Compiler Version"
               rules={[{ required: true, message: 'Please select Compiler Version' }]}>
-              <Select style={{ height: '48px' }} options={NET_VERSION}>
-                Remember me
-              </Select>
+              <Select
+                style={{ height: '40px' }}
+                options={NET_VERSION}
+                suffixIcon={<IconFont width={16} height={16} type="chevron-down-f731al7b" />}></Select>
             </Form.Item>
 
             <Form.Item
               name="csprojPath"
               label="Project File Path"
               rules={[{ required: true, message: 'Project File Path' }]}>
-              <Input placeholder="e.g., ../example/project.csproj"></Input>
+              <Input size="small" placeholder="e.g., ../example/project.csproj"></Input>
             </Form.Item>
 
             <Form.Item<FieldType>
@@ -269,11 +273,14 @@ export default function SourceCodePage() {
               rules={[
                 {
                   validator: (_, value) => {
-                    if (!value || value.fileList?.length === 0) {
+                    console.log(value, 'value');
+                    if (!value || value?.length === 0) {
                       return Promise.reject(new Error('Please select the file to upload'));
                     }
 
-                    const isLt10M = value?.file.size / 1024 / 1024 < 10;
+                    const file = value[0];
+
+                    const isLt10M = file.size / 1024 / 1024 < 10;
                     if (!isLt10M) {
                       return Promise.reject(new Error('File size must be less than 10MB.'));
                     }
@@ -282,44 +289,44 @@ export default function SourceCodePage() {
                   },
                 },
               ]}>
-              <Upload
-                tips="Support file type: .zip (Max 10M)"
-                uploadText="Choose source code file to upload"
-                accept=".zip"
-                maxCount={1}
-                showUploadButton={!(uploadFile && uploadFile?.fileList?.length > 0)}
-              />
+              <UploadButton accept=".zip" />
             </Form.Item>
+            <div className="my-6 flex justify-center">
+              <div className="cf-turnstile" ref={turnstileElementRef}></div>
+            </div>
+            <div className="mt-6 flex w-full flex-col items-center justify-center gap-2">
+              <Button
+                type="primary"
+                style={{ width: '100%', height: '40px' }}
+                className="!rounded-md !border-border"
+                disabled={
+                  isSubmitDisabled ||
+                  !token ||
+                  !(uploadFile && uploadFile?.length > 0 && uploadFile[0].size / 1024 / 1024 < 10)
+                }
+                loading={uploadLoading}
+                onClick={handleSubmit}>
+                Verify and Publish
+              </Button>
+              <Button
+                htmlType="reset"
+                className="!rounded-md !border-border !text-primary"
+                style={{ width: '100%', height: '40px' }}
+                onClick={handleReset}>
+                Reset
+              </Button>
+            </div>
           </Form>
-        </div>
-        <div className="mt-6 flex justify-center">
-          <div className="cf-turnstile" ref={turnstileElementRef}></div>
-        </div>
-        <div className="mt-6 flex w-full items-center justify-center gap-3">
-          <Button
-            type="primary"
-            disabled={
-              isSubmitDisabled ||
-              !token ||
-              !(uploadFile && uploadFile?.fileList?.length > 0 && uploadFile?.file.size / 1024 / 1024 < 10)
-            }
-            loading={uploadLoading}
-            onClick={handleSubmit}>
-            Verify and Publish
-          </Button>
-          <Button htmlType="reset" onClick={handleReset}>
-            Reset
-          </Button>
         </div>
       </div>
 
       <Modal centered open={open} title="" footer={null} closable={false}>
         <div className="flex flex-col items-center justify-center">
           <Image alt="" src={type === 'success' ? SuccessIcon : FailedIcon} width={48} height={48}></Image>
-          <div className="py-2 text-xl font-medium text-base-100">
+          <div className="py-2 text-xl font-medium text-foreground">
             {type === 'success' ? 'Verification successful' : 'Verification failed'}
           </div>
-          <div className="pb-6 text-center text-sm text-base-100">
+          <div className="pb-6 text-center text-sm text-foreground">
             {type === 'success'
               ? 'Contract verification successful and the code has been published. Please check the contract page for details.'
               : errmessage}
@@ -333,8 +340,8 @@ export default function SourceCodePage() {
       </Modal>
       <Modal centered open={uploadLoading} title="" footer={null} closable={false}>
         <div className="flex flex-col items-center justify-center">
-          <div className="py-2 text-xl font-medium text-base-100">Verifying Contract</div>
-          <div className="pb-6 text-center text-sm text-base-100">
+          <div className="py-2 text-xl font-medium text-foreground">Verifying Contract</div>
+          <div className="pb-6 text-center text-sm text-foreground">
             Contract verification in progress and is expected to take about 1 minute.
           </div>
           <div className="flex justify-center">

@@ -4,16 +4,23 @@ import { Address, HolderItem } from '../type';
 import ContractToken from '@_components/ContractToken';
 import { thousandsNumber } from '@_utils/formatter';
 import ChainTags from '@_components/ChainTags';
+import { AddressType } from '@_types/common';
 
 function renderRank(currentPage, pageSize) {
   return (text, record, index) => (currentPage - 1) * pageSize + index + 1;
 }
 
 function renderAddress(data: Address, record) {
-  const { name, addressType, address } = data;
+  const { addressType, address } = data;
   return (
     <div className="address flex items-center">
-      <ContractToken name={name} type={addressType} address={address} chainIds={record.chainIds} onlyCopy />
+      <ContractToken
+        type={addressType}
+        address={address}
+        showContractAddress={addressType === AddressType.Contract}
+        chainIds={record.chainIds}
+        onlyCopy
+      />
     </div>
   );
 }

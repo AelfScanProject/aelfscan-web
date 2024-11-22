@@ -1,5 +1,6 @@
 'use client';
 import IconFont from '@_components/IconFont';
+import { MULTI_CHAIN } from '@_utils/contant';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import CodeImg from 'public/image/code.png';
@@ -34,29 +35,29 @@ const moreList = [
 
 export default function ReadMore() {
   const Router = useRouter();
-  const { chain, address } = useParams();
+  const { address } = useParams();
   return (
     <div className="contract-code flex w-full justify-center">
       <div className="max-w-[720px]">
         <div
-          className="flex cursor-pointer items-center gap-2 py-4 pb-6 text-sm leading-[22px] text-base-100 min-[769px]:pb-4"
+          className="flex cursor-pointer items-center gap-1 pb-[10px] pt-6 text-sm font-medium"
           onClick={() => {
-            Router.push(`/${chain}/address/${address}`);
+            Router.push(`/${MULTI_CHAIN}/address/${address}`);
           }}>
-          <IconFont className="mr-1 rotate-180" type="right-arrow-dfna6beo" />
-          Back
+          <IconFont className="rotate-180 text-base" type="arrow-right" />
+          <span className="text-primary">Back</span>
         </div>
-        <div className="min-[769px]:rounded-lg min-[769px]:border min-[769px]:border-solid min-[769px]:border-[#EAECEF] min-[769px]:bg-white min-[769px]:px-4 min-[769px]:py-6">
-          <div className="mb-2 text-xl font-medium text-base-100">Verifying Contracts</div>
-          <div className="mb-10 text-sm leading-[22px] text-base-100">
+        <div className="rounded-lg border border-solid border-border bg-white px-4 py-6">
+          <div className="mb-[6px] text-2xl font-semibold">Verifying Contracts</div>
+          <div className="mb-6 text-sm text-muted-foreground">
             Source code verification provides transparency for ussers interacting with smart contracts. By uploading the
             source code, aelfscan will match the compiled code with that on the blockchain.
           </div>
           {moreList.map((item, index) => {
             return (
-              <div key={index} className={index !== moreList.length - 1 ? 'mb-10' : ''}>
-                <div className="mb-1 text-base font-medium text-base-100">{item.title}</div>
-                <div className="mb-4 text-sm leading-[22px] text-base-100">{item.subTitle}</div>
+              <div key={index} className={index !== moreList.length - 1 ? 'mb-4' : ''}>
+                <div className="mb-2 pt-4 text-lg font-medium ">{item.title}</div>
+                <div className="mb-2 text-sm text-muted-foreground ">{item.subTitle}</div>
                 {item.img && (
                   <div>
                     <Image alt="" src={item.img}></Image>

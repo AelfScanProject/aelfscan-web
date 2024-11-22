@@ -107,7 +107,12 @@ export default function MenuItemCom({ selectedKey, setCurrent, headerMenuList, t
           <IconFont className="text-base" type="menu" />
         </div>
       ) : (
-        <Menu onClick={onClick} selectedKeys={[selectedKey]} mode="horizontal" items={items}></Menu>
+        <Menu
+          onClick={onClick}
+          selectedKeys={[selectedKey]}
+          mode="horizontal"
+          style={{ minWidth: 472, flex: 'auto' }}
+          items={items}></Menu>
       )}
     </div>
   );

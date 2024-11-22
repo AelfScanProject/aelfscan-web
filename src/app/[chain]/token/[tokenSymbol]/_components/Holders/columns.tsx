@@ -3,12 +3,21 @@ import { thousandsNumber } from '@_utils/formatter';
 import { ColumnsType } from 'antd/es/table';
 import { IHolderItem } from '../../type';
 import ChainTags from '@_components/ChainTags';
+import { AddressType } from '@_types/common';
 
 const renderIndex = (currentPage, pageSize) => (text, record, index) => (currentPage - 1) * pageSize + index + 1;
 
 const renderAddress = (data, record) => {
-  const { address, addressType, name } = data;
-  return <ContractToken address={address} name={name} type={addressType} onlyCopy chainIds={record.chainIds} />;
+  const { address, addressType } = data;
+  return (
+    <ContractToken
+      address={address}
+      showContractAddress={addressType === AddressType.Contract}
+      type={addressType}
+      onlyCopy
+      chainIds={record.chainIds}
+    />
+  );
 };
 
 const renderQuantity = (text) => thousandsNumber(text);
