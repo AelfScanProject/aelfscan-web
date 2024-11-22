@@ -32,7 +32,7 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
           return chainIds.length < 2 ? (
             <div className="text-base font-medium">{chainIds[0] === 'AELF' ? main : side}</div>
           ) : (
-            <MultiDown mainCount={main} sideCount={side}>
+            <MultiDown mainCount={main} sideCount={side} dolar>
               <div className="cursor-pointer text-base font-medium text-primary">
                 {record.mainChainFloorPrice !== -1 && '$'}
                 {main}

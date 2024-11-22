@@ -64,21 +64,21 @@
 
 @media (width >= 993px) {
   .d-lg-block {
-      display: block !important;
+    display: block !important;
   }
 }
 
 @media (width >= 993px) {
   .col-lg-3 {
-      flex: 0 0 auto;
-      width: 25%;
+    flex: 0 0 auto;
+    width: 25%;
   }
 }
 
 @media (width >= 1200px) {
   .col-xl-2 {
-      flex: 0 0 auto;
-      width: 16.6667%;
+    flex: 0 0 auto;
+    width: 16.6667%;
   }
 }
 
@@ -115,11 +115,10 @@
     @apply hidden;
   }
   .explorer-anchor-link {
-    @apply !px-3 !py-[7px] mb-1;
+    @apply !px-4 py-2 text-foreground border border-transparent mb-2;
   }
   .explorer-anchor-link-active {
-    background-color: #ECEEF2!important;
-    border-radius: 8px;
+    @apply bg-muted border-border border rounded-md !text-primary;
   }
   .explorer-anchor .explorer-anchor-ink.explorer-anchor-ink-visible {
     @apply !hidden;
@@ -129,9 +128,13 @@
   }
 
   .explorer-anchor-wrapper .explorer-anchor .explorer-anchor-link-title {
-    @apply !text-base-100 font-medium text-sm leading-[22px];
+    @apply font-medium text-sm !text-foreground;
+  }
+
+  .explorer-anchor-wrapper .explorer-anchor .explorer-anchor-link-title-active {
+    @apply !text-primary;
   }
   .explorer-card-body {
-    @apply p-4;
+    @apply !p-4;
   }
 }

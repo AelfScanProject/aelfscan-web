@@ -2,9 +2,8 @@
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useEffect, useMemo } from 'react';
-import { ChartColors, IDailyPriceDData } from '../type';
-import { exportToCSV } from '@_utils/urlUtils';
+import { useMemo } from 'react';
+import { IDailyPriceDData } from '../type';
 import { fetchDailyElfPrice } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';

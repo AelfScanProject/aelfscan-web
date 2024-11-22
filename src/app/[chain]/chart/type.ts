@@ -86,33 +86,26 @@ export interface IMonthActiveAddressData {
   lowestActiveCount: IMonthActiveAddressDataItem;
   chainId: string;
 }
+
+interface IBlockProductionRateDataItem {
+  date: number;
+  mainBlockProductionRate: number;
+  mergeBlockProductionRate: number;
+  sideBlockProductionRate: number;
+}
+
 export interface IBlockProductionRateData {
-  list: Array<{
-    date: number;
-    blockProductionRate: string;
-    blockCount: number;
-    missedBlockCount: number;
-  }>;
-  highestBlockProductionRate: {
-    date: number;
-    blockProductionRate: string;
-    blockCount: number;
-    missedBlockCount: number;
-  };
-  lowestBlockProductionRate: {
-    date: number;
-    blockProductionRate: number;
-    blockCount: number;
-    missedBlockCount: number;
-  };
+  list: Array<IBlockProductionRateDataItem>;
+  highestBlockProductionRate: IBlockProductionRateDataItem;
+  lowestBlockProductionRate: IBlockProductionRateDataItem;
   chainId: string;
 }
 export interface IAelfDailyCycleCountData {
   list: Array<{
     date: number;
-    cycleCount: number;
-    missedBlockCount: number;
-    missedCycle: number;
+    mainCycleCount: number;
+    mergeCycleCount: number;
+    sideCycleCount: number;
   }>;
   highestMissedCycle: {
     date: number;
@@ -124,17 +117,14 @@ export interface IAelfDailyCycleCountData {
 export interface IAelfAVGBlockDurationData {
   list: Array<{
     date: number;
-    avgBlockDuration: string;
-    longestBlockDuration: string;
-    shortestBlockDuration: string;
+    mainAvgBlockDuration: string;
+    sideAvgBlockDuration: string;
   }>;
   highestAvgBlockDuration: {
     date: number;
-    avgBlockDuration: string;
   };
   lowestAvgBlockDuration: {
     date: number;
-    avgBlockDuration: string;
   };
   chainId: string;
 }
@@ -449,7 +439,6 @@ export const ChartData = [
   },
   {
     id: 'section-network-data',
-    hiddenMulti: true,
     title: 'Network Data',
     charts: [
       {
@@ -468,9 +457,14 @@ export const ChartData = [
         key: 'avg-duration',
       },
       {
-        title: 'aelf Block Producers',
-        path: '/chart/produce',
-        key: 'produce',
+        title: 'aelf MainChain Block Producers',
+        path: '/chart/produce/mainChain',
+        key: 'produceMain',
+      },
+      {
+        title: 'aelf dAppChain Block Producers',
+        path: '/chart/produce/dappChain',
+        key: 'produceDapp',
       },
     ],
   },

@@ -16,8 +16,8 @@ export const MultiDown = ({
   children,
   dolar,
 }: {
-  mainCount?: number | string;
-  sideCount?: number | string;
+  mainCount: number | string;
+  sideCount: number | string;
   dolar?: boolean;
   children: React.ReactNode;
 }) => {
@@ -32,8 +32,8 @@ export const MultiDown = ({
             <div className="text-sm">aelf MainChain</div>
           </div>
           <div className="text-sm  text-muted-foreground">
-            {dolar && '$'}
-            {thousandsNumber(mainCount || 0)}
+            {dolar && thousandsNumber(mainCount) !== '--' && '$'}
+            {thousandsNumber(mainCount)}
           </div>
         </div>
       ),
@@ -47,7 +47,8 @@ export const MultiDown = ({
             <div className="mx-1 text-sm">aelf dAppChain</div>
           </div>
           <div className="text-sm text-muted-foreground">
-            {dolar && '$'} {thousandsNumber(sideCount || 0)}
+            {dolar && thousandsNumber(sideCount) !== '--' && '$'}
+            {thousandsNumber(sideCount)}
           </div>
         </div>
       ),
@@ -75,7 +76,7 @@ const InfoSection = () => {
             <IconFont className="text-base" type="square-menu"></IconFont>
           </div>
           <div className="flex items-center">
-            <MultiDown mainCount={mainChain} sideCount={sideChain}>
+            <MultiDown mainCount={mainChain as number} sideCount={sideChain as number}>
               <span className="desc cursor-pointer text-primary">
                 {unitConverter(overview.mergeTransactions.total, 2)}
                 <span className="range text-foreground">txns</span>
@@ -131,7 +132,7 @@ const InfoSection = () => {
               <div className="text">Total Accounts</div>
               <IconFont className="text-base" type="users"></IconFont>
             </div>
-            <MultiDown mainCount={mainChain} sideCount={sideChain}>
+            <MultiDown mainCount={mainChain as number} sideCount={sideChain as number}>
               <span className="desc flex cursor-pointer items-center text-primary">
                 {thousandsNumber(overview.mergeAccounts.total)}
               </span>

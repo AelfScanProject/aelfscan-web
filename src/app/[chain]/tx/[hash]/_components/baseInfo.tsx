@@ -65,7 +65,7 @@ export default function BaseInfo({ data }: { data: ITransactionDetailData }) {
           <div>
             <IconFont className="mr-1 text-base" type="clock" />
             <span>
-              {formatDate(data.timestamp, 'age')}({formatDate(data.timestamp, 'Date Time (UTC)')})
+              {formatDate(data.timestamp, 'age')}({formatDate(data.timestamp, 'Date Time')})
             </span>
           </div>
         ),

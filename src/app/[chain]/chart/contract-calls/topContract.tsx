@@ -4,12 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMobileAll } from '@_hooks/useResponsive';
 import getColumns from './columnConfig';
 import { IContractCallItem, ITopContractCalls } from '../type';
-import { useParams } from 'next/navigation';
 import { fetchTopContractCall } from '@_api/fetchChart';
 import { pageSizeOption } from '@_utils/contant';
 import { Select, message } from 'antd';
 import { getChainId } from '@_utils/formatter';
-import { useMultiChain } from '@_hooks/useSelectChain';
 
 export default function Page() {
   const isMobile = useMobileAll();
@@ -19,13 +17,11 @@ export default function Page() {
 
   const [date, setDate] = useState<string>('7d');
 
-  const { chain } = useParams();
-
   const fetchData = useCallback(async () => {
     try {
       const dateInterval = date === '24h' ? 1 : 7;
       const params = {
-        chainId: getChainId(chain as string),
+        chainId: getChainId(''),
         dateInterval,
       };
       setLoading(true);
@@ -37,11 +33,9 @@ export default function Page() {
     } finally {
       setLoading(false);
     }
-  }, [chain, date]);
+  }, [date]);
 
-  const multi = useMultiChain();
-
-  const columns = useMemo(() => getColumns({ chain, multi }), [chain, multi]);
+  const columns = useMemo(() => getColumns(), []);
 
   const dateChange = (value: string) => {
     setDate(value);
