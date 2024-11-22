@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 import './index.css';
 import { MenuItem, NetworkItem } from '@_types';
-import useResponsive, { useMD } from '@_hooks/useResponsive';
+import useResponsive from '@_hooks/useResponsive';
 import AelfscanLogo from '@_components/Header/aelfscanLogo';
 import NetWorkSwitch from '@_components/NetWorkSwitch';
 import MenuItemCom from './memuItem';
@@ -16,8 +16,6 @@ interface IProps {
 const clsPrefix = 'header-menu-container';
 export default function HeaderMenu({ selectedKey, setCurrent, headerMenuList, networkList }: IProps) {
   const { isLG } = useResponsive();
-
-  const isMD = useMD();
 
   return (
     <div className={clsx(`${clsPrefix}`)}>

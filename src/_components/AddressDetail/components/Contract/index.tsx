@@ -203,7 +203,7 @@ export default function Contract({ setIsVerify, isVerify, chainIds }) {
           <IconFont className="mt-[2px] align-middle text-base min-[769px]:mt-0" type="info" />
           <span className="inline-block text-muted-foreground">
             Are you the contract creator?{' '}
-            <Link className="!inline text-primary" href={`/${MULTI_CHAIN}/source-code/${address}`}>
+            <Link className="!inline text-primary" href={`/${chain}/source-code/${address}`}>
               Verify and Publish
             </Link>{' '}
             your contract source code today!
