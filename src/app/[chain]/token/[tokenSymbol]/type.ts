@@ -75,6 +75,7 @@ export enum TokenTypeEnum {
 
 export interface ITokenListItem {
   holders: number;
+  beforeCount: number;
   totalSupply: number;
   circulatingSupply: number;
   holderPercentChange24H: number;

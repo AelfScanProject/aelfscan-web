@@ -2,15 +2,13 @@
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { IDailyBlockRewardsData } from '../type';
 const title = 'aelf Daily Block Rewards Chart';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyBlockReward } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
-const getOption = (list: any[], chain, multi): Highcharts.Options => {
+const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
@@ -32,15 +30,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const point = that.points[0] as any;
       const date = point.x;
       const { total, totalBlockCount } = customMap[date];
-      if (multi) {
-        return `
+      return `
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Daily Block Rewards</b>: <b>${thousandsNumber(total)}</b><br/>Total Blocks: <b>${thousandsNumber(totalBlockCount)}</b><br/>
       `;
-      } else {
-        return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Daily Block Rewards</b>: <b>${thousandsNumber(total)} ELF</b><br/>Total Blocks: <b>${thousandsNumber(totalBlockCount)}</b><br/>
-      `;
-      }
     },
     data: allData,
     series: [
@@ -55,14 +47,14 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDailyBlockRewardsData>({
+  const { data, loading, chartRef } = useFetchChartData<IDailyBlockRewardsData>({
     fetchFunc: fetchDailyBlockReward,
     processData: (res) => res,
   });
 
   const options = useMemo(() => {
-    return getOption(data?.list || [], chain, multi);
-  }, [chain, data?.list, multi]);
+    return getOption(data?.list || []);
+  }, [data?.list]);
 
   const { download } = useChartDownloadData(data, chartRef, title);
 

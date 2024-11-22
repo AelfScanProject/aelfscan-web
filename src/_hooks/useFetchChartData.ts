@@ -1,11 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import { message } from 'antd';
 import { useEffectOnce } from 'react-use';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
 import { getChainId } from '@_utils/formatter';
 import { useMultiChain } from './useSelectChain';
 import { exportToCSV } from '@_utils/urlUtils';
+import { MULTI_CHAIN } from '@_utils/contant';
 
 export function useFetchChartData<DataType>({
   fetchFunc,
@@ -18,10 +18,8 @@ export function useFetchChartData<DataType>({
   data: DataType | undefined;
   loading: boolean;
   multi: boolean;
-  chain: string;
   chartRef: React.RefObject<HighchartsReactRefObject>;
 } {
-  const { chain } = useParams<{ chain: string }>();
   const [data, setData] = useState<DataType>();
   const [loading, setLoading] = useState<boolean>(false);
   const chartRef = useRef<HighchartsReactRefObject>(null);
@@ -30,7 +28,7 @@ export function useFetchChartData<DataType>({
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetchFunc({ chainId: getChainId(chain) });
+      const res = await fetchFunc({ chainId: getChainId(MULTI_CHAIN) });
       const processedData = processData(res);
       setData(processedData);
     } catch (error) {
@@ -38,13 +36,13 @@ export function useFetchChartData<DataType>({
     } finally {
       setLoading(false);
     }
-  }, [chain, fetchFunc, processData]);
+  }, [fetchFunc, processData]);
 
   useEffectOnce(() => {
     fetchData();
   });
 
-  return { data, loading, chartRef, chain, multi };
+  return { data, loading, chartRef, multi };
 }
 
 export function useChartDownloadData(data: any, chartRef, title) {

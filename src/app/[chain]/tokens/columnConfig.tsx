@@ -14,11 +14,13 @@ import { MULTI_CHAIN } from '@_utils/contant';
 const renderRank = (currentPage, pageSize) => (text, record, index) => (currentPage - 1) * pageSize + index + 1;
 
 const getHolderPercentChange24h = (record: ITokenListItem) => {
-  const { holderPercentChange24H, holders } = record;
+  const { holderPercentChange24H, beforeCount } = record;
   const num = Number(holderPercentChange24H);
   if (Number.isNaN(num)) return '';
-  if (num > 0) return `A ${num}% increase in token holders from the previous day count of ${thousandsNumber(holders)}`;
-  if (num < 0) return `A ${num}% decrease in token holders from the previous day count of ${thousandsNumber(holders)}`;
+  if (num > 0)
+    return `A ${num}% increase in token holders from the previous day count of ${thousandsNumber(beforeCount)}`;
+  if (num < 0)
+    return `A ${num}% decrease in token holders from the previous day count of ${thousandsNumber(beforeCount)}`;
   return 'No change in token holders from the previous day count';
 };
 

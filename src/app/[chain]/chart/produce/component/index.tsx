@@ -1,13 +1,11 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import { thousandsNumber } from '@_utils/formatter';
-import BaseHightCharts from '../_components/charts';
+import BaseHightCharts from '../../_components/charts';
 import { useEffect, useMemo, useRef } from 'react';
 const title = 'Block Producers';
-import { useParams } from 'next/navigation';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { HighchartsReactRefObject } from 'highcharts-react-official';
-import { TChainID } from '@_api/type';
 import useBpProduce from '@_hooks/useBpProduce';
 let highlightElement;
 let centerElement;
@@ -172,13 +170,12 @@ const getOption = (list: any[], chain): Highcharts.Options => {
     },
     pane: {
       size: '90%',
-      center: ['50%', '50%'], // 设置pane位于图表中心
+      center: ['50%', '50%'],
       background: [
         {
-          // 设置pane的背景样式
           shape: 'circle',
           borderWidth: 0,
-          backgroundColor: 'rgba(255, 255, 255)', // 白色圆圈的颜色和透明度
+          backgroundColor: 'rgba(255, 255, 255)',
         },
       ],
     },
@@ -245,8 +242,7 @@ const getOption = (list: any[], chain): Highcharts.Options => {
     ],
   };
 };
-export default function Page() {
-  const { chain } = useParams<{ chain: TChainID }>();
+export default function Page({ chain }) {
   const { loading, produces } = useBpProduce(chain);
   const options = useMemo(() => {
     return getOption(produces || [], chain);
@@ -273,7 +269,7 @@ export default function Page() {
       {produces && (
         <BaseHightCharts
           ref={chartRef}
-          title={title}
+          title={(chain === 'AELF' ? 'aelf MainChain ' : 'aelf dAppChain ') + title}
           hiddenDownload
           aboutTitle="The Block Production chart shows the block distribution of BP, who are obliged to verify transactions and produce blocks. BPs are elected every 7 days."
           highlightData={highlightData}
@@ -282,7 +278,7 @@ export default function Page() {
         />
       )}
       <div>
-        <List />
+        <List chain={chain} />
       </div>
     </div>
   );

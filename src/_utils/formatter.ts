@@ -14,11 +14,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { PageTypeEnum } from '@_types';
 import { TChainID } from '@_api/type';
 import { ChartColors } from '@app/[chain]/chart/type';
-import { number } from 'echarts';
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss') => {
   if (typeof date === 'number') {
     if (type === 'Date Time (UTC)') {
       return dayjs.unix(date).format(format);
+    }
+    if (type === 'Date Time') {
+      return `${dayjs.unix(date).utc().format(format)} +UTC`;
     }
     const localTimestampInSeconds = dayjs.unix(dayjs().unix());
     const time = dayjs.unix(date);

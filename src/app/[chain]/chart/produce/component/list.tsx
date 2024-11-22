@@ -4,7 +4,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMobileAll } from '@_hooks/useResponsive';
 import getColumns from './columnConfig';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
-import { INodeBlockProduceData, INodeBlockProduceDataItem } from '../type';
+import { INodeBlockProduceData, INodeBlockProduceDataItem } from '../../type';
 import { useParams } from 'next/navigation';
 import { fetchNodeBlockProduce } from '@_api/fetchChart';
 import { pageSizeOption } from '@_utils/contant';
@@ -37,7 +37,7 @@ function getPrevious7DayPeriodTimestamps() {
 type OnChange = NonNullable<any>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
 type Sorts = GetSingle<any>;
-function Page() {
+function Page({ chain }) {
   const isMobile = useMobileAll();
   const { defaultPage, defaultPageSize } = useSearchAfterParams(25, 'produce');
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
@@ -45,12 +45,9 @@ function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [data, setData] = useState<INodeBlockProduceData[]>();
-  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
   const [date, setDate] = useState<string>('7d');
   const updateQueryParams = useUpdateQueryParams();
-
-  const { chain } = useParams();
 
   const fetchData = useCallback(async () => {
     try {
@@ -87,14 +84,7 @@ function Page() {
     setCurrentPage(page);
   };
 
-  const columns = useMemo(
-    () => getColumns({ currentPage, pageSize, sortedInfo, chain }),
-    [chain, currentPage, pageSize, sortedInfo],
-  );
-
-  const handleChange: OnChange = (pagination, filters, sorter) => {
-    setSortedInfo(sorter as Sorts);
-  };
+  const columns = useMemo(() => getColumns({ currentPage, pageSize, chain }), [chain, currentPage, pageSize]);
 
   const dateChange = (value: string) => {
     setCurrentPage(1);
@@ -131,7 +121,6 @@ function Page() {
         options={pageSizeOption}
         pageSize={pageSize}
         pageNum={currentPage}
-        onChange={handleChange}
         pageChange={pageChange}
         pageSizeChange={pageSizeChange}
       />

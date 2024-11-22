@@ -25,6 +25,8 @@ import Image from 'next/image';
 import ContractSuccessIcon from 'public/image/contract-success.svg';
 import { ITabsProps } from 'aelf-design';
 import MultiChain from '@_components/ContractToken/multiChain';
+import Link from 'next/link';
+import { MULTI_CHAIN } from '@_utils/contant';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -111,7 +113,9 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           <div className="flex flex-col gap-[2px]">
             <div className="text-sm font-medium text-muted-foreground">Author</div>
             <div className="text-sm font-medium text-primary">
-              {addressFormat(hiddenAddress(author), chainIds[0] || 'AELF')}
+              <Link href={`/${MULTI_CHAIN}/address/${author}`}>
+                {addressFormat(hiddenAddress(author), chainIds[0] || 'AELF')}
+              </Link>
             </div>
           </div>
         </div>

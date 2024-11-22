@@ -10,6 +10,7 @@ import '../index.css';
 import Highlight from '../_components/highlight';
 import { IHIGHLIGHTDataItem } from '../type';
 import Download from './download';
+import './index.css';
 
 import { MouseEventHandler, forwardRef, memo } from 'react';
 import PageAd from '@_components/PageAd';
@@ -32,14 +33,14 @@ export interface IHightChartsOption {
 function BaseHightCharts(props: IHightChartsOption, ref) {
   const { title, aboutTitle, options, highlightData, download, hiddenDownload } = props;
   return (
-    <div>
+    <div className="baseHightCharts-container">
       <div>
         <Title title={title}></Title>
-        <PageAd hiddenBorder adPage="chartdetail" />
+        <PageAd adPage="chartdetail" />
       </div>
-      <div className="row">
-        <div className="col-12 mb-lg-0 col-lg-8 col-xl-9 mb-10">
-          <Card>
+      <div className="row pt-7">
+        <div className="col-12 mb-lg-0 col-lg-8 col-xl-9 mb-8">
+          <Card className="!border-border">
             <HighchartsReact
               ref={ref}
               containerProps={{ className: 'h-[550px] min-w-[310px]' }}

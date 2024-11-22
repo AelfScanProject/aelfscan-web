@@ -1,11 +1,10 @@
 'use client';
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
-import { useEffect, useMemo } from 'react';
-import { ChartColors, IBlockProductionRateData, IHIGHLIGHTDataItem } from '../type';
+import { useMemo } from 'react';
+import { IBlockProductionRateData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
 const title = 'aelf Block Production Rate Chart';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchBlockProduceRate } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
@@ -13,16 +12,24 @@ import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartDa
 const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const customMap = {};
+  const mainData: any[] = [];
+  const sideData: any[] = [];
   list.forEach((item) => {
-    allData.push([item.date, Number(item.blockProductionRate)]);
-    customMap[item.date] = {};
-    customMap[item.date].blockCount = item.blockCount;
-    customMap[item.date].missedBlockCount = item.missedBlockCount;
+    const { date, mergeBlockProductionRate, mainBlockProductionRate, sideBlockProductionRate } = item;
+    allData.push([date, Number(mergeBlockProductionRate)]);
+    mainData.push([date, Number(mainBlockProductionRate)]);
+    sideData.push([date, Number(sideBlockProductionRate)]);
+
+    customMap[date] = {
+      total: mergeBlockProductionRate,
+      main: mainBlockProductionRate,
+      side: sideBlockProductionRate,
+    };
   });
 
   const options = getChartOptions({
     title: title,
-    legend: false,
+    legend: true,
     yAxisTitle: 'Block Production Rate',
     buttonPositionX: -22,
     tooltipFormatter: function () {
@@ -30,19 +37,27 @@ const getOption = (list: any[]): Highcharts.Options => {
       const that: any = this;
       const point = that.points[0] as any;
       const date = point.x;
-      const value = point.y;
-      const blockCount = customMap[date].blockCount;
-      const missedBlockCount = customMap[date].missedBlockCount;
+      const { total, main, side } = customMap[date];
       return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Block Production Rate</b>: <b>${thousandsNumber(value)}%</b><br/>Block Count: <b>${thousandsNumber(blockCount)}</b><br/>Missed Block Count: <b>${thousandsNumber(missedBlockCount)}</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Block Production Rate</b>: <b>${thousandsNumber(total)}%</b><br/>MainChain Block Production Rate: <b>${thousandsNumber(main)}%</b><br/>dAppChain Block Production Rate: <b>${thousandsNumber(side)}%</b><br/>
       `;
     },
     data: allData,
     series: [
       {
-        name: 'Active Addresses',
+        name: 'All Chains',
         data: allData,
         type: 'line',
+      },
+      {
+        name: 'aelf MainChain',
+        type: 'line',
+        data: mainData,
+      },
+      {
+        name: 'aelf dAppChain',
+        type: 'line',
+        data: sideData,
       },
     ],
   });
@@ -69,27 +84,12 @@ export default function Page() {
             text: (
               <span>
                 Highest block production rate of
-                <span className="px-1 font-bold">
-                  {thousandsNumber(data.highestBlockProductionRate.blockProductionRate)}%
+                <span className="px-1 font-semibold">
+                  {thousandsNumber(data.highestBlockProductionRate.mergeBlockProductionRate)}%
                 </span>
                 was on
                 <span className="pl-1">
                   {Highcharts.dateFormat('%A, %B %e, %Y', data.highestBlockProductionRate.date)}
-                </span>
-              </span>
-            ),
-          },
-          {
-            key: 'Lowest',
-            text: (
-              <span>
-                Highest number of missed blocks of
-                <span className="px-1 font-bold">
-                  {thousandsNumber(data.lowestBlockProductionRate.missedBlockCount)}
-                </span>
-                was on
-                <span className="pl-1">
-                  {Highcharts.dateFormat('%A, %B %e, %Y', data.lowestBlockProductionRate.date)}
                 </span>
               </span>
             ),
@@ -104,7 +104,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The aelf Block Production Rate Chart shows the daily block production rate of the aelf network"
+        aboutTitle="The Aelf Block Production Rate Chart shows the daily block production rate of the Aelf network."
         highlightData={highlightData}
         options={options}
         download={download}

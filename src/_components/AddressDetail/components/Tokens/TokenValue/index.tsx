@@ -11,11 +11,13 @@ export default function TokensValue({
   chainIds,
   loading,
   suffix,
+  dolar,
 }: {
   total: number;
   side: number;
   main: number;
   loading: boolean;
+  dolar?: boolean;
   title: string;
   suffix?: string;
   chainIds: TChainID[];
@@ -28,7 +30,7 @@ export default function TokensValue({
       ) : chainIds.length < 2 ? (
         <div className="text-xl font-semibold">{total}</div>
       ) : (
-        <MultiDown mainCount={main} sideCount={side}>
+        <MultiDown mainCount={main} sideCount={side} dolar={dolar}>
           <div className="cursor-pointer text-xl font-semibold text-primary">
             {thousandsNumber(total)} {suffix}
           </div>

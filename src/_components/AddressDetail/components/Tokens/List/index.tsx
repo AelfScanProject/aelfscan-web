@@ -89,7 +89,7 @@ export default function TokensList({ totalTokenValue, totalTokenValueOfElf }) {
           showTopSearch
           headerTitle={{
             multi: {
-              title: `Tokens (${total})`,
+              title: `Tokens`,
               desc: desc,
             },
           }}

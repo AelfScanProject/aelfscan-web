@@ -32,6 +32,7 @@ export default function Tokens({ portfolio, chainIds }: { portfolio: IPortfolio;
           title="Total Value"
           chainIds={chainIds}
           loading={loading}
+          dolar={true}
         />
         <TokensValue
           total={totalTokenCount}
