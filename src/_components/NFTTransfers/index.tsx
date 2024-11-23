@@ -97,7 +97,7 @@ export default function List({ showHeader = true }) {
   }, [address, multi, timeFormat]);
 
   const singleTitle = useMemo(() => {
-    return `A total of ${thousandsNumber(total)} NFT transfers found`;
+    return `Total ${thousandsNumber(total)} NFT transfers found`;
   }, [total]);
 
   const pageChange = (page: number) => {

@@ -81,9 +81,9 @@ export default function getColumns(): ColumnsType<IContractDataItem> {
     },
     {
       title: (
-        <div className="time cursor-pointer">
+        <div className="time flex cursor-pointer items-center">
           Last Updated (+UTC)
-          <IconFont className="mr-1 text-base" type="arrow-down-wide-narrow" />
+          <IconFont className="ml-1 text-base" type="arrow-down-wide-narrow" />
         </div>
       ),
       dataIndex: 'lastUpdateTime',

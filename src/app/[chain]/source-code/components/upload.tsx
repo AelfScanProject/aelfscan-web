@@ -24,6 +24,7 @@ export default function UploadButton({
       setLoading(false);
       onChange(newFileList);
     } else if (info.file.status === 'error') {
+      setLoading(false);
       message.error(`${info.file.name} file upload failed.`);
     }
   };
@@ -47,7 +48,7 @@ export default function UploadButton({
         </div>
         <div>
           <Upload maxCount={1} onChange={handleChange} accept={accept} itemRender={() => null}>
-            <Button loading={loading} className="upload-button" onClick={() => setLoading(true)}>
+            <Button disabled={loading} className="upload-button" onClick={() => setLoading(true)}>
               <IconFont className="text-base" type="upload" />
               <span className="text-primary">{loading ? 'Uploading' : 'Upload'}</span>
             </Button>

@@ -112,6 +112,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
           value: selectChain,
           onChange: chainChange,
         }}
+        showPageAndSize={false}
         dataSource={data}
         loading={loading}
         columns={columns}

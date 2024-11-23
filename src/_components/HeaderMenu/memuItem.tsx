@@ -87,7 +87,7 @@ export default function MenuItemCom({ selectedKey, setCurrent, headerMenuList, t
         title={
           <div className="">
             <AelfscanLogo />
-            <div className="absolute -top-[2px] right-[18px] cursor-pointer p-[6px]" onClick={onClose}>
+            <div className="absolute -top-[2px] right-3 cursor-pointer p-[6px]" onClick={onClose}>
               <IconFont className="text-base" type="x" />
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function MenuItemCom({ selectedKey, setCurrent, headerMenuList, t
           onClick={onClick}
           selectedKeys={[selectedKey]}
           mode="horizontal"
-          style={{ minWidth: 472, flex: 'auto' }}
+          style={{ minWidth: 450, flex: 'auto' }}
           items={items}></Menu>
       )}
     </div>

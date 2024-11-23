@@ -21,7 +21,6 @@ export const MultiDown = ({
   dolar?: boolean;
   children: React.ReactNode;
 }) => {
-  const isMd = useMD();
   const items = [
     {
       key: 'main',
@@ -44,7 +43,7 @@ export const MultiDown = ({
         <div className="flex w-full items-center justify-between gap-1">
           <div className="flex items-center justify-between gap-1">
             <IconFont className="text-base" type="dappChainLogo"></IconFont>
-            <div className="mx-1 text-sm">aelf dAppChain</div>
+            <div className="text-sm">aelf dAppChain</div>
           </div>
           <div className="text-sm text-muted-foreground">
             {dolar && thousandsNumber(sideCount) !== '--' && '$'}
@@ -55,7 +54,7 @@ export const MultiDown = ({
     },
   ];
   return (
-    <Dropdown overlayClassName="multi-count" menu={{ items }} placement={isMd ? 'bottom' : 'bottomLeft'}>
+    <Dropdown overlayClassName="multi-count" menu={{ items }} placement="topCenter">
       {children}
     </Dropdown>
   );
@@ -133,9 +132,7 @@ const InfoSection = () => {
               <IconFont className="text-base" type="users"></IconFont>
             </div>
             <MultiDown mainCount={mainChain as number} sideCount={sideChain as number}>
-              <span className="desc flex cursor-pointer items-center text-primary">
-                {thousandsNumber(overview.mergeAccounts.total)}
-              </span>
+              <span className="desc cursor-pointer text-primary">{thousandsNumber(overview.mergeAccounts.total)}</span>
             </MultiDown>
           </div>
         </div>

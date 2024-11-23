@@ -101,19 +101,19 @@ export function BannerContainer() {
       <div className="banner-section z-8 relative flex justify-start py-12  min-769:!py-24">
         <div className="w-full flex-00auto">
           <div className="relative mb-4 flex w-full justify-center gap-1 text-center text-2xl min-769:mb-6 min-769:text-3xl">
-            <div className="text-center">aelf Multichain</div>
+            <div className="text-center font-bold">aelf Multichain</div>
             <div
               className="relative flex w-[120px] items-center justify-start min-769:w-[200px]"
               style={{ position: 'relative' }}>
               <div
-                className={`absolute flex items-center gap-1 transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+                className={`absolute flex items-center gap-1 font-bold transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
                 style={{ position: 'absolute', width: 'max-content' }}>
                 <IconFont className="text-[24px] min-769:text-[32px]" type={randomIcon} />
                 <span className={textColor}>{title}</span>
               </div>
 
               <div
-                className={`absolute flex items-center gap-1 transition-opacity duration-500 ${isTransitioning ? 'opacity-100' : 'opacity-0'}`}
+                className={`absolute flex items-center gap-1 font-bold transition-opacity  duration-500 ${isTransitioning ? 'opacity-100' : 'opacity-0'}`}
                 style={{ position: 'absolute', width: 'max-content' }}>
                 <IconFont className="text-[24px] min-769:text-[32px]" type={iconTypes[currentIndex]} />
                 <span className={textColors[currentIndex]}>{titles[currentIndex]}</span>

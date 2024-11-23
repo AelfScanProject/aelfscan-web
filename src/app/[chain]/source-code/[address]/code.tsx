@@ -224,7 +224,7 @@ export default function SourceCodePage() {
             onFinish={onFinish}
             autoComplete="off">
             <Form.Item<FieldType>
-              label="Please enter the Contract Address you would like to verify"
+              label="Contract Address"
               name="contractAddress"
               required
               rules={[
@@ -251,7 +251,7 @@ export default function SourceCodePage() {
 
             <Form.Item<FieldType>
               name="version"
-              label="Please select Compiler Version"
+              label="Compiler Version"
               rules={[{ required: true, message: 'Please select Compiler Version' }]}>
               <Select
                 style={{ height: '40px' }}
@@ -262,12 +262,12 @@ export default function SourceCodePage() {
             <Form.Item
               name="csprojPath"
               label="Project File Path"
-              rules={[{ required: true, message: 'Project File Path' }]}>
+              rules={[{ required: true, message: 'Please fill in the project file path.' }]}>
               <Input size="small" placeholder="e.g., ../example/project.csproj"></Input>
             </Form.Item>
 
             <Form.Item<FieldType>
-              label="Please select the file to upload"
+              label="Contract Code"
               name="file"
               required
               rules={[
@@ -275,7 +275,7 @@ export default function SourceCodePage() {
                   validator: (_, value) => {
                     console.log(value, 'value');
                     if (!value || value?.length === 0) {
-                      return Promise.reject(new Error('Please select the file to upload'));
+                      return Promise.reject(new Error('lease upload the contract code file.'));
                     }
 
                     const file = value[0];
