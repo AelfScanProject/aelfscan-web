@@ -11,7 +11,17 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { MULTI_CHAIN } from '@_utils/contant';
 
-const Item = ({ index, item, searchType }: { index: number; searchType: TType; item: Partial<TSingle> }) => {
+const Item = ({
+  index,
+  item,
+  searchType,
+  clearHandler,
+}: {
+  index: number;
+  searchType: TType;
+  item: Partial<TSingle>;
+  clearHandler: () => void;
+}) => {
   const { state, dispatch } = useSearchContext();
   const { highLight } = state;
   const isHighlighted = highLight && index === highLight.idx;
@@ -45,12 +55,13 @@ const Item = ({ index, item, searchType }: { index: number; searchType: TType; i
     return '';
   }, [searchType, item]);
   function itemMouseDownHandler() {
-    dispatch(selectItem(item));
+    // dispatch(selectItem(item));
+    clearHandler();
     router.push(url);
   }
 
   return (
-    <Link href={url}>
+    <Link onClick={clearHandler} href={url}>
       <li
         onMouseDown={itemMouseDownHandler}
         onMouseMove={itemMouseEnterHandler}
