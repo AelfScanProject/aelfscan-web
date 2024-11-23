@@ -9,9 +9,9 @@ function EPSortIcon({ sortOrder }) {
         className="text-base"
         type={
           sortOrder === 'descend'
-            ? 'arrow-up-wide-narrow'
+            ? 'arrow-down-wide-narrow-f6kehlin'
             : sortOrder === 'ascend'
-              ? 'arrow-down-wide-narrow-f6kehlin'
+              ? 'arrow-up-wide-narrow'
               : 'arrow-down-up'
         }
       />

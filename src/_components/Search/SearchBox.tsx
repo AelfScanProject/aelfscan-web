@@ -78,8 +78,8 @@ const Search = ({
   useSelected(selectedItem, queryInput);
   // useHighlight(highLight, queryInput);
 
-  function cancelBtnHandler(e: MouseEvent<HTMLElement>) {
-    e.preventDefault();
+  function cancelBtnHandler(e?: MouseEvent<HTMLElement>) {
+    e && e.preventDefault();
     queryInput.current!.value = '';
     dispatch(setClear());
   }
@@ -119,7 +119,10 @@ const Search = ({
         router.push(`/${MULTI_CHAIN}/search/${query.trim()}`);
       }
     }
-  }, [dataWithOrderIdx, filterType, query, router]);
+
+    queryInput.current!.value = '';
+    dispatch(setClear());
+  }, [dataWithOrderIdx, dispatch, filterType?.filterType, query, router]);
 
   const keyDown = useCallback(
     (e) => {
@@ -212,7 +215,8 @@ const Search = ({
           id={randomId()}
           loading={loading}
           classNames={`${searchButton && '!w-[calc(100%-48px)]'}`}
-          searchHandler={onSearchHandler}>
+          searchHandler={onSearchHandler}
+          clearHandler={cancelBtnHandler}>
           {adsDetail?.adsId && (
             <div className={`flex border-b border-solid border-white p-4 ${query && '!border-border'}`}>
               <div className="text-sm font-medium leading-[22px] text-base-100">

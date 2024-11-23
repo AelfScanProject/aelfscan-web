@@ -144,7 +144,7 @@ export const useKeyEvent = (
         dispatch(highlightNext());
       } else if (e.key === 'Enter') {
         // dispatch(selectItem(allList[highLightIdx]));
-        // searchHandler();
+        searchHandler();
       } else if (e.key === 'Escape') {
         setActiveTabIdx(0);
         dispatch(setClear());

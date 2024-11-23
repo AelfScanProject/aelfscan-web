@@ -97,6 +97,7 @@ export type TSearchPanelProps = {
   classNames?: string;
   loading: boolean;
   searchHandler: () => void;
+  clearHandler: () => void;
   children?: ReactNode;
 };
 

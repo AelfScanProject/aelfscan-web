@@ -113,7 +113,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           <div className="flex flex-col gap-[2px]">
             <div className="text-sm font-medium text-muted-foreground">Author</div>
             <div className="text-sm font-medium text-primary">
-              <Link href={`/${MULTI_CHAIN}/address/${author}`}>
+              <Link href={`/${MULTI_CHAIN}/address/${addressFormat(author, chainIds[0])}`}>
                 {addressFormat(hiddenAddress(author), chainIds[0] || 'AELF')}
               </Link>
             </div>

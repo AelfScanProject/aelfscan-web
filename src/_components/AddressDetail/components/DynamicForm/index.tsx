@@ -106,7 +106,6 @@ export default function DynamicForm({
           return (
             <div key={item.name} id={item.name}>
               <Collapse
-                collapsible="header"
                 expandIconPosition="end"
                 expandIcon={({ isActive }) => (
                   <IconFont
@@ -131,7 +130,8 @@ export default function DynamicForm({
                           <IconFont
                             type="copy-f731al8a"
                             className="text-base"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               handleCopy(item.name);
                             }}
                           />
@@ -140,7 +140,8 @@ export default function DynamicForm({
                           <IconFont
                             type="link-f731al7a"
                             className="text-base"
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               handleCopy(window.location.href + `&type=${activeKey}` + '#' + item.name);
                             }}
                           />

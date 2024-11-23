@@ -17,10 +17,10 @@ import { ChartColors } from '@app/[chain]/chart/type';
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss') => {
   if (typeof date === 'number') {
     if (type === 'Date Time (UTC)') {
-      return dayjs.unix(date).format(format);
+      return dayjs.unix(date).utc().format(format);
     }
     if (type === 'Date Time') {
-      return `${dayjs.unix(date).utc().format(format)} +UTC`;
+      return `${dayjs.unix(date).utc().format(format)} UTC`;
     }
     const localTimestampInSeconds = dayjs.unix(dayjs().unix());
     const time = dayjs.unix(date);
