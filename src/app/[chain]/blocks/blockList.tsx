@@ -16,7 +16,7 @@ import { IBlocksResponse, IBlocksResponseItem } from '@_api/type';
 import { pageSizeOption } from '@_utils/contant';
 import { fetchBlocks } from '@_api/fetchBlocks';
 import { Spin } from 'antd';
-import { getChainId, getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber, thousandsNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { usePagination } from '@_hooks/usePagination';
 
@@ -94,7 +94,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
   });
 
   const multiTitle = useMemo(() => {
-    return `Total of ${total} blocks`;
+    return `Total of ${thousandsNumber(total)} blocks`;
   }, [total]);
 
   return (

@@ -1,7 +1,6 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import './index.css';
 // import Marquee from 'react-fast-marquee';
-import IconFont from '../../../../_components/IconFont/index';
 import Link from 'next/link';
 import Image from 'next/image';
 import Marquee from 'react-easy-marquee';
@@ -33,7 +32,7 @@ const AdsCarousel = () => {
         <div className="text-sm font-semibold">Sponsored</div>
       </div>
       <div className="w-full">
-        <Marquee pauseOnHover={true} duration={40000} reverse={true} align="center" height="38px">
+        <Marquee pauseOnHover={true} duration={80000} reverse={true} align="center" height="38px">
           {[...data].map((item, index) => (
             <div key={index} className="mx-4 flex items-center gap-1 text-sm text-foreground">
               <Image src={item.logo} width={20} height={20} className="mx-2 inline-block size-6 rounded-full" alt="" />

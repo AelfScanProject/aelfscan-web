@@ -108,7 +108,7 @@ export default function List({
   }, [showHeader, timeFormat]);
 
   const multiTitle = useMemo(() => {
-    return `More than > ${total} transactions found`;
+    return `More than ${total} transactions found`;
   }, [total]);
 
   const multiTitleDesc = useMemo(() => {
@@ -160,6 +160,7 @@ export default function List({
         loading={loading}
         dataSource={data}
         showLast={false}
+        showPageAndSize={false}
         bordered={showHeader}
         columns={columns}
         isMobile={isMobile}

@@ -7,7 +7,7 @@ import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { IContractDataItem, IContractResponseData, TChainID } from '@_api/type';
 import { fetchContactList } from '@_api/fetchContact';
-import { getChainId, getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber, thousandsNumber } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
 import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
@@ -61,7 +61,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultCha
   });
 
   const multiTitle = useMemo(() => {
-    return `A total of ${total} contracts found`;
+    return `Total ${thousandsNumber(total)} contracts found`;
   }, [total]);
 
   return (

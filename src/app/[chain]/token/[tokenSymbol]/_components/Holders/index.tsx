@@ -8,7 +8,7 @@ import { fetchTokenDetailHolders } from '@_api/fetchTokens';
 import { useParams } from 'next/navigation';
 import { pageSizeOption } from '@_utils/contant';
 import { PageTypeEnum } from '@_types';
-import { getChainId, getHoldersSearchAfter, getSort } from '@_utils/formatter';
+import { getChainId, getHoldersSearchAfter, getSort, thousandsNumber } from '@_utils/formatter';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { useMultiChain } from '@_hooks/useSelectChain';
@@ -99,7 +99,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
   }, [fetchData]);
 
   const columns = useMemo(() => getColumns({ currentPage, pageSize }), [currentPage, pageSize]);
-  const title = useMemo(() => `A total of ${total} holders found`, [total]);
+  const title = useMemo(() => `Total ${thousandsNumber(total)} holders found`, [total]);
 
   return (
     <div>

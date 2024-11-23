@@ -56,6 +56,7 @@ export interface ICommonTableProps<T> extends ITableProps<T> {
   emptyPic?: string;
   showLast?: boolean;
   tokenPage?: boolean;
+  showPageAndSize?: boolean;
   headerLeftNode?: ReactNode;
 }
 
@@ -112,6 +113,7 @@ export default function TableApp({
   hideOnSinglePage,
   emptyText,
   bordered = true,
+  showPageAndSize = true,
   headerLeftNode,
   MultiChainSelectProps = {},
   ...params
@@ -122,8 +124,6 @@ export default function TableApp({
       emptyText: emptyStatus({ emptyType, emptyText }),
     };
   }, [emptyType, emptyText]);
-
-  const isPad = usePad();
 
   const isMd = useMD();
   return (
@@ -168,8 +168,8 @@ export default function TableApp({
         {!hiddenPagination && (
           <div
             className={clsx(
-              'header-pagination flex w-full flex-col items-start gap-3 min-[769px]:w-auto  min-[769px]:flex-row min-[769px]:items-center',
-              showTopSearch && '!flex-row gap-3 min-[769px]:flex-row min-[993px]:!w-auto',
+              'header-pagination flex w-full flex-col items-center gap-4 min-[769px]:w-auto  min-[769px]:flex-row min-[769px]:items-center',
+              showTopSearch && '!flex-row gap-4 min-[769px]:flex-row min-[993px]:!w-auto',
               tokenPage && isMd && '!items-center',
             )}>
             {tokenPage && isMd && headerLeftNode}
@@ -208,7 +208,7 @@ export default function TableApp({
                 defaultCurrent={defaultCurrent}
                 showSizeChanger={false}
                 showLast={showLast}
-                showPageAndSize={!isMd}
+                showPageAndSize={!isMd && showPageAndSize}
                 hideOnSinglePage={hideOnSinglePage}
                 pageChange={pageChange}
                 pageSizeChange={pageSizeChange}
@@ -228,6 +228,7 @@ export default function TableApp({
             defaultPageSize={pageSize}
             total={total}
             pageSize={pageSize}
+            showPageAndSize={showPageAndSize}
             showLast={showLast}
             hideOnSinglePage={hideOnSinglePage}
             defaultCurrent={defaultCurrent}

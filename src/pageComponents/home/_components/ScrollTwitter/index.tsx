@@ -54,7 +54,7 @@ const AelfUpdatesCarousel = () => {
         <div className="text-sm font-semibold">aelf updates</div>
       </div>
       <div className="w-full">
-        <Marquee pauseOnHover={true} duration={40000} reverse={true} align="center" height="38px">
+        <Marquee pauseOnHover={true} duration={80000} reverse={true} align="center" height="38px">
           {[...renderData].map((item, index) => (
             <div key={index} className="mx-4 flex items-center gap-1 text-sm text-foreground">
               <IconFont type="ELF-f6dioc4d" />

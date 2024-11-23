@@ -98,7 +98,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The aelf daily cycle count chart shows the daily cycle count and missed cycle of the aelf network. The aelf network has one cycle every 8 seconds."
+        aboutTitle="The aelf daily cycle count chart shows the daily cycle count of the aelf network. Each BP produces 8 blocks per cycle."
         highlightData={highlightData}
         options={options}
         download={download}

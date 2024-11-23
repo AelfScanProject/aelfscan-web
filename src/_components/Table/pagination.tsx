@@ -5,6 +5,7 @@ import './pagination.css';
 import { useEffect, useMemo, useState } from 'react';
 import { debounce } from 'lodash';
 import IconFont from '@_components/IconFont';
+import clsx from 'clsx';
 
 export interface IEpPaginationProps extends PaginationProps {
   current?: number;
@@ -139,7 +140,7 @@ export default function Pagination({
   }
 
   return (
-    <div className="ep-pagination">
+    <div className={clsx('ep-pagination', !(showSizeChange && showSizeChanger) && '!gap-0')}>
       <div>
         {showSizeChange && showSizeChanger && (
           <>

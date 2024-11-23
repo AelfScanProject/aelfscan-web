@@ -4,7 +4,7 @@ import getColumns from './columnConfig';
 import './index.css';
 import { TokensListItemType } from '@_types/commonDetail';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { getAddress, getChainId, getPageNumber, numberFormatter } from '@_utils/formatter';
+import { getAddress, getChainId, getPageNumber, numberFormatter, thousandsNumber } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
 import { fetchAccountsDetailTokens } from '@_api/fetchContact';
 import { TableProps } from 'antd';
@@ -79,7 +79,7 @@ export default function TokensList({ totalTokenValue, totalTokenValueOfElf }) {
   }, [fetchData]);
 
   const desc = useMemo(() => {
-    return `Total Value : ${showELF ? numberFormatter(totalTokenValueOfElf || '-') : `$${totalTokenValue}`}`;
+    return `Total Value : ${showELF ? numberFormatter(totalTokenValueOfElf || '-') : `$${thousandsNumber(totalTokenValue)}`}`;
   }, [showELF, totalTokenValue, totalTokenValueOfElf]);
 
   return (
