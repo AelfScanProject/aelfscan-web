@@ -22,6 +22,7 @@ export default function DetailContainer({
     tip?: React.ReactNode | string;
     hidden?: boolean;
     ellipsis?: boolean;
+    between?: boolean;
     row?: boolean;
   }[];
 }) {
@@ -35,11 +36,16 @@ export default function DetailContainer({
           ) : (
             <div
               key={item.label}
-              className={clsx(isMobile && !item.row ? 'flex flex-col' : 'row flex flex-wrap items-start', 'py-3')}>
+              className={clsx(
+                isMobile && !item.row
+                  ? 'flex flex-col gap-4'
+                  : `flex flex-row flex-wrap items-center ${item.between && 'justify-between'}`,
+                'py-3',
+              )}>
               <div
                 className={clsx(
                   'label mr-4 flex w-full items-center min-[769px]:w-[300px] min-[1025px]:w-[400px]',
-                  isMobile && 'mb-4',
+                  isMobile && '!w-auto',
                 )}>
                 {item.tip && (
                   <Tooltip title={item.tip}>
@@ -54,6 +60,7 @@ export default function DetailContainer({
                 className={clsx(
                   'value w-full flex-1 break-all text-base text-foreground',
                   item.ellipsis && 'overflow-hidden truncate whitespace-nowrap',
+                  isMobile && item.between && '!w-auto flex-none',
                 )}>
                 {item.value}
               </div>

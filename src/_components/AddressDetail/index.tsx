@@ -158,7 +158,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
     <div className="address-detail">
       <div className="address-header">
         <HeadTitle className={isMobile && 'flex-col !items-start'} adPage={title + 'detail'} content={title}>
-          <div className={clsx('code-box ml-2', isMobile && '!ml-0 flex flex-wrap items-center')}>
+          <div className={clsx('code-box ml-2 font-semibold', isMobile && '!ml-0 flex flex-wrap items-center')}>
             <span className="inline-block flex-wrap break-all text-sm leading-5">
               {address}
               <MultiChain address={getAddress(address)} chainIds={chainIds} hidden={false} breakAll />

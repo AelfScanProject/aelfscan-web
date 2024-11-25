@@ -32,12 +32,21 @@ const AdsCarousel = () => {
         <div className="text-sm font-semibold">Sponsored</div>
       </div>
       <div className="w-full">
-        <Marquee pauseOnHover={true} duration={80000} reverse={true} align="center" height="38px">
+        <Marquee pauseOnHover={true} duration={80000} reverse={true} align="start" height="38px">
           {[...data].map((item, index) => (
-            <div key={index} className="mx-4 flex items-center gap-1 text-sm text-foreground">
-              <Image src={item.logo} width={20} height={20} className="mx-2 inline-block size-6 rounded-full" alt="" />
+            <div key={index} className="mx-4 flex items-center gap-1 pr-4 text-sm text-foreground">
+              <Image
+                src={item.logo}
+                width={20}
+                height={20}
+                className="ml-2 mr-1 box-border inline-block size-6 shrink-0 rounded-full"
+                alt=""
+              />
               <span className="text-sm text-muted-foreground">{item.adsText}</span>
-              <Link target="_blank" href={item.clickLink} className="cursor-pointer font-medium text-primary">
+              <Link
+                target="_blank"
+                href={item.clickLink}
+                className="block shrink-0 cursor-pointer font-medium text-primary">
                 {item.clickText}
               </Link>
             </div>

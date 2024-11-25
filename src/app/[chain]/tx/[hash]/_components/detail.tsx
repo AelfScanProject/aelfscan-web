@@ -50,14 +50,16 @@ export default function Detail({ SSRData }: { SSRData: ITransactionDetailData })
       ),
       children: (
         <div>
-          <div className="px-4 py-2 text-base text-muted-foreground">
-            <EPTooltip title="Transaction Receipt Event Logs" mode={'dark'}>
-              <IconFont className="text-base" style={{ marginRight: '4px' }} type="circle-help" />
-            </EPTooltip>
-            Transaction Receipt Event Logs
-          </div>
           {detailData.logEvents?.length ? (
-            <LogsContainer Logs={detailData.logEvents} />
+            <>
+              <div className="px-4 py-2 text-base text-muted-foreground">
+                <EPTooltip title="Transaction Receipt Event Logs" mode={'dark'}>
+                  <IconFont className="text-base" style={{ marginRight: '4px' }} type="circle-help" />
+                </EPTooltip>
+                Transaction Receipt Event Logs
+              </div>
+              <LogsContainer Logs={detailData.logEvents} />
+            </>
           ) : (
             <div className="pb-4">
               <CommonEmpty type="nodata" />

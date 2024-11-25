@@ -9,7 +9,7 @@ import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
 import { ITransactionsResponseItem } from '@_api/type';
 import { useParams, useSearchParams } from 'next/navigation';
 import { fetchTransactionList } from '@_api/fetchTransactions';
-import { getAddress, getBlockTimeSearchAfter, getChainId, getSort } from '@_utils/formatter';
+import { getAddress, getBlockTimeSearchAfter, getChainId, getSort, thousandsNumber } from '@_utils/formatter';
 import { useEffectOnce } from 'react-use';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { PageTypeEnum } from '@_types';
@@ -108,12 +108,12 @@ export default function List({
   }, [showHeader, timeFormat]);
 
   const multiTitle = useMemo(() => {
-    return `More than ${total} transactions found`;
+    return `More than ${thousandsNumber(total)} transactions found`;
   }, [total]);
 
   const multiTitleDesc = useMemo(() => {
-    return `Showing the last 500k records`;
-  }, []);
+    return total > 500000 ? `Showing the last 500k records` : '';
+  }, [total]);
 
   const pageChange = (page: number) => {
     let pageType;

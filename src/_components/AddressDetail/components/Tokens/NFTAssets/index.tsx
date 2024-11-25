@@ -8,7 +8,6 @@ import { useParams } from 'next/navigation';
 import { getAddress, getChainId, getPageNumber } from '@_utils/formatter';
 import { TableProps } from 'antd';
 import { SortEnum, TableSortEnum } from '@_types/common';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import useRefreshDetail from '../hooks/useRefreshDetail';
 import TokensValue from '../TokenValue';
 import { TChainID } from '@_api/type';
@@ -117,7 +116,12 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
         </div>
         <div></div>
       </div>
-      <div className={clsx('table-container p-0', hidden ? 'block' : 'hidden')}>
+      <div
+        className={clsx(
+          'table-container p-0',
+          hidden ? 'block h-auto' : 'hidden h-0',
+          'transition-height ease-[cubic-bezier(0.4, 0, 0.2, 1)] delay-0 duration-300',
+        )}>
         <Table
           loading={loading}
           showTopSearch

@@ -26,6 +26,7 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useDebounceFn } from 'ahooks';
 import { MULTI_CHAIN } from '@_utils/contant';
+import EPTooltip from '../EPToolTip/index';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -219,23 +220,25 @@ const Search = ({
           clearHandler={cancelBtnHandler}>
           {adsDetail?.adsId && (
             <div className={`flex border-b border-solid border-white p-4 ${query && '!border-border'}`}>
-              <div className="text-sm font-medium leading-[22px] text-base-100">
+              <div className="flex items-center truncate text-sm font-medium leading-[22px] text-base-100">
                 <Image
                   src={adsDetail.logo}
                   width={20}
                   height={20}
-                  className="mr-2 inline-block size-5 rounded-full"
+                  className="mr-2 inline-block size-5 shrink-0 rounded-full"
                   alt=""
                 />
-                <a
-                  className="mr-2 text-sm font-medium !text-muted-foreground"
-                  href={adsDetail.clickLink}
-                  target="_blank"
-                  onMouseDown={handleJump}
-                  rel="noreferrer">
-                  {adsDetail.adsText}
-                </a>
-                <span className="inline-block rounded bg-secondary px-1 py-[2px] text-xs text-secondary-foreground">
+                <EPTooltip mode="light" title={adsDetail.adsText}>
+                  <a
+                    className="mr-2 inline-block flex-1 truncate text-sm font-medium !text-muted-foreground"
+                    href={adsDetail.clickLink}
+                    target="_blank"
+                    onMouseDown={handleJump}
+                    rel="noreferrer">
+                    {adsDetail.adsText}
+                  </a>
+                </EPTooltip>
+                <span className="inline-block shrink-0 rounded bg-secondary px-1 py-[2px] text-xs text-secondary-foreground">
                   Sponsored
                 </span>
               </div>

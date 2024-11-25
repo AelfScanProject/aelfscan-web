@@ -55,7 +55,8 @@ export default function Tokens({ portfolio, chainIds }: { portfolio: IPortfolio;
           />
         </div>
       </div>
-      <div className={`${hidden ? 'block' : 'hidden'}`}>
+      <div
+        className={`${hidden ? 'block h-auto' : 'hidden h-0'} transition-height ease-[cubic-bezier(0.4, 0, 0.2, 1)] delay-0 duration-300`}>
         <TokensList totalTokenValue={totalTokenValue} totalTokenValueOfElf={totalTokenValueOfElf} />
       </div>
     </div>

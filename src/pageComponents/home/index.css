@@ -34,22 +34,29 @@
 
 .banner-section-container {
   transition: background-color 0.8s ease-in-out;
-
-  /* background-image: url('/image/home-bg-main.png');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover; */
+  .home-animate-text {
+    animation: slide-in 0.5s ease forwards;
+    @apply min-w-[180px] min-769:min-w-[224px];
+  }
 }
 
 .banner-bg {
-  /* @apply !bg-contain min-769:!bg-cover; */
   background-image: url('/image/bg-home-banner.png');
+}
 
-  /* background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover; */
 
-  /* background: url('/image/home-bg.png')  cover no-repeat;
-  /* background: url(<path-to-image>) lightgray 50% / contain no-repeat;
-  mix-blend-mode: multiply; */
+@keyframes slide-in {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

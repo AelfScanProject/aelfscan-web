@@ -21,7 +21,7 @@
   .search-input-wrap {
     @apply flex flex-1 h-10 items-center bg-white relative border-border border rounded-r-md px-3 py-[10px];
     .search-input {
-      @apply outline-0 border-0 pl-4 pr-2 text-sm font-normal leading-[22px] flex-1 bg-transparent overflow-hidden text-ellipsis whitespace-nowrap placeholder:text-muted-foreground;
+      @apply outline-0 border-0 pr-2 text-sm font-normal leading-[22px] flex-1 bg-transparent overflow-hidden text-ellipsis whitespace-nowrap placeholder:text-muted-foreground;
       &-mobile {
         @apply pl-0;
       }
