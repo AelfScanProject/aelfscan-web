@@ -11,11 +11,13 @@ import EPTooltip from '@_components/EPToolTip';
 import Market from '@_components/Market';
 import dayjs from 'dayjs';
 import ChainTags from '@_components/ChainTags';
+import Method from '@_components/Method';
+import TransactionsView from '@_components/TransactionsView';
 
-const renderTransactionId = (text, records, chainId) => (
+const renderTransactionId = (text, records) => (
   <div className="flex items-center">
     <EPTooltip title={text} mode="dark">
-      <Link className="block w-[120px] truncate text-link" href={`/${chainId}/tx/${text}`}>
+      <Link className="block w-[120px] truncate text-link" href={`/${records.chainIds[0]}/tx/${text}`}>
         {text}
       </Link>
     </EPTooltip>
@@ -23,35 +25,64 @@ const renderTransactionId = (text, records, chainId) => (
   </div>
 );
 
-const renderContractToken = (data, chainId) => {
+const renderContractToken = (data, chainIds) => {
   if (!data) return <div></div>;
   const { address, name } = data;
-  return <ContractToken name={name} address={getAddress(address)} type={AddressType.address} chainId={chainId} />;
+  return (
+    <ContractToken name={name} address={getAddress(address)} type={AddressType.address} chainIds={chainIds} onlyCopy />
+  );
 };
 
 const renderPrice = (text, record) =>
   record.action === 'Sale' && (
-    <div>
-      <span>${record.priceOfUsd}</span>
-      <span className="text-xs leading-5 text-base-200">
+    <div className="text-sm">
+      <span className="text-foreground">${record.priceOfUsd}</span>
+      <span className="text-muted-foreground">
         ({record.price} {record.priceSymbol})
       </span>
     </div>
   );
 
-export default function getColumns({
-  timeFormat,
-  handleTimeChange,
-  chainId,
-  detailData,
-  multi,
-}): ColumnsType<IActivityTableData> {
+export default function getColumns({ timeFormat, handleTimeChange, detailData }): ColumnsType<IActivityTableData> {
   const commonColumns = [
+    {
+      title: (
+        <EPTooltip title="See preview of the transaction details." mode="dark">
+          <IconFont className="ml-[6px] cursor-pointer text-base" type="circle-help" />
+        </EPTooltip>
+      ),
+      width: 60,
+      dataIndex: '',
+      key: 'view',
+      render: (record) => <TransactionsView record={record} custom={true} jumpChain={record.chainIds[0]} />,
+    },
+    {
+      title: 'Chain',
+      width: 140,
+      dataIndex: 'chainIds',
+      key: 'chainIds',
+      render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
+    },
     {
       title: 'Txn Hash',
       dataIndex: 'transactionId',
+      width: 177,
       key: 'transactionId',
-      render: (text, records) => renderTransactionId(text, records, chainId),
+      render: (text, records) => renderTransactionId(text, records),
+    },
+    {
+      dataIndex: 'action',
+      key: 'action',
+      width: 130,
+      title: (
+        <div className="cursor-pointer font-medium">
+          <span>Action</span>
+          <EPTooltip title="Function executed based on input data." mode="dark">
+            <IconFont className="ml-1 text-base" type="circle-help" />
+          </EPTooltip>
+        </div>
+      ),
+      render: (text) => <Method text={text} tip={text} />,
     },
     {
       title: (
@@ -67,68 +98,31 @@ export default function getColumns({
       render: (text) => <div>{formatDate(dayjs(text).unix().valueOf(), timeFormat)}</div>,
     },
     {
-      title: 'Action',
-      dataIndex: 'action',
-      key: 'action',
-      render: (text) => <span>{text}</span>,
-    },
-    {
-      title: '',
-      dataIndex: 'market',
-      key: 'market',
-      render: (text, record) => (
-        <div>{record.action === 'Sale' && <Market url={detailData?.marketPlaces?.marketLogo} />}</div>
-      ),
-    },
-    {
       title: 'Price',
       dataIndex: 'price',
+      width: 240,
       key: 'price',
       render: renderPrice,
     },
     {
       dataIndex: 'from',
       title: 'From',
-      render: (from, records) => renderContractToken(from, (records.chainIds && records.chainIds[0]) || chainId),
+      width: 257,
+      render: (from, records) => renderContractToken(from, records.chainIds),
     },
     {
       title: '',
-      key: 'from_to',
-      render: () => <IconFont className="text-[24px]" type="fromto" />,
+      width: 24,
+      className: 'from_to-col',
+      render: () => <IconFont className="text-[24px]" type="From-To" />,
     },
     {
       dataIndex: 'to',
       title: 'To',
-      render: (to, records) => renderContractToken(to, (records.chainIds && records.chainIds[0]) || chainId),
+      width: 255,
+      render: (to, records) => renderContractToken(to, records.chainIds),
     },
   ];
 
-  return multi
-    ? [
-        {
-          title: 'Chain',
-          width: 144,
-          dataIndex: 'chainIds',
-          key: 'chainIds',
-          render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
-        },
-        { ...commonColumns[0], width: 200 },
-        { ...commonColumns[1], width: 200 },
-        { ...commonColumns[2], width: 112 },
-        { ...commonColumns[3], width: 90 },
-        { ...commonColumns[4], width: 190 },
-        { ...commonColumns[5], width: 196 },
-        { ...commonColumns[6], width: 40 },
-        { ...commonColumns[7] },
-      ]
-    : [
-        { ...commonColumns[0], width: 224 },
-        { ...commonColumns[1], width: 224 },
-        { ...commonColumns[2], width: 112 },
-        { ...commonColumns[3], width: 90 },
-        { ...commonColumns[4], width: 190 },
-        { ...commonColumns[5], width: 196 },
-        { ...commonColumns[6], width: 40 },
-        { ...commonColumns[7] },
-      ];
+  return commonColumns;
 }

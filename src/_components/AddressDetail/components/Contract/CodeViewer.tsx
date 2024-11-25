@@ -2,10 +2,12 @@ import React, { memo, useEffect, useState } from 'react';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-csharp';
 import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/theme-tomorrow';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-searchbox';
 import './code.css';
 import clsx from 'clsx';
+import { useMD } from '@_hooks/useResponsive';
 
 const languageDetector = [
   {
@@ -44,19 +46,20 @@ const CodeViewer = ({ data, name, auto, path, resetSearch }) => {
       resetSearch(ace);
     }
   };
+  const ismd = useMD();
   return (
     <div className="code-viewer-container">
-      <div className="mb-2 text-sm leading-[22px] text-base-100">{path}</div>
+      <div className="mb-1 truncate text-sm text-secondary-foreground">{path}</div>
       <AceEditor
         mode={language}
         className={clsx('ace-editor !w-full rounded-lg', !auto && 'resize')}
         highlightActiveLine={true}
         showGutter={true}
         value={data}
-        theme="textmate"
+        theme="tomorrow"
         name="UNIQUE_ID_OF_DIV"
         showPrintMargin={false}
-        height={!auto ? '800px' : 'auto'}
+        height={!auto ? (ismd ? '350px' : '800px') : 'auto'}
         maxLines={auto ? 10000 : 0}
         setOptions={{
           readOnly: true,

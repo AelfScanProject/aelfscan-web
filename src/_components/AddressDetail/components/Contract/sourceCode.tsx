@@ -8,7 +8,6 @@ import copy from 'copy-to-clipboard';
 import { Ace } from 'ace-builds';
 import { useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { useMobileAll } from '@_hooks/useResponsive';
 import FileTree from '../FileTree';
 import { useParams } from 'next/navigation';
 import { getAddress } from '@_utils/formatter';
@@ -32,18 +31,6 @@ function getDefaultFile(files: any[] = [], names: string[] = [], index = 0, path
   }
   const selectFile = filtered[0];
   const newPath = `${path}${selectFile.name}/`;
-  // if (index === names.length - 1) {
-  //   if (Array.isArray(selectFile.files) && selectFile.files.length > 0) {
-  //     return {
-  //       ...selectFile.files[0],
-  //       path: `${newPath}${selectFile.files[0].name}`,
-  //     };
-  //   }
-  //   return {
-  //     ...selectFile,
-  //     path: `${path}${selectFile.name}`,
-  //   };
-  // }
 
   if (index === names.length - 1) {
     const findFileWithContent = (files: any[], currentPath: string): any => {
@@ -110,13 +97,11 @@ export interface IFileItem {
 }
 
 export default function SourceCode({ contractInfo }: { contractInfo: IContractSourceCode }) {
-  const isMobile = useMobileAll();
   const { result, defaultFile } = handleFiles(contractInfo);
   const files = useMemo(() => {
     return result;
   }, [result]);
   const [viewerConfig, setViewerConfig] = useState<IFileItem>(defaultFile);
-  const [linkStatus, setLinkStatus] = useState(false);
   const copyCode = () => {
     handelCopy(window.atob(viewerConfig.content));
   };
@@ -170,10 +155,7 @@ export default function SourceCode({ contractInfo }: { contractInfo: IContractSo
   const copyLink = () => {
     try {
       copy(window.location.href);
-      setLinkStatus(true);
-      setTimeout(() => {
-        setLinkStatus(false);
-      }, 1000);
+      message.success('Copied');
     } catch (e) {
       message.error('Copy failed, please copy by yourself.');
     }
@@ -186,33 +168,32 @@ export default function SourceCode({ contractInfo }: { contractInfo: IContractSo
 
   const { address } = useParams<{ address: string }>();
   return (
-    <div className="contract-source-code px-4">
-      <div
-        className={clsx(isMobile && 'flex-col !items-start', 'source-header flex items-center justify-between py-4')}>
+    <div className="contract-source-code">
+      <div className={clsx('source-header flex items-center justify-between py-4')}>
         <div>
-          <IconFont className="mr-1 text-xs" type="contract-aa3pc9ha" />
-          <span className="inline-block text-sm leading-[22px] text-base-100">Contract Source Code</span>
+          <IconFont className="mr-1 text-base" type="file" />
+          <span className="inline-block text-sm">Contract Source Code</span>
         </div>
-        <div className={clsx(isMobile && 'mt-2', 'view flex items-center')}>
+        <div className={clsx('view flex items-center gap-2')}>
           <Download files={files} fileName={getAddress(address)} />
           <Button
-            className="view-button mx-2"
-            icon={<IconFont className="!text-xs" type="view-copy" />}
+            className="view-button"
+            icon={<IconFont className="!text-base" type="copy-f731al63" />}
             onClick={copyCode}
           />
           <Button
-            className="view-button mr-2"
-            icon={<IconFont className="!text-xs" type={linkStatus ? 'link-success' : 'link'} />}
+            className="view-button"
+            icon={<IconFont className="!text-base" type="link-f731al60" />}
             onClick={copyLink}
           />
           <Button
             className="view-button"
-            icon={<IconFont className="!text-xs" type={!codeAuto ? 'viewer' : 'viewer-full'} />}
+            icon={<IconFont className="!text-base" type={codeAuto ? 'minimize-2-f78beccb' : 'fullscreen'} />}
             onClick={viewChange}
           />
         </div>
       </div>
-      <div className="flex w-full overflow-x-auto pb-10">
+      <div className="flex w-full flex-col gap-4 overflow-x-auto pb-10 min-769:flex-row min-769:gap-0">
         <FileTree files={files} onChange={onFileChange} />
         <div className="ml-1 flex-1">
           <CodeViewer

@@ -7,6 +7,13 @@
 
 @import url('tailwindcss/utilities');
 
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist.woff2') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -24,7 +31,8 @@ html {
   @apply h-full w-full;
 }
 body {
-  @apply lg:min-w-[768px] bg-F7 relative h-full w-full overflow-x-hidden overflow-y-auto;
+  font-family: Geist, sans-serif !important;
+  @apply lg:min-w-[768px] bg-F7 relative h-full w-full overflow-x-hidden overflow-y-auto text-foreground;
   .explorer-dropdown-menu {
     .explorer-dropdown-menu-item {
       @apply !text-xs !leading-20 !text-base-100 !px-2 !py-[6px];
@@ -68,6 +76,10 @@ body {
     svg {
       @apply !text-white;
     }
+  }
+
+  .from_to-col {
+    @apply !px-0;
   }
 }
 

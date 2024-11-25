@@ -18,6 +18,7 @@ import EPTooltip from '@_components/EPToolTip';
 import { useEffect } from 'react';
 import { getSecondHashValue } from '@_utils/formatter';
 import { TelegramPlatform } from '@portkey/did-ui-react';
+import { TChainID } from '@_api/type';
 
 export default function DynamicForm({
   methods,
@@ -47,7 +48,7 @@ export default function DynamicForm({
     message.destroy();
     try {
       copy(value);
-      message.success('Copied Successfully');
+      message.success('Copied');
     } catch (e) {
       message.error('Copy failed, please copy by yourself.');
     }
@@ -67,31 +68,36 @@ export default function DynamicForm({
     <div className="contract-collapse-container pb-4">
       <div className="flex flex-wrap items-center gap-2 pb-4">
         <div
-          className="boder-color-divider flex w-auto cursor-pointer items-center gap-2 rounded-md border border-solid px-2 py-1"
+          className="boder-border flex h-9 w-auto cursor-pointer items-center gap-1 rounded-md border border-solid px-2 py-[6px]"
           onClick={onConnectBtnClickHandler}>
-          <Image src={WalletIcon} alt="wallet" width={14} height={14} />
+          <Image className="rounded-[50%]" src={WalletIcon} alt="wallet" width={16} height={16} />
           {isConnected ? (
-            <div className="wallet-address flex items-center">
-              Connected - Portkey Wallet [
+            <div className="wallet-address flex items-center text-sm">
+              <span className="mr-px">Connected:</span>
               <ContractToken
                 showCopy={false}
                 count={isMd ? 2 : 4}
                 address={walletInfo?.address || ''}
                 type={AddressType.address}
-                chainId={chain}
+                chainIds={[chain as TChainID]}
               />
-              ]
-              <Copy value={addressFormat(walletInfo?.address || '', chain)} />
             </div>
           ) : (
-            <div className="text-xs leading-5 text-base-100">Connect to wallet</div>
+            <div className="text-sm text-primary">Connect wallet</div>
           )}
         </div>
-        {isConnected && !TelegramPlatform.isTelegramPlatform() && (
-          <div
-            className="logout-warpper boder-color-divider flex size-7 cursor-pointer items-center justify-center rounded-md border border-solid bg-F7"
-            onClick={disConnectWallet}>
-            <IconFont type="logout"></IconFont>
+        {isConnected && (
+          <div className="flex items-center gap-2">
+            <div className="item-center flex size-9 justify-center rounded-md border border-border bg-white ">
+              <Copy value={addressFormat(walletInfo?.address || '', chain)} type="copy-f731al63" />
+            </div>
+            {!TelegramPlatform.isTelegramPlatform() && (
+              <div
+                className="logout-warpper boder-border flex size-9 cursor-pointer items-center justify-center rounded-md border border-border bg-white"
+                onClick={disConnectWallet}>
+                <IconFont className="text-base" type="log-out"></IconFont>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -100,12 +106,11 @@ export default function DynamicForm({
           return (
             <div key={item.name} id={item.name}>
               <Collapse
-                collapsible="header"
                 expandIconPosition="end"
                 expandIcon={({ isActive }) => (
                   <IconFont
-                    type="right-arrow-dfna6beo"
-                    className={clsx('arrow text-xs', isActive ? 'rotate-90' : 'rotate-0')}
+                    type="chevron-down-f731al7b"
+                    className={clsx('arrow text-base', isActive ? 'rotate-180' : 'rotate-0')}
                   />
                 )}
                 items={[
@@ -123,16 +128,20 @@ export default function DynamicForm({
                       <div className="flex items-center gap-4">
                         <EPTooltip mode="dark" placement="top" title="Copy Method Name">
                           <IconFont
-                            type="view-copy"
-                            onClick={() => {
+                            type="copy-f731al8a"
+                            className="text-base"
+                            onClick={(e) => {
+                              e.stopPropagation();
                               handleCopy(item.name);
                             }}
                           />
                         </EPTooltip>
                         <EPTooltip mode="dark" placement="top" title="Copy Permalink">
                           <IconFont
-                            type="link"
-                            onClick={() => {
+                            type="link-f731al7a"
+                            className="text-base"
+                            onClick={(e) => {
+                              e.stopPropagation();
                               handleCopy(window.location.href + `&type=${activeKey}` + '#' + item.name);
                             }}
                           />

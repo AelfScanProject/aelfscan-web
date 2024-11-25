@@ -3,11 +3,10 @@ import { fetchServerTokenList } from '@_api/fetchTokens';
 import { SortEnum, TablePageSize } from '@_types/common';
 import { getChainId, getPageNumber } from '@_utils/formatter';
 
-export default async function TokensPage({ params, searchParams }) {
+export default async function TokensPage({ searchParams }) {
   const p = searchParams['p'] || 1;
   const ps = searchParams['ps'] || TablePageSize.small;
-  const { chain } = params;
-  const defaultChain = searchParams['chain'] || chain;
+  const defaultChain = searchParams['chain'];
   const data = await fetchServerTokenList({
     skipCount: getPageNumber(Number(p), ps),
     maxResultCount: ps,

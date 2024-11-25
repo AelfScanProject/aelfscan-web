@@ -29,7 +29,6 @@ export default function MainContainer({ children }) {
         'main-container w-full',
         isHome && '!w-full !max-w-full !px-0',
         isAds && '!w-full !max-w-full !px-0 !pb-0',
-        !isHome && isMobile && '!pt-28',
       )}>
       {children}
     </div>

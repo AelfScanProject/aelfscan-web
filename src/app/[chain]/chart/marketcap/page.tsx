@@ -2,9 +2,8 @@
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber, unitConverter } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { IMarkerCap } from '../type';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyMarketCap } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';

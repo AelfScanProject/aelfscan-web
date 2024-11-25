@@ -48,7 +48,7 @@ const BackToTopButton = ({ isDark }: IProps) => {
 
   return (
     <div onClick={scrollToTop} className={clsx('back-to-top-container')}>
-      <IconFont type="Backtotop" />
+      <IconFont type="arrow-up-to-line" />
       <span className="text">Back to Top</span>
     </div>
   );

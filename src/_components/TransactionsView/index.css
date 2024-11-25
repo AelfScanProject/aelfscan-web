@@ -1,8 +1,11 @@
 .transaction-view {
-  @apply border border-solid cursor-pointer bg-white rounded border-color-divider w-6 h-6 box-border flex justify-center items-center focus:!bg-color-divider;
+  @apply border border-solid cursor-pointer bg-white rounded-md border-border w-[30px] h-[30px] box-border flex justify-center items-center focus:!bg-border;
+  .anticon {
+    @apply text-base;
+  }
 }
 .transaction-view:focus {
-  @apply !bg-color-divider;
+  @apply !bg-border;
 }
 .transaction-tooltip {
   .explorer-tooltip-inner {
@@ -18,7 +21,7 @@
   .main {
     @apply p-2;
     .label {
-      @apply text-base-200 text-xs leading-5 mr-2;
+      @apply text-muted-foreground text-xs mr-2;
     }
     .status,.fee {
       @apply flex items-center justify-between;

@@ -34,7 +34,7 @@ function SearchSelect({ searchValidator }: { searchValidator?: TSearchValidator 
       dropdownRender={(menu) => (
         <div>
           {cloneElement(menu as ReactElement, {
-            className: '!flex !gap-1 !flex-col !shadow-search !w-[114px] !p-2 !-ml-4 !mt-[9px]',
+            className: '!flex !gap-1 !flex-col !shadow-search !w-[126px] !p-2',
           })}
         </div>
       )}>

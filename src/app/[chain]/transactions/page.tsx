@@ -8,19 +8,18 @@
 
 import { fetchServerTransactionList } from '@_api/fetchTransactions';
 import TransactionsList from './list';
-import { getChainId, getSort } from '@_utils/formatter';
+import { getSort } from '@_utils/formatter';
 import { TablePageSize } from '@_types/common';
 import { PageTypeEnum } from '@_types';
-export default async function BlocksPage({ params, searchParams }) {
+export default async function BlocksPage({ searchParams }) {
   const p = searchParams['p'] || 1;
   const ps = searchParams['ps'] || TablePageSize.mini;
-  const { chain } = params;
-  const defaultChain = searchParams['chain'] || chain;
+  const defaultChain = searchParams['chain'];
   const defaultPageType = Number(searchParams['pageType'] || PageTypeEnum.NEXT) as unknown as PageTypeEnum;
   const defaultSearchAfter = searchParams['searchAfter'];
   const sort = getSort(defaultPageType, p);
   const data = await fetchServerTransactionList({
-    chainId: getChainId(defaultChain),
+    chainId: '',
     searchAfter: defaultSearchAfter && JSON.parse(defaultSearchAfter),
     maxResultCount: ps,
     orderInfos: [

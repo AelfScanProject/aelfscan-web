@@ -1,0 +1,12 @@
+.upload-button-container {
+  .upload-button {
+    @apply flex items-center bg-white text-primary border border-border !h-10 px-3 rounded-md;
+  }
+
+  .explorer-btn-loading-icon {
+    @apply !hidden;
+  }
+  .explorer-btn-variant-outlined:disabled {
+    @apply bg-white border-border opacity-[0.65] !important;
+  }
+}

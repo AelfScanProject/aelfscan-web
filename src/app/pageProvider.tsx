@@ -25,13 +25,17 @@ import WebLoginProvider from './webLoginProvider';
 // );
 
 const MobileContext = createContext<any>({});
+const HeaderContext = createContext<any>({});
 
 const useMobileContext = () => {
   return useContext(MobileContext);
 };
-export { useMobileContext };
+const useHeaderContext = () => {
+  return useContext(HeaderContext);
+};
+export { useMobileContext, useHeaderContext };
 
-function RootProvider({ children, isMobileSSR, config, chartImg }) {
+function RootProvider({ children, isMobileSSR, config, chartImg, networkList, headerMenuList }) {
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = makeStore();
@@ -46,17 +50,19 @@ function RootProvider({ children, isMobileSSR, config, chartImg }) {
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
       <ConfigProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
-        <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config, chartImg }}>
-          <ReduxProvider store={storeRef.current}>
-            <WebLoginProvider config={config}>
-              {/* <OpentelemetryProvider config={config}> */}
-              <div id="scroll-content" className="flex min-h-screen flex-col justify-between">
-                {children}
-              </div>
-              {/* </OpentelemetryProvider> */}
-            </WebLoginProvider>
-          </ReduxProvider>
-        </MobileContext.Provider>
+        <HeaderContext.Provider value={{ networkList, headerMenuList }}>
+          <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config, chartImg }}>
+            <ReduxProvider store={storeRef.current}>
+              <WebLoginProvider config={config}>
+                {/* <OpentelemetryProvider config={config}> */}
+                <div id="scroll-content" className="flex min-h-screen flex-col justify-between">
+                  {children}
+                </div>
+                {/* </OpentelemetryProvider> */}
+              </WebLoginProvider>
+            </ReduxProvider>
+          </MobileContext.Provider>
+        </HeaderContext.Provider>
       </ConfigProvider>
     </AELFDProvider>
   );

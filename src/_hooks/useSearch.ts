@@ -12,14 +12,13 @@ import { RefObject, useEffect, useMemo, useState } from 'react';
 import animateScrollTo from 'animated-scroll-to';
 import { useDebounce } from 'react-use';
 import { fetchSearchData } from '@_api/fetchSearch';
-import { useAppSelector } from '@_store';
-import { TChainID } from '@_api/type';
 import { getAddress, getChainId } from '@_utils/formatter';
+import { MULTI_CHAIN } from '@_utils/contant';
 export const useUpdateDataByQuery = () => {
   const { state, dispatch } = useSearchContext();
   const { query, filterType } = state;
   const [loading, setLoading] = useState<boolean>(false);
-  const { defaultChain } = useAppSelector((state) => state.getChainId);
+
   useDebounce(
     () => {
       if (!query) {
@@ -52,7 +51,7 @@ export const useUpdateDataByQuery = () => {
         setLoading(true);
         const params = {
           filterType: filterType?.filterType,
-          chainId: getChainId(defaultChain || ''),
+          chainId: getChainId(MULTI_CHAIN || ''),
           keyword: getAddress(query.trim()),
           searchType: 0,
         };
@@ -145,7 +144,7 @@ export const useKeyEvent = (
         dispatch(highlightNext());
       } else if (e.key === 'Enter') {
         // dispatch(selectItem(allList[highLightIdx]));
-        // searchHandler();
+        searchHandler();
       } else if (e.key === 'Escape') {
         setActiveTabIdx(0);
         dispatch(setClear());

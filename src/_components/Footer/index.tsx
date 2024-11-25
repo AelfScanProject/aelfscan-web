@@ -6,8 +6,6 @@
  * @Description:
  */
 'use client';
-import clsx from 'clsx';
-import './index.css';
 import IconFont from '@_components/IconFont';
 import BackToTopButton from '@_components/BackToTopBtn';
 import Image from 'next/image';
@@ -15,8 +13,6 @@ import { usePad } from '@_hooks/useResponsive';
 import { MenuItem } from '@_types';
 import { useAppSelector } from '@_store';
 import Link from 'next/link';
-import Copy from '@_components/Copy';
-const clsPrefix = 'footer-container';
 const email = 'contact@aelfscan.io';
 interface IProps {
   isMobileSSR: boolean;
@@ -44,51 +40,55 @@ export default function Footer({ footerMenuList }: IProps) {
     );
   });
   return (
-    <div className={clsx(clsPrefix, isPad && `${clsPrefix}-mobile`)}>
-      <div className={clsx(`${clsPrefix}-wrapper`)}>
-        <div className={`${clsPrefix}-content`}>
-          <div className="left">
-            <div className="title flex items-center">
-              <IconFont type="aelf-header-top-test-change"></IconFont>
-              <span className="text">Powered by AELF</span>
-            </div>
-            <div className="description">
-              AELF Scan is a Block Explorer and Analytics Platform for AELF, a decentralized cloud computing blockchain
-              explorer.
-            </div>
+    <div className="w-full pb-[56px] min-[769px]:pb-0">
+      <div className="relative m-auto max-w-[1440px] px-5 pt-6">
+        <div className="flex items-center justify-between py-6">
+          <div className="flex items-center gap-6">
+            <a href="https://x.com/aelfblockchain" target="_blank" rel="noopener noreferrer">
+              <Image width={20} height={20} src="/image/X.svg" alt="twitter"></Image>
+            </a>
+            <a href="https://t.me/aelfblockchain" target="_blank" rel="noopener noreferrer">
+              <Image width={20} height={20} src="/image/telegram.svg" alt="telegram"></Image>
+            </a>
+            <a href="https://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
+              <Image width={20} height={14.2} src="/image/youtube.svg" alt="youtube"></Image>
+            </a>
+            <a href="https://discord.gg/bgysa9xjvD" target="_blank" rel="noopener noreferrer">
+              <Image width={20} height={20} src="/image/discord.svg" alt="discord"></Image>
+            </a>
           </div>
-          <div className="right">
-            {rightLinkCom}
-            <div className="service" key="service">
-              <span className="title">Service</span>
-              <Link className="text" href={`/${defaultChain}/contactusadvertise`} key="advertise">
-                Advertise
-              </Link>
-              <span className="mt-1 !flex items-center gap-1">
-                <a className="text !mt-0" href={`mailto:${email}`} target="_blank" key="Contact Us" rel="noreferrer">
-                  Contact Us
-                </a>
-              </span>
-            </div>
-          </div>
+          <BackToTopButton isDark={true}></BackToTopButton>
         </div>
-        <BackToTopButton isDark={true}></BackToTopButton>
-        <div className={`${clsPrefix}-link`}>
-          <a href="https://x.com/aelfblockchain" target="_blank" rel="noopener noreferrer">
-            <Image width={32} height={32} src="/image/twitter.svg" alt="twitter"></Image>
-          </a>
-          <a href="https://t.me/aelfblockchain" target="_blank" rel="noopener noreferrer">
-            <Image width={32} height={32} src="/image/telegram.svg" alt="telegram"></Image>
-          </a>
-          <a href="https://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
-            <Image width={32} height={32} src="/image/youtube.svg" alt="youtube"></Image>
-          </a>
-          <a href="https://discord.gg/bgysa9xjvD" target="_blank" rel="noopener noreferrer">
-            <Image width={32} height={32} src="/image/discord.svg" alt="discord"></Image>
-          </a>
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-border py-8 min-[769px]:flex-row min-[769px]:gap-0 ">
+          <div className="title flex items-center gap-2">
+            <IconFont type="aelf-header-top-test-change"></IconFont>
+            <span className="text-sm font-medium text-muted-foreground">
+              Powered by{' '}
+              <Link href="https://aelf.io" target="_blank" className="text-primary">
+                aelf
+              </Link>
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link
+              className="text-sm text-primary"
+              target="_blank"
+              href="https://form.aelfscan.io/advertise"
+              key="advertise">
+              Advertise
+            </Link>
+            <a
+              className="text-sm text-primary"
+              href="https://form.aelfscan.io/contactus"
+              target="_blank"
+              key="Contact Us"
+              rel="noreferrer">
+              Contact Us
+            </a>
+            <div className="text-sm text-muted-foreground">aelfscan © {new Date().getFullYear()}</div>
+          </div>
         </div>
       </div>
-      <div className="copywrite">aelfscan © {new Date().getFullYear()}</div>
     </div>
   );
 }

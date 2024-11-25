@@ -9,7 +9,7 @@ import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Cumulative Addresses Chart';
-const getOption = (list: any[], multi, chain): Highcharts.Options => {
+const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
@@ -33,88 +33,59 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
 
   const options = getChartOptions({
     title: title,
-    legend: multi,
+    legend: true,
     tooltipFormatter: function () {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that: any = this;
       const point = that.points[0] as any;
       const date = point.x;
       const { totalCount, mainData, sideData } = customMap[date];
-
-      if (multi) {
-        return `
+      return `
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(totalCount)}</b><br/>aelf MainChain Wallet Addresses: <b>${thousandsNumber(mainData)}</b><br/>aelf dAppChain Wallet Addresses: <b>${thousandsNumber(sideData)}</b><br/>
       `;
-      } else {
-        return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Wallet Addresses</b>: <b>${thousandsNumber(chain === 'AELF' ? mainData : sideData)}</b>
-      `;
-      }
     },
     yAxisTitle: 'aelf Cumulative Address Growth',
     buttonPositionX: -25,
     data: allData,
-    series: multi
-      ? [
-          {
-            name: 'All Chains',
-            type: 'line',
-            data: allData,
-          },
-          {
-            name: 'aelf MainChain Wallet',
-            type: 'line',
-            data: mainData,
-          },
-          {
-            name: 'aelf dAppChain Wallet',
-            type: 'line',
-            data: sideData,
-          },
-        ]
-      : [
-          {
-            name: 'Total Wallet',
-            type: 'line',
-            data: chain === 'AELF' ? mainData : sideData,
-          },
-        ],
+    series: [
+      {
+        name: 'All Chains',
+        type: 'line',
+        data: allData,
+      },
+      {
+        name: 'aelf MainChain Wallet',
+        type: 'line',
+        data: mainData,
+      },
+      {
+        name: 'aelf dAppChain Wallet',
+        type: 'line',
+        data: sideData,
+      },
+    ],
   });
 
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDailyAddAddressData>({
+  const { data, loading, chartRef } = useFetchChartData<IDailyAddAddressData>({
     fetchFunc: fetchUniqueAddresses,
     processData: (res) => res,
   });
 
   const options = useMemo(() => {
-    return getOption(data?.list || [], multi, chain);
-  }, [data, multi, chain]);
+    return getOption(data?.list || []);
+  }, [data]);
 
   const Highest = useMemo(() => {
-    if (multi) {
-      return data?.highestIncrease;
-    } else if (chain === 'AELF') {
-      const result = data?.list || [];
-      const maxMainChainAddressCountItem = result.reduce((maxItem, currentItem) => {
-        return currentItem.mainChainAddressCount > maxItem.mainChainAddressCount ? currentItem : maxItem;
-      }, result[0]);
-      return maxMainChainAddressCountItem;
-    } else {
-      const result = data?.list || [];
-      const maxMainChainAddressCountItem = result.reduce((maxItem, currentItem) => {
-        return currentItem.sideChainAddressCount > maxItem.sideChainAddressCount ? currentItem : maxItem;
-      }, result[0]);
-      return maxMainChainAddressCountItem;
-    }
-  }, [multi, chain, data]);
+    return data?.highestIncrease;
+  }, [data]);
 
   const { download } = useChartDownloadData(data, chartRef, title);
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
-    const key = multi ? 'mergeAddressCount' : chain === 'AELF' ? 'mainChainAddressCount' : 'sideChainAddressCount';
+    const key = 'mergeAddressCount';
     return data
       ? [
           {
@@ -131,7 +102,7 @@ export default function Page() {
           },
         ]
       : [];
-  }, [Highest, chain, data, multi]);
+  }, [Highest, data]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

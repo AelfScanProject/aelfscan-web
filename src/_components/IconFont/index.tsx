@@ -6,8 +6,9 @@
  */
 
 import createFromIconfontCN from '@ant-design/icons/lib/components/IconFont';
-// const createFromIconfontCN = Icons.createFromIconfontCN;
-const ICON_FONT_URL = 'https://lf1-cdn-tos.bytegoofy.com/obj/iconpark/svg_27664_86.d04287078adb6eb32a67eaaef8bf4c44.js';
+
+const ICON_FONT_URL =
+  'https://lf1-cdn-tos.bytegoofy.com/obj/iconpark/svg_27664_146.050a915da8c25d2ef3afc51e7556480e.js';
 
 const IconFont = createFromIconfontCN({
   scriptUrl: ICON_FONT_URL,

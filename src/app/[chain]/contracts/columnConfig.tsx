@@ -7,21 +7,21 @@ import { AddressType } from '@_types/common';
 import EPTooltip from '@_components/EPToolTip';
 import dayjs from 'dayjs';
 import ChainTags from '@_components/ChainTags';
-import { MULTI_CHAIN } from '@_utils/contant';
 
-const renderContractToken = (text, record, chain) => (
+const renderContractToken = (text, record) => (
   <div className="flex items-center">
     <ContractToken
       showContractAddress
       address={text}
+      showChainId={false}
       type={AddressType.Contract}
-      chainId={record.chainIds?.[0] || chain}
+      chainIds={record.chainIds}
     />
   </div>
 );
 
 const renderContractName = (text) => (
-  <div className="w-full max-w-[208px] truncate break-all">
+  <div className="w-full max-w-[140px] truncate break-all">
     <EPTooltip mode="dark" title={text}>
       {text}
     </EPTooltip>
@@ -36,52 +36,59 @@ const renderTxns = (txns) => (typeof txns === 'number' && txns >= 0 ? thousandsN
 
 const renderLastUpdated = (text) => <div>{formatDate(dayjs(text).unix().valueOf(), 'Date Time (UTC)')}</div>;
 
-export default function getColumns(chain): ColumnsType<IContractDataItem> {
+export default function getColumns(): ColumnsType<IContractDataItem> {
   const commonColumns = [
     {
       title: 'Address',
       dataIndex: 'address',
+      width: 210,
       key: 'address',
-      render: (text, record) => renderContractToken(text, record, chain),
+      render: (text, record) => renderContractToken(text, record),
     },
     {
       title: 'Contract Name',
       dataIndex: 'contractName',
       key: 'contractName',
+      width: 173,
       render: renderContractName,
     },
     {
       title: 'Type',
       dataIndex: 'type',
+      width: 173,
       key: 'type',
     },
     {
       title: 'Version',
       dataIndex: 'contractVersion',
       key: 'contractVersion',
+      width: 173,
       render: renderVersion,
     },
     {
       title: 'Balance',
       dataIndex: 'balance',
       key: 'balance',
+      width: 173,
       render: renderBalance,
     },
     {
       title: 'Txns',
+      width: 150,
       dataIndex: 'txns',
       key: 'txns',
       render: renderTxns,
     },
     {
       title: (
-        <div className="time cursor-pointer">
-          <IconFont className="mr-1 text-xs" type="Rank" />
-          Last Updated At (+UTC)
+        <div className="time flex cursor-pointer items-center">
+          Last Updated (+UTC)
+          <IconFont className="ml-1 text-base" type="arrow-down-wide-narrow" />
         </div>
       ),
       dataIndex: 'lastUpdateTime',
       key: 'lastUpdateTime',
+      width: 186,
       render: renderLastUpdated,
     },
   ];
@@ -89,31 +96,21 @@ export default function getColumns(chain): ColumnsType<IContractDataItem> {
   const multiChainSpecificColumn = [
     {
       title: 'Chain',
-      width: 144,
+      width: 140,
       dataIndex: 'chainIds',
       key: 'chainIds',
       render: (chainIds) => <ChainTags chainIds={chainIds} />,
     },
   ];
 
-  return chain === MULTI_CHAIN
-    ? [
-        { ...commonColumns[0], width: 224 },
-        multiChainSpecificColumn[0],
-        { ...commonColumns[1], width: 208 },
-        { ...commonColumns[2], width: 168 },
-        { ...commonColumns[3], width: 120 },
-        { ...commonColumns[4], width: 224 },
-        { ...commonColumns[5], width: 112 },
-        { ...commonColumns[6], width: 208 },
-      ]
-    : [
-        { ...commonColumns[0], width: 208 },
-        { ...commonColumns[1], width: 208 },
-        { ...commonColumns[2], width: 152 },
-        { ...commonColumns[3], width: 152 },
-        { ...commonColumns[4], width: 208 },
-        { ...commonColumns[5], width: 96 },
-        { ...commonColumns[6], width: 208 },
-      ];
+  return [
+    { ...commonColumns[0] },
+    multiChainSpecificColumn[0],
+    { ...commonColumns[1] },
+    { ...commonColumns[2] },
+    { ...commonColumns[3] },
+    { ...commonColumns[4] },
+    { ...commonColumns[5] },
+    { ...commonColumns[6] },
+  ];
 }

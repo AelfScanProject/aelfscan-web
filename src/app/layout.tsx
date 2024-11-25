@@ -70,10 +70,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 width="0"
                 style="display:none;visibility:hidden"></iframe>`,
           }}></noscript>
-        <div className="relative box-border min-h-screen bg-[#FBFBFB]">
+        <div
+          className="relative box-border min-h-screen"
+          style={{ background: 'linear-gradient(180deg, #F1F5F9 0%, #FFF 31.28%)' }}>
           <PublicEnvProvider>
             <StyleRegistry>
-              <RootProvider isMobileSSR={isMobile} config={config} chartImg={chartImg}>
+              <RootProvider
+                isMobileSSR={isMobile}
+                config={config}
+                chartImg={chartImg}
+                networkList={networkList}
+                headerMenuList={headerMenuList}>
                 <Suspense>
                   <Header chainList={multiChainList} networkList={networkList} headerMenuList={headerMenuList} />
                 </Suspense>

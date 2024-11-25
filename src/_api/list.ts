@@ -60,12 +60,15 @@ const ADDRESS_API_LIST = {
   uploadContractCode: `${BASE_API}/contractfile/upload`,
   getServerTopAccounts: `${SERVER_BASE_API}/app/address/accounts`,
   getServerAccountDetail: `${SERVER_BASE_API}/app/address/detail`,
+  getAccountDetail: `${BASE_API}/app/address/detail`,
 };
 
 const Common_API_List = {
   getPrice: '',
   getSearchFilter: `${BASE_API}/app/blockchain/filters`,
   getAdsDetail: `${BASE_API}/app/ads/detail`,
+  getAdsDetailList: `${BASE_API}/app/ads/detail/list`,
+  getLatestTwitter: `${BASE_API}/app/ads/LatestTwitter`,
   getBannerAdsDetail: `${BASE_API}/app/ads/banner/detail`,
   getServerBannerAdsDetail: `${SERVER_BASE_API}/app/ads/banner/detail`,
 };

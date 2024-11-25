@@ -1,0 +1,8 @@
+.baseHightCharts-container {
+  .highcharts-title {
+    @apply text-base text-foreground !important;
+  }
+  .highcharts-subtitle {
+    @apply text-xs text-muted-foreground !important;
+  }
+}

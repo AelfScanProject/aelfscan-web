@@ -4,72 +4,68 @@ import { Address, HolderItem } from '../type';
 import ContractToken from '@_components/ContractToken';
 import { thousandsNumber } from '@_utils/formatter';
 import ChainTags from '@_components/ChainTags';
+import { AddressType } from '@_types/common';
 
-function renderAddress(chain, data: Address) {
-  const { name, addressType, address } = data;
+function renderAddress(data: Address, record) {
+  const { addressType, address } = data;
   return (
     <div className="address flex items-center">
-      <ContractToken name={name} type={addressType} address={address} chainId={chain} />
+      <ContractToken
+        type={addressType}
+        showContractAddress={addressType === AddressType.Contract}
+        address={address}
+        chainIds={record.chainIds}
+        onlyCopy
+      />
     </div>
   );
 }
 
-function getCommonColumns(currentPage, pageSize, chain): ColumnsType<HolderItem> {
+function getCommonColumns(currentPage, pageSize): ColumnsType<HolderItem> {
   return [
     {
       title: <span>#</span>,
       dataIndex: '',
+      width: 100,
       key: 'rank',
       render: (text, record, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       dataIndex: 'address',
+      width: 393,
       key: 'address',
       title: (
         <div>
           <span>Address</span>
         </div>
       ),
-      render: (data: Address) => renderAddress(chain, data),
+      render: (data: Address, record) => renderAddress(data, record),
+    },
+    {
+      title: 'Chain',
+      width: 120,
+      dataIndex: 'chainIds',
+      key: 'chainIds',
+      render: (chainIds) => <ChainTags showIcon chainIds={chainIds || []} />,
     },
     {
       title: <span>Quantity</span>,
       dataIndex: 'quantity',
+      width: 393,
       key: 'quantity',
       render: (quantity) => <span>{thousandsNumber(quantity)}</span>,
     },
     {
       title: <span>Percentage</span>,
       dataIndex: 'percentage',
+      width: 391,
       key: 'percentage',
       render: (percentage) => <span>{percentage}%</span>,
     },
   ];
 }
 
-export default function getColumns(currentPage, pageSize, chain, multi): ColumnsType<HolderItem> {
-  const commonColumns = getCommonColumns(currentPage, pageSize, chain);
-
-  if (multi) {
-    return [
-      { ...commonColumns[0], width: 128 },
-      { ...commonColumns[1], width: 374, render: (data: Address) => renderAddress(chain, data) },
-      {
-        title: 'Chain',
-        width: 234,
-        dataIndex: 'chainIds',
-        key: 'chainIds',
-        render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
-      },
-      { ...commonColumns[2], width: 304 },
-      { ...commonColumns[3], width: 304 },
-    ];
-  }
-
-  return [
-    { ...commonColumns[0], width: 144 },
-    { ...commonColumns[1], width: 448, render: (data: Address) => renderAddress(chain, data) },
-    { ...commonColumns[2], width: 384 },
-    { ...commonColumns[3], width: 384 },
-  ];
+export default function getColumns(currentPage, pageSize): ColumnsType<HolderItem> {
+  const commonColumns = getCommonColumns(currentPage, pageSize);
+  return commonColumns;
 }

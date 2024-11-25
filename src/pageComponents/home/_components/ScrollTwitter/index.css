@@ -1,0 +1,20 @@
+
+@keyframes horizontal-scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.updates-scroll {
+  white-space: nowrap;
+  display: flex;
+}
+
+.update-text {
+  display: flex;
+  white-space: nowrap;
+  animation: horizontal-scroll 100s linear infinite;
+}

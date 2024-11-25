@@ -18,6 +18,23 @@ module.exports = {
         'rise-red': '#FF4D4F',
         'fall-green': '#05bd72',
         'global-grey': '#f7f8f9',
+        foreground: '#020617',
+        'secondary-foreground': '#0F172A',
+        'muted-foreground': '#64748B',
+        muted: '#F1F5F9',
+        muted05: '#F8FAFC',
+        accentBlue: '#1D4ED8',
+        'accent-teal': '#0F766E',
+        'accent-pink': '#BE185D',
+        border: '#E2E8F0',
+        success: '#16A34A',
+        warning: '#CA8A04',
+        destructive: '#DC2626',
+        primary: '#2563EB',
+        secondary: '#EFF6FF',
+        'accent-blue-background': '#EFF6FF',
+        'accent-teal-background': '#F0FDFA',
+        'accent-pink-background': '#FDF2F8',
         base: {
           100: '#252525',
           200: '#858585',
@@ -39,7 +56,6 @@ module.exports = {
         scorpion: '#595959',
         positive: '#00A186',
         'yellow-stroke': '#FADEAB',
-        warning: '#FAAD14',
         'yellow-fill': '#FEF6E7',
       },
       boxShadow: {
@@ -48,6 +64,7 @@ module.exports = {
         row_tab: '0px -2px 0px 0px #266CD3',
         row_tab_inset: '0px -2px 0px 0px #266CD3 inset',
         title_bot: '0px -1px 0px 0px #E6E6E6 inset',
+        card_box: '0px 1px 2px 0px rgba(0, 0, 0, 0.05)',
       },
       lineHeight: {
         20: '20px',
@@ -60,7 +77,30 @@ module.exports = {
       flex: {
         '00auto': '0 0 auto',
       },
+      screens: {
+        'min-769': '769px',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.font-medium': {
+          fontVariationSettings: '"wght" 500',
+          '-webkit-font-smoothing': 'antialiased',
+          '-moz-osx-font-smoothing': 'grayscale',
+        },
+        '.font-semibold': {
+          fontVariationSettings: '"wght" 600',
+          '-webkit-font-smoothing': 'antialiased',
+          '-moz-osx-font-smoothing': 'grayscale',
+        },
+        '.font-bold': {
+          fontVariationSettings: '"wght" 700',
+          '-webkit-font-smoothing': 'antialiased',
+          '-moz-osx-font-smoothing': 'grayscale',
+        },
+      });
+    },
+  ],
 };

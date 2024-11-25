@@ -117,7 +117,7 @@ export default function List() {
   }, [fetchData]);
 
   const singleTitle = useMemo(() => {
-    return `A total of ${thousandsNumber(total)} token transfers found`;
+    return `Total ${thousandsNumber(total)} token transfers found`;
   }, [total]);
 
   return (
@@ -131,6 +131,7 @@ export default function List() {
         loading={loading}
         dataSource={data}
         showMultiChain={multi}
+        bordered={false}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

@@ -1,5 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { Tree } from 'antd';
+import { Popover, Tree } from 'antd';
+import IconFont from '@_components/IconFont';
+import './index.css';
+import { useMD } from '@_hooks/useResponsive';
 
 function addKeyForTree(files: any[] = [], parentKey = '', splitChar = '#') {
   return files.map((file) => {
@@ -65,19 +68,52 @@ const FileTree = (props: IFileTreeProps) => {
     setSelectKeys([e.node.key]);
     onChange(e.node.key.split('#'));
   };
+
+  const ismd = useMD();
+
   const treeData = useMemo(() => filesWithKey.map((v) => renderTreeNode(v)), [filesWithKey]);
   return (
-    <Tree
-      showLine
-      autoExpandParent
-      height={800}
-      defaultSelectedKeys={firstFileKey}
-      defaultExpandedKeys={firstFileKey}
-      selectedKeys={selectedKeys}
-      onSelect={onSelect}
-      className="contract-viewer-file-tree w-[250px] overflow-x-auto"
-      treeData={treeData}
-    />
+    <div className="ep-tree-container">
+      {ismd ? (
+        <Popover
+          trigger="click"
+          placement="bottomLeft"
+          overlayClassName="!w-[224px] !h-[280px] overflow-auto tree-container-file"
+          content={
+            <Tree
+              showLine
+              autoExpandParent
+              switcherIcon={<IconFont className="text-base" type="chevron-down1" />}
+              defaultSelectedKeys={firstFileKey}
+              defaultExpandedKeys={firstFileKey}
+              selectedKeys={selectedKeys}
+              onSelect={onSelect}
+              className="contract-viewer-file-tree"
+              treeData={treeData}
+            />
+          }>
+          <div className="inline-block cursor-pointer border-2 border-white p-[2px]">
+            <div className="flex items-center gap-1 rounded-md border border-border bg-white px-2 py-[6px]">
+              <IconFont className="text-base" type="menu" />
+              <div className="text-sm text-primary">Show Files</div>
+            </div>
+          </div>
+        </Popover>
+      ) : (
+        <Tree
+          showLine
+          autoExpandParent
+          height={800}
+          switcherIcon={<IconFont className="text-base" type="chevron-down1" />}
+          defaultSelectedKeys={firstFileKey}
+          defaultExpandedKeys={firstFileKey}
+          selectedKeys={selectedKeys}
+          onSelect={onSelect}
+          className="contract-viewer-file-tree w-[250px] overflow-x-auto"
+          treeData={treeData}
+        />
+      )}
+    </div>
   );
 };
 

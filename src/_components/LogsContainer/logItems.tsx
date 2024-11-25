@@ -4,11 +4,10 @@ import CodeBlock from '@_components/CodeBlock';
 import { Button } from 'aelf-design';
 import './logItem.css';
 import { deserializeLog } from '@_utils/deserializeLog';
-import { useParams } from 'next/navigation';
 import { message } from 'antd';
 import { useEffectOnce } from 'react-use';
 import { useMobileContext } from '@app/pageProvider';
-function LogItems({ data }: { data: ILogsProps }) {
+function LogItems({ data, chain }: { data: ILogsProps; chain: string }) {
   const { config } = useMobileContext();
   const originData = useMemo(() => {
     return {
@@ -21,7 +20,6 @@ function LogItems({ data }: { data: ILogsProps }) {
   const [loading, setLoading] = useState(true);
   const code = JSON.stringify(originData, null, 2);
   const [result, setResult] = useState<any>();
-  const { chain } = useParams<{ chain: string }>();
 
   const [hasDecoded, setHasDecoded] = useState<boolean>(true);
 
@@ -56,7 +54,7 @@ function LogItems({ data }: { data: ILogsProps }) {
       {
         <>
           <CodeBlock value={hasDecoded ? JSON.stringify(result, null, 2) : code} />
-          <Button type="primary" className="log-button mt-2 text-xs leading-5" loading={loading} onClick={decode}>
+          <Button ghost className="log-button" loading={loading} onClick={decode}>
             {hasDecoded ? 'Encode' : 'Decode'}
           </Button>
         </>

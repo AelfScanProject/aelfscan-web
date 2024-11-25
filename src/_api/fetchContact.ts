@@ -78,6 +78,15 @@ export async function fetchServerAccountDetail(params: IAccountDetailRequestPara
   const data = result?.data || {};
   return data;
 }
+
+export async function fetchAccountDetail(params: IAccountDetailRequestParams): Promise<IAddressResponse> {
+  const result = await request.address.getAccountDetail({
+    params: params,
+  });
+  const data = result?.data || {};
+  return data;
+}
+
 export async function fetchContractHistory(params: IContractHistoryRequestParams): Promise<{ record: IHistory[] }> {
   const result = await request.address.getContractHistory({
     params: params,

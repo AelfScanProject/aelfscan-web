@@ -1,23 +1,27 @@
 'use client';
 import NFTImage from '@_components/NFTImage';
 import { IToken } from '@_types/common';
-import { FontWeightEnum, Typography } from 'aelf-design';
 import clsx from 'clsx';
 interface ITokenImageProps {
   token: Partial<IToken>;
   className?: string;
+  textClassName?: string;
   width?: string;
   height?: string;
 }
 
-const { Text } = Typography;
-
-export default function TokenImage({ token, className, width = '24px', height = '24px' }: ITokenImageProps) {
+export default function TokenImage({
+  token,
+  className,
+  width = '24px',
+  height = '24px',
+  textClassName,
+}: ITokenImageProps) {
   return (
     <>
       {token?.imageUrl ? (
         <NFTImage
-          className={clsx('size-6 rounded-xl', className)}
+          className={clsx('size-6 rounded-lg', className)}
           src={token.imageUrl}
           alt="logo"
           width={width}
@@ -26,12 +30,12 @@ export default function TokenImage({ token, className, width = '24px', height = 
       ) : (
         <div
           className={clsx(
-            'flex size-6 items-center justify-center rounded-xl border border-solid border-D0 bg-white',
+            'flex size-6 items-center justify-center rounded-xl border border-solid border-border bg-white',
             className,
           )}>
-          <Text size="small" fontWeight={FontWeightEnum.Bold}>
+          <div className={clsx('text-sm font-semibold text-muted-foreground', textClassName)}>
             {token?.symbol?.[0] || '--'}
-          </Text>
+          </div>
         </div>
       )}
     </>

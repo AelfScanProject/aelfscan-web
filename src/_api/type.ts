@@ -319,7 +319,6 @@ export interface IAccountDetailRequestParams extends RequestInit {
   chainId: TChainID;
   address: string;
   maxResultCount?: number;
-  addressType: AddressType;
 }
 
 export interface IAccountTokensRequestParams extends RequestInit {
@@ -331,6 +330,7 @@ export interface IAccountTokensRequestParams extends RequestInit {
   sort?: SortEnum;
   orderBy?: string;
   search?: string;
+  fuzzySearch?: string;
   orderInfos?: ISortInfo[];
   searchAfter?: any[];
 }

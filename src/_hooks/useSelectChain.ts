@@ -28,3 +28,14 @@ export const useSideChain = () => {
   const isMainNet = useMainNet();
   return isMainNet ? 'tDVV' : 'tDVW';
 };
+
+export const useCurrentPageChain = () => {
+  const searchParams = useSearchParams();
+  const { chain } = useParams<{ chain: string }>();
+
+  const pageChain: string = useMemo(() => {
+    return searchParams.get('chainId') || chain;
+  }, [chain, searchParams]);
+
+  return pageChain;
+};

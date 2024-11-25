@@ -56,12 +56,14 @@ async function service(url: string, options: RequestWithParams) {
     }
   }
 
+  console.log(url, 'url');
+
   try {
     const response = await fetch(url, {
       ...options,
       cache: 'no-store',
       headers: {
-        // 'pre-release': '1',
+        'pre-release': '1',
         ...(options?.headers || {}),
       },
     });

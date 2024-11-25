@@ -13,25 +13,17 @@ function Status({ status }: { status: StatusEnum }) {
   return (
     <div
       className={clsx(
-        'confirm-status h-6 px-2 flex border items-center rounded',
-        (status === StatusEnum.Confirmed || status === StatusEnum.Success) && 'bg-confirm-bg border-confirm-br',
-        status === StatusEnum.Unconfrimed && 'border-color-divider bg-F7',
-        status === StatusEnum.Fail && 'bg-pink_fill border-pink_stroke',
+        'confirm-status flex h-5 items-center rounded-[9px] px-[10px]',
+        (status === StatusEnum.Confirmed || status === StatusEnum.Success) && 'bg-success',
+        status === StatusEnum.Unconfrimed && ' bg-muted-foreground',
+        status === StatusEnum.Fail && 'bg-destructive',
       )}>
       {(status === StatusEnum.Confirmed || status === StatusEnum.Success) && (
-        <IconFont className="text-xs mr-1" type="confirmed" />
+        <IconFont className="mr-1 text-xs" type="circle-check-big" />
       )}
-      {status === StatusEnum.Unconfrimed && <IconFont className="text-xs mr-1" type="unconfirmed" />}
-      {status === StatusEnum.Fail && <IconFont className="text-xs mr-1" type="fail-close" />}
-      <span
-        className={clsx(
-          'block text-xs leading-5 font-medium',
-          (status === StatusEnum.Confirmed || status === StatusEnum.Success) && 'text-confirm',
-          status === StatusEnum.Unconfrimed && 'text-base-200',
-          status === StatusEnum.Fail && 'text-rise-red',
-        )}>
-        {status}
-      </span>
+      {status === StatusEnum.Unconfrimed && <IconFont className="mr-1 text-xs" type="clock-white" />}
+      {status === StatusEnum.Fail && <IconFont className="mr-1 text-xs" type="circle-x" />}
+      <span className={clsx('block text-xs font-semibold text-white')}>{status}</span>
     </div>
   );
 }

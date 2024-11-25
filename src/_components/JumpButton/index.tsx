@@ -29,20 +29,14 @@ export default function JumpButton({ isFirst, isLast, jump }: IJumpProps) {
         onClick={() => {
           !isFirst && jump(JumpTypes.Prev);
         }}>
-        <IconFont
-          className={clsx(isFirst ? 'disabled-icon' : 'active-icon', 'w-3', 'h-3', 'text-xs')}
-          type="left-arrow"
-        />
+        <IconFont className={clsx(isFirst ? 'disabled-icon' : 'active-icon', 'text-base')} type="chevron-left" />
       </div>
       <div
         className={clsx('jum-button ml-1', isLast && 'disabled-button')}
         onClick={() => {
           !isLast && jump(JumpTypes.Next);
         }}>
-        <IconFont
-          className={clsx(isLast ? 'disabled-icon' : 'active-icon', 'w-3', 'h-3', 'text-xs')}
-          type="right-arrow"
-        />
+        <IconFont className={clsx(isLast ? 'disabled-icon' : 'active-icon', 'text-base')} type="chevron-right" />
       </div>
     </div>
   );

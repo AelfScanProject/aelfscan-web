@@ -24,7 +24,7 @@ export default function Download({ files, fileName, fileType = '.zip', ...parmas
     <Button
       className="view-button"
       loading={loading}
-      icon={<IconFont className="!text-xs" type="Download" />}
+      icon={<IconFont className="!text-base" type="download-f731al5a" />}
       onClick={download}
       {...parmas}
     />

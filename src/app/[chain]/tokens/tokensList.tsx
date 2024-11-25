@@ -5,13 +5,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import getColumns from './columnConfig';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { ITokenList, ITokenListItem } from '../token/[tokenSymbol]/type';
-import { useParams } from 'next/navigation';
 import { fetchTokenList } from '@_api/fetchTokens';
 import { getChainId, getPageNumber } from '@_utils/formatter';
 import { pageSizeOption } from '@_utils/contant';
 import { SortEnum } from '@_types/common';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-import { useMultiChain } from '@_hooks/useSelectChain';
 
 interface TokensListProps {
   SSRData: ITokenList;
@@ -31,8 +29,6 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
   const updateQueryParams = useUpdateQueryParams();
 
   const [selectChain, setSelectChain] = useState(defaultChain);
-
-  const { chain } = useParams();
 
   const mountRef = useRef(true);
 
@@ -65,11 +61,9 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
     setSort(sort === SortEnum.desc ? SortEnum.asc : SortEnum.desc);
   }, [loading, sort]);
 
-  const multi = useMultiChain();
-
   const columns = useMemo(
-    () => getColumns({ currentPage, pageSize, sort, ChangeOrder, chain, multi }),
-    [ChangeOrder, chain, currentPage, multi, pageSize, sort],
+    () => getColumns({ currentPage, pageSize, sort, ChangeOrder }),
+    [ChangeOrder, currentPage, pageSize, sort],
   );
 
   const pageChange = (page: number) => {
@@ -83,7 +77,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
     setSelectChain(value);
   };
 
-  const title = useMemo(() => `A total of ${total} ${total <= 1 ? 'token' : 'tokens'} found`, [total]);
+  const title = useMemo(() => `Total ${total} tokens found`, [total]);
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
@@ -101,7 +95,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
           },
         }}
         loading={loading}
-        showMultiChain={multi}
+        showMultiChain={true}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

@@ -12,13 +12,11 @@ import { HolderItem } from '../type';
 import { PageTypeEnum } from '@_types';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-import { getChainId, getHoldersSearchAfter, getSort } from '@_utils/formatter';
-import { useMultiChain } from '@_hooks/useSelectChain';
+import { getChainId, getHoldersSearchAfter, getSort, thousandsNumber } from '@_utils/formatter';
 const TAB_NAME = 'holders';
 export default function Holder() {
   const isMobile = useMobileAll();
   const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
   const itemSymbol: string = searchParams.get('itemSymbol') || '';
 
   const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
@@ -76,11 +74,9 @@ export default function Holder() {
     }
   }, [selectChain, currentPage, itemSymbol, pageSize, pageType, updateQueryParams]);
 
-  const multi = useMultiChain();
-
   const columns = useMemo<ColumnsType<HolderItem>>(() => {
-    return getColumns(currentPage, pageSize, chain, multi);
-  }, [chain, currentPage, pageSize, multi]);
+    return getColumns(currentPage, pageSize);
+  }, [currentPage, pageSize]);
 
   const pageSizeChange = (page, size) => {
     setPageSize(size);
@@ -112,13 +108,14 @@ export default function Holder() {
       <Table
         headerTitle={{
           multi: {
-            title: `A total of ${total} holders found`,
+            title: `Total ${thousandsNumber(total)} holders found`,
             desc: '',
           },
         }}
         loading={loading}
+        bordered={false}
         dataSource={data}
-        showMultiChain={multi}
+        showMultiChain={true}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
