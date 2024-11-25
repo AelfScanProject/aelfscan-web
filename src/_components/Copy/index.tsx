@@ -14,7 +14,7 @@ export default function Copy({ value, className, type }: { value: string; classN
     message.destroy();
     try {
       copy(value);
-      message.success('Copied Successfully');
+      message.success('Copied');
     } catch (e) {
       message.error('Copy failed, please copy by yourself.');
     }

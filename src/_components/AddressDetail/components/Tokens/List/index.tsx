@@ -40,7 +40,7 @@ export default function TokensList({ totalTokenValue, totalTokenValueOfElf }) {
         address: getAddress(address as string),
         orderBy: sortedInfo.order ? (sortedInfo.columnKey as string) : undefined,
         sort: sortedInfo.order ? SortEnum[TableSortEnum[sortedInfo.order]] : undefined,
-        search: SearchFetchText,
+        fuzzySearch: SearchFetchText,
       };
       setLoading(true);
       const data = await fetchAccountsDetailTokens(params);

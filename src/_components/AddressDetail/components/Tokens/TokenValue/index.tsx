@@ -30,7 +30,7 @@ export default function TokensValue({
       ) : chainIds.length < 2 ? (
         <div className="text-xl font-semibold">
           {dolar && '$'}
-          {total}
+          {thousandsNumber(total)}
         </div>
       ) : (
         <MultiDown mainCount={main} sideCount={side} dolar={dolar}>

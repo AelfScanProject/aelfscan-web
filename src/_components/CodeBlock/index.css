@@ -1,5 +1,7 @@
 .tx-block-code-like-content{
   @apply !rounded !border-none !bg-muted !p-3 !w-full text-xs border-border !text-muted-foreground;
+
+  font-family: "Courier New", Courier, monospace !important;
   &:disabled {
     @apply !text-muted-foreground !opacity-100 text-xs;
 

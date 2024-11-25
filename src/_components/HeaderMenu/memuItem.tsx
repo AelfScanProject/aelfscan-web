@@ -111,7 +111,7 @@ export default function MenuItemCom({ selectedKey, setCurrent, headerMenuList, t
           onClick={onClick}
           selectedKeys={[selectedKey]}
           mode="horizontal"
-          style={{ minWidth: 450, flex: 'auto' }}
+          style={{ minWidth: 453, flex: 'auto' }}
           items={items}></Menu>
       )}
     </div>
