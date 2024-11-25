@@ -79,8 +79,8 @@ export default function List() {
   }, [total]);
 
   const multiTitleDesc = useMemo(() => {
-    return `Showing the last 500k records`;
-  }, []);
+    return total > 500000 ? `Showing the last 500k records` : '';
+  }, [total]);
   const pageChange = (page: number) => {
     setCurrentPage(page);
   };

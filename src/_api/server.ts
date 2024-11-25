@@ -63,7 +63,7 @@ async function service(url: string, options: RequestWithParams) {
       ...options,
       cache: 'no-store',
       headers: {
-        // 'pre-release': '1',
+        'pre-release': '1',
         ...(options?.headers || {}),
       },
     });

@@ -7,7 +7,10 @@ export default function SwitchButton({ hidden, buttonProps }: { hidden: boolean;
       className="rounded-mg flex h-10 items-center justify-center gap-4 !border-border px-3 py-2"
       {...buttonProps}>
       <div className="text-sm">{hidden ? 'Hide' : 'Show'} assets</div>
-      <IconFont className={`${hidden && 'rotate-180'} text-base`} type="chevron-down1" />
+      <IconFont
+        className={`${hidden && '-rotate-180'} text-base transition-transform duration-300`}
+        type="chevron-down1"
+      />
     </Button>
   );
 }
