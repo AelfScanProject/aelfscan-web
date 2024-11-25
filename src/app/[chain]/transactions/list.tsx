@@ -17,6 +17,7 @@ const TAB_NAME = 'transactions';
 export default function List({
   SSRData,
   showHeader = true,
+  showMultiChain = true,
   defaultPage,
   defaultPageSize,
   defaultPageType,
@@ -31,7 +32,7 @@ export default function List({
   const [data, setData] = useState<ITransactionsResponseItem[]>(SSRData.transactions);
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
-  const { chain, address } = useParams();
+  const { address } = useParams();
   const mountRef = useRef(false);
   const searchParams = useSearchParams();
   const defaultSearchAfter = searchParams.get('searchAfter');
@@ -152,7 +153,7 @@ export default function List({
             desc: multiTitleDesc,
           },
         }}
-        showMultiChain={chain === MULTI_CHAIN}
+        showMultiChain={showMultiChain}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

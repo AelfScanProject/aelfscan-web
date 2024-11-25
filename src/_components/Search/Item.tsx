@@ -1,5 +1,5 @@
 import { useSearchContext } from './SearchProvider';
-import { setHighlighted, selectItem } from './action';
+import { setHighlighted } from './action';
 import { TSingle, TType } from './type';
 import clsx from 'clsx';
 import IconFont from '@_components/IconFont';
@@ -47,9 +47,9 @@ const Item = ({
     } else if (searchType === 'tokens') {
       return `/${MULTI_CHAIN}/token/${item.symbol}`;
     } else if (searchType === 'contracts') {
-      return `/${MULTI_CHAIN}/address/${item.address}`;
+      return `/${chainIds && chainIds[0]}/address/${addressFormat(item.address || '', chainIds && chainIds[0])}`;
     } else if (searchType === 'accounts') {
-      return `/${MULTI_CHAIN}/address/${item.address}`;
+      return `/${MULTI_CHAIN}/address/${addressFormat(item.address || '', chainIds && chainIds.sort()[0])}`;
     }
 
     return '';

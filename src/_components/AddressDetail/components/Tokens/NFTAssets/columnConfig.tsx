@@ -91,7 +91,7 @@ export default function getColumns(sortedInfo): ColumnsType<NftsItemType> {
       render: renderQuantity,
     },
     {
-      title: 'Acquired_Since_Time',
+      title: 'Acquired since',
       dataIndex: 'firstNftTime',
       key: 'FirstNftTime',
       width: 313,

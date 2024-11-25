@@ -17,9 +17,9 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
       <div className="not-found-logo-wrap">
         <Image className="object-contain" fill src={Logo} alt="" />
       </div>
-      <h1 className="not-found-h1">Something went wrong!</h1>
+      <h1 className="not-found-h1">Oops! An Error Occurred</h1>
       <h2 className="not-found-h2">
-        The error message content is: <span className="break-all text-[red]">{error.message}</span>
+        Error message: <span className="break-words text-destructive">{error.message}</span>
       </h2>
       <Button
         type="primary"

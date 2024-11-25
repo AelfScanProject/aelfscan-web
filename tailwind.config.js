@@ -89,16 +89,19 @@ module.exports = {
           fontVariationSettings: '"wght" 500',
           '-webkit-font-smoothing': 'antialiased',
           '-moz-osx-font-smoothing': 'grayscale',
+          fontWeight: 'normal !important',
         },
         '.font-semibold': {
           fontVariationSettings: '"wght" 600',
           '-webkit-font-smoothing': 'antialiased',
           '-moz-osx-font-smoothing': 'grayscale',
+          fontWeight: 'normal !important',
         },
         '.font-bold': {
           fontVariationSettings: '"wght" 700',
           '-webkit-font-smoothing': 'antialiased',
           '-moz-osx-font-smoothing': 'grayscale',
+          fontWeight: 'normal !important',
         },
       });
     },

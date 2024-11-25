@@ -30,7 +30,14 @@ export default function MultiChainSelect({ props, className }: { props: SelectPr
         {chainArr?.map((item) => {
           return (
             <Option className="common-select-option-wrapper chain-select-option" key={item.key} value={item.key}>
-              {chainArr.find((ele) => ele.key === item.key)!.label}
+              <div className="flex items-center gap-2">
+                {item.key === props.value ? (
+                  <IconFont className="check text-base" type="Check" />
+                ) : (
+                  <div className="check size-4"></div>
+                )}
+                {chainArr.find((ele) => ele.key === item.key)!.label}
+              </div>
             </Option>
           );
         })}

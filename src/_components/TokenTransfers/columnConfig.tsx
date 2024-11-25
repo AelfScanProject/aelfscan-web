@@ -70,7 +70,6 @@ export default function getColumns({
   columnType,
   handleTimeChange,
   address,
-  multi,
 }): ColumnsType<TokenTransfersItemType> {
   const columns = [
     {
@@ -84,7 +83,7 @@ export default function getColumns({
       key: 'view',
       render: (record) => <TransactionsView record={record} custom jumpChain={record.chainIds[0]} />,
     },
-    multi && {
+    {
       title: 'Chain',
       width: 140,
       dataIndex: 'chainIds',
