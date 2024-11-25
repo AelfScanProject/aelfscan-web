@@ -51,12 +51,14 @@ function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
               </div>
               <div className="text-sm">
                 <EPTooltip title={ele.transactionId} mode="dark" pointAtCenter={false}>
-                  <Link
-                    prefetch={false}
-                    className="mb-2 hidden w-[140px] truncate !text-primary"
-                    href={`/${ele.chainIds[0]}/tx/${ele.transactionId}`}>
-                    {ele.transactionId}
-                  </Link>
+                  <div className="mb-2 w-[140px] truncate">
+                    <Link
+                      prefetch={false}
+                      className="w-[140px] truncate !text-primary"
+                      href={`/${ele.chainIds[0]}/tx/${ele.transactionId}`}>
+                      {ele.transactionId}
+                    </Link>
+                  </div>
                 </EPTooltip>
                 <div className="from mb-1 flex items-center">
                   <span className="mr-1 font-medium">From:</span>
@@ -94,12 +96,14 @@ function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
                       </Link>
                     ) : (
                       <EPTooltip title={ele.transactionId} mode="dark" pointAtCenter={false}>
-                        <Link
-                          prefetch={false}
-                          className="!text-primary"
-                          href={`/${ele.chainIds[0]}/tx/${ele.transactionId}`}>
-                          {ele.transactionId}
-                        </Link>
+                        <div className="truncate">
+                          <Link
+                            prefetch={false}
+                            className="!text-primary"
+                            href={`/${ele.chainIds[0]}/tx/${ele.transactionId}`}>
+                            {ele.transactionId}
+                          </Link>
+                        </div>
                       </EPTooltip>
                     )}
                   </span>

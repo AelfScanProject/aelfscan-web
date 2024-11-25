@@ -13,16 +13,18 @@ import { fetchAccountTransfers } from '@_api/fetchContact';
 import { PageTypeEnum } from '@_types';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
-import { useMultiChain } from '@_hooks/useSelectChain';
+import { useAddressContext } from '@_components/AddressDetail/AddressContext';
 export interface IResponseData {
   total: number;
   data: TokenTransfersItemType[];
 }
 const TAB_NAME = 'nfttransfers';
-export default function List({ showHeader = true }) {
+export default function List({ showHeader = true, defaultChain }) {
   const isMobile = useMobileAll();
-  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
-    useSearchAfterParams(25, TAB_NAME);
+  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(
+    25,
+    TAB_NAME,
+  );
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
@@ -32,6 +34,8 @@ export default function List({ showHeader = true }) {
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
 
   const [selectChain, setSelectChain] = useState(defaultChain);
+
+  const { isAddress } = useAddressContext();
 
   const mountRef = useRef(false);
 
@@ -82,8 +86,6 @@ export default function List({ showHeader = true }) {
     }
   }, [address, selectChain, currentPage, pageSize, pageType]);
 
-  const multi = useMultiChain();
-
   const columns = useMemo<ColumnsType<TokenTransfersItemType>>(() => {
     return getColumns({
       timeFormat,
@@ -92,9 +94,8 @@ export default function List({ showHeader = true }) {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
       address,
-      multi,
     });
-  }, [address, multi, timeFormat]);
+  }, [address, timeFormat]);
 
   const singleTitle = useMemo(() => {
     return `Total ${thousandsNumber(total)} NFT transfers found`;
@@ -134,7 +135,7 @@ export default function List({ showHeader = true }) {
             title: singleTitle,
           },
         }}
-        showMultiChain={multi}
+        showMultiChain={isAddress}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

@@ -10,7 +10,7 @@ import History from './components/History';
 import { useMemo, useRef, useState } from 'react';
 import Events from './components/Events';
 import Contract from './components/Contract';
-import Tokens from './components/Tokens';
+import Tokens from './components/Tokens/List/index';
 import clsx from 'clsx';
 import './index.css';
 import { useMobileAll } from '@_hooks/useResponsive';
@@ -27,6 +27,8 @@ import { ITabsProps } from 'aelf-design';
 import MultiChain from '@_components/ContractToken/multiChain';
 import Link from 'next/link';
 import { MULTI_CHAIN } from '@_utils/contant';
+
+import { AddressContextProvider } from './AddressContext';
 
 export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }) {
   const { chain, address } = useParams<{
@@ -54,6 +56,14 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
 
   const [isVerify, setIsVerify] = useState(false);
 
+  const searchParams = useSearchParams();
+
+  const searchChainId = searchParams.get('chain') || MULTI_CHAIN;
+
+  const multi = useMemo(() => {
+    return (isAddress ? MULTI_CHAIN : chain) === MULTI_CHAIN;
+  }, [chain, isAddress]);
+
   const onTabClick = (key) => {
     tabRef.current?.setActiveKey(key);
   };
@@ -76,7 +86,7 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
       key: 'transactions',
       label: 'Transactions',
       children: addressTypeList.includes('PortKey') ? (
-        <AATransactionList />
+        <AATransactionList showMultiChain={multi} defaultChain={isAddress ? searchChainId : chain} />
       ) : (
         <TransactionList
           showHeader={false}
@@ -84,22 +94,23 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
           defaultPage={defaultPage}
           defaultPageSize={defaultPageSize}
           defaultPageType={defaultPageType}
-          defaultChain={chain}
+          showMultiChain={multi}
+          defaultChain={isAddress ? searchChainId : chain}
         />
       ),
     },
     {
       key: 'tokentransfers',
       label: 'Token Transfers',
-      children: <TokenTransfers />,
+      children: <TokenTransfers defaultChain={isAddress ? searchChainId : chain} />,
     },
     {
       key: 'nfttransfers',
       label: 'NFT Transfers',
-      children: <NFTTransfers showHeader={false} />,
+      children: <NFTTransfers showHeader={false} defaultChain={isAddress ? searchChainId : chain} />,
     },
   ];
-  if (!isAddress) {
+  if (!isAddress && chain !== MULTI_CHAIN) {
     defaultTab = Search.get('tab') || 'contract';
     tokenTabItems.push({
       key: 'MoreInfo',
@@ -155,23 +166,25 @@ export default function AddressDetail({ SSRData }: { SSRData: IAddressResponse }
   const isMobile = useMobileAll();
 
   return (
-    <div className="address-detail">
-      <div className="address-header">
-        <HeadTitle className={isMobile && 'flex-col !items-start'} adPage={title + 'detail'} content={title}>
-          <div className={clsx('code-box ml-2 font-semibold', isMobile && '!ml-0 flex flex-wrap items-center')}>
-            <span className="inline-block flex-wrap break-all text-sm leading-5">
-              {address}
-              <MultiChain address={getAddress(address)} chainIds={chainIds} hidden={false} breakAll />
-            </span>
-          </div>
-        </HeadTitle>
+    <AddressContextProvider isAddress={multi}>
+      <div className="address-detail">
+        <div className="address-header">
+          <HeadTitle className={isMobile && 'flex-col !items-start'} adPage={title + 'detail'} content={title}>
+            <div className={clsx('code-box ml-2 font-semibold', isMobile && '!ml-0 flex flex-wrap items-center')}>
+              <span className="inline-block flex-wrap break-all text-sm leading-5">
+                {address}
+                <MultiChain address={getAddress(address)} chainIds={chainIds} hidden={false} breakAll />
+              </span>
+            </div>
+          </HeadTitle>
+        </div>
+        <div className="mt-2">
+          <EPTabs items={tokenTabItems} memory={false} selectKey="Tokens" />
+        </div>
+        <div className="address-main mt-4">
+          <EPTabs ref={tabRef} selectKey={defaultTab} items={items} />
+        </div>
       </div>
-      <div className="mt-2">
-        <EPTabs items={tokenTabItems} memory={false} selectKey="Tokens" />
-      </div>
-      <div className="address-main mt-4">
-        <EPTabs ref={tabRef} selectKey={defaultTab} items={items} />
-      </div>
-    </div>
+    </AddressContextProvider>
   );
 }

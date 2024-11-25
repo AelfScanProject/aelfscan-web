@@ -13,11 +13,16 @@
     }
     .explorer-select-selection-item {
       @apply text-primary text-sm !flex items-center font-medium !h-[21px] !leading-6 !pr-[21px];
+      .check {
+        @apply !hidden;
+      }
     }
 
     &:hover {
       @apply !bg-[#F7F8FA] !border-[#EAECEF];
     }
+
+
   }
   .explorer-select-arrow {
     @apply text-base;
@@ -39,8 +44,7 @@
 }
 
 .chain-select-options.explorer-select-dropdown {
-  /* @apply !px-2 !pt-2 !pb-1 !mt-6 !top-[82px]; */
-  @apply !p-4;
+  @apply !p-1;
   .explorer-select-item {
     @apply min-h-[32px] !py-[6px] !px-2 !mb-1;
     .explorer-select-item-option-content {

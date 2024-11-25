@@ -27,6 +27,7 @@ import Image from 'next/image';
 import { useDebounceFn } from 'ahooks';
 import { MULTI_CHAIN } from '@_utils/contant';
 import EPTooltip from '../EPToolTip/index';
+import addressFormat from '@_utils/urlUtils';
 
 const randomId = () => `searchbox-${(0 | (Math.random() * 6.04e7)).toString(36)}`;
 
@@ -111,9 +112,11 @@ const Search = ({
           return `/nftItem?chainId=${MULTI_CHAIN}&&itemSymbol=${nfts[0].symbol}`;
         }
       } else if (accounts.length) {
-        router.push(`/${MULTI_CHAIN}/address/${accounts[0].address}`);
+        router.push(`/${MULTI_CHAIN}/address/${addressFormat(accounts[0].address, accounts[0]?.chainIds[0])}`);
       } else if (contracts.length) {
-        router.push(`/${MULTI_CHAIN}/address/${contracts[0].address}`);
+        router.push(
+          `/${contracts[0]?.chainIds[0]}/address/${addressFormat(contracts[0].address, contracts[0]?.chainIds[0])}`,
+        );
       } else if (blocks.length) {
         router.push(`/${blocks[0]?.chainIds && blocks[0]?.chainIds[0]}/block/${blocks[0].blockHeight}`);
       } else {

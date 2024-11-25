@@ -37,10 +37,14 @@ export default function ContractToken({
     return chainIds?.length > 1 ? 'AELF' : chainIds[0];
   }, [chainIds]);
 
+  const contractAddress = useMemo(() => {
+    return showContractAddress || (type === AddressType.Contract && !name);
+  }, [name, showContractAddress, type]);
+
   return type === AddressType.address || showContractAddress || (type === AddressType.Contract && !name) ? (
     address ? (
       <div className="address flex items-center">
-        {showContractAddress && (
+        {contractAddress && (
           <EPTooltip mode="dark" title="Contract">
             <IconFont className="mr-1 text-base" type="ContractIcon" />
           </EPTooltip>
@@ -49,7 +53,7 @@ export default function ContractToken({
           <Link
             prefetch={false}
             className="text-primary"
-            href={`/${MULTI_CHAIN}/address/${addressFormat(address || '', showChain)}`}>
+            href={`/${contractAddress ? showChain : MULTI_CHAIN}/address/${addressFormat(address || '', showChain)}`}>
             {addressFormat(hiddenAddress(address || ''), showChain)}
           </Link>
         </EPTooltip>
@@ -76,7 +80,7 @@ export default function ContractToken({
         <Link
           prefetch={false}
           className={`max-w-full truncate ${className}`}
-          href={`/${MULTI_CHAIN}/address/${addressFormat(address, showChain)}`}>
+          href={`/${showChain}/address/${addressFormat(address, showChain)}`}>
           {name}
         </Link>
       </EPTooltip>
