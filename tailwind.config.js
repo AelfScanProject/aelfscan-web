@@ -82,5 +82,25 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.font-medium': {
+          fontVariationSettings: '"wght" 500',
+          '-webkit-font-smoothing': 'antialiased',
+          '-moz-osx-font-smoothing': 'grayscale',
+        },
+        '.font-semibold': {
+          fontVariationSettings: '"wght" 600',
+          '-webkit-font-smoothing': 'antialiased',
+          '-moz-osx-font-smoothing': 'grayscale',
+        },
+        '.font-bold': {
+          fontVariationSettings: '"wght" 700',
+          '-webkit-font-smoothing': 'antialiased',
+          '-moz-osx-font-smoothing': 'grayscale',
+        },
+      });
+    },
+  ],
 };

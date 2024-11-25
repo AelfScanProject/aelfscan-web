@@ -48,7 +48,7 @@ export default function DynamicForm({
     message.destroy();
     try {
       copy(value);
-      message.success('Copied Successfully');
+      message.success('Copied');
     } catch (e) {
       message.error('Copy failed, please copy by yourself.');
     }

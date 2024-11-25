@@ -330,6 +330,7 @@ export interface IAccountTokensRequestParams extends RequestInit {
   sort?: SortEnum;
   orderBy?: string;
   search?: string;
+  fuzzySearch?: string;
   orderInfos?: ISortInfo[];
   searchAfter?: any[];
 }

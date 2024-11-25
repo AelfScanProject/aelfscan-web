@@ -155,7 +155,7 @@ export default function SourceCode({ contractInfo }: { contractInfo: IContractSo
   const copyLink = () => {
     try {
       copy(window.location.href);
-      message.success('Copied Successfully');
+      message.success('Copied');
     } catch (e) {
       message.error('Copy failed, please copy by yourself.');
     }

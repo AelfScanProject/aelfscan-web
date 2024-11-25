@@ -50,8 +50,8 @@ export default function HeadTitle({
           !multi && '!gap-2',
           rootClassName,
         )}>
-        <div className={clsx('flex items-end text-xl font-bold not-italic text-foreground', className)}>
-          {content}
+        <div className={clsx('flex items-end text-xl not-italic text-foreground', className)}>
+          <span className="font-bold tracking-[-0.6px]"> {content}</span>
           {children}
         </div>
       </div>

@@ -28,7 +28,7 @@ function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
         {ele.reward || ele.transactionFee ? (
           <>
             <span className="reward">{divDecimals(isBlocks ? ele.reward : ele.transactionFee)}</span>
-            <span>ELF</span>
+            <span> ELF</span>
           </>
         ) : (
           '-'
