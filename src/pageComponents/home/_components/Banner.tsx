@@ -10,19 +10,30 @@ import NetWorkSwitch from '@_components/NetWorkSwitch';
 import SearchComp from './SearchWithClient';
 import IconFont from '@_components/IconFont';
 
-const backgroundColors = ['bg-accent-blue-background', 'bg-accent-teal-background', 'bg-accent-pink-background'];
-const iconTypes = ['globe-f6em01fl', 'chart-column-big', 'chart-pie'];
-const textColors = ['text-accentBlue', 'text-accent-teal', 'text-accent-pink'];
-const titles = ['Explorer', 'Analytics', 'Portfolio'];
+const HOME_TEXT_LISTS = [
+  {
+    backgroundColors: 'bg-accent-blue-background',
+    iconTypes: 'globe-f6em01fl',
+    textColors: 'text-accentBlue',
+    titles: 'Explorer',
+  },
+  {
+    backgroundColors: 'bg-accent-teal-background',
+    iconTypes: 'chart-column-big',
+    textColors: 'text-accent-teal',
+    titles: 'Analytics',
+  },
+  {
+    backgroundColors: 'bg-accent-pink-background',
+    iconTypes: 'chart-pie',
+    textColors: 'text-accent-pink',
+    titles: 'Portfolio',
+  },
+];
 
 export function BannerContainer() {
-  const [randomIcon, setRandomIcon] = useState('globe-f6em01fl');
-  const [textColor, setTextColor] = useState('text-accentBlue');
-  const [backgroundColor, setBackgroundColor] = useState('bg-white');
-  const [title, setTitle] = useState('Explorer');
-
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedItem, setSelectedItem] = useState(HOME_TEXT_LISTS[0]);
 
   const { networkList, headerMenuList } = useHeaderContext();
 
@@ -40,23 +51,15 @@ export function BannerContainer() {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        const nextIndex = (currentIndex + 1) % titles.length;
-        setCurrentIndex(nextIndex);
-        setRandomIcon(iconTypes[nextIndex]);
-        setTextColor(textColors[nextIndex]);
-        setBackgroundColor(backgroundColors[nextIndex]);
-        setTitle(titles[nextIndex]);
-
-        setTimeout(() => {
-          setIsTransitioning(false);
-        }, 500);
-      }, 300);
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % HOME_TEXT_LISTS.length;
+        setSelectedItem(HOME_TEXT_LISTS[nextIndex]);
+        return nextIndex;
+      });
     }, 3000);
 
     return () => clearInterval(intervalId);
-  }, [currentIndex]);
+  }, []);
 
   const isMobile = useMobileAll();
 
@@ -67,7 +70,7 @@ export function BannerContainer() {
   const { isLG } = useResponsive();
 
   return (
-    <div className={`banner-section-container z-8 relative w-full  ${backgroundColor}`}>
+    <div className={`banner-section-container z-8 relative w-full  ${selectedItem.backgroundColors}`}>
       <div className="absolute inset-0 h-full overflow-hidden">
         <div className="banner-bg absolute  -bottom-7 aspect-[393/85] max-h-[400px] w-full bg-cover bg-no-repeat mix-blend-multiply min-769:-bottom-2 min-769:aspect-[1024/232] min-769:bg-center min-[1025px]:-bottom-[53px] min-[1025px]:aspect-[1024/311] min-[1500px]:bg-top"></div>
       </div>
@@ -102,22 +105,18 @@ export function BannerContainer() {
         <div className="w-full flex-00auto">
           <div className="relative mb-4 flex w-full justify-center gap-1 text-center text-2xl min-769:mb-6 min-769:text-3xl">
             <div className="text-center font-bold">aelf Multichain</div>
-            <div
-              className="relative flex w-[120px] items-center justify-start min-769:w-[200px]"
-              style={{ position: 'relative' }}>
-              <div
-                className={`absolute flex items-center gap-1 font-bold transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
-                style={{ position: 'absolute', width: 'max-content' }}>
-                <IconFont className="text-[24px] min-769:text-[32px]" type={randomIcon} />
-                <span className={textColor}>{title}</span>
-              </div>
-
-              <div
-                className={`absolute flex items-center gap-1 font-bold transition-opacity  duration-500 ${isTransitioning ? 'opacity-100' : 'opacity-0'}`}
-                style={{ position: 'absolute', width: 'max-content' }}>
-                <IconFont className="text-[24px] min-769:text-[32px]" type={iconTypes[currentIndex]} />
-                <span className={textColors[currentIndex]}>{titles[currentIndex]}</span>
-              </div>
+            <div className="relative flex   items-center justify-start " style={{ position: 'relative' }}>
+              {HOME_TEXT_LISTS.map((item) => {
+                const { iconTypes, textColors, titles } = item;
+                return (
+                  <div
+                    className={`home-animate-text flex items-center gap-1 font-bold ${selectedItem.titles === item.titles ? 'block' : 'hidden'}`}
+                    key={titles}>
+                    <IconFont className="text-[24px] min-769:text-[32px]" type={iconTypes} />
+                    <span className={textColors}>{titles}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="search-section w-full">
