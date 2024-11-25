@@ -1,10 +1,15 @@
-.tooltip-dark,.tooltip-light {
+.tooltip-dark,
+.tooltip-light {
+  @apply !max-w-[300px];
   .explorer-tooltip-inner {
-    @apply text-white text-xs px-2 py-1 leading-5 min-h-[28px] rounded-lg !important;
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 10%),
+      0 2px 4px -2px rgb(0 0 0 / 10%) !important;
+    @apply text-foreground border-border border text-sm px-3 py-[6px] min-h-[32px] rounded-md !important;
   }
 }
 .tooltip-light {
   .explorer-tooltip-inner {
-    @apply !text-base-100;
+    @apply !text-foreground;
   }
 }

@@ -10,9 +10,9 @@
   .explorer-menu-vertical {
     @apply !pb-1 !pt-2 !min-w-[119px];
     .explorer-menu-item {
-      @apply h-8 leading-5 px-2 py-[6px] mt-0 mb-1 flex align-middle text-[12px] mx-2 w-[103px] overflow-hidden;
+      @apply h-8 leading-5 font-medium px-2 py-[6px] mt-0 mb-1 flex align-middle text-[12px] mx-2 w-[103px] overflow-hidden;
       &:hover {
-        @apply !bg-[#D8DDE5] !text-primary;
+        @apply !bg-muted !text-foreground;
       }
     }
   }
@@ -29,7 +29,7 @@
         @apply !border-b-0;
       }
       &:hover {
-        @apply !text-primary;
+        @apply !text-foreground;
       }
       .submenu-title-wrapper {
         @apply mr-2;
