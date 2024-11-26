@@ -71,11 +71,14 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
     updateQueryParams({ p: page, ps: pageSize, chain: selectChain });
   };
 
-  const chainChange = (value) => {
-    updateQueryParams({ p: 1, ps: pageSize, chain: value });
-    setCurrentPage(1);
-    setSelectChain(value);
-  };
+  const chainChange = useCallback(
+    (value) => {
+      updateQueryParams({ p: 1, ps: pageSize, chain: value });
+      setCurrentPage(1);
+      setSelectChain(value);
+    },
+    [pageSize, updateQueryParams],
+  );
 
   const title = useMemo(() => `Total ${total} tokens found`, [total]);
 
@@ -96,10 +99,12 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
         }}
         loading={loading}
         showMultiChain={true}
-        MultiChainSelectProps={{
-          value: selectChain,
-          onChange: chainChange,
-        }}
+        MultiChainSelectProps={useMemo(() => {
+          return {
+            value: selectChain,
+            onChange: chainChange,
+          };
+        }, [chainChange, selectChain])}
         dataSource={data}
         columns={columns}
         isMobile={isMobile}

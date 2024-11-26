@@ -1,9 +1,11 @@
+'use client';
 import { NetworkItem } from '@_types';
 import { Dropdown } from 'aelf-design';
 import IconFont from '@_components/IconFont';
 import { MenuProps } from 'rc-menu';
 import { useMemo } from 'react';
 import './index.css';
+import { useMainNet } from '@_hooks/useSelectChain';
 
 export default function NetWorkSwitch({
   networkList,
@@ -12,10 +14,13 @@ export default function NetWorkSwitch({
   networkList: NetworkItem[];
   isSelect?: boolean;
 }) {
-  const origin = typeof window !== 'undefined' && window.location.origin;
+  const mainNet = useMainNet();
+  const netKey = useMemo(() => {
+    return mainNet ? 'mainnet' : 'testnet';
+  }, [mainNet]);
   const selectNet = useMemo(() => {
-    return networkList.find((item) => item.path === 'https://testnet.aelfscan.io');
-  }, [networkList]);
+    return networkList.find((item) => item.key === netKey);
+  }, [networkList, netKey]);
 
   const items: MenuProps['items'] = useMemo(() => {
     return networkList.map((item) => {
@@ -24,7 +29,7 @@ export default function NetWorkSwitch({
         label: (
           <a
             target="_blank"
-            className={`text-sm leading-[22px] ${origin === item?.path ? '!text-primary' : '!text-foreground'}`}
+            className={`text-sm leading-[22px] ${netKey === item?.path ? '!text-primary' : '!text-foreground'}`}
             href={item?.path}
             rel="noopener noreferrer">
             {item?.label}
@@ -32,7 +37,7 @@ export default function NetWorkSwitch({
         ),
       };
     });
-  }, [networkList, origin]);
+  }, [networkList, netKey]);
   return (
     <div className="network-container">
       <Dropdown trigger={['click']} overlayClassName="network-drop w-[140px]" menu={{ items }}>

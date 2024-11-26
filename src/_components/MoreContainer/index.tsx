@@ -15,6 +15,7 @@ function MoreContainer({
     {
       label: 'More Details ',
       row: true,
+      between: true,
       value: (
         <div className="flex items-center justify-start" onClick={onChange}>
           <IconFont className="text-base" type={showMore ? 'minus' : 'plus'} />

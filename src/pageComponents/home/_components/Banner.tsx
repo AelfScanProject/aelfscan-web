@@ -104,7 +104,7 @@ export function BannerContainer() {
       <div className="banner-section z-8 relative flex justify-start py-12  min-769:!py-24">
         <div className="w-full flex-00auto">
           <div className="relative mb-4 flex w-full justify-center gap-1 text-center text-2xl min-769:mb-6 min-769:text-3xl">
-            <div className="text-center font-bold">aelf Multichain</div>
+            <div className="text-center font-bold tracking-[-0.75px]">aelf Multichain</div>
             <div className="relative flex   items-center justify-start " style={{ position: 'relative' }}>
               {HOME_TEXT_LISTS.map((item) => {
                 const { iconTypes, textColors, titles } = item;

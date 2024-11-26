@@ -1,14 +1,13 @@
 import Table from '@_components/Table';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import getColumns from './columnConfig';
 import './index.css';
 import { IPortfolio, NftsItemType } from '@_types/commonDetail';
 import { fetchAccountsDetailNFTAssets } from '@_api/fetchContact';
 import { useParams } from 'next/navigation';
 import { getAddress, getChainId, getPageNumber } from '@_utils/formatter';
-import { TableProps } from 'antd';
+import { Skeleton, TableProps } from 'antd';
 import { SortEnum, TableSortEnum } from '@_types/common';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import useRefreshDetail from '../hooks/useRefreshDetail';
 import TokensValue from '../TokenValue';
 import { TChainID } from '@_api/type';
@@ -16,6 +15,8 @@ import SwitchButton from '../SwitchButton';
 import RefreshButtonCom from '../RefreshButtonCom';
 import clsx from 'clsx';
 import { MULTI_CHAIN } from '@_utils/contant';
+import { useAddressContext } from '@_components/AddressDetail/AddressContext';
+import { useMD } from '@_hooks/useResponsive';
 
 type OnChange = NonNullable<TableProps<NftsItemType>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -29,10 +30,19 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
   const [data, setData] = useState<NftsItemType[]>([]);
   const [searchText, setSearchText] = useState<string>('');
   const [SearchFetchText, setSearchFetchText] = useState<string>('');
-  const { address } = useParams();
+  const { address, chain } = useParams();
   const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
-  const [selectChain, setSelectChain] = useState(MULTI_CHAIN);
+  const mountedRef = useRef(true);
+
+  const { isAddress } = useAddressContext();
+
+  const [height, setHeight] = useState(0);
+  const [viewHeight, setViewHeight] = useState('0px');
+
+  const [selectChain, setSelectChain] = useState(isAddress ? MULTI_CHAIN : (chain as string));
+
+  const isMd = useMD();
 
   const fetchData = useCallback(async () => {
     try {
@@ -41,7 +51,7 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
         maxResultCount: pageSize,
         chainId: getChainId(selectChain),
         address: getAddress(address as string),
-        search: SearchFetchText,
+        fuzzySearch: SearchFetchText,
         orderInfos: sortedInfo.order
           ? [{ orderBy: sortedInfo.columnKey as string, sort: SortEnum[TableSortEnum[sortedInfo.order]] }]
           : [],
@@ -50,11 +60,16 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
       const data = await fetchAccountsDetailNFTAssets(params);
       setTotal(data.total);
       setData(data.list);
+      setHeight(data.list.length === 0 ? (isMd ? 550 : 433) : 172 + (isMd ? 30 : 0) + data.list.length * 64);
       setLoading(false);
+      mountedRef.current = false;
+    } catch {
+      setHeight(isMd ? 550 : 433);
+      mountedRef.current = false;
     } finally {
       setLoading(false);
     }
-  }, [SearchFetchText, address, selectChain, currentPage, pageSize, sortedInfo]);
+  }, [SearchFetchText, address, selectChain, currentPage, pageSize, sortedInfo, isMd]);
 
   const columns = getColumns(sortedInfo);
 
@@ -90,34 +105,66 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
 
   const [hidden, setHidden] = useState(false);
 
+  const [hiddenLoading, setHiddenLoading] = useState(false);
+
+  const hiddenBlock = () => {
+    if (hiddenLoading) return;
+    if (!hidden) {
+      setHidden(!hidden);
+      setViewHeight(`${height}px`);
+      setHiddenLoading(true);
+      setTimeout(() => {
+        setHiddenLoading(false);
+        setViewHeight('auto');
+      }, 300);
+    } else {
+      setViewHeight(`${height}px`);
+      setTimeout(() => {
+        setHidden(!hidden);
+        setViewHeight('0px');
+      }, 100);
+    }
+  };
+
   return (
     <div className="asset-list">
-      <div className="asset-list-header flex flex-col  gap-4 px-4 pb-6 pt-2 min-769:flex-row min-769:items-center min-769:gap-6 min-[1025px]:gap-6">
-        <div>
-          <TokensValue
-            total={totalNftCount}
-            main={mainNftCount}
-            side={sideNftCount}
-            loading={detailLoading}
-            chainIds={chainIds}
-            suffix="NFTs"
-            title="Total NFT assets"
-          />
+      {mountedRef.current ? (
+        <Skeleton />
+      ) : (
+        <div className="asset-list-header flex flex-col  gap-4 px-4 pb-6 pt-2 min-769:flex-row min-769:items-center min-769:gap-6 min-[1025px]:gap-6">
+          <div>
+            <TokensValue
+              total={totalNftCount}
+              main={mainNftCount}
+              side={sideNftCount}
+              loading={detailLoading}
+              chainIds={chainIds}
+              suffix="NFTs"
+              title="Total NFT assets"
+            />
+          </div>
+          <div className="flex items-center gap-4 min-769:gap-6 min-[1025px]:gap-6">
+            <RefreshButtonCom onClick={refreshData} />
+            <SwitchButton
+              hidden={hidden}
+              buttonProps={{
+                onClick: hiddenBlock,
+              }}
+            />
+          </div>
+          <div></div>
         </div>
-        <div className="flex items-center gap-4 min-769:gap-6 min-[1025px]:gap-6">
-          <RefreshButtonCom onClick={refreshData} />
-          <SwitchButton
-            hidden={hidden}
-            buttonProps={{
-              onClick: () => {
-                setHidden(!hidden);
-              },
-            }}
-          />
-        </div>
-        <div></div>
-      </div>
-      <div className={clsx('table-container p-0', hidden ? 'block' : 'hidden')}>
+      )}
+
+      <div
+        style={{
+          height: viewHeight,
+        }}
+        className={clsx(
+          'table-container p-0',
+          hidden ? `visible overflow-visible` : 'invisible h-0 min-h-0 overflow-hidden',
+          'transition-height ease-[cubic-bezier(0.4, 0, 0.2, 1)] delay-0 duration-300',
+        )}>
         <Table
           loading={loading}
           showTopSearch
@@ -138,7 +185,7 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
             },
           }}
           bordered={false}
-          showMultiChain={true}
+          showMultiChain={isAddress}
           MultiChainSelectProps={{
             value: selectChain,
             onChange: chainChange,

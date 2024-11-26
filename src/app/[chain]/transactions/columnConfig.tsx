@@ -122,14 +122,14 @@ const getColumnsConfig = (timeFormat, handleTimeChange, type, chainId, showHeade
     },
     {
       title: type === 'block' || !showHeader ? 'Amount' : 'Value',
-      width: !showHeader ? 106.5 : type === 'block' ? 177 : 100,
+      'min-width': !showHeader ? 106.5 : type === 'block' ? 177 : 100,
       key: 'transactionValue',
       dataIndex: 'transactionValue',
       render: (text) => <span className="break-all">{text || text === 0 ? addSymbol(divDecimals(text)) : '-'}</span>,
     },
     {
       title: 'Txn Fee',
-      width: !showHeader ? 106.5 : type === 'block' ? 177 : 108,
+      'min-width': !showHeader ? 106.5 : type === 'block' ? 177 : 108,
       key: 'transactionFee',
       hidden: showHeader && type !== 'block',
       dataIndex: 'transactionFee',

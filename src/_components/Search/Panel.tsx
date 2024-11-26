@@ -10,6 +10,7 @@ import { useKeyEvent } from '@_hooks/useSearch';
 import { useThrottleFn } from 'ahooks';
 import IconFont from '@_components/IconFont';
 import { Spin } from 'antd';
+import { SEARCH_TITLE } from '@_utils/contant';
 function Panel({ id, searchHandler, children, loading, classNames, clearHandler }: TSearchPanelProps) {
   // Global state from context
   const { state } = useSearchContext();
@@ -95,7 +96,7 @@ function Panel({ id, searchHandler, children, loading, classNames, clearHandler 
         <Spin spinning={loading}>
           <ul className="search-result-ul">
             <div className="search-result-ul-wrap">
-              <p className="search-result-ul-title">{'transaction'}</p>
+              <p className="search-result-ul-title">{'Transaction'}</p>
               <Item
                 key={`item${'transaction'}`}
                 searchType={'transaction' as TType}
@@ -137,7 +138,7 @@ function Panel({ id, searchHandler, children, loading, classNames, clearHandler 
                     className={clsx('search-result-panel-anchor', activeTabIdx === idx && 'selected')}
                     key={searchType + idx}
                     onMouseDown={(e) => tabMouseDownHandler(e, idx)}>
-                    <span className="text-xs">{searchType}</span>
+                    <span className="text-xs">{SEARCH_TITLE[searchType]}</span>
                     <span className="text-xs">{`(${list?.length})`}</span>
                   </div>
                 );
@@ -148,7 +149,7 @@ function Panel({ id, searchHandler, children, loading, classNames, clearHandler 
             {previewData.map(([searchType, searchData]: [string, any], pIdx: number) => {
               return (
                 <div key={searchType + pIdx} className="search-result-ul-wrap">
-                  <p className="search-result-ul-title">{searchType}</p>
+                  <p className="search-result-ul-title">{SEARCH_TITLE[searchType]}</p>
                   {searchData.map((item: Partial<TSingle>, index: number) => (
                     <Item
                       key={`item${index}`}

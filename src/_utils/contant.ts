@@ -11,3 +11,11 @@ export const TG_BOT_LINK = {
   Mainnet: 'https://t.me/aelfscan_bot',
   Testnet: 'https://t.me/aelfscantest_bot',
 };
+
+export const SEARCH_TITLE = {
+  tokens: 'Tokens',
+  nfts: 'NFTs',
+  accounts: 'Accounts',
+  contracts: 'Contracts',
+  blocks: 'Blocks',
+};

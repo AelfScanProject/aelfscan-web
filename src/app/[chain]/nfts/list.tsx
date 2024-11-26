@@ -4,7 +4,7 @@ import Table from '@_components/Table';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import getColumns from './columnConfig';
 import { INFTsTableData, INFTsTableItem } from './type';
-import { getChainId, getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber, thousandsNumber } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
 import { SortEnum } from '@_types/common';
 import { fetchNFTSList } from '@_api/fetchNFTS';
@@ -84,7 +84,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
     fetchData();
   }, [fetchData]);
 
-  const title = useMemo(() => `Total ${total} collections found`, [total]);
+  const title = useMemo(() => `Total ${thousandsNumber(total)} collections found`, [total]);
 
   return (
     <div>

@@ -11,10 +11,11 @@ import TransactionsList from './list';
 import { getSort } from '@_utils/formatter';
 import { TablePageSize } from '@_types/common';
 import { PageTypeEnum } from '@_types';
+import { MULTI_CHAIN } from '@_utils/contant';
 export default async function BlocksPage({ searchParams }) {
   const p = searchParams['p'] || 1;
   const ps = searchParams['ps'] || TablePageSize.mini;
-  const defaultChain = searchParams['chain'];
+  const defaultChain = searchParams['chain'] || MULTI_CHAIN;
   const defaultPageType = Number(searchParams['pageType'] || PageTypeEnum.NEXT) as unknown as PageTypeEnum;
   const defaultSearchAfter = searchParams['searchAfter'];
   const sort = getSort(defaultPageType, p);
@@ -31,6 +32,7 @@ export default async function BlocksPage({ searchParams }) {
   return (
     <TransactionsList
       SSRData={data}
+      showMultiChain={true}
       defaultPage={p}
       defaultPageSize={ps}
       defaultPageType={defaultPageType}

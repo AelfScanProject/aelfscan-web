@@ -1,7 +1,5 @@
 import { ReactNode, useMemo } from 'react';
-import tableEmptyImg from 'public/image/table-empty-data.png';
-import TableEmptyInternet from 'public/image/table-empty-internet.png';
-import TableEmptySearch from 'public/image/table-empty-search.png';
+import tableEmptyImg from 'public/image/table-empty.svg';
 import Image from 'next/image';
 import clsx from 'clsx';
 
@@ -27,14 +25,14 @@ export default function CommonEmpty({ type, desc, className, size = 'large' }: I
     const typesMap = {
       nodata: {
         src: tableEmptyImg,
-        desc: 'There are no matching entries',
+        desc: 'No matching entries',
       },
       search: {
-        src: TableEmptySearch,
+        src: tableEmptyImg,
         desc: 'noSearch',
       },
       internet: {
-        src: TableEmptyInternet,
+        src: tableEmptyImg,
         desc: 'No Internet',
       },
     };
@@ -45,9 +43,9 @@ export default function CommonEmpty({ type, desc, className, size = 'large' }: I
       curType = typesMap[type];
     }
     return (
-      <div className={clsx('empty-placeholder flex flex-col items-center justify-center', sizeStyle, className)}>
-        {curType.src && <Image alt="empty" src={curType.src} />}
-        {curType.desc && <span className="mt-1">{desc || curType.desc}</span>}
+      <div className={clsx('empty-placeholder flex flex-col items-center justify-center gap-6', sizeStyle, className)}>
+        {curType.src && <Image width={240} height={213} alt="empty" src={curType.src} />}
+        {curType.desc && <span className="text-sm text-muted-foreground">{desc || curType.desc}</span>}
       </div>
     );
   }, [className, desc, sizeStyle, type]);

@@ -151,11 +151,11 @@ export default function Events({ chainIds }: { chainIds: TChainID[] }) {
         loading={loading}
         headerTitle={
           <div className="tips">
-            Tips：Contract events are developer-defined mechanisms that allow users to observe and understand specific
-            operations within a contract. These operations can include changes in state, user interactions, and
-            important notifications. By examining events, users can gain valuable insights into the contract&apos;s
-            internal workings, including event names, parameters, transaction hashes, block numbers, and other pertinent
-            data.
+            <span className="font-semibold">Tips: </span>Contract events are developer-defined mechanisms that allow
+            users to observe and understand specific operations within a contract. These operations can include changes
+            in state, user interactions, and important notifications. By examining events, users can gain valuable
+            insights into the contract&apos;s internal workings, including event names, parameters, transaction hashes,
+            block numbers, and other pertinent data.
           </div>
         }
         topSearchProps={{

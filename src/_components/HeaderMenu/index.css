@@ -10,7 +10,7 @@
   .explorer-menu-vertical {
     @apply !pb-1 !pt-2 !min-w-[119px];
     .explorer-menu-item {
-      @apply h-8 leading-5 font-medium px-2 py-[6px] mt-0 mb-1 flex align-middle text-[12px] mx-2 w-[103px] overflow-hidden;
+      @apply h-8 font-medium px-2 py-[6px] mt-0 mb-1 flex align-middle text-sm overflow-hidden;
       &:hover {
         @apply !bg-muted !text-foreground;
       }
@@ -32,7 +32,7 @@
         @apply !text-foreground;
       }
       .submenu-title-wrapper {
-        @apply mr-2;
+        @apply mr-1;
       }
       .explorer-menu-title-content {
         @apply text-sm font-medium leading-[48px];

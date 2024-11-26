@@ -3,6 +3,6 @@
     @apply px-4;
   }
   .tips {
-    @apply flex-1 text-sm font-semibold text-muted-foreground left-5 mr-4;
+    @apply flex-1 text-sm text-muted-foreground left-5 mr-4;
   }
 }
