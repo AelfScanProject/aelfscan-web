@@ -10,7 +10,7 @@ import './index.css';
 import EPTooltip from '@_components/EPToolTip';
 import MultiChainSelect from '@_components/ChainSelect/multiCain';
 import { SelectProps } from 'antd';
-import { useMD, usePad } from '@_hooks/useResponsive';
+import { useBreakpointMD, usePad } from '@_hooks/useResponsive';
 import Pagination from './pagination';
 
 export interface ITableSearch extends Omit<ISearchProps, 'onPressEnter'> {
@@ -127,7 +127,7 @@ export default function TableApp({
 
   console.log('tabletabletabletable');
 
-  const isMd = useMD();
+  const isMd = useBreakpointMD();
   return (
     <div className={clsx('ep-table', !showLast && 'ep-table-hidden-page')}>
       <div

@@ -94,7 +94,7 @@ export default function ItemActivityTable({ detailData }: { detailData: ItemSymb
             desc: '',
           },
         }}
-        showMultiChain={true}
+        showMultiChain
         bordered={false}
         MultiChainSelectProps={{
           value: selectChain,

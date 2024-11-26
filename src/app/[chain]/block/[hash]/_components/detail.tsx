@@ -66,7 +66,6 @@ export default function Detail({ SSRData }) {
     [chain, detailData],
   );
 
-  console.log(SSRData, 'SSRData');
   const columns = useMemo<ColumnsType<ITransactionsResponseItem>>(() => {
     return getColumns({
       timeFormat,

@@ -10,7 +10,7 @@ import { AddressType } from '@_types/common';
 import './index.css';
 import Copy from '@_components/Copy';
 import addressFormat from '@_utils/urlUtils';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 import IconFont from '@_components/IconFont';
 import clsx from 'clsx';
 import copy from 'copy-to-clipboard';
@@ -34,7 +34,7 @@ export default function DynamicForm({
   activeKey: string;
 }) {
   const { connectWallet, walletInfo, isConnected, disConnectWallet } = useConnectWallet();
-  const isMd = useMD();
+  const isMd = useBreakpointMD();
   const onConnectBtnClickHandler = async () => {
     if (isConnected) return;
     try {

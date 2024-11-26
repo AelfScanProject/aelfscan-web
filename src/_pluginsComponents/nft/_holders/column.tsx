@@ -65,7 +65,4 @@ function getCommonColumns(currentPage, pageSize): ColumnsType<HolderItem> {
   ];
 }
 
-export default function getColumns(currentPage, pageSize): ColumnsType<HolderItem> {
-  const commonColumns = getCommonColumns(currentPage, pageSize);
-  return commonColumns;
-}
+export default getCommonColumns;

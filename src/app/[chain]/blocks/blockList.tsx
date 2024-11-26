@@ -108,7 +108,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
               desc: `(Showing blocks between #${pageMinBlock} to #${pageMaxBlock})`,
             },
           }}
-          showMultiChain={true}
+          showMultiChain
           MultiChainSelectProps={{
             value: selectChain,
             onChange: chainChange,

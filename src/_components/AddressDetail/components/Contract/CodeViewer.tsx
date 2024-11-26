@@ -7,7 +7,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/ext-searchbox';
 import './code.css';
 import clsx from 'clsx';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 
 const languageDetector = [
   {
@@ -46,7 +46,7 @@ const CodeViewer = ({ data, name, auto, path, resetSearch }) => {
       resetSearch(ace);
     }
   };
-  const ismd = useMD();
+  const ismd = useBreakpointMD();
   return (
     <div className="code-viewer-container">
       <div className="mb-1 truncate text-sm text-secondary-foreground">{path}</div>

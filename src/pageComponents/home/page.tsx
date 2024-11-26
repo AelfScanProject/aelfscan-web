@@ -31,7 +31,7 @@ function Home() {
     <main className={clsx(`${clsPrefix}`, mobile && `${clsPrefix}-mobile`, 'relative')}>
       <BannerContainer />
       <ScrollPage />
-      <div className="relative z-10 mx-auto box-border w-full max-w-[1440px] px-2 min-769:px-5 min-[993px]:min-w-[200px]">
+      <div className="relative z-10 mx-auto box-border w-full max-w-[1440px] px-2 md:px-5 min-[993px]:min-w-[200px]">
         {OverView}
       </div>
       <LatestAll />

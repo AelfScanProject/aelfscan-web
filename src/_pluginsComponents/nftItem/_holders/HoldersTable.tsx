@@ -115,7 +115,7 @@ export default function Holder() {
         loading={loading}
         bordered={false}
         dataSource={data}
-        showMultiChain={true}
+        showMultiChain
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

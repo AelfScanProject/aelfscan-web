@@ -76,7 +76,7 @@ export function BannerContainer() {
   return (
     <div className={`banner-section-container z-8 relative w-full  ${selectedItem.backgroundColors}`}>
       <div className="absolute inset-0 h-full overflow-hidden">
-        <div className="banner-bg absolute  -bottom-7 aspect-[393/85] max-h-[400px] w-full bg-cover bg-no-repeat mix-blend-multiply min-769:-bottom-2 min-769:aspect-[1024/232] min-769:bg-center min-[1025px]:-bottom-[53px] min-[1025px]:aspect-[1024/311] min-[1500px]:bg-top"></div>
+        <div className="banner-bg absolute  -bottom-7 aspect-[393/85] max-h-[400px] w-full bg-cover bg-no-repeat mix-blend-multiply md:-bottom-2 md:aspect-[1024/232] md:bg-center min-[1025px]:-bottom-[53px] min-[1025px]:aspect-[1024/311] min-[1500px]:bg-top"></div>
       </div>
       <div className="header-section">
         <div className="flex items-center gap-4">
@@ -84,7 +84,7 @@ export function BannerContainer() {
 
           <div
             className={clsx(
-              'hidden items-center justify-center rounded bg-white px-2 py-1 min-769:flex',
+              'hidden items-center justify-center rounded bg-white px-2 py-1 md:flex',
               !main && 'bg-transparent !p-0',
             )}>
             <TokenPrice />
@@ -109,9 +109,9 @@ export function BannerContainer() {
           )}
         </div>
       </div>
-      <div className="banner-section z-8 relative flex justify-start py-12  min-769:!py-24">
+      <div className="banner-section z-8 relative flex justify-start py-12  md:!py-24">
         <div className="w-full flex-00auto">
-          <div className="relative mb-4 flex w-full justify-center gap-1 text-center text-2xl min-769:mb-6 min-769:text-3xl">
+          <div className="relative mb-4 flex w-full justify-center gap-1 text-center text-2xl md:mb-6 md:text-3xl">
             <div className="text-center font-bold tracking-[-0.75px]">aelf Multichain</div>
             <div className="relative flex   items-center justify-start " style={{ position: 'relative' }}>
               {HOME_TEXT_LISTS.map((item) => {
@@ -120,7 +120,7 @@ export function BannerContainer() {
                   <div
                     className={`home-animate-text flex items-center gap-1 font-bold ${selectedItem.titles === item.titles ? 'block' : 'hidden'}`}
                     key={titles}>
-                    <IconFont className="text-[24px] min-769:text-[32px]" type={iconTypes} />
+                    <IconFont className="text-[24px] md:text-[32px]" type={iconTypes} />
                     <span className={textColors}>{titles}</span>
                   </div>
                 );

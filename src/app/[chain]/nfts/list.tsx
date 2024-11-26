@@ -20,7 +20,6 @@ interface TokensListProps {
 }
 
 export default function TokensList({ SSRData, defaultPage, defaultPageSize, defaultChain }: TokensListProps) {
-  console.log(SSRData, 'SSRData');
   const isMobile = useMobileAll();
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
   const [pageSize, setPageSize] = useState<number>(Number(defaultPageSize));
@@ -98,7 +97,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
         loading={loading}
         dataSource={data}
         columns={columns}
-        showMultiChain={true}
+        showMultiChain
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

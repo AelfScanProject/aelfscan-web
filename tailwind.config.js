@@ -78,7 +78,7 @@ module.exports = {
         '00auto': '0 0 auto',
       },
       screens: {
-        'min-769': '769px',
+        md: '769px',
       },
     },
   },

@@ -126,7 +126,7 @@ const Transfers = ({ searchType, token }: ITransfersProps, ref) => {
           },
         }}
         bordered={false}
-        showMultiChain={true}
+        showMultiChain
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

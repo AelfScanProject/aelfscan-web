@@ -91,7 +91,6 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
   };
 
   const chainChange = (value: string) => {
-    console.log(value, 'value');
     setSelectChain(value);
     setCurrentPage(1);
     setPageType(PageTypeEnum.NEXT);
@@ -107,7 +106,7 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultPag
             title: multiTitle,
           },
         }}
-        showMultiChain={true}
+        showMultiChain
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

@@ -9,7 +9,7 @@ import IconFont from '@_components/IconFont';
 import { Divider } from 'antd';
 import clsx from 'clsx';
 import { Tooltip } from 'aelf-design';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 
 export default function DetailContainer({
   infoList,
@@ -26,7 +26,7 @@ export default function DetailContainer({
     row?: boolean;
   }[];
 }) {
-  const isMobile = useMD();
+  const isMobile = useBreakpointMD();
   return (
     <div className={clsx('wrap basic px-4', className)}>
       {infoList.map((item) => {

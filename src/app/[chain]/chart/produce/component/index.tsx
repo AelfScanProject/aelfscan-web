@@ -46,7 +46,6 @@ const drawRoundedColumn = (chart) => {
 
   // const innerRadius = chart.yAxis[0].toPixels(0);
   const innerRadius = Math.min(chart.plotWidth, chart.plotHeight) * 0.1;
-  console.log(innerRadius, 'innerRadius');
 
   centerElement = renderer
     .circle(centerX, centerY, innerRadius)

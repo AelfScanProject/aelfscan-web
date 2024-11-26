@@ -24,7 +24,7 @@ export default function Tokens({ portfolio, chainIds }: { portfolio: IPortfolio;
 
   return (
     <div className="token-container">
-      <div className="token-header  flex flex-col  gap-4 px-4 pb-6 pt-2 min-769:flex-row min-769:items-center min-769:gap-6 min-[1025px]:gap-6">
+      <div className="token-header  flex flex-col  gap-4 px-4 pb-6 pt-2 md:flex-row md:items-center md:gap-6 min-[1025px]:gap-6">
         <TokensValue
           total={totalTokenValue}
           main={mainTokenValue}
@@ -43,7 +43,7 @@ export default function Tokens({ portfolio, chainIds }: { portfolio: IPortfolio;
           chainIds={chainIds}
           loading={loading}
         />
-        <div className="flex items-center gap-4 min-769:gap-6 min-[1025px]:gap-6">
+        <div className="flex items-center gap-4 md:gap-6 min-[1025px]:gap-6">
           <RefreshButton onClick={refreshData} />
           <SwitchButton
             hidden={hidden}

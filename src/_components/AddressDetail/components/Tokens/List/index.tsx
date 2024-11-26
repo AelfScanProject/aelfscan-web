@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import getColumns from './columnConfig';
 import './index.css';
 import { IPortfolio, TokensListItemType } from '@_types/commonDetail';
-import { useMD, useMobileAll } from '@_hooks/useResponsive';
+import { useBreakpointMD, useMobileAll } from '@_hooks/useResponsive';
 import { getAddress, getChainId, getPageNumber, numberFormatter, thousandsNumber } from '@_utils/formatter';
 import { useParams } from 'next/navigation';
 import { fetchAccountsDetailTokens } from '@_api/fetchContact';
@@ -78,7 +78,7 @@ export default function TokensList({ portfolio, chainIds }: { portfolio: IPortfo
   const [height, setHeight] = useState(0);
   const [viewHeight, setViewHeight] = useState('0px');
 
-  const isMd = useMD();
+  const isMd = useBreakpointMD();
 
   const fetchData = useCallback(async () => {
     try {
@@ -143,7 +143,7 @@ export default function TokensList({ portfolio, chainIds }: { portfolio: IPortfo
 
   return (
     <div className="token-container">
-      <div className="token-header  flex flex-col  gap-4 px-4 pb-6 pt-2 min-769:flex-row min-769:items-center min-769:gap-6 min-[1025px]:gap-6">
+      <div className="token-header  flex flex-col  gap-4 px-4 pb-6 pt-2 md:flex-row md:items-center md:gap-6 min-[1025px]:gap-6">
         <TokensValue
           total={totalTokenValue}
           main={mainTokenValue}
@@ -162,7 +162,7 @@ export default function TokensList({ portfolio, chainIds }: { portfolio: IPortfo
           chainIds={chainIds}
           loading={detailLoading}
         />
-        <div className="flex items-center gap-4 min-769:gap-6 min-[1025px]:gap-6">
+        <div className="flex items-center gap-4 md:gap-6 min-[1025px]:gap-6">
           <RefreshButtonCom onClick={refreshData} />
           <SwitchButton
             hidden={hidden}
