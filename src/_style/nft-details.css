@@ -1,7 +1,7 @@
 .nft-wrap {
   @apply text-base-100 text-sm leading-[22px] pt-6;
   .ntf-overview-wrap {
-    @apply flex flex-col gap-4 min-769:flex-row;
+    @apply flex flex-col gap-4 md:flex-row;
   }
   .nft-image-wrap {
     @apply relative inline-flex justify-center items-start w-full h-auto;
@@ -13,7 +13,7 @@
     }
   }
   .nft-detail-wrap {
-    @apply flex-1 min-[1025px]:min-w-[70%] min-769:min-w-[73%];
+    @apply flex-1 min-[1025px]:min-w-[70%] md:min-w-[73%];
     .nft-title-wrap {
       @apply pb-4;
     }

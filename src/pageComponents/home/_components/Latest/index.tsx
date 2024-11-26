@@ -8,7 +8,7 @@ import EPTooltip from '@_components/EPToolTip';
 import { IBlocksResponseItem, ITopTokensItem, ITransactionsResponseItem } from '@_api/type';
 import { divDecimals, formatDate } from '@_utils/formatter';
 import ContractToken from '@_components/ContractToken';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 import { memo } from 'react';
 import { MULTI_CHAIN } from '@_utils/contant';
 
@@ -21,7 +21,7 @@ interface IProps {
 }
 
 function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
-  const isMD = useMD();
+  const isMD = useBreakpointMD();
   const RewrdInfo = (ele) => {
     return (
       <span className="button">

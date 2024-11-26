@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Popover, Tree } from 'antd';
 import IconFont from '@_components/IconFont';
 import './index.css';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 
 function addKeyForTree(files: any[] = [], parentKey = '', splitChar = '#') {
   return files.map((file) => {
@@ -69,7 +69,7 @@ const FileTree = (props: IFileTreeProps) => {
     onChange(e.node.key.split('#'));
   };
 
-  const ismd = useMD();
+  const ismd = useBreakpointMD();
 
   const treeData = useMemo(() => filesWithKey.map((v) => renderTreeNode(v)), [filesWithKey]);
   return (

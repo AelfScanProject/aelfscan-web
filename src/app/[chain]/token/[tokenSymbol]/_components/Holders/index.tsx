@@ -109,7 +109,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
             title,
           },
         }}
-        showMultiChain={true}
+        showMultiChain
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

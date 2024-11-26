@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 import './index.css';
 import Search from '@_components/Search';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 import { MenuItem, NetworkItem } from '@_types';
 import NetWorkSwitch from '@_components/NetWorkSwitch';
 import TokenPrice from './price';
@@ -15,7 +15,7 @@ interface IProps {
   selectedKey: string;
 }
 export default function HeaderTop({ networkList }: IProps) {
-  const isMobile = useMD();
+  const isMobile = useBreakpointMD();
 
   return (
     <div className={clsx(clsPrefix, isMobile && `${clsPrefix}-mobile`)}>

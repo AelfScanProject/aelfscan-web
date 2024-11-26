@@ -32,7 +32,7 @@ export default async function BlocksPage({ searchParams }) {
   return (
     <TransactionsList
       SSRData={data}
-      showMultiChain={true}
+      showMultiChain
       defaultPage={p}
       defaultPageSize={ps}
       defaultPageType={defaultPageType}

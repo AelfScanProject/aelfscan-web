@@ -74,7 +74,6 @@ const multiDetail = (overview: CollectionDetailData): IOverviewItem[][] => {
 };
 export default function OverView(props: OverViewProps) {
   const { overview } = props;
-  console.log(overview, 'overview');
 
   const multiDetailItems = multiDetail(overview);
   return (

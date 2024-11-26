@@ -6,7 +6,7 @@ import IconFont from '@_components/IconFont';
 import { thousandsNumber, unitConverter } from '@_utils/formatter';
 import { useAppSelector } from '@_store';
 import { Dropdown, Skeleton } from 'antd';
-import useResponsive, { useMD } from '@_hooks/useResponsive';
+import useResponsive, { useBreakpointMD } from '@_hooks/useResponsive';
 import { useMemo } from 'react';
 const clsPrefix = 'home-info-section';
 
@@ -63,7 +63,7 @@ export const MultiDown = ({
 const InfoSection = () => {
   const { tokenInfo: overview } = useAppSelector((state) => state.getChainId);
   const range = overview?.tokenPriceRate24h || 0;
-  const isMd = useMD();
+  const isMd = useBreakpointMD();
   const { isLG } = useResponsive();
   const transactionsOverview = useMemo(() => {
     const { mainChain, sideChain } = overview?.mergeTransactions || {};

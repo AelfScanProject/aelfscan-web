@@ -1,11 +1,11 @@
 import { Divider, Flex } from 'antd';
 import './index.css';
 import { IFourOverviewCardProps } from './type';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 import { useRenderItem } from './useRenderItem';
 
 export default function OverviewThreeCard({ items, dataSource, title = 'Overview' }: IFourOverviewCardProps) {
-  const isMobile = useMD();
+  const isMobile = useBreakpointMD();
 
   const renderItem = useRenderItem(dataSource);
 

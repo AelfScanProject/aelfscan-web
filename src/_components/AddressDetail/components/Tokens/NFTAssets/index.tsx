@@ -16,7 +16,7 @@ import RefreshButtonCom from '../RefreshButtonCom';
 import clsx from 'clsx';
 import { MULTI_CHAIN } from '@_utils/contant';
 import { useAddressContext } from '@_components/AddressDetail/AddressContext';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 
 type OnChange = NonNullable<TableProps<NftsItemType>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -42,7 +42,7 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
 
   const [selectChain, setSelectChain] = useState(isAddress ? MULTI_CHAIN : (chain as string));
 
-  const isMd = useMD();
+  const isMd = useBreakpointMD();
 
   const fetchData = useCallback(async () => {
     try {
@@ -131,7 +131,7 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
       {mountedRef.current ? (
         <Skeleton />
       ) : (
-        <div className="asset-list-header flex flex-col  gap-4 px-4 pb-6 pt-2 min-769:flex-row min-769:items-center min-769:gap-6 min-[1025px]:gap-6">
+        <div className="asset-list-header flex flex-col  gap-4 px-4 pb-6 pt-2 md:flex-row md:items-center md:gap-6 min-[1025px]:gap-6">
           <div>
             <TokensValue
               total={totalNftCount}
@@ -143,7 +143,7 @@ export default function NFTAssets({ portfolio, chainIds }: { portfolio: IPortfol
               title="Total NFT assets"
             />
           </div>
-          <div className="flex items-center gap-4 min-769:gap-6 min-[1025px]:gap-6">
+          <div className="flex items-center gap-4 md:gap-6 min-[1025px]:gap-6">
             <RefreshButtonCom onClick={refreshData} />
             <SwitchButton
               hidden={hidden}

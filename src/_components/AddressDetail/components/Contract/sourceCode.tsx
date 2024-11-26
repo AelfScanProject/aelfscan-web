@@ -193,7 +193,7 @@ export default function SourceCode({ contractInfo }: { contractInfo: IContractSo
           />
         </div>
       </div>
-      <div className="flex w-full flex-col gap-4 overflow-x-auto pb-10 min-769:flex-row min-769:gap-0">
+      <div className="flex w-full flex-col gap-4 overflow-x-auto pb-10 md:flex-row md:gap-0">
         <FileTree files={files} onChange={onFileChange} />
         <div className="ml-1 flex-1">
           <CodeViewer

@@ -14,10 +14,11 @@ function MultiChainSelect({ props, className }: { props: SelectProps; className?
   const chainArr = useMemo(() => {
     return chainList.map((ele) => ele.chainList_id);
   }, [chainList]);
-  console.log(chainArr, props, 'props');
 
   const params = useSearchParams();
-  const chain = params.get('chain') || MULTI_CHAIN;
+  const chain = useMemo(() => {
+    return params.get('chain') || MULTI_CHAIN;
+  }, [params]);
   const selectChain = useMemo(() => {
     return chain as string;
   }, [chain]);

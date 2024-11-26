@@ -11,7 +11,7 @@ import { fetchNFTHolders } from '@_api/fetchNFTS';
 import { pageSizeOption } from '@_utils/contant';
 import { PageTypeEnum } from '@_types';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
-import { getChainId, getHoldersSearchAfter, getSort } from '@_utils/formatter';
+import { getChainId, getHoldersSearchAfter, getSort, thousandsNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 
 export interface HolderProps {
@@ -113,12 +113,12 @@ export default function Holder(props: HolderProps) {
       <Table
         headerTitle={{
           single: {
-            title: `Total ${total} holders found`,
+            title: `Total ${thousandsNumber(total)} holders found`,
           },
         }}
         loading={loading}
         dataSource={data}
-        showMultiChain={true}
+        showMultiChain
         bordered={false}
         MultiChainSelectProps={{
           value: selectChain,

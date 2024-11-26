@@ -5,7 +5,7 @@ import { getPathnameFirstSlash, isURL } from '@_utils/urlUtils';
 import { Drawer, Menu, MenuProps } from 'antd';
 import Link from 'next/link';
 import IconFont from '@_components/IconFont';
-import { useMD } from '@_hooks/useResponsive';
+import { useBreakpointMD } from '@_hooks/useResponsive';
 import AelfscanLogo from '@_components/Header/aelfscanLogo';
 import './index.css';
 
@@ -21,7 +21,7 @@ const clsPrefix = 'header-menu-warp';
 export default function MenuItemCom({ selectedKey, setCurrent, headerMenuList, type = 'horizontal' }: IProps) {
   const [open, setOpen] = useState(false);
 
-  const isMD = useMD();
+  const isMD = useBreakpointMD();
 
   const showDrawer = () => {
     setOpen(true);

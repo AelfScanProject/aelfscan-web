@@ -98,7 +98,7 @@ export default function TokensList({ SSRData, defaultPage, defaultPageSize, defa
           },
         }}
         loading={loading}
-        showMultiChain={true}
+        showMultiChain
         MultiChainSelectProps={useMemo(() => {
           return {
             value: selectChain,

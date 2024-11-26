@@ -56,7 +56,7 @@ export const usePad = () => {
   return useMemo(() => isPad, [isPad]);
 };
 
-export const useMD = () => {
+export const useBreakpointMD = () => {
   const { isMobileSSR } = useMobileContext();
   const [isMD, setIsMD] = useState(isMobileSSR);
   const { isMD: isMDResponsive } = useResponsive();

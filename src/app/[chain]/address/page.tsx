@@ -28,7 +28,7 @@ export default async function AccountsPage({ searchParams }) {
       defaultPage={Number(p)}
       defaultPageSize={Number(ps)}
       defaultPageType={defaultPageType}
-      defaultChain={defaultChain || ''}
+      defaultChain={defaultChain}
     />
   );
 }
