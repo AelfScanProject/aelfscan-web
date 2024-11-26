@@ -27,7 +27,7 @@
       }
     }
     .search-input-query-icon {
-      @apply pl-3 pr-1;
+      @apply pl-3 pr-1 flex items-center;
       svg {
         @apply w-4 h-4 text-white;
       }

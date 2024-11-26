@@ -1,12 +1,13 @@
 import TokensList from './tokensList';
 import { fetchServerTokenList } from '@_api/fetchTokens';
 import { SortEnum, TablePageSize } from '@_types/common';
+import { MULTI_CHAIN } from '@_utils/contant';
 import { getChainId, getPageNumber } from '@_utils/formatter';
 
 export default async function TokensPage({ searchParams }) {
   const p = searchParams['p'] || 1;
   const ps = searchParams['ps'] || TablePageSize.small;
-  const defaultChain = searchParams['chain'];
+  const defaultChain = searchParams['chain'] || MULTI_CHAIN;
   const data = await fetchServerTokenList({
     skipCount: getPageNumber(Number(p), ps),
     maxResultCount: ps,

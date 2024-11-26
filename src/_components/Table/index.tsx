@@ -125,6 +125,8 @@ export default function TableApp({
     };
   }, [emptyType, emptyText]);
 
+  console.log('tabletabletabletable');
+
   const isMd = useMD();
   return (
     <div className={clsx('ep-table', !showLast && 'ep-table-hidden-page')}>

@@ -22,10 +22,13 @@ import type { Viewport } from 'next';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-  title: 'AELF Block Explorer',
-  description: 'AELF explorer',
+  title:
+    (process.env?.NEXT_PUBLIC_NETWORK_TYPE === 'TESTNET' ? 'TESTNET ' : '') + 'aelf Blockchain Explorer | aelfscan',
+  description:
+    'aelfscan allows you to explore and search the aelf blockchain for transactions, addresses, tokens and prices taking place on aelf Layer 1 AI blockchain.',
   icons: {
-    icon: process.env?.NEXT_PUBLIC_NETWORK_TYPE === 'TESTNET' ? '/favicon.test.ico' : '/favicon.ico',
+    icon: '/favicon.ico',
+    // icon: process.env?.NEXT_PUBLIC_NETWORK_TYPE === 'TESTNET' ? '/favicon.test.ico' : '/favicon.ico',
   },
 };
 
@@ -80,9 +83,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 config={config}
                 chartImg={chartImg}
                 networkList={networkList}
+                chainList={multiChainList}
                 headerMenuList={headerMenuList}>
                 <Suspense>
-                  <Header chainList={multiChainList} networkList={networkList} headerMenuList={headerMenuList} />
+                  <Header networkList={networkList} headerMenuList={headerMenuList} />
                 </Suspense>
                 <Suspense>
                   <MainContainer>{children}</MainContainer>
