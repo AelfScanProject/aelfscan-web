@@ -9,6 +9,8 @@ import { cloneDeep } from 'lodash';
 import NetWorkSwitch from '@_components/NetWorkSwitch';
 import SearchComp from './SearchWithClient';
 import IconFont from '@_components/IconFont';
+import { useMainNet } from '@_hooks/useSelectChain';
+import clsx from 'clsx';
 
 const HOME_TEXT_LISTS = [
   {
@@ -69,6 +71,8 @@ export function BannerContainer() {
 
   const { isLG } = useResponsive();
 
+  const main = useMainNet();
+
   return (
     <div className={`banner-section-container z-8 relative w-full  ${selectedItem.backgroundColors}`}>
       <div className="absolute inset-0 h-full overflow-hidden">
@@ -78,7 +82,11 @@ export function BannerContainer() {
         <div className="flex items-center gap-4">
           <AelfscanLogo />
 
-          <div className="hidden items-center justify-center rounded bg-white px-2 py-1 min-769:flex">
+          <div
+            className={clsx(
+              'hidden items-center justify-center rounded bg-white px-2 py-1 min-769:flex',
+              !main && 'bg-transparent !p-0',
+            )}>
             <TokenPrice />
           </div>
         </div>
