@@ -1,3 +1,4 @@
+'use client';
 import { NetworkItem } from '@_types';
 import { Dropdown } from 'aelf-design';
 import IconFont from '@_components/IconFont';
@@ -12,12 +13,13 @@ export default function NetWorkSwitch({
   networkList: NetworkItem[];
   isSelect?: boolean;
 }) {
-  const origin = typeof window !== 'undefined' && window.location.origin;
   const selectNet = useMemo(() => {
+    const origin = typeof window !== 'undefined' && window.location.origin;
     return networkList.find((item) => item.path === origin) || networkList[0];
-  }, [networkList, origin]);
+  }, [networkList]);
 
   const items: MenuProps['items'] = useMemo(() => {
+    const origin = typeof window !== 'undefined' && window.location.origin;
     return networkList.map((item) => {
       return {
         key: item?.key,
@@ -32,7 +34,7 @@ export default function NetWorkSwitch({
         ),
       };
     });
-  }, [networkList, origin]);
+  }, [networkList]);
   return (
     <div className="network-container">
       <Dropdown trigger={['click']} overlayClassName="network-drop w-[140px]" menu={{ items }}>
