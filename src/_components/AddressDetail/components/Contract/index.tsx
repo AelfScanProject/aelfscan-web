@@ -14,9 +14,10 @@ import { useEffectOnce } from 'react-use';
 import DynamicForm from '../DynamicForm';
 import './index.css';
 import Link from 'next/link';
-import ContractInfoIcon from 'public/image/contract-info.svg';
 import Image from 'next/image';
 import ContractSuccessIcon from 'public/image/contract-success.svg';
+import { MULTI_CHAIN } from '@_utils/contant';
+import IconFont from '@_components/IconFont';
 
 export interface IInputItem {
   name: string;
@@ -35,10 +36,11 @@ export interface IMethod {
 
 export const contractKey = ['ReadContract', 'WriteContract'];
 
-export default function Contract({ setIsVerify, isVerify }) {
-  const isMobile = useMobileAll();
+export default function Contract({ setIsVerify, isVerify, chainIds }) {
   const { config } = useMobileContext();
-  const { chain, address } = useParams<{ chain: TChainID; address: string }>();
+  const { address } = useParams<{ address: string }>();
+
+  const chain: TChainID = chainIds[0];
   const RPC_URL = config['rpcUrl' + chain];
 
   const aelfInstance = getAElf(RPC_URL);
@@ -132,26 +134,24 @@ export default function Contract({ setIsVerify, isVerify }) {
         children: (
           <div className="contract-container">
             {isVerify && (
-              <div className="code-title mb-4 flex items-center gap-1 text-sm font-medium leading-[22px] text-base-100">
+              <div className="code-title mb-4 flex items-center gap-1 text-sm font-medium">
                 <Image alt="" src={ContractSuccessIcon} width={16} height={16}></Image>Contract Source Code Verified
-                <span className="font-normal text-base-200">(Exact Match)</span>
+                <span className="font-normal text-muted-foreground">(Exact Match)</span>
               </div>
             )}
-            <div
-              className={clsx(isMobile && 'flex-col', 'contract-header mx-4 flex border-b border-color-divider pb-4')}>
+            <div className={clsx('contract-header flex border-b border-border pb-4')}>
               <div className="list-items mr-4 min-w-[197px] pr-4">
-                <div className="item-label font10px leading-[18px] text-base-200">CONTRACT NAME</div>
-                <div className="item-value text-wrap break-words text-sm leading-[22px] text-base-100">
+                <div className="item-label text-xs text-muted-foreground">CONTRACT NAME</div>
+                <div className="item-value text-wrap break-words text-sm text-foreground">
                   {contractInfo?.contractName}
                 </div>
               </div>
-              <div className={clsx(isMobile && 'mt-4 !pl-0', 'list-items pl-4')}>
-                <div className="item-label font10px leading-[18px] text-base-200">CONTRACT VERSION</div>
-                <div className="item-value text-sm leading-[22px] text-base-100">{contractInfo?.contractVersion}</div>
+              <div className={clsx('list-items pl-4')}>
+                <div className="item-label text-xs text-muted-foreground">CONTRACT VERSION</div>
+                <div className="item-value text-sm text-foreground">{contractInfo?.contractVersion}</div>
               </div>
             </div>
             {contractInfo && <SourceCode contractInfo={contractInfo} />}
-            {/* <Protocol /> */}
           </div>
         ),
       },
@@ -182,7 +182,7 @@ export default function Contract({ setIsVerify, isVerify }) {
         ),
       },
     ];
-  }, [isVerify, isMobile, contractInfo, activeKey, readMethods, contract, chain, address, writeMethods]);
+  }, [isVerify, contractInfo, activeKey, readMethods, contract, chain, address, writeMethods]);
 
   useEffect(() => {
     fetchData();
@@ -199,28 +199,22 @@ export default function Contract({ setIsVerify, isVerify }) {
   ) : (
     <div className="contract-container px-4">
       {!isVerify && (
-        <div className="title mb-2 flex items-start   gap-1 text-sm font-medium leading-[22px] text-base-100 min-[769px]:items-center">
-          <Image
-            alt=""
-            className="mt-[3px] align-middle min-[769px]:mt-0"
-            src={ContractInfoIcon}
-            width={16}
-            height={16}
-          />
-          <span className="inline-block">
+        <div className="title mb-4 flex items-start gap-1 text-sm min-[769px]:items-center">
+          <IconFont className="mt-[2px] align-middle text-base min-[769px]:mt-0" type="info" />
+          <span className="inline-block text-muted-foreground">
             Are you the contract creator?{' '}
-            <Link className="!inline" href={`/${chain}/source-code/${address}`}>
+            <Link className="!inline text-primary" href={`/${chain}/source-code/${address}`}>
               Verify and Publish
             </Link>{' '}
             your contract source code today!
           </span>
         </div>
       )}
-      <div className="pb-5">
-        <ul className="contract-button-container flex gap-[9px]">
+      <div className="inline-flex w-auto pb-5">
+        <ul className="contract-button-container flex w-auto rounded-lg bg-secondary p-1">
           {items.map((item) => {
             return (
-              <li key={item.key} className="contract-button" onClick={() => tabChange(item.key)}>
+              <li key={item.key} className="contract-button inline-flex" onClick={() => tabChange(item.key)}>
                 <a
                   className={clsx('contract-button-link', activeKey === item.key && 'active-button-link')}
                   href="javascript:;">

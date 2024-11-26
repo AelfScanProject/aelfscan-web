@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import { ReactNode } from 'react';
 import './index.css';
 import { TooltipPlacement } from 'antd/es/tooltip';
-import useResponsive, { useMobileAll } from '@_hooks/useResponsive';
-import { TriggerType } from 'antd/es/color-picker/interface';
+import { useMobileAll } from '@_hooks/useResponsive';
 
 interface IToolTip extends Omit<ITooltipProps, 'children' | 'color' | 'overlayClassName' | 'arrow' | 'placement'> {
   pointAtCenter?: boolean;
@@ -27,10 +26,10 @@ export default function EPTooltip({
   return (
     <Tooltip
       overlayClassName={clsx(mode === 'light' ? 'tooltip-light' : 'tooltip-dark', className)}
-      color={mode === 'dark' ? '#1D2A51' : '#FFFFFF'}
+      color={'#FFFFFF'}
       trigger={trigger || (isMobile ? 'click' : 'hover')}
-      arrow={{ pointAtCenter: pointAtCenter }}
-      placement={placement}
+      arrow={false}
+      placement={'top'}
       {...params}>
       {children}
     </Tooltip>

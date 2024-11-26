@@ -10,15 +10,15 @@ import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Daily Transactions Chart';
-const getOption = (list: any[], multi, chain): Highcharts.Options => {
+const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
   const blockDataMap = {};
   list.forEach((item) => {
-    const transactionCount = multi ? item.mergeTransactionCount : item.transactionCount;
-    const mainChainCount = multi ? item.mainChainTransactionCount : transactionCount;
-    const sideChainCount = multi ? item.sideChainTransactionCount : transactionCount;
+    const transactionCount = item.mergeTransactionCount;
+    const mainChainCount = item.mainChainTransactionCount;
+    const sideChainCount = item.sideChainTransactionCount;
 
     allData.push([item.date, transactionCount]);
     mainData.push([item.date, mainChainCount]);
@@ -34,7 +34,7 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
 
   const options = getChartOptions({
     title: title,
-    legend: multi,
+    legend: true,
     yAxisTitle: 'Transactions per Day',
     buttonPositionX: -35,
     tooltipFormatter: function () {
@@ -43,60 +43,46 @@ const getOption = (list: any[], multi, chain): Highcharts.Options => {
       const point = that.points[0] as any;
       const date = point.x;
       const { main, side, blockCount, total } = blockDataMap[date];
-      if (multi) {
-        return `
+      return `
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Transactions: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Transactions: <b>${thousandsNumber(side)}</b><br/>
       `;
-      } else {
-        return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Transactions</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Total Block Count: <b>${thousandsNumber(blockCount)}</b><br/>
-      `;
-      }
     },
     data: allData,
-    series: multi
-      ? [
-          {
-            name: 'Total',
-            type: 'line',
-            data: allData,
-          },
-          {
-            name: 'aelf MainChain',
-            type: 'line',
-            data: mainData,
-          },
-          {
-            name: 'aelf dAppChain',
-            type: 'line',
-            data: sideData,
-          },
-        ]
-      : [
-          {
-            name: 'Total',
-            type: 'line',
-            data: chain === 'AELF' ? mainData : sideData,
-          },
-        ],
+    series: [
+      {
+        name: 'Total',
+        type: 'line',
+        data: allData,
+      },
+      {
+        name: 'aelf MainChain',
+        type: 'line',
+        data: mainData,
+      },
+      {
+        name: 'aelf dAppChain',
+        type: 'line',
+        data: sideData,
+      },
+    ],
   });
 
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDailyTransactionsData>({
+  const { data, loading, chartRef } = useFetchChartData<IDailyTransactionsData>({
     fetchFunc: fetchDailyTransactions,
     processData: (res) => res,
   });
 
   const options = useMemo(() => {
-    return getOption(data?.list || [], multi, chain);
-  }, [chain, data?.list, multi]);
+    return getOption(data?.list || []);
+  }, [data?.list]);
 
   const { download } = useChartDownloadData(data, chartRef, title);
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
-    const key = multi ? 'mergeTransactionCount' : 'transactionCount';
+    const key = 'mergeTransactionCount';
     return data
       ? [
           {
@@ -124,7 +110,7 @@ export default function Page() {
           },
         ]
       : [];
-  }, [data, multi]);
+  }, [data]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

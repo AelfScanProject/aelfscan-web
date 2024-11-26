@@ -7,7 +7,7 @@
     @apply mt-3 text-main-blue text-xl font-medium;
   }
   .not-found-h2{
-    @apply px-10 leading-20 text-base-200;
+    @apply px-10 leading-20 text-muted-foreground text-center;
   }
   .not-found-h3{
     @apply leading-20 text-[#FAAD14] flex;

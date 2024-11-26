@@ -11,9 +11,8 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 import { fetchMonthActiveAddresses } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useFetchChartData } from '@_hooks/useFetchChartData';
-const getOption = (list: any[], chain, multi): Highcharts.Options => {
+const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
@@ -21,9 +20,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
 
   list.forEach((item) => {
     const date = dayjs.utc(item.dateMonth.toString(), 'YYYYMM').valueOf();
-    const addressCount = multi ? item.mergeAddressCount : item.addressCount;
-    const mainChainCount = multi ? item.mainChainAddressCount : item.addressCount;
-    const sideChainCount = multi ? item.sideChainAddressCount : item.addressCount;
+    const addressCount = item.mergeAddressCount;
+    const mainChainCount = item.mainChainAddressCount;
+    const sideChainCount = item.sideChainAddressCount;
 
     allData.push([date, addressCount]);
     mainData.push([date, mainChainCount]);
@@ -34,16 +33,11 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       main: mainChainCount,
       side: sideChainCount,
     };
-
-    if (!multi) {
-      customMap[date].sendAddressCount = item.sendAddressCount;
-      customMap[date].receiveAddressCount = item.receiveAddressCount;
-    }
   });
 
   const options = getChartOptions({
     title: title,
-    legend: multi,
+    legend: true,
     yAxisTitle: 'Active Addresses',
     buttons: [
       {
@@ -76,56 +70,42 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const that: any = this;
       const point = that.points[0] as any;
       const date = point.x;
-      const { total, main, side, sendAddressCount, receiveAddressCount } = customMap[date];
-      if (multi) {
-        return `
-        ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Total Active Addresses</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Active Addresses: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Active Addresses: <b>${thousandsNumber(side)}</b><br/>
-      `;
-      } else {
-        return `
-        ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Active Addresses</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Sender Address: <b>${thousandsNumber(sendAddressCount)}</b><br/>Receive Address: <b>${thousandsNumber(receiveAddressCount)}</b><br/>
-      `;
-      }
+      const { total, main, side } = customMap[date];
+      return `
+      ${Highcharts.dateFormat('%B %Y', date)}<br/><b>Total Active Addresses</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Active Addresses: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Active Addresses: <b>${thousandsNumber(side)}</b><br/>
+    `;
     },
     data: allData,
-    series: multi
-      ? [
-          {
-            name: 'All Chains',
-            type: 'line',
-            data: allData,
-          },
-          {
-            name: 'aelf MainChain',
-            type: 'line',
-            data: mainData,
-          },
-          {
-            name: 'aelf dAppChain',
-            type: 'line',
-            data: sideData,
-          },
-        ]
-      : [
-          {
-            name: 'Active Addresses',
-            type: 'line',
-            data: chain === 'AELF' ? mainData : sideData,
-          },
-        ],
+    series: [
+      {
+        name: 'All Chains',
+        type: 'line',
+        data: allData,
+      },
+      {
+        name: 'aelf MainChain',
+        type: 'line',
+        data: mainData,
+      },
+      {
+        name: 'aelf dAppChain',
+        type: 'line',
+        data: sideData,
+      },
+    ],
   });
 
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain, multi } = useFetchChartData<IMonthActiveAddressData>({
+  const { data, loading, chartRef } = useFetchChartData<IMonthActiveAddressData>({
     fetchFunc: fetchMonthActiveAddresses,
     processData: (res) => res,
   });
 
   const options = useMemo(() => {
-    return getOption(data?.list || [], chain, multi);
-  }, [chain, data?.list, multi]);
+    return getOption(data?.list || []);
+  }, [data?.list]);
 
   useEffect(() => {
     if (data) {
@@ -142,7 +122,7 @@ export default function Page() {
     exportToCSV(data?.list || [], title);
   };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
-    const key = multi ? 'mergeAddressCount' : 'addressCount';
+    const key = 'mergeAddressCount';
     return data
       ? [
           {
@@ -163,7 +143,7 @@ export default function Page() {
           },
           {
             key: 'Lowest',
-            hidden: multi,
+            hidden: true,
             text: (
               <span>
                 Lowest number of
@@ -178,7 +158,7 @@ export default function Page() {
           },
         ]
       : [];
-  }, [data, multi]);
+  }, [data]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

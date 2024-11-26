@@ -9,7 +9,7 @@
 import { TChainID } from '@_api/type';
 import ChainTags from '@_components/ChainTags';
 import PageAd from '@_components/PageAd';
-import { useMultiChain, useSideChain } from '@_hooks/useSelectChain';
+import { useMultiChain } from '@_hooks/useSelectChain';
 import { Button } from 'aelf-design';
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -19,6 +19,7 @@ export default function HeadTitle({
   content,
   children,
   className,
+  rootClassName,
   adPage,
   mainLink,
   hiddenAds,
@@ -27,12 +28,12 @@ export default function HeadTitle({
   content: string;
   children?: React.ReactNode;
   className?: string;
+  rootClassName?: string;
   mainLink?: string;
   sideLink?: string;
   adPage: string;
   hiddenAds?: boolean;
 }) {
-  const sideChain = useSideChain();
   const { chain } = useParams<{ chain: TChainID }>();
   const params = useSearchParams();
   const chainId = params.get('chainId') as TChainID;
@@ -43,27 +44,15 @@ export default function HeadTitle({
 
   return (
     <>
-      <div className={clsx('header-title flex flex-wrap items-center gap-4 bg-inherit py-5', !multi && '!gap-2')}>
-        <div className={clsx('flex items-end text-xl font-medium not-italic text-base-100', className)}>
-          {content}
+      <div
+        className={clsx(
+          'header-title flex flex-wrap items-center gap-4 bg-inherit pb-3 pt-8',
+          !multi && '!gap-2',
+          rootClassName,
+        )}>
+        <div className={clsx('flex items-end text-xl not-italic text-foreground', className)}>
+          <span className="font-bold tracking-[-0.6px]"> {content}</span>
           {children}
-        </div>
-        <div className="flex items-center gap-2">
-          {!multi && <ChainTags chainIds={chainIds} className="border-D0 leading-[18px]" />}
-          {mainLink && (
-            <Link href={mainLink}>
-              <Button className="!h-7 !px-2" size="small" ghost type="primary">
-                View on aelf MainChain
-              </Button>
-            </Link>
-          )}
-          {sideLink && (
-            <Link href={sideLink}>
-              <Button className="!h-7 !px-2" size="small" ghost type="primary">
-                View on aelf dAppChain
-              </Button>
-            </Link>
-          )}
         </div>
       </div>
       {!hiddenAds && <PageAd adPage={adPage} />}

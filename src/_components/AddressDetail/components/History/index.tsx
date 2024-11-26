@@ -10,15 +10,23 @@ import { useParams, useRouter } from 'next/navigation';
 import { useMobileAll } from '@_hooks/useResponsive';
 import { fetchContractHistory } from '@_api/fetchContact';
 import { TChainID } from '@_api/type';
-import { AddressType } from '@_types/common';
 import dayjs from 'dayjs';
 import { Skeleton } from 'antd';
+import { MULTI_CHAIN } from '@_utils/contant';
 
-export default function History({ SSRData = [], onTabClick }: { SSRData: IHistory[]; onTabClick: (string) => void }) {
+export default function History({
+  SSRData = [],
+  onTabClick,
+  chainIds,
+}: {
+  SSRData: IHistory[];
+  onTabClick: (string) => void;
+  chainIds: TChainID[];
+}) {
   const [history, setHistory] = useState<IHistory[]>(SSRData);
   const isMobile = useMobileAll();
   const router = useRouter();
-  const { chain, address } = useParams<{
+  const { address } = useParams<{
     chain: string;
     address: string;
   }>();
@@ -27,7 +35,7 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
     async function getData() {
       setLoading(true);
       const res = await fetchContractHistory({
-        chainId: chain as TChainID,
+        chainId: chainIds[0],
         address: getAddress(address as string),
       });
       setHistory(res.record || []);
@@ -42,12 +50,13 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
         <div className="description-item">
           <span className="label">Author: </span>
           <div
-            className="break-all text-link"
+            className="cursor-pointer break-all text-primary"
             onClick={() => {
-              if (author !== address) router.push(`/${chain}/address/${addressFormat(author, chain)}?tab=contract`);
+              if (author !== address)
+                router.push(`/${MULTI_CHAIN}/address/${addressFormat(author, chainIds[0])}?tab=contract`);
               onTabClick('contract');
             }}>
-            {addressFormat(author)}
+            {addressFormat(author, chainIds[0])}
           </div>
         </div>
         <div className="description-item">
@@ -60,7 +69,7 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
         </div>
         <div className="description-item">
           <span className="label">Transaction Hash: </span>
-          <Link className="break-words text-link" href={`/${chain}/tx/${transactionId}`}>
+          <Link className="break-words text-primary" href={`/${chainIds[0]}/tx/${transactionId}`}>
             {transactionId}
           </Link>
         </div>
@@ -70,7 +79,7 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
         </div>
         <div className="description-item">
           <span className="label">Block: </span>
-          <Link className="break-words text-link" href={`/${chain}/block/${blockHeight}`}>
+          <Link className="break-words text-primary" href={`/${chainIds[0]}/block/${blockHeight}`}>
             {blockHeight}
           </Link>
         </div>
@@ -82,7 +91,7 @@ export default function History({ SSRData = [], onTabClick }: { SSRData: IHistor
       key: v.transactionId,
       title: (
         <>
-          <div className={clsx(index === 0 ? 'active-bot' : 'disabled-bot', 'history-bot')}></div>
+          <div className={clsx('active-bot', 'history-bot')}></div>
           <div className="header-title">{v.contractOperationType}</div>
         </>
       ),

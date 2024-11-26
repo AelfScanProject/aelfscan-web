@@ -7,6 +7,7 @@ import './index.css';
 import { useMemo } from 'react';
 import { MenuItem } from '@_types';
 import useChainSelect from '@_hooks/useChainSelect';
+import IconFont from '@_components/IconFont';
 
 export default function ChainSelect({
   setCurrent,
@@ -32,6 +33,7 @@ export default function ChainSelect({
           popupClassName="chain-select-options"
           value={selectChain}
           popupMatchSelectWidth={false}
+          suffixIcon={<IconFont width={16} height={16} type="chevron-down" />}
           getPopupContainer={() => document.getElementById('chain-select-container')!}
           onChange={onChangeHandler}>
           {chainArr?.map((item) => {

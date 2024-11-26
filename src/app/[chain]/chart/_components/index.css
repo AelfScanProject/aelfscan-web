@@ -1,0 +1,23 @@
+.baseHightCharts-container {
+  .highcharts-title {
+    @apply text-base text-foreground !important;
+  }
+  .highcharts-subtitle {
+    @apply text-xs text-muted-foreground !important;
+  }
+  .highcharts-label {
+    text {
+      font-family: Geist, sans-serif !important;
+      @apply !text-primary ;
+    }
+  }
+
+  .highcharts-root {
+    font-family: Geist, sans-serif !important;
+  }
+  .highcharts-menu-item {
+    @apply !text-foreground;
+
+    font-family: Geist, sans-serif !important;
+  }
+}

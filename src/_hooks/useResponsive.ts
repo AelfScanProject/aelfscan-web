@@ -16,7 +16,7 @@ export default function useResponsive() {
     return width < 993;
   }, [width]);
   const isLG = useMemo(() => {
-    return width < 1024;
+    return width < 1025;
   }, [width]);
   const isXL = useMemo(() => {
     return width < 1280;
@@ -56,7 +56,7 @@ export const usePad = () => {
   return useMemo(() => isPad, [isPad]);
 };
 
-export const useMD = () => {
+export const useBreakpointMD = () => {
   const { isMobileSSR } = useMobileContext();
   const [isMD, setIsMD] = useState(isMobileSSR);
   const { isMD: isMDResponsive } = useResponsive();

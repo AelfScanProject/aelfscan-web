@@ -9,6 +9,7 @@ export const THEME_CONFIG: ThemeConfig = {
     colorBorder: '#D0D0D0',
     colorPrimaryBorder: '#D0D0D0',
     colorTextDisabled: '#D6D6D6',
+    fontFamily: 'Geist, sans-serif',
   },
   components: {
     Descriptions: {

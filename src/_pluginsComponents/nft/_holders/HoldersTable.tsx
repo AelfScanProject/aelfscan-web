@@ -11,9 +11,8 @@ import { fetchNFTHolders } from '@_api/fetchNFTS';
 import { pageSizeOption } from '@_utils/contant';
 import { PageTypeEnum } from '@_types';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
-import { getChainId, getHoldersSearchAfter, getSort } from '@_utils/formatter';
+import { getChainId, getHoldersSearchAfter, getSort, thousandsNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-import { useMultiChain } from '@_hooks/useSelectChain';
 
 export interface HolderProps {
   topSearchProps?: ITableSearch;
@@ -23,12 +22,10 @@ export interface HolderProps {
 const TAB_NAME = 'holders';
 
 export default function Holder(props: HolderProps) {
-  const { topSearchProps } = props;
   const isMobile = useMobileAll();
   const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
     useSearchAfterParams(50, TAB_NAME);
   const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
   const collectionSymbol: string = searchParams.get('collectionSymbol') || '';
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
@@ -82,11 +79,9 @@ export default function Holder(props: HolderProps) {
     }
   }, [selectChain, collectionSymbol, currentPage, pageSize, pageType]);
 
-  const multi = useMultiChain();
-
   const columns = useMemo<ColumnsType<HolderItem>>(() => {
-    return getColumns(currentPage, pageSize, chain, multi);
-  }, [chain, currentPage, pageSize, multi]);
+    return getColumns(currentPage, pageSize);
+  }, [currentPage, pageSize]);
 
   const pageChange = (page: number) => {
     if (page > currentPage) {
@@ -109,12 +104,6 @@ export default function Holder(props: HolderProps) {
     setPageType(PageTypeEnum.NEXT);
   };
 
-  const onSearchChange = (value) => {
-    setCurrentPage(1);
-    setPageType(PageTypeEnum.NEXT);
-    topSearchProps?.onSearchChange(value);
-  };
-
   useEffect(() => {
     fetchHolderDataWrap();
   }, [fetchHolderDataWrap]);
@@ -124,14 +113,13 @@ export default function Holder(props: HolderProps) {
       <Table
         headerTitle={{
           single: {
-            title: `A total of ${total} holders found`,
+            title: `Total ${thousandsNumber(total)} holders found`,
           },
         }}
-        showTopSearch={false}
-        topSearchProps={{ ...topSearchProps, onSearchChange }}
         loading={loading}
         dataSource={data}
-        showMultiChain={multi}
+        showMultiChain
+        bordered={false}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

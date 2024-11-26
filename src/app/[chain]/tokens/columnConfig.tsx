@@ -9,27 +9,33 @@ import { ITokenListItem, TokenTypeEnum } from '../token/[tokenSymbol]/type';
 import Link from 'next/link';
 import { SortEnum } from '@_types/common';
 import ChainTags from '@_components/ChainTags';
+import { MULTI_CHAIN } from '@_utils/contant';
 
 const renderRank = (currentPage, pageSize) => (text, record, index) => (currentPage - 1) * pageSize + index + 1;
 
 const getHolderPercentChange24h = (record: ITokenListItem) => {
-  const { holderPercentChange24H, holders } = record;
+  const { holderPercentChange24H, beforeCount } = record;
   const num = Number(holderPercentChange24H);
   if (Number.isNaN(num)) return '';
-  if (num > 0) return `A ${num}% increase in token holders from the previous day count of ${thousandsNumber(holders)}`;
-  if (num < 0) return `A ${num}% decrease in token holders from the previous day count of ${thousandsNumber(holders)}`;
+  if (num > 0)
+    return `A ${num}% increase in token holders from the previous day count of ${thousandsNumber(beforeCount)}`;
+  if (num < 0)
+    return `A ${num}% decrease in token holders from the previous day count of ${thousandsNumber(beforeCount)}`;
   return 'No change in token holders from the previous day count';
 };
 
-const renderToken = (text, record, chain) => (
+const renderToken = (text, record) => (
   <Link
+    className="block w-full"
     href={
       record.type === TokenTypeEnum.nft
-        ? `/nftItem?chainId=${chain}&itemSymbol=${record.token.symbol}`
-        : `/${chain}/token/${text.symbol}`
+        ? `/nftItem?chainId=${MULTI_CHAIN}&itemSymbol=${record.token.symbol}`
+        : `/${MULTI_CHAIN}/token/${text.symbol}`
     }>
-    <TokenTableCell token={text}>
-      <TokenImage token={text} />
+    <TokenTableCell token={text} className="max-w-[263px] flex-nowrap truncate">
+      <div className="flex shrink-0 items-center">
+        <TokenImage token={text} className="bg-muted" textClassName="text-xs font-normal" />
+      </div>
     </TokenTableCell>
   </Link>
 );
@@ -40,8 +46,15 @@ const renderHolderChange = (record) => {
   const { holderPercentChange24H } = record;
   return (
     <div>
-      <div>{record.holders}</div>
-      <div className={clsx(holderPercentChange24H >= 0 ? 'text-[#00A186]' : 'text-rise-red')}>
+      <div className="font-medium">{record.holders}</div>
+      <div
+        className={clsx(
+          holderPercentChange24H === 0
+            ? 'text-muted-foreground'
+            : holderPercentChange24H > 0
+              ? 'text-success'
+              : 'text-destructive',
+        )}>
         <EPTooltip title={getHolderPercentChange24h(record)} mode="dark">
           <span className="text-xs leading-5">{holderPercentChange24H}%</span>
         </EPTooltip>
@@ -52,43 +65,50 @@ const renderHolderChange = (record) => {
 
 const getSortableHeader = (sort, ChangeOrder) => (
   <div className="flex cursor-pointer" onClick={ChangeOrder}>
-    <IconFont className={`mr-1 text-xs ${sort === SortEnum.asc ? '-scale-y-100' : ''}`} type="Rank" />
     <EPTooltip mode="dark" title="Sorted in descending order Click for ascending order">
-      <div className="text-link">Holder</div>
+      <div className="text-primary">Holder</div>
     </EPTooltip>
+    <IconFont
+      className="ml-1 text-base"
+      type={sort === SortEnum.asc ? 'arrow-up-wide-narrow' : 'arrow-down-wide-narrow-f6kehlin'}
+    />
   </div>
 );
 
-export default function getColumns({
-  currentPage,
-  pageSize,
-  ChangeOrder,
-  chain,
-  sort,
-  multi,
-}): ColumnsType<ITokenListItem> {
+export default function getColumns({ currentPage, pageSize, ChangeOrder, sort }): ColumnsType<ITokenListItem> {
   const commonColumns = [
     {
       title: '#',
       dataIndex: 'rank',
+      width: 100,
       key: 'rank',
       render: renderRank(currentPage, pageSize),
     },
     {
       title: 'Token',
       dataIndex: 'token',
+      width: 295,
       key: 'token',
-      render: (text, record) => renderToken(text, record, chain),
+      render: (text, record) => renderToken(text, record),
+    },
+    {
+      title: 'Chain',
+      width: 120,
+      dataIndex: 'chainIds',
+      key: 'chainIds',
+      render: (chainIds) => <ChainTags chainIds={chainIds || []} showIcon={true} />,
     },
     {
       title: 'Maximum Supply',
       dataIndex: 'totalSupply',
+      width: 295,
       key: 'totalSupply',
       render: renderSupply,
     },
     {
       title: 'Circulating Supply',
       dataIndex: 'circulatingSupply',
+      width: 295,
       key: 'circulatingSupply',
       render: renderSupply,
     },
@@ -96,30 +116,10 @@ export default function getColumns({
       title: getSortableHeader(sort, ChangeOrder),
       dataIndex: 'holders',
       key: 'holders',
+      width: 293,
       render: (text, record) => renderHolderChange(record),
     },
   ];
 
-  return multi
-    ? [
-        { ...commonColumns[0], width: '96px' },
-        { ...commonColumns[1], width: '400px' },
-        {
-          title: 'Chain',
-          width: 234,
-          dataIndex: 'chainIds',
-          key: 'chainIds',
-          render: (chainIds) => <ChainTags chainIds={chainIds || []} />,
-        },
-        { ...commonColumns[2], width: '224px' },
-        { ...commonColumns[3], width: '224px' },
-        { ...commonColumns[4], width: '160px' },
-      ]
-    : [
-        { ...commonColumns[0], width: '96px' },
-        { ...commonColumns[1], width: '432px' },
-        { ...commonColumns[2], width: '320px' },
-        { ...commonColumns[3], width: '208px' },
-        { ...commonColumns[4], width: '208px' },
-      ];
+  return commonColumns;
 }

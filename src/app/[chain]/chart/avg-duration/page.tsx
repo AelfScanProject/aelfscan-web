@@ -2,45 +2,52 @@
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useEffect, useMemo } from 'react';
-import { IAelfAVGBlockDurationData, IHIGHLIGHTDataItem } from '../type';
-import { exportToCSV } from '@_utils/urlUtils';
+import { useMemo } from 'react';
+import { IAelfAVGBlockDurationData } from '../type';
 import { fetchAvgBlockDuration } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 const title = 'aelf AVG Block Duration Chart';
 const getOption = (list: any[]): Highcharts.Options => {
-  const allData: any[] = [];
+  const mainData: any[] = [];
+  const sideData: any[] = [];
   const customMap = {};
   list.forEach((item) => {
-    allData.push([item.date, Number(item.avgBlockDuration)]);
+    const main = Number(item.mainAvgBlockDuration);
+    const side = Number(item.sideAvgBlockDuration);
+    mainData.push([item.date, main]);
+    sideData.push([item.date, side]);
     customMap[item.date] = {};
-    customMap[item.date].longestBlockDuration = item.longestBlockDuration;
-    customMap[item.date].shortestBlockDuration = item.shortestBlockDuration;
+    customMap[item.date].main = main;
+    customMap[item.date].side = side;
   });
 
   const options = getChartOptions({
     title: title,
-    legend: false,
+    legend: true,
     yAxisTitle: 'AVG Block Duration',
     tooltipFormatter: function () {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that: any = this;
       const point = that.points[0] as any;
       const date = point.x;
-      const value = point.y;
-      const longestBlockDuration = customMap[date].longestBlockDuration;
-      const shortestBlockDuration = customMap[date].shortestBlockDuration;
+      const main = customMap[date].main;
+      const side = customMap[date].side;
       return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>AVG Block Duration</b>: <b>${thousandsNumber(value)}s</b><br/>Longest block duration: <b>${thousandsNumber(longestBlockDuration)}s</b><br/>Shortest block duration: <b>${thousandsNumber(shortestBlockDuration)}s</b><br/>
+        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>MainChain AVG Block Duration</b>: <b>${thousandsNumber(main)}s</b><br/>dAppChain AVG Block Duration: <b>${thousandsNumber(side)}s</b>
       `;
     },
-    data: allData,
+    data: mainData,
     series: [
       {
-        name: 'Active Addresses',
-        data: allData,
+        name: 'aelf MainChain',
         type: 'line',
+        data: mainData,
+      },
+      {
+        name: 'aelf dAppChain',
+        type: 'line',
+        data: sideData,
       },
     ],
   });
@@ -59,27 +66,7 @@ export default function Page() {
 
   const { download } = useChartDownloadData(data, chartRef, title);
 
-  const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
-    return data
-      ? [
-          {
-            key: 'Highest',
-            text: (
-              <span>
-                Highest AVG block duration of
-                <span className="px-1 font-bold">
-                  {thousandsNumber(data.highestAvgBlockDuration.avgBlockDuration)}s
-                </span>
-                was on
-                <span className="pl-1">
-                  {Highcharts.dateFormat('%A, %B %e, %Y', data.highestAvgBlockDuration.date)}
-                </span>
-              </span>
-            ),
-          },
-        ]
-      : [];
-  }, [data]);
+  const highlightData = [];
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

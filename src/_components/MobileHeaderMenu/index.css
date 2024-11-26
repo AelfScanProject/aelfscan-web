@@ -23,7 +23,7 @@
         .explorer-menu-submenu > .explorer-menu-submenu-title {
           @apply border-r-0 !pl-2 !pr-2 m-0 bg-transparent w-full h-[38px] leading-[38px] mb-1 justify-center;
           &:hover {
-            @apply text-link;
+            @apply text-foreground;
           }
         }
         .explorer-menu-submenu {

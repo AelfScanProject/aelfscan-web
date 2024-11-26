@@ -14,11 +14,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { PageTypeEnum } from '@_types';
 import { TChainID } from '@_api/type';
 import { ChartColors } from '@app/[chain]/chart/type';
-import { number } from 'echarts';
 export const formatDate = (date: number, type: string, format = 'YYYY-MM-DD HH:mm:ss') => {
   if (typeof date === 'number') {
     if (type === 'Date Time (UTC)') {
-      return dayjs.unix(date).format(format);
+      return dayjs.unix(date).utc().format(format);
+    }
+    if (type === 'Date Time') {
+      return `${dayjs.unix(date).utc().format(format)} UTC`;
     }
     const localTimestampInSeconds = dayjs.unix(dayjs().unix());
     const time = dayjs.unix(date);
@@ -55,7 +57,7 @@ export const numberFormatter = (number: string | number, symbol = SYMBOL): strin
 
 export const thousandsNumber = (number: string | number): string => {
   const num = Number(number);
-  if (number === '' || Number.isNaN(num) || number === null) return '-';
+  if (number === '' || Number.isNaN(num) || number === null) return '--';
   return `${num.toLocaleString(undefined, { maximumFractionDigits: 8 })}`;
 };
 
@@ -189,6 +191,9 @@ export function getOrCreateUserId() {
 }
 
 export const getChainId = (chainId: string): TChainID => {
+  if (!chainId) {
+    return '';
+  }
   return (chainId === MULTI_CHAIN ? '' : chainId) as TChainID;
 };
 export const getChartOptions = ({

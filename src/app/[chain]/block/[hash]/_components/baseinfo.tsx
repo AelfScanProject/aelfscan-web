@@ -11,15 +11,15 @@ import { useMemo } from 'react';
 import ConfirmStatus from '@_components/ConfirmedStatus';
 import IconFont from '@_components/IconFont';
 import { addSymbol, divDecimals, formatDate } from '@_utils/formatter';
-import dayjs from 'dayjs';
 import Copy from '@_components/Copy';
 import JumpButton from '@_components/JumpButton';
 import SizeBytes from '@_components/SizeBytes';
-import DollarCurrency from '@_components/DollarCurrency';
-import addressFormat from '@_utils/urlUtils';
+import addressFormat, { hiddenAddress } from '@_utils/urlUtils';
 import { StatusEnum } from '@_types/status';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { MULTI_CHAIN } from '@_utils/contant';
+import EPTooltip from '@_components/EPToolTip';
 export default function BaseInfo({ data, tabChange, jump }) {
   const { chain } = useParams();
   const isFirst = data?.preBlockHeight === 0;
@@ -51,9 +51,9 @@ export default function BaseInfo({ data, tabChange, jump }) {
         tip: 'The date and time at which the block is produced.',
         value: (
           <div className="value-timestamp">
-            <IconFont className="mr-1 !text-sm !leading-[22px]" type="Time" />
+            <IconFont className="mr-1 text-base" type="clock" />
             <span>
-              {formatDate(data.timestamp, 'age')}({formatDate(data.timestamp, 'Date Time (UTC)')})
+              {formatDate(data.timestamp, 'age')}({formatDate(data.timestamp, 'Date Time')})
             </span>
           </div>
         ),
@@ -64,7 +64,7 @@ export default function BaseInfo({ data, tabChange, jump }) {
         value: (
           <div>
             <span
-              className=" cursor-pointer text-link"
+              className=" cursor-pointer text-primary"
               onClick={() => {
                 tabChange('transactions');
               }}>
@@ -88,11 +88,18 @@ export default function BaseInfo({ data, tabChange, jump }) {
         tip: 'The producer of the block.',
         value: (
           <div>
-            <Link
-              className="text-link"
-              href={`/${chain}/address/${addressFormat(data.producer?.address, chain as string)}`}>
-              {data.producer?.name ? data.producer?.name : addressFormat(data.producer?.address, chain as string)}
-            </Link>
+            <EPTooltip
+              pointAtCenter={false}
+              title={addressFormat(data.producer?.address || '', chain as string)}
+              mode="dark">
+              <Link
+                className="text-primary"
+                href={`/${MULTI_CHAIN}/address/${addressFormat(data.producer?.address, chain as string)}`}>
+                {data.producer?.name
+                  ? data.producer?.name
+                  : addressFormat(hiddenAddress(data.producer?.address), chain as string)}
+              </Link>
+            </EPTooltip>
             <Copy value={addressFormat(data.producer?.address, chain as string)} />
             <span className="ml-1">in 0.5 secs</span>
           </div>
@@ -104,7 +111,7 @@ export default function BaseInfo({ data, tabChange, jump }) {
         value: (
           <div className="flex items-center ">
             <span className="mr-1">{addSymbol(divDecimals(data.reward?.elfReward))}</span>
-            {data.reward?.usdReward && <DollarCurrency price={data.reward?.usdReward} />}
+            {data.reward?.usdReward && <div className="text-muted-foreground"> (${data.reward?.usdReward})</div>}
           </div>
         ),
       },
@@ -122,14 +129,11 @@ export default function BaseInfo({ data, tabChange, jump }) {
         tip: 'Each transaction will burn 10% of its Size Fee.',
         value: (
           <div className="flex items-center text-sm leading-[22px]">
-            <span className="mr-1">{addSymbol(divDecimals(data.burntFee?.elfFee))}</span>
-            {data.burntFee?.usdFee && <DollarCurrency price={data.burntFee?.usdFee} />}
+            {(data.burntFee?.elfFee && <span className="mr-1">{addSymbol(divDecimals(data.burntFee?.elfFee))}</span>) ||
+              '-'}
+            {data.burntFee?.usdFee && <div className="text-muted-foreground"> (${data.burntFee?.usdFee})</div>}
           </div>
         ),
-      },
-      {
-        label: 'divider3',
-        value: 'divider',
       },
     ];
   }, [data, isFirst, isLast, jump, chain, tabChange]);

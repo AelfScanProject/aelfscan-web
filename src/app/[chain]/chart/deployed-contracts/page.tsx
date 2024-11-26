@@ -2,18 +2,16 @@
 import Highcharts from 'highcharts/highstock';
 import '../index.css';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { IDeployedContractsData, IHIGHLIGHTDataItem } from '../type';
 import BaseHightCharts from '../_components/charts';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyDeployContract } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
 import dayjs from 'dayjs';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 
 const title = 'aelf Deployed Contracts Chart';
-const getOption = (list: any[], chain, multi): Highcharts.Options => {
+const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
@@ -23,9 +21,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   list.forEach((item) => {
     const dateInMillis = dayjs(item.date).valueOf();
     const dailyIncreaseContract = Number(item.count);
-    const totalCount = multi ? Number(item.mergeTotalCount) : Number(item.totalCount);
-    const mainCount = multi ? Number(item.mainChainTotalCount) : totalCount;
-    const sideCount = multi ? Number(item.sideChainTotalCount) : totalCount;
+    const totalCount = Number(item.mergeTotalCount);
+    const mainCount = Number(item.mainChainTotalCount);
+    const sideCount = Number(item.sideChainTotalCount);
 
     allData.push([dateInMillis, totalCount]);
     mainData.push([dateInMillis, mainCount]);
@@ -42,7 +40,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
 
   const options = getChartOptions({
     title: title,
-    legend: multi,
+    legend: true,
     yAxisTitle: 'aelf Cumulative Contracts',
     buttonPositionX: -25,
     tooltipFormatter: function () {
@@ -50,58 +48,43 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const that: any = this;
       const point = that.points[0] as any;
       const date = point.x;
-      const value = point.y;
       const { total, main, side } = customMap[date];
-      if (multi) {
-        return `
+      return `
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain Deployed Contracts: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain Deployed Contracts: <b>${thousandsNumber(side)}</b><br/>
       `;
-      } else {
-        return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total Deployed Contracts</b>: <b>${thousandsNumber(value)}</b><br/>
-      `;
-      }
     },
     data: allData,
-    series: multi
-      ? [
-          {
-            name: 'All Chains',
-            type: 'line',
-            data: allData,
-          },
-          {
-            name: 'aelf MainChain',
-            type: 'line',
-            data: mainData,
-          },
-          {
-            name: 'aelf dAppChain',
-            type: 'line',
-            data: sideData,
-          },
-        ]
-      : [
-          {
-            name: 'Cumulative Contracts',
-            type: 'line',
-            data: chain === 'AELF' ? mainData : sideData,
-          },
-        ],
+    series: [
+      {
+        name: 'All Chains',
+        type: 'line',
+        data: allData,
+      },
+      {
+        name: 'aelf MainChain',
+        type: 'line',
+        data: mainData,
+      },
+      {
+        name: 'aelf dAppChain',
+        type: 'line',
+        data: sideData,
+      },
+    ],
   });
 
   return options;
 };
 
 export default function Page() {
-  const { data, loading, chartRef, chain, multi } = useFetchChartData<IDeployedContractsData>({
+  const { data, loading, chartRef } = useFetchChartData<IDeployedContractsData>({
     fetchFunc: fetchDailyDeployContract,
     processData: (res) => res,
   });
 
   const options = useMemo(() => {
-    return getOption(data?.list || [], chain, multi);
-  }, [chain, data?.list, multi]);
+    return getOption(data?.list || []);
+  }, [data?.list]);
 
   const { download } = useChartDownloadData(data, chartRef, title);
 

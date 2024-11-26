@@ -9,7 +9,7 @@ import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
 import { ITransactionsResponseItem } from '@_api/type';
 import { useParams, useSearchParams } from 'next/navigation';
 import { fetchTransactionList } from '@_api/fetchTransactions';
-import { getAddress, getBlockTimeSearchAfter, getChainId, getSort } from '@_utils/formatter';
+import { getAddress, getBlockTimeSearchAfter, getChainId, getSort, thousandsNumber } from '@_utils/formatter';
 import { useEffectOnce } from 'react-use';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { PageTypeEnum } from '@_types';
@@ -17,6 +17,7 @@ const TAB_NAME = 'transactions';
 export default function List({
   SSRData,
   showHeader = true,
+  showMultiChain = true,
   defaultPage,
   defaultPageSize,
   defaultPageType,
@@ -31,7 +32,7 @@ export default function List({
   const [data, setData] = useState<ITransactionsResponseItem[]>(SSRData.transactions);
   const [timeFormat, setTimeFormat] = useState<string>('Age');
   const [pageType, setPageType] = useState<PageTypeEnum>(defaultPageType);
-  const { chain, address } = useParams();
+  const { address } = useParams();
   const mountRef = useRef(false);
   const searchParams = useSearchParams();
   const defaultSearchAfter = searchParams.get('searchAfter');
@@ -103,17 +104,17 @@ export default function List({
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
       type: 'tx',
-      chainId: chain as string,
+      showHeader,
     });
-  }, [chain, timeFormat]);
+  }, [showHeader, timeFormat]);
 
   const multiTitle = useMemo(() => {
-    return `More than > ${total} transactions found`;
+    return `More than ${thousandsNumber(total)} transactions found`;
   }, [total]);
 
   const multiTitleDesc = useMemo(() => {
-    return `Showing the last 500k records`;
-  }, []);
+    return total > 500000 ? `Showing the last 500k records` : '';
+  }, [total]);
 
   const pageChange = (page: number) => {
     let pageType;
@@ -152,7 +153,7 @@ export default function List({
             desc: multiTitleDesc,
           },
         }}
-        showMultiChain={chain === MULTI_CHAIN}
+        showMultiChain={showMultiChain}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
@@ -160,6 +161,8 @@ export default function List({
         loading={loading}
         dataSource={data}
         showLast={false}
+        showPageAndSize={false}
+        bordered={showHeader}
         columns={columns}
         isMobile={isMobile}
         rowKey="transactionId"

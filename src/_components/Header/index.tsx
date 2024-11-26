@@ -4,21 +4,16 @@ import HeaderTop from '@_components/HeaderTop';
 import HeaderMenu from '@_components/HeaderMenu';
 import './index.css';
 import clsx from 'clsx';
-import { usePad } from '@_hooks/useResponsive';
-import { useAppDispatch } from '@_store';
-import { setChainArr } from '@_store/features/chainIdSlice';
 import { usePathname } from 'next/navigation';
 import { cloneDeep } from 'lodash';
+import { homePath } from '@_components/Main';
+import useBlockchainOverview from '@_hooks/useBlockchainOverview';
+import useHomeSocket from '@_hooks/useHomeSocket';
+import useSearchFilter from '@_hooks/useSearchFilters';
+import { Affix } from 'antd';
 
 const clsPrefix = 'header-container';
-export default function Header({ chainList, networkList, headerMenuList }) {
-  const isPad = usePad();
-  const chainArr = chainList.map((ele) => ele.chainList_id);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(setChainArr(chainArr));
-  }, [chainArr, dispatch]);
-
+export default function Header({ networkList, headerMenuList }) {
   const pathname = usePathname();
   const segments = pathname.split('/');
   const defaultCurrent = segments.length > 2 ? `/${segments[2]}` : '/';
@@ -37,6 +32,12 @@ export default function Header({ chainList, networkList, headerMenuList }) {
       return pre;
     }, []);
   }, [headerList]);
+
+  const path = usePathname();
+
+  const isHome = useMemo(() => {
+    return homePath.includes(path);
+  }, [path]);
 
   useEffect(() => {
     const segments = pathname.split('/');
@@ -59,11 +60,29 @@ export default function Header({ chainList, networkList, headerMenuList }) {
     }
   }, [menus, pathname]);
 
+  useBlockchainOverview();
+  useHomeSocket();
+  useSearchFilter();
+
   const networkArr = networkList.map((ele) => ele.network_id);
   return (
-    <div className={clsx(clsPrefix)}>
-      <HeaderTop selectedKey={current} networkList={networkArr} setCurrent={setCurrent} headerMenuList={headerList} />
-      {!isPad && <HeaderMenu headerMenuList={headerList} selectedKey={current} setCurrent={setCurrent} />}
-    </div>
+    !isHome && (
+      <div className={clsx(clsPrefix)}>
+        <Affix offsetTop={0}>
+          <HeaderTop
+            selectedKey={current}
+            networkList={networkArr}
+            setCurrent={setCurrent}
+            headerMenuList={headerList}
+          />
+        </Affix>
+        <HeaderMenu
+          headerMenuList={headerList}
+          selectedKey={current}
+          networkList={networkArr}
+          setCurrent={setCurrent}
+        />
+      </div>
+    )
   );
 }

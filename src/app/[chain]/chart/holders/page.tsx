@@ -2,15 +2,13 @@
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { IHIGHLIGHTDataItem, IHoldersAccountData } from '../type';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyHolder } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
 const title = 'ELF Holders';
-const getOption = (list: any[], chain, multi): Highcharts.Options => {
+const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
@@ -18,9 +16,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
 
   list.forEach((item) => {
     const date = item.date;
-    const count = multi ? item.mergeCount : item.count;
-    const mainCount = multi ? item.mainCount : count;
-    const sideCount = multi ? item.sideCount : count;
+    const count = item.mergeCount;
+    const mainCount = item.mainCount;
+    const sideCount = item.sideCount;
 
     allData.push([date, count]);
     mainData.push([date, mainCount]);
@@ -34,7 +32,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
   });
   const options = getChartOptions({
     title: title,
-    legend: multi,
+    legend: true,
     yAxisTitle: 'ELF Holders',
     buttonPositionX: -35,
     tooltipFormatter: function () {
@@ -43,60 +41,46 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const point = that.points[0] as any;
       const date = point.x;
       const { total, main, side } = customMap[date];
-      if (multi) {
-        return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total ELF Holders</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain ELF Holders: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain ELF Holders: <b>${thousandsNumber(side)}</b><br/>
-      `;
-      } else {
-        return `
-        ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>ELF Holders</b>: <b>${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>
-      `;
-      }
+      return `
+      ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Total ELF Holders</b>: <b>${thousandsNumber(total)}</b><br/>aelf MainChain ELF Holders: <b>${thousandsNumber(main)}</b><br/>aelf dAppChain ELF Holders: <b>${thousandsNumber(side)}</b><br/>
+    `;
     },
     data: allData,
-    series: multi
-      ? [
-          {
-            name: 'All Chains',
-            type: 'line',
-            data: allData,
-          },
-          {
-            name: 'aelf MainChain',
-            type: 'line',
-            data: mainData,
-          },
-          {
-            name: 'aelf dAppChain',
-            type: 'line',
-            data: sideData,
-          },
-        ]
-      : [
-          {
-            name: 'Total Tx Fee',
-            type: 'line',
-            data: chain === 'AELF' ? mainData : sideData,
-          },
-        ],
+    series: [
+      {
+        name: 'All Chains',
+        type: 'line',
+        data: allData,
+      },
+      {
+        name: 'aelf MainChain',
+        type: 'line',
+        data: mainData,
+      },
+      {
+        name: 'aelf dAppChain',
+        type: 'line',
+        data: sideData,
+      },
+    ],
   });
 
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain, multi } = useFetchChartData<IHoldersAccountData>({
+  const { data, loading, chartRef } = useFetchChartData<IHoldersAccountData>({
     fetchFunc: fetchDailyHolder,
     processData: (res) => res,
   });
 
   const options = useMemo(() => {
-    return getOption(data?.list || [], chain, multi);
-  }, [chain, data?.list, multi]);
+    return getOption(data?.list || []);
+  }, [data?.list]);
 
   const { download } = useChartDownloadData(data, chartRef, title);
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
-    const key = multi ? 'mergeCount' : 'count';
+    const key = 'mergeCount';
     return data
       ? [
           {
@@ -112,7 +96,7 @@ export default function Page() {
           },
         ]
       : [];
-  }, [data, multi]);
+  }, [data]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

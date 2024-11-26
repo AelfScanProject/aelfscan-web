@@ -1,0 +1,15 @@
+.network-drop {
+  .explorer-dropdown-menu {
+    @apply p-2;
+  }
+}
+
+.network-container {
+  .explorer-dropdown-open {
+    .down {
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}

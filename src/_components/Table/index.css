@@ -1,15 +1,54 @@
 .ep-table {
-  .explorer-table {
-    .explorer-table-cell {
-      @apply py-3 pr-4 pl-0 bg-white border-none;
+  .table-container {
+    @apply rounded-lg border border-border overflow-hidden;
+    .explorer-table-row:last-child {
+      @apply !border-none;
+      .explorer-table-cell {
+        @apply !shadow-none;
+      }
+    }
+  }
+  .table-container-noBorder {
+    @apply border-x-0 rounded-none;
+    .explorer-table {
+      .explorer-table-thead {
+        .sort-title-cell {
+          .explorer-table-column-title {
+            @apply !flex-none px-1;
+          }
+        }
+        .explorer-table-cell {
+          @apply bg-muted05 !important;
+        }
+      }
+    }
+  }
 
-      box-shadow: 0 -1px 0 0 #e6e6e6 inset;
+  .table-full-search {
+    .explorer-input-affix-wrapper{
+      @apply !max-w-full;
+    }
+  }
+  .explorer-table {
+    @apply !bg-transparent;
+
+    .explorer-table-content {
+      @apply bg-none bg-transparent;
+
+      background: transparent;
+    }
+    .explorer-table-cell {
+      @apply py-3 px-4 bg-transparent border-none;
+
+      box-shadow: 0 -1px 0 0 #e2e8f0 inset;
+    }
+    .explorer-table-row {
+      @apply bg-transparent;
     }
     .explorer-table-cell:first-child {
-      @apply pl-4 !important;
+      @apply pl-4  !important;
     }
     .explorer-table-thead {
-      @apply border-none;
       .explorer-table-cell::before {
         @apply bg-inherit w-0 h-0 !important;
       }
@@ -20,20 +59,20 @@
         @apply rounded-none !important;
       }
       .explorer-table-cell {
-        @apply py-2 pr-4 pl-0 text-xs bg-white border-none leading-5 text-base-100 font-medium !important;
+        @apply py-3 px-4 text-sm leading-6 bg-transparent border-none text-foreground font-bold !important;
+      }
+      .from_to-col {
+        @apply !px-0;
       }
       .header-top {
         @apply flex items-center !important;
       }
       .explorer-table-column-sorters {
-        @apply !flex-row-reverse;
-        .explorer-table-column-sorter {
-          @apply ms-0 me-1;
-        }
+        @apply justify-start;
       }
     }
     .explorer-table-tbody {
-      @apply text-sm leading-[22px] text-base-100;
+      @apply text-sm text-foreground;
       .explorer-table-cell {
         @apply text-sm leading-[22px];
       }
@@ -62,11 +101,15 @@
   .ep-table-header-mobile {
     @apply flex items-start flex-col !important;
     .header-left {
-      @apply flex-1 flex-shrink-0 mb-3;
+      @apply flex-1 flex-shrink-0 mb-2;
     }
     .header-pagination {
-      @apply flex-1 flex-shrink-0;
+      @apply flex-1 flex-shrink-0 flex-row justify-between;
     }
+  }
+
+  .explorer-table-expanded-row-fixed {
+    @apply !p-6;
   }
 }
 

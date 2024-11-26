@@ -1,36 +1,33 @@
 import { thousandsNumber } from '@_utils/formatter';
-import { Typography } from 'aelf-design';
 import { Flex } from 'antd';
 import { useMemo } from 'react';
 
-const { Text } = Typography;
 interface INumberPercentGroupProps {
   number: string | number;
   percent: string | number;
   decorator?: string;
+  className?: string;
 }
 
-export default function NumberPercentGroup({ number, percent, decorator }: INumberPercentGroupProps) {
+export default function NumberPercentGroup({ number, percent, decorator, className }: INumberPercentGroupProps) {
   const renderPercent = useMemo(() => {
     const percentNum = Number(percent);
     const isGteZero = percentNum >= 0;
-    if (Number.isNaN(percentNum)) return <Text>{'(--)'}</Text>;
+    if (Number.isNaN(percentNum)) return <div className="text-base">{'(--)'}</div>;
     return (
       <>
-        <Text
-          style={{
-            color: isGteZero ? '#00A186' : '#FF4D4F',
-          }}>{`(${isGteZero ? '+' : ''}${thousandsNumber(percentNum)}%)`}</Text>
+        <div
+          className={`${isGteZero ? 'text-success' : 'text-destructive'} text-base font-medium`}>{`(${isGteZero ? '+' : ''}${percentNum}%)`}</div>
       </>
     );
   }, [percent]);
 
   return (
     <Flex gap={4}>
-      <Text>
+      <div className={`text-base font-medium ${className}`}>
         {decorator}
         {thousandsNumber(number)}
-      </Text>
+      </div>
       {renderPercent}
     </Flex>
   );

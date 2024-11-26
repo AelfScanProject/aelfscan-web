@@ -12,12 +12,11 @@ import getColumns from './columnConfig';
 import { useCallback, useMemo, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { IBlocksResponse, IBlocksResponseItem, TChainID } from '@_api/type';
-import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
+import { IBlocksResponse, IBlocksResponseItem } from '@_api/type';
+import { pageSizeOption } from '@_utils/contant';
 import { fetchBlocks } from '@_api/fetchBlocks';
-import { useParams } from 'next/navigation';
 import { Spin } from 'antd';
-import { getChainId, getPageNumber } from '@_utils/formatter';
+import { getChainId, getPageNumber, thousandsNumber } from '@_utils/formatter';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { usePagination } from '@_hooks/usePagination';
 
@@ -45,7 +44,6 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
   const [loading, setLoading] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(SSRData.total);
   const [data, setData] = useState<IBlocksResponseItem[]>(SSRData.blocks);
-  const { chain } = useParams<{ chain: TChainID }>();
   const updateQueryParams = useUpdateQueryParams();
 
   const [selectChain, setSelectChain] = useState(defaultChain);
@@ -80,9 +78,8 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
       handleTimeChange: () => {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
-      chainId: chain,
     });
-  }, [chain, timeFormat]);
+  }, [timeFormat]);
 
   const pageMaxBlock = data && data[0]?.blockHeight;
   const pageMinBlock = data && data[data.length - 1]?.blockHeight;
@@ -97,7 +94,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
   });
 
   const multiTitle = useMemo(() => {
-    return `Total of ${total} blocks`;
+    return `Total of ${thousandsNumber(total)} blocks`;
   }, [total]);
 
   return (
@@ -111,7 +108,7 @@ export default function BlockList({ SSRData, defaultPage, defaultPageSize, defau
               desc: `(Showing blocks between #${pageMinBlock} to #${pageMaxBlock})`,
             },
           }}
-          showMultiChain={chain === MULTI_CHAIN}
+          showMultiChain
           MultiChainSelectProps={{
             value: selectChain,
             onChange: chainChange,

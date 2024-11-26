@@ -11,13 +11,13 @@ import { fetchTokenDetail } from '@_api/fetchTokens';
 import { getChainId } from '@_utils/formatter';
 
 export default async function TokenSymbol({
-  params: { chain, tokenSymbol },
+  params: { tokenSymbol },
 }: {
   params: ChainId & {
     tokenSymbol: string;
   };
 }) {
-  const tokenDetail = await fetchTokenDetail({ chainId: getChainId(chain), symbol: tokenSymbol, cache: 'no-store' });
+  const tokenDetail = await fetchTokenDetail({ chainId: getChainId(''), symbol: tokenSymbol, cache: 'no-store' });
   return (
     <div>
       <Detail tokenDetail={tokenDetail} />

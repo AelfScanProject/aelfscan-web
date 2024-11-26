@@ -5,4 +5,49 @@
   .explorer-form-item-control {
     max-width: 100%;
   }
+
+  .explorer-form-item {
+    @apply !mb-4;
+  }
+
+  .explorer-form-item-has-error {
+    .explorer-form-item-required {
+      @apply !text-destructive;
+    }
+
+    .upload-button-preview  {
+      @apply border-destructive;
+    }
+
+    .upload-tips {
+      @apply !hidden;
+    }
+  }
+
+  .explorer-input-outlined.explorer-input-status-error:not(.explorer-input-disabled) {
+    @apply !border-destructive;
+  }
+
+  .explorer-form-item-required {
+    @apply !text-sm !font-medium !text-foreground;
+  }
+  .explorer-form-item-control-input {
+    @apply border-border rounded-md;
+  }
+
+  .explorer-form-item-explain-error {
+    @apply !text-destructive;
+  }
+
+  .explorer-form-item-additional {
+    @apply my-2;
+  }
+
+  .explorer-btn-variant-solid:disabled {
+    @apply bg-primary border-border opacity-[0.65] !important;
+  }
+
+  .explorer-btn-primary{
+    @apply bg-primary;
+  }
 }

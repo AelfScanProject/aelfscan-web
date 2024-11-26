@@ -13,9 +13,10 @@ interface EPTabsProps {
   selectKey?: string;
   onTabChange?: (key: string) => void;
   items: ITabsProps['items'];
+  memory?: boolean;
 }
 // eslint-disable-next-line react/display-name
-const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChange }, ref) => {
+const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChange, memory = true }, ref) => {
   const [activeKey, setActiveKey] = useState<string>('');
   const deleteQueryParam = useDeleteQueryParam();
 
@@ -27,27 +28,33 @@ const EPTabs = forwardRef<EPTabsRef, EPTabsProps>(({ items, selectKey, onTabChan
 
   useEffect(() => {
     if (selectKey) {
-      if (selectKey) {
-        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain'], {
-          tab: selectKey,
-        });
-      } else {
-        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain']);
+      if (memory) {
+        if (selectKey) {
+          deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain'], {
+            tab: selectKey,
+          });
+        } else {
+          deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain']);
+        }
       }
+
       setActiveKey(selectKey as string);
     }
-  }, [selectKey]);
+  }, [selectKey, memory]);
 
   const tabChange = (activeKey) => {
     onTabChange?.(activeKey);
     window.location.hash = '';
-    if (activeKey) {
-      deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain'], {
-        tab: activeKey,
-      });
-    } else {
-      deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain']);
+    if (memory) {
+      if (activeKey) {
+        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain'], {
+          tab: activeKey,
+        });
+      } else {
+        deleteQueryParam(['p', 'ps', 'pageType', 'tab', 'type', 'searchAfter', 'chain']);
+      }
     }
+
     setActiveKey(activeKey);
   };
 

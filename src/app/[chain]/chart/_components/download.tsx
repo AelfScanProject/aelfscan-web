@@ -4,11 +4,11 @@ import { MouseEventHandler } from 'react';
 export default function Download({ download }: { download: MouseEventHandler<HTMLSpanElement> }) {
   return (
     <div className="mt-4 flex items-center">
-      <IconFont type="Download"></IconFont>
-      <span className="ml-2 text-sm leading-[22px] text-base-100">
+      <IconFont className="text-base" type="download-f7em235n"></IconFont>
+      <span className="ml-2 text-sm">
         {' '}
         Download:{' '}
-        <span className="cursor-pointer text-link" onClick={download}>
+        <span className="cursor-pointer text-primary" onClick={download}>
           CSV Data{' '}
         </span>
         (Attribution Required)

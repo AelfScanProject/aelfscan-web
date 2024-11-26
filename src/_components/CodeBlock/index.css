@@ -1,9 +1,11 @@
 .tx-block-code-like-content{
-  @apply !rounded !border-none !bg-F7 !px-4 !py-2 !w-full;
-  &:disabled {
-    @apply !text-base-200 !opacity-100;
+  @apply !rounded !border-none !bg-muted !p-3 !w-full text-xs border-border !text-muted-foreground;
 
-    -webkit-text-fill-color: #858585;
+  font-family: "Courier New", Courier, monospace !important;
+  &:disabled {
+    @apply !text-muted-foreground !opacity-100 text-xs;
+
+    -webkit-text-fill-color: #64748B;
   }
 }
 .tx-block-code-like-content:hover {

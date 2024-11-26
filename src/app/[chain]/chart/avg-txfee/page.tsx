@@ -2,15 +2,13 @@
 import Highcharts from 'highcharts/highstock';
 import { getChartOptions, thousandsNumber } from '@_utils/formatter';
 import BaseHightCharts from '../_components/charts';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { IAvgTxFeeData, IHIGHLIGHTDataItem } from '../type';
 const title = 'Average Transaction Fee';
-import { exportToCSV } from '@_utils/urlUtils';
 import { fetchDailyAvgTransactionFee } from '@_api/fetchChart';
 import PageLoadingSkeleton from '@_components/PageLoadingSkeleton';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useChartDownloadData, useFetchChartData } from '@_hooks/useFetchChartData';
-const getOption = (list: any[], chain, multi): Highcharts.Options => {
+const getOption = (list: any[]): Highcharts.Options => {
   const allData: any[] = [];
   const mainData: any[] = [];
   const sideData: any[] = [];
@@ -18,9 +16,9 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
 
   list.forEach((item) => {
     const date = item.date;
-    const avgFeeUsdt = multi ? Number(item.mergeAvgFeeUsdt) : Number(item.avgFeeUsdt);
-    const mainAvgFeeUsdt = multi ? Number(item.mainChainAvgFeeUsdt) : avgFeeUsdt;
-    const sideAvgFeeUsdt = multi ? Number(item.sideChainAvgFeeUsdt) : avgFeeUsdt;
+    const avgFeeUsdt = Number(item.mergeAvgFeeUsdt);
+    const mainAvgFeeUsdt = Number(item.mainChainAvgFeeUsdt);
+    const sideAvgFeeUsdt = Number(item.sideChainAvgFeeUsdt);
 
     allData.push([date, avgFeeUsdt]);
     mainData.push([date, mainAvgFeeUsdt]);
@@ -36,7 +34,7 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
 
   const options = getChartOptions({
     title: title,
-    legend: multi,
+    legend: true,
     yAxisTitle: title,
     buttonPositionX: -25,
     tooltipFormatter: function () {
@@ -44,61 +42,47 @@ const getOption = (list: any[], chain, multi): Highcharts.Options => {
       const that: any = this;
       const point = that.points[0] as any;
       const date = point.x;
-      const { total, main, side, avgFeeElf } = customMap[date];
-      if (multi) {
-        return `
+      const { total, main, side } = customMap[date];
+      return `
         ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Txn Fee</b>: <b>$${thousandsNumber(total)}</b><br/>aelf MainChain Average Tx Fee: <b>$${thousandsNumber(main)}</b><br/>aelf dAppChain Average Tx Fee: <b>$${thousandsNumber(side)}</b><br/>
       `;
-      } else {
-        return `
-      ${Highcharts.dateFormat('%A, %B %e, %Y', date)}<br/><b>Average Txn Fee</b>: <b>$${thousandsNumber(chain === 'AELF' ? main : side)}</b><br/>Average Txn Fee(ELF): <b>${thousandsNumber(avgFeeElf)} ELF</b><br/>
-    `;
-      }
     },
     data: allData,
-    series: multi
-      ? [
-          {
-            name: 'All Chains',
-            type: 'line',
-            data: allData,
-          },
-          {
-            name: 'aelf MainChain',
-            type: 'line',
-            data: mainData,
-          },
-          {
-            name: 'aelf dAppChain',
-            type: 'line',
-            data: sideData,
-          },
-        ]
-      : [
-          {
-            name: 'Active Addresses',
-            type: 'line',
-            data: chain === 'AELF' ? mainData : sideData,
-          },
-        ],
+    series: [
+      {
+        name: 'All Chains',
+        type: 'line',
+        data: allData,
+      },
+      {
+        name: 'aelf MainChain',
+        type: 'line',
+        data: mainData,
+      },
+      {
+        name: 'aelf dAppChain',
+        type: 'line',
+        data: sideData,
+      },
+    ],
   });
 
   return options;
 };
 export default function Page() {
-  const { data, loading, chartRef, chain, multi } = useFetchChartData<IAvgTxFeeData>({
+  const { data, loading, chartRef } = useFetchChartData<IAvgTxFeeData>({
     fetchFunc: fetchDailyAvgTransactionFee,
     processData: (res) => res,
   });
 
   const options = useMemo(() => {
-    return getOption(data?.list || [], chain, multi);
-  }, [chain, data?.list, multi]);
+    return getOption(data?.list || []);
+  }, [data?.list]);
 
   const { download } = useChartDownloadData(data, chartRef, title);
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
-    const key = multi ? 'mergeAvgFeeUsdt' : 'avgFeeUsdt';
+    const key = 'mergeAvgFeeUsdt';
     return data
       ? [
           {
@@ -124,7 +108,7 @@ export default function Page() {
           },
         ]
       : [];
-  }, [data, multi]);
+  }, [data]);
   return loading ? (
     <PageLoadingSkeleton />
   ) : (

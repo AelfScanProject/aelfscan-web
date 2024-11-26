@@ -5,7 +5,7 @@ import getColumns from './columnConfig';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import { useMobileAll } from '@_hooks/useResponsive';
-import { pageSizeOption } from '@_utils/contant';
+import { MULTI_CHAIN, pageSizeOption } from '@_utils/contant';
 import { ITransactionsResponseItem } from '@_api/type';
 import { useParams } from 'next/navigation';
 import { getAddress, getChainId, getPageNumber } from '@_utils/formatter';
@@ -15,9 +15,9 @@ import { TablePageSize } from '@_types/common';
 import { fetchTransactionList } from '@_api/fetchTransactions';
 import { useMultiChain } from '@_hooks/useSelectChain';
 const TAB_NAME = 'transactions';
-export default function List() {
+export default function List({ defaultChain, showMultiChain }) {
   const isMobile = useMobileAll();
-  const { defaultPage, defaultPageSize, defaultChain } = useSearchAfterParams(TablePageSize.mini, TAB_NAME);
+  const { defaultPage, defaultPageSize } = useSearchAfterParams(TablePageSize.mini, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(Number(defaultPage));
   const [pageSize, setPageSize] = useState<number>(Number(defaultPageSize));
   const [loading, setLoading] = useState<boolean>(false);
@@ -70,6 +70,7 @@ export default function List() {
       },
       chainId: chain as string,
       type: 'tx',
+      showHeader: false,
     });
   }, [chain, timeFormat]);
 
@@ -78,8 +79,8 @@ export default function List() {
   }, [total]);
 
   const multiTitleDesc = useMemo(() => {
-    return `Showing the last 500k records`;
-  }, []);
+    return total > 500000 ? `Showing the last 500k records` : '';
+  }, [total]);
   const pageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -93,8 +94,6 @@ export default function List() {
     setSelectChain(value);
   };
 
-  const multi = useMultiChain();
-
   return (
     <div>
       <Table
@@ -104,7 +103,7 @@ export default function List() {
             desc: multiTitleDesc,
           },
         }}
-        showMultiChain={multi}
+        showMultiChain={MULTI_CHAIN === showMultiChain}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,

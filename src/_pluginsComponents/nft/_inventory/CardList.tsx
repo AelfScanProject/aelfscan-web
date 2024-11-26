@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Card, Spin } from 'antd';
 import './index.css';
-import { Pagination } from 'aelf-design';
 import EPSearch from '@_components/EPSearch';
 import clsx from 'clsx';
 import { isReactNode } from '@_utils/typeUtils';
@@ -13,6 +12,8 @@ import EPTooltip from '@_components/EPToolTip';
 import { useMobileAll } from '@_hooks/useResponsive';
 import NFTImage from '@_components/NFTImage';
 import CommonEmpty from '@_components/Table/empty';
+import { MULTI_CHAIN } from '@_utils/contant';
+import Pagination from '@_components/Table/pagination';
 
 export interface IHeaderTitleProps {
   single?: {
@@ -50,31 +51,29 @@ interface NftCardListProps {
   list: InventoryItem[];
 }
 function NftCardList(props: NftCardListProps) {
-  const searchParams = useSearchParams();
-  const chain = searchParams.get('chainId');
   const { list } = props;
   return (
     <div className="collection-detail-inventory">
       {list.map((itemObj, index) => {
         return (
           <div key={index} className="collection-detail-inventory-item">
-            <Link href={`/nftItem?chainId=${chain}&&itemSymbol=${itemObj?.item?.symbol}`}>
-              <Card hoverable cover={<NFTImage className="rounded object-cover" src={itemObj?.item?.imageUrl} />}>
+            <Link href={`/nftItem?chainId=${MULTI_CHAIN}&&itemSymbol=${itemObj?.item?.symbol}`}>
+              <Card hoverable cover={<NFTImage className="!rounded-lg object-cover" src={itemObj?.item?.imageUrl} />}>
                 <div>
-                  <span className="text-xs leading-5 text-base-200">Symbol:</span>
-                  <span className="ml-1 text-xs leading-5 text-base-100">{itemObj.item.symbol}</span>
+                  <span className="text-sm">Symbol: </span>
+                  <span className="text-sm">{itemObj.item.symbol}</span>
                 </div>
-                <div className="item-center flex text-xs leading-5">
-                  <div className="w-[58px] text-base-200">Last Sale:</div>
+                <div className="item-center flex text-sm">
+                  <div className="shrink-0 text-sm">Last traded: </div>
                   {itemObj.lastSalePrice === -1 ? (
-                    <span className="text-base-100">N/A</span>
+                    <span>N/A</span>
                   ) : itemObj.lastTransactionId ? (
                     <EPTooltip
                       mode="dark"
                       title={`Click to see transaction with last sale price of $${itemObj.lastSalePriceInUsd} (${itemObj.lastSalePrice} ${itemObj.lastSaleAmountSymbol})`}>
                       <Link
-                        className="inline-block truncate"
-                        href={`/${(itemObj?.chainIds && itemObj?.chainIds[0]) || chain}/tx/${itemObj.lastTransactionId}`}>
+                        className="inline-block truncate text-primary"
+                        href={`/${itemObj?.chainIds && itemObj?.chainIds[0]}/tx/${itemObj.lastTransactionId}`}>
                         <span className="mx-1">${itemObj.lastSalePriceInUsd}</span>
                         <span>
                           ({itemObj.lastSalePrice} {itemObj.lastSaleAmountSymbol})
@@ -82,8 +81,8 @@ function NftCardList(props: NftCardListProps) {
                       </Link>
                     </EPTooltip>
                   ) : (
-                    <span className="inline-block truncate">
-                      <span className="mx-1">${itemObj.lastSalePriceInUsd}</span>
+                    <span className="inline-block truncate text-sm">
+                      <span> ${itemObj.lastSalePriceInUsd}</span>
                       <span>
                         ({itemObj.lastSalePrice} {itemObj.lastSaleAmountSymbol})
                       </span>

@@ -1,4 +1,8 @@
 .ace-editor {
+  .ace_content {
+    font-family: "Courier New", Courier, monospace !important;
+  }
+
   background-color: #f8f9fa !important;
   .ace_marker-layer {
     .ace_active-line {
@@ -46,6 +50,15 @@
   }
 
   .code-viewer-container {
-    min-width: 910px;
+    min-width: 310px;
+  }
+}
+
+
+.view-button {
+  @apply border-border p-[6px] rounded-md !important;
+  
+  &:hover {
+    @apply bg-white border-primary !important;
   }
 }

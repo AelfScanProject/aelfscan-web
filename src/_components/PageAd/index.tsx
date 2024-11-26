@@ -30,14 +30,13 @@ function PageAd(props: IAdProps) {
   }, [adsDetail?.adsText, adsDetail?.adsId, adPage]);
   return (
     adsDetail?.adsId && (
-      <div
-        className={`${props.hiddenBorder && '!border-none !pt-0'} ${isMobile && '!pb-4'} flex border-t border-solid border-color-divider pb-6 pt-4`}>
-        <div className="text-sm font-medium leading-[22px] text-base-200">
-          <span className="text-sm font-medium leading-[22px] text-base-200">Sponsored:</span>
+      <div className={`${props.hiddenBorder && '!border-none !pt-0'} ${isMobile && '!pb-4'} flex py-2`}>
+        <div className="text-sm font-medium text-muted-foreground">
+          <span className="text-sm font-medium ">Sponsored:</span>
           <Image src={adsDetail.logo} width={24} height={24} className="mx-2 inline-block size-6 rounded-full" alt="" />
           {adsDetail?.adsText}
           <a
-            className="ml-2 text-sm font-medium leading-[22px] text-link"
+            className="ml-2 text-sm font-medium text-primary"
             href={adsDetail.clickLink}
             target="_blank"
             onClick={handleJump}

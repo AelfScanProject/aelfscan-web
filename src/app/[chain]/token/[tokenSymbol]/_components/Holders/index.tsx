@@ -8,7 +8,7 @@ import { fetchTokenDetailHolders } from '@_api/fetchTokens';
 import { useParams } from 'next/navigation';
 import { pageSizeOption } from '@_utils/contant';
 import { PageTypeEnum } from '@_types';
-import { getChainId, getHoldersSearchAfter, getSort } from '@_utils/formatter';
+import { getChainId, getHoldersSearchAfter, getSort, thousandsNumber } from '@_utils/formatter';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { useMultiChain } from '@_hooks/useSelectChain';
@@ -19,7 +19,7 @@ const TAB_NAME = 'holders';
 export default function Holders({ search, onSearchChange, onSearchInputChange }: HoldersProps) {
   const isMobile = useMobileAll();
 
-  const { chain, tokenSymbol } = useParams();
+  const { tokenSymbol } = useParams();
   const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
     useSearchAfterParams(50, TAB_NAME);
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
@@ -72,7 +72,7 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
       setLoading(false);
       mountRef.current = true;
     }
-  }, [chain, tokenSymbol, pageSize, pageType, currentPage, selectChain]);
+  }, [tokenSymbol, pageSize, pageType, currentPage, selectChain]);
 
   const pageChange = (page: number) => {
     if (page > currentPage) {
@@ -98,13 +98,8 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
     fetchData();
   }, [fetchData]);
 
-  const multi = useMultiChain();
-
-  const columns = useMemo(
-    () => getColumns({ currentPage, pageSize, chain, multi }),
-    [currentPage, pageSize, chain, multi],
-  );
-  const title = useMemo(() => `A total of ${total} holders found`, [total]);
+  const columns = useMemo(() => getColumns({ currentPage, pageSize }), [currentPage, pageSize]);
+  const title = useMemo(() => `Total ${thousandsNumber(total)} holders found`, [total]);
 
   return (
     <div>
@@ -114,19 +109,12 @@ export default function Holders({ search, onSearchChange, onSearchInputChange }:
             title,
           },
         }}
-        topSearchProps={{
-          value: search || '',
-          onChange: ({ currentTarget }) => {
-            onSearchInputChange(currentTarget.value);
-          },
-          onSearchChange,
-        }}
-        showMultiChain={multi}
+        showMultiChain
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
         }}
-        // showTopSearch
+        bordered={false}
         loading={loading}
         dataSource={data}
         columns={columns}

@@ -13,11 +13,14 @@ import { PageTypeEnum } from '@_types';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
 import { useMultiChain } from '@_hooks/useSelectChain';
+import { useAddressContext } from '@_components/AddressDetail/AddressContext';
 const TAB_NAME = 'tokentransfers';
-export default function List() {
+export default function List({ defaultChain }) {
   const isMobile = useMobileAll();
-  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter, defaultChain } =
-    useSearchAfterParams(25, TAB_NAME);
+  const { activeTab, defaultPage, defaultPageSize, defaultPageType, defaultSearchAfter } = useSearchAfterParams(
+    25,
+    TAB_NAME,
+  );
   const [currentPage, setCurrentPage] = useState<number>(defaultPage);
   const [pageSize, setPageSize] = useState<number>(defaultPageSize);
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,6 +38,8 @@ export default function List() {
   }>();
 
   const updateQueryParams = useUpdateQueryParams();
+
+  const { isAddress } = useAddressContext();
 
   const fetchData = useCallback(async () => {
     const sort = getSort(pageType, currentPage);
@@ -78,8 +83,6 @@ export default function List() {
     }
   }, [address, selectChain, currentPage, pageSize]);
 
-  const multi = useMultiChain();
-
   const columns = useMemo<ColumnsType<TokenTransfersItemType>>(() => {
     return getColumns({
       timeFormat,
@@ -88,9 +91,8 @@ export default function List() {
         setTimeFormat(timeFormat === 'Age' ? 'Date Time (UTC)' : 'Age');
       },
       address: getAddress(address),
-      multi,
     });
-  }, [address, timeFormat, multi]);
+  }, [address, timeFormat]);
 
   const pageChange = (page: number) => {
     if (page > currentPage) {
@@ -117,7 +119,7 @@ export default function List() {
   }, [fetchData]);
 
   const singleTitle = useMemo(() => {
-    return `A total of ${thousandsNumber(total)} token transfers found`;
+    return `Total ${thousandsNumber(total)} token transfers found`;
   }, [total]);
 
   return (
@@ -130,7 +132,8 @@ export default function List() {
         }}
         loading={loading}
         dataSource={data}
-        showMultiChain={multi}
+        showMultiChain={isAddress}
+        bordered={false}
         MultiChainSelectProps={{
           value: selectChain,
           onChange: chainChange,
