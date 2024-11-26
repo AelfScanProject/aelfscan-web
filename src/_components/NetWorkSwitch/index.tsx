@@ -5,6 +5,7 @@ import IconFont from '@_components/IconFont';
 import { MenuProps } from 'rc-menu';
 import { useMemo } from 'react';
 import './index.css';
+import { useMainNet } from '@_hooks/useSelectChain';
 
 export default function NetWorkSwitch({
   networkList,
@@ -13,20 +14,22 @@ export default function NetWorkSwitch({
   networkList: NetworkItem[];
   isSelect?: boolean;
 }) {
+  const mainNet = useMainNet();
+  const netKey = useMemo(() => {
+    return mainNet ? 'mainnet' : 'testnet';
+  }, [mainNet]);
   const selectNet = useMemo(() => {
-    const origin = typeof window !== 'undefined' && window.location.origin;
-    return networkList.find((item) => item.path === origin) || networkList[0];
-  }, [networkList]);
+    return networkList.find((item) => item.key === netKey);
+  }, [networkList, netKey]);
 
   const items: MenuProps['items'] = useMemo(() => {
-    const origin = typeof window !== 'undefined' && window.location.origin;
     return networkList.map((item) => {
       return {
         key: item?.key,
         label: (
           <a
             target="_blank"
-            className={`text-sm leading-[22px] ${origin === item?.path ? '!text-primary' : '!text-foreground'}`}
+            className={`text-sm leading-[22px] ${netKey === item?.path ? '!text-primary' : '!text-foreground'}`}
             href={item?.path}
             rel="noopener noreferrer">
             {item?.label}
@@ -34,7 +37,7 @@ export default function NetWorkSwitch({
         ),
       };
     });
-  }, [networkList]);
+  }, [networkList, netKey]);
   return (
     <div className="network-container">
       <Dropdown trigger={['click']} overlayClassName="network-drop w-[140px]" menu={{ items }}>
