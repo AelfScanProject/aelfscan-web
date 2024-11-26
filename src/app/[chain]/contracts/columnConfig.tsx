@@ -74,7 +74,7 @@ export default function getColumns(): ColumnsType<IContractDataItem> {
     },
     {
       title: 'Txns',
-      width: 150,
+      width: 138,
       dataIndex: 'txns',
       key: 'txns',
       render: renderTxns,
@@ -88,7 +88,7 @@ export default function getColumns(): ColumnsType<IContractDataItem> {
       ),
       dataIndex: 'lastUpdateTime',
       key: 'lastUpdateTime',
-      width: 186,
+      width: 196,
       render: renderLastUpdated,
     },
   ];
