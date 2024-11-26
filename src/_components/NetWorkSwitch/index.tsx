@@ -14,8 +14,8 @@ export default function NetWorkSwitch({
 }) {
   const origin = typeof window !== 'undefined' && window.location.origin;
   const selectNet = useMemo(() => {
-    return networkList.find((item) => item.path === 'https://testnet.aelfscan.io');
-  }, [networkList]);
+    return networkList.find((item) => item.path === origin) || networkList[0];
+  }, [networkList, origin]);
 
   const items: MenuProps['items'] = useMemo(() => {
     return networkList.map((item) => {

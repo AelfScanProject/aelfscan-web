@@ -54,7 +54,7 @@ export const MultiDown = ({
     },
   ];
   return (
-    <Dropdown overlayClassName="multi-count" menu={{ items }} placement="topCenter">
+    <Dropdown overlayClassName="multi-count" menu={{ items }} placement="top">
       {children}
     </Dropdown>
   );

@@ -35,7 +35,7 @@ const useHeaderContext = () => {
 };
 export { useMobileContext, useHeaderContext };
 
-function RootProvider({ children, isMobileSSR, config, chartImg, networkList, headerMenuList }) {
+function RootProvider({ children, isMobileSSR, config, chartImg, networkList, headerMenuList, chainList }) {
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = makeStore();
@@ -50,7 +50,7 @@ function RootProvider({ children, isMobileSSR, config, chartImg, networkList, he
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
       <ConfigProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
-        <HeaderContext.Provider value={{ networkList, headerMenuList }}>
+        <HeaderContext.Provider value={{ networkList, headerMenuList, chainList }}>
           <MobileContext.Provider value={{ isMobileSSR: isMobileSSR, config, chartImg }}>
             <ReduxProvider store={storeRef.current}>
               <WebLoginProvider config={config}>

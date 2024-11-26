@@ -4,8 +4,6 @@ import HeaderTop from '@_components/HeaderTop';
 import HeaderMenu from '@_components/HeaderMenu';
 import './index.css';
 import clsx from 'clsx';
-import { useAppDispatch } from '@_store';
-import { setChainArr } from '@_store/features/chainIdSlice';
 import { usePathname } from 'next/navigation';
 import { cloneDeep } from 'lodash';
 import { homePath } from '@_components/Main';
@@ -15,13 +13,7 @@ import useSearchFilter from '@_hooks/useSearchFilters';
 import { Affix } from 'antd';
 
 const clsPrefix = 'header-container';
-export default function Header({ chainList, networkList, headerMenuList }) {
-  const chainArr = chainList.map((ele) => ele.chainList_id);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(setChainArr(chainArr));
-  }, [chainArr, dispatch]);
-
+export default function Header({ networkList, headerMenuList }) {
   const pathname = usePathname();
   const segments = pathname.split('/');
   const defaultCurrent = segments.length > 2 ? `/${segments[2]}` : '/';
