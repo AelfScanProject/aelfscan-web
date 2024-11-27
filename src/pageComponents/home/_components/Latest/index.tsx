@@ -157,12 +157,12 @@ function Latest({ isBlocks, data, iconType, title, tips }: IProps) {
           );
         })}
       </div>
-      <div className={clsx('link', isMD && !isBlocks && 'mt-6')}>
-        <Link href={isBlocks ? `/${MULTI_CHAIN}/blocks` : `/${MULTI_CHAIN}/transactions`} prefetch={false}>
+      <Link href={isBlocks ? `/${MULTI_CHAIN}/blocks` : `/${MULTI_CHAIN}/transactions`} prefetch={false}>
+        <div className={clsx('link', isMD && !isBlocks && 'mt-6')}>
           <span className="px-1">View all {isBlocks ? 'blocks' : 'transactions'}</span>
           <IconFont className="text-base" type="arrow-right"></IconFont>
-        </Link>
-      </div>
+        </div>
+      </Link>
     </div>
   );
 }

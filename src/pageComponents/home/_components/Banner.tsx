@@ -76,7 +76,7 @@ export function BannerContainer() {
   return (
     <div className={`banner-section-container z-8 relative w-full  ${selectedItem.backgroundColors}`}>
       <div className="absolute inset-0 h-full overflow-hidden">
-        <div className="banner-bg absolute  -bottom-7 aspect-[393/85] max-h-[400px] w-full bg-cover bg-no-repeat mix-blend-multiply md:-bottom-2 md:aspect-[1024/232] md:bg-center min-[1025px]:-bottom-[53px] min-[1025px]:aspect-[1024/311] min-[1500px]:bg-top"></div>
+        <div className="banner-bg"></div>
       </div>
       <div className="header-section">
         <div className="flex items-center gap-4">
