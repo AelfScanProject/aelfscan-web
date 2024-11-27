@@ -87,7 +87,11 @@ export default function Page() {
 
   const options = useMemo(() => getChartOption(data?.list || []), [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeCycleCount: 'Total Cycle Count',
+    mainCycleCount: 'MainChain Cycle Count',
+    sideCycleCount: 'dAppChain Cycle Count',
+  });
 
   const highlightData = [];
 

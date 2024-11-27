@@ -79,7 +79,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeTransactionCount: 'Total Transactions',
+    mainChainTransactionCount: 'aelf MainChain Transactions',
+    sideChainTransactionCount: 'aelf dAppChain Transactions',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = 'mergeTransactionCount';

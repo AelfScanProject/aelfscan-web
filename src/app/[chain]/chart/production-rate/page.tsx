@@ -74,7 +74,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeBlockProductionRate: 'Total Block Production Rate',
+    mainBlockProductionRate: 'MainChain Block Production Rate',
+    sideBlockProductionRate: 'dAppChain Block Production Rate',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     return data
@@ -104,7 +108,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The Aelf Block Production Rate Chart shows the daily block production rate of the Aelf network."
+        aboutTitle="The aelf Block Production Rate Chart shows the daily block production rate of the aelf network."
         highlightData={highlightData}
         options={options}
         download={download}

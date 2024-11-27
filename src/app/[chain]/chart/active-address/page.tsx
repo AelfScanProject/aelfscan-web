@@ -78,7 +78,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeAddressCount: 'Total Active Addresses',
+    mainChainAddressCount: 'aelf MainChain Active Addresses',
+    sideChainAddressCount: 'aelf dAppChain Active Addresses',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = multi ? 'mergeAddressCount' : 'addressCount';

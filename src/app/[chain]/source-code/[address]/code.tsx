@@ -15,7 +15,6 @@ import FailedIcon from 'public/image/failed.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import addressFormat from '@_utils/urlUtils';
-import { MULTI_CHAIN } from '@_utils/contant';
 import UploadButton from '../components/upload';
 
 type FieldType = {
@@ -47,7 +46,6 @@ export default function SourceCodePage() {
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const uploadFile = Form.useWatch('file', form);
-  console.log(uploadFile, 'uploadFile');
 
   useEffect(() => {
     if (address) {
@@ -169,7 +167,7 @@ export default function SourceCodePage() {
   const handleGot = () => {
     if (type === 'success') {
       setOpen(false);
-      Router.push(`/${MULTI_CHAIN}/address/${address}`);
+      Router.push(`/${chain}/address/${address}`);
     } else {
       setOpen(false);
     }
@@ -194,7 +192,7 @@ export default function SourceCodePage() {
         <div
           className="flex cursor-pointer items-center gap-1 pb-[10px] pt-6 text-sm font-medium"
           onClick={() => {
-            Router.push(`/${MULTI_CHAIN}/address/${address}`);
+            Router.push(`/${chain}/address/${address}`);
           }}>
           <IconFont className="rotate-180 text-base" type="arrow-right" />
           <span className="text-primary">Back</span>
@@ -205,7 +203,7 @@ export default function SourceCodePage() {
             <span>
               Source code verification provides transparency for users intteracting with smart contracts. By uploading
               the source code, aelfscan will match the comppiled code with that on the blockchain.{' '}
-              <Link target="_blank" href={`/${MULTI_CHAIN}/readmore/${address}`}>
+              <Link target="_blank" href={`/${chain}/readmore/${address}`}>
                 {' '}
                 Read more
               </Link>

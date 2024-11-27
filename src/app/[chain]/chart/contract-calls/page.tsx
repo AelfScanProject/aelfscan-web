@@ -79,7 +79,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeCallCount: 'Total Number of Calls',
+    mainChainCallCount: 'aelf MainChain Number of Calls',
+    sideChainCallCount: 'aelf dAppChain Number of Calls',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = 'mergeCallCount';

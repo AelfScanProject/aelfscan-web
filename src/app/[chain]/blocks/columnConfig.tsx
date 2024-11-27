@@ -23,7 +23,7 @@ const getAddressLink = (address, record) => {
       pointAtCenter={false}>
       <Link
         className="block text-sm leading-[22px] !text-primary"
-        href={`/multiChain/${addressFormat(address, chain)}`}>
+        href={`/multiChain/address/${addressFormat(address, chain)}`}>
         {record.producerName || addressFormat(hiddenAddress(address, 4, 4), chain)}
       </Link>
     </EPTooltip>

@@ -105,5 +105,29 @@ module.exports = {
         },
       });
     },
+    function ({ addComponents }) {
+      const newStyles = {};
+
+      const baseBottom = -14;
+      const incrementPer10px = 2;
+      const start = 400;
+      const end = 450;
+
+      for (let width = start; width <= end; width += 10) {
+        const bottomValue = baseBottom - ((width - start) / 10) * incrementPer10px;
+        newStyles[`@media (min-width: ${width}px)`] = {
+          '.banner-bg': {
+            bottom: `${bottomValue}px !important`,
+          },
+        };
+      }
+
+      newStyles[`@media (min-width: 450px)`] = {
+        '.banner-bg': {
+          bottom: `-16px !important`,
+        },
+      };
+      addComponents(newStyles);
+    },
   ],
 };

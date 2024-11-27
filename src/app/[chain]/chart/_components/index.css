@@ -20,4 +20,12 @@
 
     font-family: Geist, sans-serif !important;
   }
+
+  .highcharts-range-selector-group {
+    .highcharts-button-pressed {
+      text {
+        @apply !font-normal;
+      }
+    }
+  }
 }

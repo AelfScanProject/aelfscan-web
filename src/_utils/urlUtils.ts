@@ -45,16 +45,16 @@ export function updateQueryParams(params: { [K in string]: any }) {
   window.history.replaceState(null, '', url.toString());
 }
 
-export const exportToCSV = (list: Array<any>, title: string) => {
-  const metrics = Object.keys(list[0] || {}).filter(
-    (item) => item !== 'date' && item !== 'dateStr' && item !== 'dateMonth',
+export const exportToCSV = (list: Array<any>, title: string, fieldAliasMap: { [key: string]: any }) => {
+  const metrics = Object.keys(fieldAliasMap || {});
+  const columns = ['Date(UTC)', 'UnixTimeStamp'].concat(
+    metrics.map((field) => (fieldAliasMap && fieldAliasMap[field]) || field),
   );
-  const columns = ['Date(UTC)', 'UnixTimeStamp'].concat(metrics);
   const rows = list.map((item) => {
     return [
       item.dateMonth ? item.dateMonth : dayjs(item.date).format('M/D/YYYY'),
       item.dateMonth ? item.dateMonth : `'${String(item.date)}`,
-      ...metrics.map((me) => item[me]),
+      ...metrics.map((key) => item[key]),
     ];
   });
   const csv = Papa.unparse({ fields: columns, data: rows });

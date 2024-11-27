@@ -45,7 +45,7 @@ export function useFetchChartData<DataType>({
   return { data, loading, chartRef, multi };
 }
 
-export function useChartDownloadData(data: any, chartRef, title) {
+export function useChartDownloadData(data: any, chartRef, title, fieldAliasMap: { [key: string]: string | number }) {
   useEffect(() => {
     if (data) {
       const chart = chartRef.current?.chart;
@@ -57,7 +57,7 @@ export function useChartDownloadData(data: any, chartRef, title) {
     }
   }, [chartRef, data]);
   const download = () => {
-    exportToCSV(data?.list || [], title);
+    exportToCSV(data?.list || [], title, fieldAliasMap);
   };
 
   return { download };

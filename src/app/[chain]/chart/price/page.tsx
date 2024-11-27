@@ -46,7 +46,12 @@ export default function Page() {
 
   const options = useMemo(() => getOption(data?.list || []), [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    price: 'ELF Price',
+    open: 'open',
+    high: 'high',
+    low: 'low',
+  });
 
   return loading ? (
     <PageLoadingSkeleton />
