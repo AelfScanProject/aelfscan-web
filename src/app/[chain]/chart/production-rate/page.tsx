@@ -74,7 +74,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeBlockProductionRate: 'Total Block Production Rate',
+    mainBlockProductionRate: 'MainChain Block Production Rate',
+    sideBlockProductionRate: 'dAppChain Block Production Rate',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     return data

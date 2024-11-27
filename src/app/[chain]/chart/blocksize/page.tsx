@@ -78,7 +78,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeAvgBlockSize: 'Average Block Size(Bytes)',
+    mainChainAvgBlockSize: 'aelf MainChain Block Size(Bytes)',
+    sideChainAvgBlockSize: 'aelf dAppChain Block Size(Bytes)',
+  });
 
   const highlightData = [];
   return loading ? (

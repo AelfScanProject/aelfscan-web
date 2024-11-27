@@ -56,7 +56,10 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    blockReward: 'Total Daily Block Rewards',
+    totalBlockCount: 'Total Blocks',
+  });
 
   const highlightData = [];
   return loading ? (

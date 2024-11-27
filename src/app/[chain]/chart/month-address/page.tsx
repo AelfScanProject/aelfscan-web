@@ -119,7 +119,11 @@ export default function Page() {
   }, [chartRef, data]);
 
   const download = () => {
-    exportToCSV(data?.list || [], title);
+    exportToCSV(data?.list || [], title, {
+      mergeAddressCount: 'Total Active Addresses',
+      mainChainAddressCount: 'aelf MainChain Active Addresses',
+      sideChainAddressCount: 'aelf dAppChain Active Addresses',
+    });
   };
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = 'mergeAddressCount';

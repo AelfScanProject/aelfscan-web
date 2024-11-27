@@ -78,7 +78,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeTotalFeeElf: 'Total Transaction Fees',
+    mainChainTotalFeeElf: 'aelf MainChain Transaction Fees',
+    sideChainTotalFeeElf: 'aelf dAppChain Transaction Fees',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = 'mergeTotalFeeElf';

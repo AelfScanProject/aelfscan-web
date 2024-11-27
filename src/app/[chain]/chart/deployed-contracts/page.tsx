@@ -86,7 +86,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeTotalCount: 'Total Deployed Contracts',
+    mainChainTotalCount: 'aelf MainChain Deployed Contracts',
+    sideChainTotalCount: 'aelf dAppChain Deployed Contracts',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     return data

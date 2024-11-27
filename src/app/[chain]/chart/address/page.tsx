@@ -82,7 +82,11 @@ export default function Page() {
     return data?.highestIncrease;
   }, [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeTotalUniqueAddressees: 'Total Wallet Addresses',
+    mainChainTotalUniqueAddressees: 'aelf MainChain Wallet Addresses',
+    sideChainTotalUniqueAddressees: 'aelf dAppChain Wallet Addresses',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = 'mergeAddressCount';

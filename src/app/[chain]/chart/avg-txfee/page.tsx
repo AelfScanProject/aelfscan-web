@@ -79,7 +79,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeAvgFeeUsdt: 'Average Txn Fee',
+    mainChainAvgFeeUsdt: 'aelf MainChain Average Tx Fee',
+    sideChainAvgFeeUsdt: 'aelf dAppChain Average Tx Fee',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = 'mergeAvgFeeUsdt';

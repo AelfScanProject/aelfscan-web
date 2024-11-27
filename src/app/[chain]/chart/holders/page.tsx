@@ -77,7 +77,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeCount: 'Total ELF Holders',
+    mainCount: 'aelf MainChain ELF Holders',
+    sideCount: 'aelf dAppChain ELF Holders',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = 'mergeCount';

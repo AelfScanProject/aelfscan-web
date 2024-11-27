@@ -64,7 +64,10 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mainAvgBlockDuration: 'MainChain AVG Block Duration',
+    sideAvgBlockDuration: 'dAppChain AVG Block Duration',
+  });
 
   const highlightData = [];
   return loading ? (
