@@ -54,7 +54,7 @@ export const exportToCSV = (list: Array<any>, title: string, fieldAliasMap: { [k
     return [
       item.dateMonth ? item.dateMonth : dayjs(item.date).format('M/D/YYYY'),
       item.dateMonth ? item.dateMonth : `'${String(item.date)}`,
-      ...metrics.map((key) => item[key] || ''),
+      ...metrics.map((key) => item[key]),
     ];
   });
   const csv = Papa.unparse({ fields: columns, data: rows });
