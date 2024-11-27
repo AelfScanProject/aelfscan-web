@@ -1,6 +1,5 @@
 'use client';
 import IconFont from '@_components/IconFont';
-import { MULTI_CHAIN } from '@_utils/contant';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import CodeImg from 'public/image/code.png';
@@ -35,14 +34,14 @@ const moreList = [
 
 export default function ReadMore() {
   const Router = useRouter();
-  const { address } = useParams();
+  const { address, chain } = useParams();
   return (
     <div className="contract-code flex w-full justify-center">
       <div className="max-w-[720px]">
         <div
           className="flex cursor-pointer items-center gap-1 pb-[10px] pt-6 text-sm font-medium"
           onClick={() => {
-            Router.push(`/${MULTI_CHAIN}/address/${address}`);
+            Router.push(`/${chain}/address/${address}`);
           }}>
           <IconFont className="rotate-180 text-base" type="arrow-right" />
           <span className="text-primary">Back</span>
