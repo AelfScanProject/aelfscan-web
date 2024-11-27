@@ -12,7 +12,6 @@ import { TChainID } from '@_api/type';
 import { PageTypeEnum } from '@_types';
 import useSearchAfterParams from '@_hooks/useSearchAfterParams';
 import { useUpdateQueryParams } from '@_hooks/useUpdateQueryParams';
-import { useMultiChain } from '@_hooks/useSelectChain';
 import { useAddressContext } from '@_components/AddressDetail/AddressContext';
 const TAB_NAME = 'tokentransfers';
 export default function List({ defaultChain }) {

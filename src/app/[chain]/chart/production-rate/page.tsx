@@ -108,7 +108,7 @@ export default function Page() {
       <BaseHightCharts
         ref={chartRef}
         title={title}
-        aboutTitle="The Aelf Block Production Rate Chart shows the daily block production rate of the Aelf network."
+        aboutTitle="The aelf Block Production Rate Chart shows the daily block production rate of the aelf network."
         highlightData={highlightData}
         options={options}
         download={download}
