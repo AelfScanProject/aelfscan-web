@@ -59,7 +59,14 @@ export default function Page() {
     processData: (res) => res,
   });
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    totalSupply: 'ELF Circulating Supply',
+    reward: 'Daily ELF rewards',
+    burnt: 'aelf MainChain burnt',
+    sideChainBurnt: 'aelf dAppChain burnt',
+    organizationUnlock: 'Organization Unlock',
+    totalUnReceived: 'Unreceived',
+  });
 
   const options = useMemo(() => {
     return getOption(data?.list || []);

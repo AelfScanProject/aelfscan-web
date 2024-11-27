@@ -78,7 +78,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data?.list]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    mergeBurnt: 'Total Daily ELF Burnt',
+    mainChainBurnt: 'aelf MainChain Daily ELF Burnt',
+    sideChainBurnt: 'aelf dAppChain Daily ELF Burnt',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     const key = 'mergeBurnt';

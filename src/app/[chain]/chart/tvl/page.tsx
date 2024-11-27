@@ -75,7 +75,12 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    tvl: 'TVL',
+    bpLocked: 'BP Locked',
+    voteLocked: 'Vote Locked',
+    awakenLocked: 'Awaken',
+  });
 
   const highlightData = useMemo<IHIGHLIGHTDataItem[]>(() => {
     return data

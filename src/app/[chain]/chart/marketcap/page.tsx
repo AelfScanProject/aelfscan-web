@@ -56,7 +56,11 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    totalMarketCap: 'ELF Market Cap',
+    fdv: 'FDV',
+    price: 'ELF Price(USD)',
+  });
 
   const highlightData = [];
   return loading ? (

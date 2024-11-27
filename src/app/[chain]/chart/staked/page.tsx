@@ -58,7 +58,12 @@ export default function Page() {
     return getOption(data?.list || []);
   }, [data]);
 
-  const { download } = useChartDownloadData(data, chartRef, title);
+  const { download } = useChartDownloadData(data, chartRef, title, {
+    totalStaked: 'Total ELF Staked',
+    bpStaked: 'BP Staked',
+    voteStaked: 'Vote Staked',
+    rate: 'Staking Rate',
+  });
 
   const highlightData = [];
   return loading ? (

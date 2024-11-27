@@ -42,7 +42,7 @@
 
 .banner-bg {
   background-image: url('/image/bg-home-banner.png');
-  @apply absolute -bottom-[10px]  aspect-[393/85]  min-[400px]:-bottom-[22px] max-h-[400px] w-full bg-cover bg-no-repeat mix-blend-multiply md:-bottom-2 md:aspect-[1024/232] md:bg-center min-[1025px]:-bottom-[53px] min-[1025px]:aspect-[1024/311] min-[1500px]:bg-top;
+  @apply absolute -bottom-[14px]  aspect-[393/85]  min-[400px]:-bottom-[16px] min-[400px]:aspect-[4096/886]  max-h-[400px] w-full bg-cover bg-no-repeat mix-blend-multiply md:!-bottom-2 md:aspect-[1024/232] md:bg-center min-[1025px]:!-bottom-[53px] min-[1025px]:aspect-[1024/311] min-[1500px]:bg-top;
 }
 
 
