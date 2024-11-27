@@ -53,7 +53,7 @@ export default function Footer({ footerMenuList }: IProps) {
             <a href="https://www.youtube.com/c/aelfblockchain" target="_blank" rel="noopener noreferrer">
               <Image width={20} height={14.2} src="/image/youtube.svg" alt="youtube"></Image>
             </a>
-            <a href="https://discord.gg/bgysa9xjvD" target="_blank" rel="noopener noreferrer">
+            <a href=" https://discord.com/invite/aelfblockchain" target="_blank" rel="noopener noreferrer">
               <Image width={20} height={20} src="/image/discord.svg" alt="discord"></Image>
             </a>
           </div>
@@ -64,7 +64,7 @@ export default function Footer({ footerMenuList }: IProps) {
             <IconFont type="aelf-header-top-test-change"></IconFont>
             <span className="text-sm font-medium text-muted-foreground">
               Powered by{' '}
-              <Link href="https://aelf.io" target="_blank" className="text-primary">
+              <Link href="https://aelf.com" target="_blank" className="text-primary">
                 aelf
               </Link>
             </span>

@@ -71,9 +71,10 @@ export default function MultiChain({
         {multi ? (
           <Dropdown
             trigger={['click']}
+            placement="bottom"
             overlayClassName="multiChain-drop min-w-[240px] max-w-[395px]"
             menu={{ items: items }}>
-            <IconFont className="text-base" type="chevron-down1" />
+            <IconFont className="text-base" id="chevron-down1" type="chevron-down1" />
           </Dropdown>
         ) : (
           <>

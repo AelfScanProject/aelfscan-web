@@ -82,7 +82,6 @@ export default function List({ SSRData, defaultPage, defaultPageSize, defaultCha
         dataSource={data}
         columns={columns}
         isMobile={isMobile}
-        rowKey="address"
         total={total}
         options={pageSizeOption}
         pageSize={pageSize}
