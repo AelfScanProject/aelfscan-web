@@ -71,7 +71,7 @@ const InfoSection = () => {
       overview && (
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-transaction`)}>
           <div className="title flex items-center gap-1">
-            <div className="text">Toal Transactions</div>
+            <div className="text">Total Transactions</div>
             <IconFont className="text-base" type="square-menu"></IconFont>
           </div>
           <div className="flex items-center">
