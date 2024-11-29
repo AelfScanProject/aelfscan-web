@@ -18,3 +18,11 @@ message VirtualTransactionCreated {
   bytes params = 5;
   aelf.Address signatory = 6 [(aelf.is_indexed) = true];
 }
+
+service InlineTransaction {
+}
+
+message InlineTransactionCreated {
+  option (aelf.is_event) = true;
+  aelf.Transaction transaction = 1 [(aelf.is_indexed) = true];
+}

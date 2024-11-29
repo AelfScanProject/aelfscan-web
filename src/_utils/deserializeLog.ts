@@ -48,6 +48,14 @@ export async function deserializeLog(log, rpc) {
       // if normal contract has a method called VirtualTransactionCreated
       dataType = proto.lookupType(Name);
     }
+  } else if (Name === 'InlineTransactionCreated') {
+    try {
+      const root = Root as any;
+      dataType = root.InlineTransactionCreated;
+    } catch (e) {
+      // if normal contract has a method called VirtualTransactionCreated
+      dataType = proto.lookupType(Name);
+    }
   } else {
     dataType = proto.lookupType(Name);
   }
