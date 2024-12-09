@@ -28,18 +28,19 @@ const AdsCarousel = () => {
     </div>
   ) : (
     <div className="aelf-updates-container flex max-w-full items-center overflow-hidden rounded-lg border bg-white">
-      <div className="box-border flex h-[38px] shrink-0 items-center justify-center gap-1 bg-border p-2">
+      {/* <div className="box-border flex h-[38px] shrink-0 items-center justify-center gap-1 bg-border p-2">
         <div className="text-sm font-semibold">Sponsored</div>
-      </div>
-      <div className="w-full">
+      </div> */}
+      <div className="w-full px-2">
         <Marquee pauseOnHover={true} duration={80000} reverse={true} align="start" height="38px">
           {[...data].map((item, index) => (
             <div key={index} className="mx-4 flex items-center gap-1 pr-4 text-sm text-foreground">
+              <div className="h-5 rounded bg-secondary px-1 text-xs leading-5 text-secondary-foreground">Sponsored</div>
               <Image
                 src={item.logo}
                 width={20}
                 height={20}
-                className="ml-2 mr-1 box-border inline-block size-6 shrink-0 rounded-full"
+                className="box-border inline-block size-6 shrink-0 rounded-full"
                 alt=""
               />
               <span className="text-sm text-muted-foreground">{item.adsText}</span>
