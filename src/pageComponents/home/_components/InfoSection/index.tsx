@@ -69,7 +69,7 @@ const InfoSection = () => {
     const { mainChain, sideChain } = overview?.mergeTransactions || {};
     return (
       overview && (
-        <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-transaction`)}>
+        <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-transaction`, isMd && `${clsPrefix}-row-item-md`)}>
           <div className="title flex items-center gap-1">
             <div className="text">Total Transactions</div>
             <IconFont className="text-base" type="square-menu"></IconFont>
@@ -85,32 +85,46 @@ const InfoSection = () => {
         </div>
       )
     );
-  }, [overview]);
+  }, [isMd, overview]);
   const PriceOverview = useMemo(() => {
     return (
       overview && (
-        <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-price`)}>
-          <div className="title">
-            <div className="text"> ELF Price </div>
-            <IconFont className="text-base" type="ELF-f6dioc4d"></IconFont>
-          </div>
-          <span className="desc flex items-center">
-            {typeof overview.tokenPriceInUsd === 'number' ? `$${thousandsNumber(overview.tokenPriceInUsd)}` : '-'}
-            <span className={clsx('range !ml-[6px]', +range >= 0 ? 'rise' : 'fall')}>
-              ({+range >= 0 ? '+' : ''}
-              {+range}%)
+        <div
+          className={clsx(
+            `${clsPrefix}-row-item`,
+            `${clsPrefix}-price`,
+            isMd && `${clsPrefix}-row-item-md`,
+            !isLG && `${clsPrefix}-row-item-lg`,
+          )}>
+          <div className={`border-r border-solid ${isMd ? 'border-r-0 pr-0' : 'pr-6'}`}>
+            <div className="title">
+              <div className="text"> ELF Price </div>
+              <IconFont className="text-base" type="ELF-f6dioc4d"></IconFont>
+            </div>
+            <span className="desc flex items-center">
+              {typeof overview.tokenPriceInUsd === 'number' ? `$${thousandsNumber(overview.tokenPriceInUsd)}` : '-'}
+              <span className={clsx('range !ml-[6px]', +range >= 0 ? 'rise' : 'fall')}>
+                ({+range >= 0 ? '+' : ''}
+                {+range}%)
+              </span>
             </span>
-          </span>
+          </div>
         </div>
       )
     );
-  }, [overview, range]);
+  }, [isLG, isMd, overview, range]);
 
   const marketCapOverview = useMemo(() => {
     return (
       overview && (
-        <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-height`)}>
-          <div>
+        <div
+          className={clsx(
+            `${clsPrefix}-row-item`,
+            `${clsPrefix}-height`,
+            isMd && `${clsPrefix}-row-item-md`,
+            !isLG && `${clsPrefix}-row-item-lg`,
+          )}>
+          <div className={`${!isLG && 'border-r border-solid pr-6'}`}>
             <div className="title">
               <div className="text">Market Cap</div>
               <IconFont className="text-base" type="globe"></IconFont>
@@ -120,13 +134,13 @@ const InfoSection = () => {
         </div>
       )
     );
-  }, [overview]);
+  }, [isLG, isMd, overview]);
   const accountsOverview = useMemo(() => {
     const { mainChain, sideChain } = overview?.mergeAccounts || {};
     return (
       overview && (
-        <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-accounts`)}>
-          <div>
+        <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-accounts`, isMd && `${clsPrefix}-row-item-md`)}>
+          <div className={`border-r border-solid ${isMd ? 'border-r-0 pr-0' : 'pr-6'}`}>
             <div className="title">
               <div className="text">Total Accounts</div>
               <IconFont className="text-base" type="users"></IconFont>
@@ -138,10 +152,15 @@ const InfoSection = () => {
         </div>
       )
     );
-  }, [overview]);
+  }, [isMd, overview]);
 
   return overview ? (
-    <div className={clsx('grid grid-cols-2 gap-4', !isLG && '!grid-cols-4', isMd && '!grid-cols-1')}>
+    <div
+      className={clsx(
+        'grid grid-cols-2 overflow-hidden rounded-lg border border-solid border-border bg-secondary',
+        !isLG && '!grid-cols-4',
+        isMd && '!grid-cols-1',
+      )}>
       {PriceOverview}
       {marketCapOverview}
       {accountsOverview}

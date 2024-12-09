@@ -49,11 +49,11 @@ const AelfUpdatesCarousel = () => {
     </div>
   ) : (
     <div className="aelf-updates-container flex max-w-full items-center overflow-hidden rounded-lg border bg-white">
-      <div className="flex h-[38px] shrink-0 items-center justify-center gap-1 bg-border p-2">
+      {/* <div className="flex h-[38px] shrink-0 items-center justify-center gap-1 bg-border p-2">
         <Image width={16} height={16} alt="" src="/image/Megaphone.svg" />
         <div className="text-sm font-semibold">aelf updates</div>
-      </div>
-      <div className="w-full">
+      </div> */}
+      <div className="w-full px-2">
         <Marquee pauseOnHover={true} duration={80000} reverse={true} align="center" height="38px">
           {[...renderData].map((item, index) => (
             <div key={index} className="mx-4 flex items-center gap-1 text-sm text-muted-foreground">
