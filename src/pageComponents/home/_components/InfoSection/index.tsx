@@ -96,7 +96,7 @@ const InfoSection = () => {
             isMd && `${clsPrefix}-row-item-md`,
             !isLG && `${clsPrefix}-row-item-lg`,
           )}>
-          <div className={`border-r border-solid pr-6 ${isMd && 'border-r-0 pr-0'}`}>
+          <div className={`border-r border-solid ${isMd ? 'border-r-0 pr-0' : 'pr-6'}`}>
             <div className="title">
               <div className="text"> ELF Price </div>
               <IconFont className="text-base" type="ELF-f6dioc4d"></IconFont>
@@ -140,7 +140,7 @@ const InfoSection = () => {
     return (
       overview && (
         <div className={clsx(`${clsPrefix}-row-item`, `${clsPrefix}-accounts`, isMd && `${clsPrefix}-row-item-md`)}>
-          <div className={`border-r border-solid pr-6 ${isMd && 'border-r-0 pr-0'}`}>
+          <div className={`border-r border-solid ${isMd ? 'border-r-0 pr-0' : 'pr-6'}`}>
             <div className="title">
               <div className="text">Total Accounts</div>
               <IconFont className="text-base" type="users"></IconFont>
