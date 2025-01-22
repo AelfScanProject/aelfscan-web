@@ -71,6 +71,7 @@ export default function getColumns(): ColumnsType<IContractDataItem> {
       key: 'balance',
       width: 173,
       render: renderBalance,
+      align: 'right',
     },
     {
       title: 'Txns',

@@ -69,6 +69,7 @@ export default function getColumns(currentPage, pageSize): ColumnsType<IAccounts
       dataIndex: 'balance',
       width: 325,
       render: renderBalance,
+      align: 'right',
     },
     {
       title: percentageTitle,

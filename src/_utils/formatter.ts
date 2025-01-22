@@ -52,7 +52,7 @@ export const numberFormatter = (number: string | number, symbol = SYMBOL): strin
   if (Number.isNaN(num)) {
     return '-';
   }
-  return `${num.toLocaleString(undefined, { maximumFractionDigits: 8 })} ${symbol}`;
+  return `${num.toLocaleString(undefined, { maximumFractionDigits: 8, minimumFractionDigits: 8 })} ${symbol}`;
 };
 
 export const thousandsNumber = (number: string | number): string => {
