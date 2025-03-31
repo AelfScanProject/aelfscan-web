@@ -44,11 +44,6 @@ export default function ContractToken({
   return type === AddressType.address || showContractAddress || (type === AddressType.Contract && !name) ? (
     address ? (
       <div className="address flex items-center">
-        {contractAddress && (
-          <EPTooltip mode="dark" title="Contract">
-            <IconFont className="mr-1 text-base" type="ContractIcon" />
-          </EPTooltip>
-        )}
         <EPTooltip pointAtCenter={false} title={addressFormat(address || '', showChain)} mode="dark">
           <Link
             prefetch={false}
@@ -58,6 +53,11 @@ export default function ContractToken({
           </Link>
         </EPTooltip>
         {showCopy && <MultiChain showChainId={showChainId} address={address} onlyCopy={onlyCopy} chainIds={chainIds} />}
+        {contractAddress && (
+          <EPTooltip mode="dark" title="Contract">
+            <IconFont className="mr-1 text-base" type="ContractIcon" />
+          </EPTooltip>
+        )}
         <div className="flex items-center"></div>
       </div>
     ) : (
@@ -65,9 +65,6 @@ export default function ContractToken({
     )
   ) : name ? (
     <div className="address flex w-full truncate">
-      <EPTooltip mode="dark" title="Contract">
-        <IconFont className="mr-1 text-base" type="ContractIcon" />
-      </EPTooltip>
       <EPTooltip
         title={
           <div className="break-all">
@@ -85,6 +82,9 @@ export default function ContractToken({
         </Link>
       </EPTooltip>
       {showCopy && <MultiChain showChainId={showChainId} onlyCopy={onlyCopy} address={address} chainIds={chainIds} />}
+      <EPTooltip mode="dark" title="Contract">
+        <IconFont className="mr-1 text-base" type="ContractIcon" />
+      </EPTooltip>
     </div>
   ) : (
     '-'
