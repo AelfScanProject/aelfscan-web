@@ -1,0 +1,12 @@
+.collection-detail-inventory-item {
+  .explorer-card-body {
+    @apply pt-1 pb-2 px-2;
+  }
+  .explorer-card-cover {
+    @apply pt-2 px-2 rounded;
+  }
+
+  .explorer-card {
+    @apply !border-border;
+  }
+}

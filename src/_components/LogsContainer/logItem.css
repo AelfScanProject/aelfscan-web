@@ -1,0 +1,5 @@
+.log-item {
+  .log-button {
+    @apply bg-white px-2 border-border border h-[38px] box-border text-primary mt-4 flex items-center text-center w-[75px] !important;
+  }
+}

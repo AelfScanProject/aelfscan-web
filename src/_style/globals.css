@@ -1,0 +1,99 @@
+@import url('tailwindcss/base');
+
+@import url('tailwindcss/components');
+@import url('./search.css');
+@import url('./nft-details.css');
+@import url('./not-found.css');
+
+@import url('tailwindcss/utilities');
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist.woff2') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+html {
+  @apply h-full w-full;
+
+  overscroll-behavior: none;
+}
+body {
+  font-family: Geist, sans-serif !important;
+  overscroll-behavior: none;
+  @apply lg:min-w-[768px] bg-F7 relative h-full w-full overflow-x-hidden overflow-y-auto text-foreground;
+  .explorer-dropdown-menu {
+    .explorer-dropdown-menu-item {
+      @apply !text-xs !leading-20 !text-base-100 !px-2 !py-[6px];
+      &:hover {
+        @apply !bg-F7;
+      }
+    }
+    .explorer-dropdown-menu-item-selected {
+      @apply !text-link;
+    }
+  }
+
+  a {
+    @apply !text-link;
+  }
+
+  .explorer-menu-light .explorer-menu-item a,
+  .explorer-menu-light > .explorer-menu .explorer-menu-item a,
+  .explorer-menu-light .explorer-menu-item a:hover,
+  .explorer-menu-light > .explorer-menu .explorer-menu-item a:hover {
+    color: inherit !important;
+  }
+}
+
+@layer utilities {
+  .font10px {
+    font-size: 12px;
+    zoom: 0.83;
+  }
+  .view-button {
+    @apply !w-8 !h-8 !box-border !rounded !border-D0 !bg-white;
+  }
+  .view-button:hover {
+    @apply !bg-32 !border-32;
+    svg {
+      @apply !text-white;
+    }
+  }
+  .view-button:active {
+    @apply !bg-button_active  !border-button_active;
+    svg {
+      @apply !text-white;
+    }
+  }
+
+  .from_to-col {
+    @apply !px-0;
+  }
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  appearance: button;
+  background-image: none;
+}
+
+.anticon {
+  display: inline-flex !important;
+}

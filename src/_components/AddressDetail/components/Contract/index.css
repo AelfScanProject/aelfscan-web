@@ -1,0 +1,10 @@
+.contract-container {
+  .contract-button-link {
+    @apply block rounded-md px-3 py-[6px] text-sm !text-muted-foreground;
+
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+  }
+  .active-button-link {
+    @apply !text-foreground bg-white;
+  }
+}

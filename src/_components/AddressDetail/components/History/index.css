@@ -1,0 +1,47 @@
+.history-pane {
+  @apply px-4 pb-4;
+  .header {
+    @apply flex items-center;
+    .history-bot {
+      @apply w-2 h-2 rounded-full mr-3;
+    }
+    .active-bot {
+      @apply  bg-primary;
+    }
+    .disabled-bot {
+      @apply bg-ECEEF2;
+    }
+    .header-title {
+      @apply text-lg font-medium leading-[18px];
+    }
+  }
+  .history-description {
+    box-sizing: border-box;
+    @apply ml-1 border-l-border border-l;
+    .description-item {
+      @apply px-4 py-2 flex;
+      .label {
+        @apply inline-block w-[292px] text-muted-foreground text-sm;
+      }
+      .value {
+        @apply text-sm leading-[14px] text-foreground;
+      }
+
+    }
+  }
+  .history-description-last {
+    border-left: none;
+  }
+  .history-description-mobile {
+    .description-item {
+      @apply flex-col;
+      .label {
+        @apply mb-2;
+      }
+      .value {
+        @apply break-words;
+      }
+
+    }
+  }
+}

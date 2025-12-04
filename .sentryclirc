@@ -1,0 +1,13 @@
+[defaults]
+url=https://sentry.io/
+project=aelfscan-web
+org=aelfscan
+
+[auth]
+token=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
+
+[log]
+level=debug
+
+[http]
+verify_ssl=false

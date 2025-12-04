@@ -1,0 +1,30 @@
+/* stylelint-disable no-duplicate-selectors */
+.ep-pagination {
+  @apply flex justify-between items-start flex-col min-[769px]:flex-row min-[769px]:items-center gap-2 min-[769px]:gap-0;
+  .submenu-right-arrow {
+    pointer-events: none !important;
+    svg {
+      @apply w-4 h-4;
+    }
+  }
+
+  .explorer-btn {
+    @apply w-[38px] h-[38px] rounded-md border-border bg-white !important;
+  }
+  .explorer-btn-background-ghost:disabled {
+    opacity: 0.4;
+  }
+
+  .explorer-select {
+    @apply mx-2 min-w-[74px] w-auto h-[38px]  !important;
+    .explorer-select-selector {
+      @apply border py-2 px-3 rounded-md border-border flex items-center !important;
+      .explorer-select-selection-item {
+        @apply pe-5 font-normal  text-sm;
+      }
+    }
+    .explorer-select-arrow {
+      @apply text-base;
+    }
+  }
+}
