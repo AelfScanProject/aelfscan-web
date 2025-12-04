@@ -1,0 +1,91 @@
+.home-latest {
+  @apply bg-white rounded-lg shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] p-6 border border-border;
+  .title {
+    @apply flex items-center pb-6 text-xl font-bold;
+  }
+  .content {
+    @apply overflow-auto;
+    .item {
+      @apply pb-6 min-h-[80px] flex min-[769px]:gap-4 justify-between flex-row align-middle;
+      .left {
+        @apply flex flex-row flex-wrap w-[196px] min-[769px]:flex-nowrap;
+        .anticon {
+          @apply mr-4;
+          svg {
+            @apply w-10 h-10;
+          }
+        }
+        .text {
+          @apply flex flex-col justify-center;
+          .height {
+            @apply text-sm text-primary max-w-[115px] overflow-hidden text-ellipsis whitespace-nowrap;
+          }
+          .time {
+            @apply text-sm text-muted-foreground;
+          }
+        }
+      }
+      .middle {
+        @apply flex-shrink-0  flex-grow flex flex-auto flex-wrap flex-col justify-center min-[769px]:flex-nowrap;
+        .producer {
+          @apply flex min-[769px]:flex-wrap text-[14px] font-[400] leading-[22px] w-full overflow-hidden text-ellipsis whitespace-nowrap;
+        }
+        .txns {
+          @apply text-[14px] font-[400] leading-[22px];
+          a {
+            @apply text-primary mr-1;
+          }
+          .time {
+            @apply text-xs leading-5;
+          }
+        }
+        .from,
+        .to {
+          @apply flex flex-wrap w-full text-sm;
+        }
+      }
+      .right {
+        @apply flex w-[120px] flex-shrink-0 items-center justify-end min-[1100px]:w-[80px] min-[1200px]:w-[120px];
+        .button {
+          @apply text-base truncate;
+        }
+      }
+    }
+    .item:last-child {
+      @apply shadow-none;
+    }
+  }
+  .link {
+    @apply rounded-md px-3 py-2 flex justify-center align-middle bg-secondary hover:text-primary;
+    a {
+      @apply flex items-center text-sm font-medium;
+    }
+  }
+}
+
+/* .home-latest-mobile {
+  .content {
+    @apply overflow-auto;
+    .item {
+      @apply flex flex-wrap w-full h-[96px];
+      .left {
+        @apply w-full;
+        .time {
+          @apply ml-2;
+        }
+        .text {
+          @apply flex flex-row;
+        }
+      }
+      .middle {
+        @apply w-full;
+        .button {
+          @apply h-6 border-[1px] rounded-[4px] px-2 text-[10px] font-[500] inline-block ml-2 text-base-100 leading-5;
+          .reward {
+            @apply mr-1;
+          }
+        }
+      }
+    }
+  }
+} */

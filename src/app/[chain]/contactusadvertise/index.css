@@ -1,0 +1,9 @@
+.container-layout {
+  @apply mx-auto box-border w-full max-w-[1440px] min-[769px]:px-6 min-[993px]:px-10 px-3;
+}
+
+.ads-wrapper {
+  .ads-title {
+    @apply text-3xl leading-[38px] text-base-100 font-bold text-center mb-6 min-[769px]:mb-10 min-[993px]:mb-12;
+  }
+}

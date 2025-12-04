@@ -1,0 +1,30 @@
+.transaction-view {
+  @apply border border-solid cursor-pointer bg-white rounded-md border-border w-[30px] h-[30px] box-border flex justify-center items-center focus:!bg-border;
+  .anticon {
+    @apply text-base;
+  }
+}
+.transaction-view:focus {
+  @apply !bg-border;
+}
+.transaction-tooltip {
+  .explorer-tooltip-inner {
+    @apply !p-0;
+  }
+}
+
+.preview-view {
+  @apply min-w-[203px] min-h-[106px];
+  .header {
+    @apply shadow-title_bot;
+  }
+  .main {
+    @apply p-2;
+    .label {
+      @apply text-muted-foreground text-xs mr-2;
+    }
+    .status,.fee {
+      @apply flex items-center justify-between;
+    }
+  }
+}

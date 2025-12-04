@@ -1,0 +1,19 @@
+.ep-tree-container {
+  .explorer-tree-switcher-icon {
+    @apply !text-base !mt-[3px];
+  }
+  
+  .explorer-popover-open {
+    @apply border-[2px] border-primary rounded-md;
+  }
+}
+
+.tree-container-file {
+  @apply border border-border rounded-lg !important;
+  .explorer-popover-content {
+    @apply  overflow-auto overflow-x-auto !important;
+    .explorer-popover-inner {
+      @apply overflow-x-auto !important;
+    }
+  }
+}

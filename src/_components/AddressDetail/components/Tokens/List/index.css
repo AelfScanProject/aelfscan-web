@@ -1,0 +1,18 @@
+.token-list {
+  .shadow-table  {
+    @apply shadow-none;
+  }
+  .footer-pagination-container {
+    @apply px-0;
+  }
+
+  .explorer-switch.explorer-switch-checked {
+    @apply bg-primary;
+  }
+  .explorer-switch {
+    @apply bg-border;
+  }
+  .explorer-switch:hover:not(.explorer-switch-disabled) {
+    @apply bg-border;
+  }
+}

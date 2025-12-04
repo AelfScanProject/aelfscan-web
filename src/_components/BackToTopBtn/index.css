@@ -1,0 +1,9 @@
+.back-to-top-container {
+  @apply flex items-center left-auto hover:cursor-pointer gap-2;
+  .text {
+    @apply text-foreground text-sm font-medium;
+  }
+  .anticon {
+    @apply text-base;
+  }
+}
