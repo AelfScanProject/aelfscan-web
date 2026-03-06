@@ -1,7 +1,27 @@
 import request from '@_api';
-export async function fetchCMS() {
+
+export interface ICMSChartImageGroup {
+  [chartKey: string]: string | undefined;
+}
+
+export interface ICMSChartImageConfig {
+  [chainKey: string]: ICMSChartImageGroup | undefined;
+  multi?: ICMSChartImageGroup;
+  multiChain?: ICMSChartImageGroup;
+}
+
+export interface IFetchCMSResult {
+  headerMenuList: any[];
+  footerMenuList: any[];
+  chainList: any[];
+  networkList: any[];
+  config: Record<string, any>;
+  chartImg?: ICMSChartImageConfig;
+}
+
+export async function fetchCMS(): Promise<IFetchCMSResult> {
   const result = await request.cms.getGlobalConfig({ params: { cache: 'no-store' } });
-  const { data } = result;
+  const { data } = result as { data: IFetchCMSResult };
   return data;
 }
 
