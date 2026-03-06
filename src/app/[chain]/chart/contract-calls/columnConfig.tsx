@@ -6,7 +6,7 @@ import ContractToken from '@_components/ContractToken';
 import ChainTags from '@_components/ChainTags';
 
 export default function getColumns(): ColumnsType<INodeBlockProduceData> {
-  return [
+  const columns: ColumnsType<INodeBlockProduceData> = [
     {
       title: '#',
       width: 80,
@@ -60,4 +60,6 @@ export default function getColumns(): ColumnsType<INodeBlockProduceData> {
       render: (text) => thousandsNumber(text),
     },
   ];
+
+  return columns;
 }
