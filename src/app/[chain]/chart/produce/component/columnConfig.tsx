@@ -7,7 +7,7 @@ import { INodeBlockProduceData } from '../../type';
 import ContractToken from '@_components/ContractToken';
 
 export default function getColumns({ currentPage, pageSize, chain }): ColumnsType<INodeBlockProduceData> {
-  return [
+  const columns: ColumnsType<INodeBlockProduceData> = [
     {
       title: '#',
       width: 80,
@@ -86,4 +86,6 @@ export default function getColumns({ currentPage, pageSize, chain }): ColumnsTyp
       render: (text) => text + '%',
     },
   ];
+
+  return columns;
 }

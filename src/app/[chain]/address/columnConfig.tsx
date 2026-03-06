@@ -51,7 +51,7 @@ const transfersTitle = (
 );
 
 export default function getColumns(currentPage, pageSize): ColumnsType<IAccountsItem> {
-  const commonColumns = [
+  const commonColumns: ColumnsType<IAccountsItem> = [
     {
       title: '#',
       dataIndex: 'rank',

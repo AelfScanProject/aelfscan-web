@@ -37,7 +37,7 @@ const renderTxns = (txns) => (typeof txns === 'number' && txns >= 0 ? thousandsN
 const renderLastUpdated = (text) => <div>{formatDate(dayjs(text).unix().valueOf(), 'Date Time (UTC)')}</div>;
 
 export default function getColumns(): ColumnsType<IContractDataItem> {
-  const commonColumns = [
+  const commonColumns: ColumnsType<IContractDataItem> = [
     {
       title: 'Address',
       dataIndex: 'address',
@@ -94,7 +94,7 @@ export default function getColumns(): ColumnsType<IContractDataItem> {
     },
   ];
 
-  const multiChainSpecificColumn = [
+  const multiChainSpecificColumn: ColumnsType<IContractDataItem> = [
     {
       title: 'Chain',
       width: 140,
