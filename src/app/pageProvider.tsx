@@ -10,21 +10,39 @@
 
 import { PREFIXCLS, THEME_CONFIG } from '@_lib/AntdThemeConfig';
 import { makeStore, AppStore } from '@_store';
+import type { ICMSChartImageConfig } from '@_api/fetchCMS';
 // import { wrapper } from '@_store';
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, useContext, useRef } from 'react';
 import { AELFDProvider } from 'aelf-design';
 import 'aelf-design/css';
 import { ConfigProvider } from 'antd';
 import { Provider as ReduxProvider } from 'react-redux';
-import useResponsive from '@_hooks/useResponsive';
-import dynamic from 'next/dynamic';
 import WebLoginProvider from './webLoginProvider';
 // const OpentelemetryProvider = dynamic(
 //   () => import('./opentelemetryProvider').then((mod) => mod.OpentelemetryProvider),
 //   { ssr: false },
 // );
 
-const MobileContext = createContext<any>({});
+interface IMobileContextValue {
+  isMobileSSR: boolean;
+  config: Record<string, any>;
+  chartImg?: ICMSChartImageConfig;
+}
+
+interface IRootProviderProps {
+  children: React.ReactNode;
+  isMobileSSR: boolean;
+  config: Record<string, any>;
+  chartImg?: ICMSChartImageConfig;
+  networkList: any[];
+  headerMenuList: any[];
+  chainList: any[];
+}
+
+const MobileContext = createContext<IMobileContextValue>({
+  isMobileSSR: false,
+  config: {},
+});
 const HeaderContext = createContext<any>({});
 
 const useMobileContext = () => {
@@ -35,17 +53,19 @@ const useHeaderContext = () => {
 };
 export { useMobileContext, useHeaderContext };
 
-function RootProvider({ children, isMobileSSR, config, chartImg, networkList, headerMenuList, chainList }) {
+function RootProvider({
+  children,
+  isMobileSSR,
+  config,
+  chartImg,
+  networkList,
+  headerMenuList,
+  chainList,
+}: IRootProviderProps) {
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
     storeRef.current = makeStore();
   }
-
-  const [isMobile, setIsMobile] = useState(isMobileSSR);
-  const { isMobile: isMobileClient } = useResponsive();
-  useEffect(() => {
-    setIsMobile(isMobileClient);
-  }, [isMobileClient]);
 
   return (
     <AELFDProvider prefixCls={PREFIXCLS} theme={THEME_CONFIG}>
