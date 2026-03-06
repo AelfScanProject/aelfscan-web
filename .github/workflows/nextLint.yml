@@ -1,5 +1,4 @@
 name: Next Lint Check
-# 
 
 on: [push, pull_request]
 
@@ -8,26 +7,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'  # Your node version, default 20 in 2024
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          node-version: '20'
+          cache: yarn
+          cache-dependency-path: yarn.lock
 
       - name: Install Dependencies
-        run: yarn
+        run: yarn install --frozen-lockfile
 
       - name: Run ESLint
         run: yarn lint
